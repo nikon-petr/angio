@@ -1,0 +1,11 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.angio.app.AngioAppProperties",
+      "name": "angio.app",
+      "type": "com.angio.app.AngioAppProperties"
+    }
+  ],
+  "properties": []
+}
