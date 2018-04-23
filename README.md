@@ -7,7 +7,7 @@ For startup you need [docker](https://www.docker.com/) and [docker-compose](http
 
 Clone repository
 ```
-git clone https://nikon_petr@bitbucket.org/nikon_petr/angio.git
+git clone https://github.com/nikon-petr/angio
 ```
 
 Go to project folder
