@@ -1,0 +1,26 @@
+version: "2"
+
+services:
+    db:
+        image: postgres:10
+        volumes:
+            - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+        expose:
+            - "5432"
+        environment:
+            - POSTGRES_PASSWORD=DO$od~lBd}8L
+
+    app:
+        build: ./app
+        volumes:
+            - ~/.m2:/root/.m2:rw # Maven repository files
+            - ./app:/app
+        expose: 
+            - "8080"
+        ports:
+            - 8000:8000 # Port for remote debug
+        command: mvn clean spring-boot:ru
+        working_dir: /app
+        depends_on:
+            - db
+        
