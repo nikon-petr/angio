@@ -1,10 +1,9 @@
-package com.angio.app.anonymous;
+package com.angio.app.test;
 
-public class AnonymousGreeting {
-
+public class Greeting {
     private String content;
 
-    public AnonymousGreeting(String content) {
+    public Greeting(String content) {
         this.content = content;
     }
 
