@@ -8,7 +8,7 @@
       app
     >
       <v-list dense>
-        <v-list-tile :to="{name: 'Landing'}" @click="">
+        <v-list-tile :to="{name: 'Landing'}">
           <v-list-tile-action>
             <v-icon>home</v-icon>
           </v-list-tile-action>
@@ -16,7 +16,7 @@
             <v-list-tile-title>Главная</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile :to="{name: 'Analyses'}" @click="">
+        <v-list-tile :to="{name: 'Analyses'}">
           <v-list-tile-action>
             <v-icon>list</v-icon>
           </v-list-tile-action>
@@ -24,7 +24,7 @@
             <v-list-tile-title>Список анализов</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="">
+        <v-list-tile>
           <v-list-tile-action>
             <v-icon>info_outline</v-icon>
           </v-list-tile-action>
@@ -57,9 +57,9 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      drawer: false
-    })
-  }
+export default {
+  data: () => ({
+    drawer: false
+  })
+}
 </script>

@@ -41,74 +41,73 @@
 </template>
 
 <script>
-  import API from '@/lib/API'
+import API from '@/lib/API'
 
-  export default {
+export default {
   data: () => ({
-      dialog: false,
-      search: '',
-      headers: [
-        {
-          text: 'Наименование',
-          align: 'left',
-          value: 'name'
-        },
-        { text: 'Краткое описание', value: 'short_description' },
-        { text: 'Первичный анализ', value: 'first' },
-        { text: 'Пациент (ФИО)', value: 'patient' },
-        { text: 'Диагност (ФИО)', value: 'diagnost' },
-        { text: 'Дата', value: 'date' },
-        { text: 'Действия', value: 'actions', sortable: false }
-      ],
-      items: [],
-      defaultItem: {
-        name: '-',
-        short_description: '-',
-        first: '-',
-        patient: '-',
-        diagnost: '',
-        date: ''
-      }
-    }),
-
-    created () {
-      this.initialize()
-    },
-
-    mounted(){
-      this.load()
-    },
-
-    methods: {
-      load(){
-        API.getAnalyses()
-          .then((analyses) => {
-            console.log(analyses)
-          })
+    dialog: false,
+    search: '',
+    headers: [
+      {
+        text: 'Наименование',
+        align: 'left',
+        value: 'name'
       },
-      initialize () {
-          this.items = [
-            {
-              date: '24.04.2017 19:31',
-              name: 'Первичный анализ перенесённого тромбоза',
-              short_description: 'Акцент при анализе сделан на повышенную степень извилистости сосудистой системы глаза',
-              first: true,
-              patient: 'Заболевальная Е.В.',
-              diagnost: 'Врачебный А.В.'
-            }
-          ]
-        },
-
-        deleteItem (item) {
-          const index = this.items.indexOf(item)
-          confirm('Are you sure you want to delete this item?') && this.items.splice(index, 1)
-        },
-
-        close () {
-          this.dialog = false
-        }
-      }
+      {text: 'Краткое описание', value: 'short_description'},
+      {text: 'Первичный анализ', value: 'first'},
+      {text: 'Пациент (ФИО)', value: 'patient'},
+      {text: 'Диагност (ФИО)', value: 'diagnost'},
+      {text: 'Дата', value: 'date'},
+      {text: 'Действия', value: 'actions', sortable: false}
+    ],
+    items: [],
+    defaultItem: {
+      name: '-',
+      short_description: '-',
+      first: '-',
+      patient: '-',
+      diagnost: '',
+      date: ''
     }
+  }),
+
+  created () {
+    this.initialize()
+  },
+
+  mounted () {
+    this.load()
+  },
+
+  methods: {
+    load () {
+      API.getAnalyses()
+        .then((analyses) => {
+          console.log(analyses)
+        })
+    },
+    initialize () {
+      this.items = [
+        {
+          date: '24.04.2017 19:31',
+          name: 'Первичный анализ перенесённого тромбоза',
+          short_description: 'Акцент при анализе сделан на повышенную степень извилистости сосудистой системы глаза',
+          first: true,
+          patient: 'Заболевальная Е.В.',
+          diagnost: 'Врачебный А.В.'
+        }
+      ]
+    },
+    deleteItem (item) {
+      const index = this.items.indexOf(item)
+      confirm('Are you sure you want to delete this item?') && this.items.splice(index, 1)
+    },
+
+    close () {
+      this.dialog = false
+    }
+  }
+}
 </script>
 
 <style lang="css">
