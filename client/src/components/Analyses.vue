@@ -1,43 +1,56 @@
 <template lang="html">
-  <v-app id="inspire" dark>
-    <h1>Список анализов</h1>
+  <v-layout v-bind="binding">
+    <v-flex>
+      <v-app id="inspire" dark>
+        <h1>Список анализов</h1>
 
-    <v-card-title>
-      <v-spacer></v-spacer>
-      <v-text-field
-        append-icon="search"
-        label="Search"
-        single-line
-        hide-details
-        v-model="search"
-      ></v-text-field>
-    </v-card-title>
-    <v-data-table
-      :headers="headers"
-      :items="items"
-      :search="search"
-      hide-actions
-      class="elevation-1"
-    >
-      <template slot="items" slot-scope="props">
-        <td>{{ props.item.name }}</td>
-        <td class="text-xs-right">{{ props.item.short_description }}</td>
-        <td class="text-xs-right">{{ props.item.first }}</td>
-        <td class="text-xs-right">{{ props.item.patient }}</td>
-        <td class="text-xs-right">{{ props.item.diagnost }}</td>
-        <td class="text-xs-right">{{ props.item.date }}</td>
-        <td class="justify-center layout px-0">
-          <v-btn icon class="mx-0" @click="deleteItem(props.item)">
-            <v-icon color="pink">delete</v-icon>
-          </v-btn>
-        </td>
-      </template>
-    </v-data-table>
+        <v-card-title>
+          <v-spacer></v-spacer>
+          <v-text-field
+            append-icon="search"
+            label="Search"
+            single-line
+            hide-details
+            v-model="search"
+          ></v-text-field>
+        </v-card-title>
+        <v-data-table
+          :headers="headers"
+          :items="analyses"
+          :search="search"
+          :loading="loading_analyses"
+          hide-actions
+          class="elevation-1"
+        >
+          <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
+          <template slot="items" slot-scope="props">
+            <td>{{ props.item.name }}</td>
+            <td class="text-xs-right">{{ props.item.short_description }}</td>
+            <td class="text-xs-right">{{ props.item.analyse_type }}</td>
+            <td class="text-xs-right">{{ props.item.patient }}</td>
+            <td class="text-xs-right">{{ props.item.diagnost }}</td>
+            <td class="text-xs-right">{{ props.item.date | moment("DD:MM:YYYY HH:MM") }}</td>
+            <td class="justify-center layout px-0">
+              <v-btn
+                :loading=!props.item.is_analyse_finished
+                @click="detailItem(props.item)"
+                :disabled=!props.item.is_analyse_finished
+                color="transparent"
+                class="white--text"
+              >
+                Подробнее
+                <v-icon white dark>chevron-right</v-icon>
+              </v-btn>
+            </td>
+          </template>
+        </v-data-table>
 
-    <v-btn style="margin-bottom: 40px" fixed fab bottom right dark large color="blue accent-3">
-      <v-icon dark>add</v-icon>
-    </v-btn>
-  </v-app>
+        <v-btn style="margin-bottom: 40px" fixed fab bottom right dark large color="blue accent-3">
+          <v-icon dark>add</v-icon>
+        </v-btn>
+      </v-app>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -48,32 +61,26 @@
       dialog: false,
       search: '',
       headers: [
-        {
-          text: 'Наименование',
-          align: 'left',
-          value: 'name'
-        },
-        { text: 'Краткое описание', value: 'short_description' },
-        { text: 'Первичный анализ', value: 'first' },
-        { text: 'Пациент (ФИО)', value: 'patient' },
-        { text: 'Диагност (ФИО)', value: 'diagnost' },
-        { text: 'Дата', value: 'date' },
-        { text: 'Действия', value: 'actions', sortable: false }
+        { text: 'Наименование', align: 'left' , value: 'name', width: '20%' },
+        { text: 'Краткое описание', align: 'left', value: 'short_description', width: '35%' },
+        { text: 'Первичный анализ', align: 'left', value: 'analyse_type', width: '5%' },
+        { text: 'Пациент (ФИО)', align: 'left', value: 'patient', width: '10%' },
+        { text: 'Диагност (ФИО)', align: 'left', value: 'diagnost', width: '10%' },
+        { text: 'Дата', align: 'left', value: 'date', width: '10%' },
+        { text: 'Действия', align: 'left', value: 'actions', sortable: false, width: '10%' }
       ],
-      items: [],
+      analyses: [],
       defaultItem: {
-        name: '-',
-        short_description: '-',
-        first: '-',
-        patient: '-',
+        name: '',
+        short_description: '',
+        analyse_type: '',
+        patient: '',
         diagnost: '',
-        date: ''
-      }
+        date: '',
+        is_analyse_finished: true
+      },
+      loading_analyses: true
     }),
-
-    created () {
-      this.initialize()
-    },
 
     mounted(){
       this.load()
@@ -82,33 +89,27 @@
     methods: {
       load(){
         API.getAnalyses()
-          .then((analyses) => {
-            console.log(analyses)
-          })
+          .then(analyses => {
+              this.analyses = analyses
+              this.loading_analyses = false
+            })
       },
-      initialize () {
-          this.items = [
-            {
-              date: '24.04.2017 19:31',
-              name: 'Первичный анализ перенесённого тромбоза',
-              short_description: 'Акцент при анализе сделан на повышенную степень извилистости сосудистой системы глаза',
-              first: true,
-              patient: 'Заболевальная Е.В.',
-              diagnost: 'Врачебный А.В.'
-            }
-          ]
-        },
 
-        deleteItem (item) {
-          const index = this.items.indexOf(item)
-          confirm('Are you sure you want to delete this item?') && this.items.splice(index, 1)
-        },
+      detailItem (item) {
+        console.log('Detail item: ' + item)
+      },
 
-        close () {
-          this.dialog = false
-        }
+      close () {
+        this.dialog = false
+      }
+    },
+
+    computed: {
+      formatted(){
+        return Vue.filter('date')(this.analyses.date)
       }
     }
+  }
 </script>
 
 <style lang="css">

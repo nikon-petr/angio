@@ -6,6 +6,8 @@ import App from './App'
 import router from './router'
 import 'vuetify/dist/vuetify.min.css'
 
+Vue.use(require('vue-moment'));
+
 Vue.use(Vuetify)
 
 Vue.config.productionTip = false
