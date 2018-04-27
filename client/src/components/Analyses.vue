@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import API from '@/lib/API'
+import API from '../api/analyses'
 
 export default {
   data: () => ({
