@@ -4,6 +4,8 @@ import com.angio.app.security.entities.AuthorityEntity;
 import com.angio.app.security.entities.UserEntity;
 import com.angio.app.security.repositories.AuthorityCrudRepository;
 import com.angio.app.security.repositories.UserCrudRepository;
+import com.angio.app.userinfo.entities.UserInfoEntity;
+import com.angio.app.userinfo.repositories.UserInfoCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,21 +21,24 @@ import java.util.Date;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserCrudRepository userRepository;
+    private final UserInfoCrudRepository userInfoCrudRepository;
     private final AuthorityCrudRepository authorityCrudRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(
             UserCrudRepository userRepository,
+            UserInfoCrudRepository userInfoCrudRepository,
             AuthorityCrudRepository authorityCrudRepository,
             PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.userInfoCrudRepository = userInfoCrudRepository;
         this.authorityCrudRepository = authorityCrudRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByUsername(s).get(0);
         if(userEntity == null) throw new UsernameNotFoundException("Username does not exist.");
@@ -53,13 +58,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserEntity registerNewUser(String username, String password) throws UsernameExistsException {
+    @Transactional
+    public void registerNewUser(
+            String username,
+            String password,
+            String firstname,
+            String lastname,
+            Date modified_date) throws UsernameExistsException {
         if(userRepository.exists(username)){
             throw new UsernameExistsException("There is user with the same username");
         }
+
         UserEntity userEntity = new UserEntity(username, passwordEncoder.encode(password), true, new Date());
         userEntity = userRepository.save(userEntity);
+
         authorityCrudRepository.save(new AuthorityEntity(userEntity, "ROLE_USER"));
-        return userEntity;
+
+        UserInfoEntity userInfoEntity = new UserInfoEntity(
+                userRepository.findByUsername(username).get(0),
+                firstname,
+                lastname,
+                modified_date);
+        userInfoCrudRepository.save(userInfoEntity);
     }
 }

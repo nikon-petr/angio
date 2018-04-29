@@ -2,12 +2,14 @@ package com.angio.app.security;
 
 
 import com.angio.app.AngioAppProperties;
+import com.angio.app.security.entities.TokenEntity;
 import com.angio.app.security.entities.UserEntity;
 import com.angio.app.security.jwt.JwtTokenUtil;
 import com.angio.app.security.requests.AuthRequest;
 import com.angio.app.security.requests.CheckUsernameRequest;
 import com.angio.app.security.requests.RevokeTokenRequest;
 import com.angio.app.security.responses.AuthenticationResponse;
+import com.angio.app.security.responses.CheckUsernameResponse;
 import com.angio.app.security.services.TokenException;
 import com.angio.app.security.services.TokenService;
 import com.angio.app.security.services.UserService;
@@ -59,12 +61,12 @@ public class SecurityController {
         this.tokenService = tokenService;
     }
 
-    @RequestMapping(path = "/register/user", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/v1/user/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerNewUser(@RequestBody RegisterRequest registerRequest) {
         try {
-            userService.registerNewUser(registerRequest.getUsername(), registerRequest.getPassword());
-
-            userInfoService.registerNewUser(registerRequest.getUsername(),
+            userService.registerNewUser(
+                    registerRequest.getUsername(),
+                    registerRequest.getPassword(),
                     registerRequest.getFirstname(),
                     registerRequest.getLastname(),
                     new Date());
@@ -75,17 +77,17 @@ public class SecurityController {
         }
     }
 
-    @RequestMapping(path = "/register/checkUsername", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/v1/user/register/check-username", method = RequestMethod.POST)
     public ResponseEntity<?> checkUsername(@RequestBody CheckUsernameRequest checkUsernameRequest){
         try{
             userService.findByUsername(checkUsernameRequest.getUsername());
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.ok(new CheckUsernameResponse("used"));
         } catch (UsernameNotFoundException e){
-            return ResponseEntity.ok().body(null);
+            return ResponseEntity.ok(new CheckUsernameResponse("unused"));
         }
     }
 
-    @RequestMapping(path = "/auth/token", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/v1/auth/token", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authenticationRequest, Device device)
             throws AuthenticationException {
         final Authentication authentication = authenticationManager.authenticate(
@@ -103,7 +105,7 @@ public class SecurityController {
         return ResponseEntity.ok(new AuthenticationResponse(token, angioAppProperties.jwt.getTokenType()));
     }
 
-    @RequestMapping(path = "/auth/refresh", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/v1/auth/refresh", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String token = request.getHeader(angioAppProperties.jwt.getHeader());
         token = jwtTokenUtil.getTokenBody(token);
@@ -119,7 +121,20 @@ public class SecurityController {
         }
     }
 
-    @RequestMapping(path = "/auth/revoke", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/v1/auth/logout", method = RequestMethod.GET)
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        try {
+            String token = request.getHeader(angioAppProperties.jwt.getHeader());
+            token = jwtTokenUtil.getTokenBody(token);
+            TokenEntity tokenEntity = tokenService.findByToken(token);
+            tokenService.revokeToken(tokenEntity.getId());
+            return ResponseEntity.ok().body(null);
+        } catch (TokenException e){
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @RequestMapping(path = "/api/v1/auth/revoke", method = RequestMethod.POST)
     public ResponseEntity<?> revokeAuthenticationToken(@RequestBody RevokeTokenRequest revokeTokenRequest){
         try{
             tokenService.revokeToken(revokeTokenRequest.getId());

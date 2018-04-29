@@ -18,4 +18,6 @@ public class AuthenticationResponse implements Serializable {
     public String getType() {
         return type;
     }
+
+
 }
