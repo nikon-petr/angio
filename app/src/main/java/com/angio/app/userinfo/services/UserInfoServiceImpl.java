@@ -25,9 +25,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         this.userCrudRepository = userCrudRepository;
     }
 
-    @Transactional(readOnly = true)
-
     @Override
+    @Transactional(readOnly = true)
     public UserInfoEntity findByUser(UserEntity user) throws Exception {
         UserInfoEntity userInfo = userInfoCrudRepository.findByUser(user).stream()
                 .findFirst()
@@ -37,21 +36,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
 
         return userInfo;
-    }
-
-    @Override
-    public UserInfoEntity registerNewUser(String username,
-                                          String firstname,
-                                          String lastname,
-                                          Date modified_date) throws Exception {
-        UserInfoEntity userInfoEntity = new UserInfoEntity(
-                userCrudRepository.findByUsername(username).get(0),
-                firstname,
-                lastname,
-                modified_date);
-
-        userInfoEntity = userInfoCrudRepository.save(userInfoEntity);
-        return userInfoEntity;
     }
 
     @Override

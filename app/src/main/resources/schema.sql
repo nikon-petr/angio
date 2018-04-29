@@ -22,6 +22,7 @@ CREATE TABLE public.authorities (
 );
 
 CREATE TABLE public.users_info (
+      info_id        SERIAL NOT NULL PRIMARY KEY,
       username       VARCHAR(30) NOT NULL,
       firstname      VARCHAR(30) NOT NULL,
       lastname       VARCHAR(30) NOT NULL,

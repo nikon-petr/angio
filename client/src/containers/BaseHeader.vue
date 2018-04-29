@@ -3,14 +3,16 @@
     <v-toolbar-side-icon @click.stop="$emit('toggle-drawer')"></v-toolbar-side-icon>
     <v-toolbar-title>AngioVision</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn flat large color="white">Вход</v-btn>
-    <v-btn flat large color="white">Регистрация</v-btn>
+    <v-btn @click="$root.$emit('showSignIn')" flat large color="white">Вход</v-btn>
+    <v-btn @click="$root.$emit('showSignUp')" flat large color="white">Регистрация</v-btn>
   </v-toolbar>
 </template>
 
 <script>
+import BaseSignUpForm from './BaseSignUpForm'
 export default {
-  name: 'BaseHeader'
+  name: 'BaseHeader',
+  components: {BaseSignUpForm}
 }
 </script>
 
