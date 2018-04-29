@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Landing from '@/components/Landing'
 import Analyses from '@/components/Analyses'
+import NewAnalyseDialog from '@/components/NewAnalyseDialog'
 import BaseSignUpForm from '@/containers/BaseSignUpForm'
 import BaseSignInForm from '@/containers/BaseSignInForm'
 
