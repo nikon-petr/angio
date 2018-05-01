@@ -107,8 +107,7 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>4.2.4.RELEASE</version>
 		</dependency>
-
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>
@@ -123,41 +122,6 @@
 					</jvmArguments>
 				</configuration>
 			</plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-install-plugin</artifactId>-->
-                <!--<version>2.5</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>binarization-jar</id>-->
-                        <!--<phase>initialize</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>install-file</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<groupId>makeImageBinarization</groupId>-->
-                            <!--<artifactId>bin-app</artifactId>-->
-                            <!--<version>1.0</version>-->
-                            <!--<packaging>jar</packaging>-->
-                            <!--<file>${basedir}/lib/makeImageBinarization.jar</file>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-					<!--<execution>-->
-                        <!--<id>builder-jar</id>-->
-						<!--<phase>initialize</phase>-->
-						<!--<goals>-->
-							<!--<goal>install-file</goal>-->
-						<!--</goals>-->
-						<!--<configuration>-->
-							<!--<groupId>com.mathworks</groupId>-->
-							<!--<artifactId>builder-app</artifactId>-->
-							<!--<version>1.0</version>-->
-							<!--<packaging>jar</packaging>-->
-							<!--<file>/matlabruntime/v92/toolbox/javabuilder/jar/javabuilder.jar</file>-->
-						<!--</configuration>-->
-					<!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
 		</plugins>
 	</build>
 

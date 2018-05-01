@@ -28,7 +28,7 @@ public class UserInfoEntity {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "info_id", nullable = false)
     public long getInfo_id() {
         return info_id;
