@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Landing from '@/components/Landing'
 import Analyses from '@/components/Analyses'
-import NewAnalyseDialog from '@/components/NewAnalyseDialog'
+import DetailAnalyse from '@/components/DetailAnalyse'
 import BaseSignUpForm from '@/containers/BaseSignUpForm'
 import BaseSignInForm from '@/containers/BaseSignInForm'
 
@@ -20,6 +20,11 @@ export default new Router({
       path: '/analyses',
       name: 'Analyses',
       component: Analyses
+    },
+    {
+      path: '/analyses/1',
+      name: 'DetailAnalyse',
+      component: DetailAnalyse
     },
     {
       path: '/user',

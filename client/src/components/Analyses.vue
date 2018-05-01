@@ -109,7 +109,7 @@
             })
       },
       detailItem (item) {
-        console.log('Detail item: ' + item)
+        this.$router.push({path: '/analyses/1'}) 
       }
     },
     computed: {
