@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-layout v-bind="binding">
+  <v-layout>
     <v-flex>
       <v-app id="inspire" dark>
         <h1>Список анализов</h1>
@@ -29,7 +29,7 @@
             <td class="text-xs-right">{{ props.item.patient }}</td>
             <td class="text-xs-right">{{ props.item.policy }}</td>
             <td class="text-xs-right">{{ props.item.diagnost }}</td>
-            <td class="text-xs-right">{{ props.item.date | moment("DD:MM:YYYY HH:MM") }}</td>
+            <td class="text-xs-right">{{ props.item.date }}</td>
             <td class="justify-center layout px-0">
               <v-btn
                 :loading=!props.item.is_analyse_finished
@@ -76,6 +76,7 @@
       ],
       analyses: [],
       defaultItem: {
+        id: '',
         name: '',
         short_description: '',
         analyse_type: '',
@@ -99,6 +100,7 @@
               this.loading_analyses = false
             })
             .catch(() => {
+              this.loading_analyses = false
               this.$root.$emit(
                 'showAlert',
                 {
@@ -109,12 +111,7 @@
             })
       },
       detailItem (item) {
-        this.$router.push({path: '/analyses/1'}) 
-      }
-    },
-    computed: {
-      formatted(){
-        return Vue.filter('date')(this.analyses.date)
+        this.$router.push({path: '/analyses/1'})
       }
     },
     components: {

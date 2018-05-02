@@ -9,8 +9,6 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import 'vuetify/dist/vuetify.min.css'
 
-Vue.use(require('vue-moment'))
-
 Vue.use(Vuetify)
 Vue.use(VueAxios, axios)
 

@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-layout v-bind="binding">
+  <v-layout>
     <v-flex>
       <v-app id="inspire" dark>
         <h1>Подробный анализ</h1>

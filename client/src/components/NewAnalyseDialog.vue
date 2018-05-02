@@ -1,5 +1,5 @@
 <template>
-  <v-layout v-bind="binding">
+  <v-layout>
     <v-flex>
       <v-app id="inspire" dark>
         <v-dialog
@@ -17,7 +17,7 @@
             <v-toolbar-title>Новый анализ</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-              <v-btn dark flat :disabled="new_analyse.img.length <= 0" @click.negative="startNewAnalyse()">Запустить</v-btn>
+              <v-btn dark flat :disabled="new_analyse.info.img.length <= 0" @click.negative="startNewAnalyse()">Запустить</v-btn>
             </v-toolbar-items>
           </v-toolbar>
           <v-card-text>
@@ -25,6 +25,25 @@
               <v-layout row justify-space-between>
                 <v-flex xs5>
                   <h2>Информация о пациенте</h2>
+                  <small>Для добавления информации о пациенте к описанию анализа, в первую очередь, убедитесь в том,
+                    что пациент отсутствует в базе. Для этого введите номер страхового полиса.
+                    Если пациент уже имеется в базе - поля будут заполненны автоматически.
+                  </small>
+                  <pre></pre>
+                  <small>
+                    Для обновления информации о пациенте поля можно редактировать.
+                  </small>
+                  <v-container grid-list-md text-xs-center>
+                    <v-layout row wrap>
+                      <v-text-field
+                        label="Страховой полис (номер)"
+                        v-model="new_analyse.patient.policy"
+                        :rules="new_analyse_rules.patient.policy"
+                        required
+                      ></v-text-field>
+                      <v-btn dark flat @click.negative="checkPolicy()">Проверить</v-btn>
+                    </v-layout>
+                    </v-container>
                   <v-text-field
                     label="Фамилия"
                     v-model="new_analyse.patient.lastname"
@@ -53,12 +72,6 @@
                     :rules="new_analyse_rules.patient.phone"
                     required
                   ></v-text-field>
-                  <v-text-field
-                    label="Страховой полис (номер)"
-                    v-model="new_analyse.patient.policy"
-                    :rules="new_analyse_rules.patient.policy"
-                    required
-                  ></v-text-field>
                   <v-menu
                     lazy
                     :close-on-content-click="false"
@@ -67,7 +80,6 @@
                     full-width
                     :nudge-right="40"
                     min-width="290px"
-                    :return-value.sync="date"
                   >
                   <v-text-field
                     slot="activator"
@@ -138,8 +150,8 @@
                     Загрузить изображение:
                     <input type="file" @change="previewImage" accept="image/*">
                   </div>
-                  <div v-if="new_analyse.img.length > 0">
-                    <img class="preview" :src="new_analyse.img">
+                  <div v-if="new_analyse.info.img.length > 0">
+                    <img class="preview" :src="new_analyse.info.img">
                   </div>
                 </v-flex>
               </v-layout>
@@ -154,6 +166,8 @@
 </template>
 
 <script>
+import {newAnalyse, checkPatientByPolicy} from '../api/analyses'
+
   export default {
     name: 'NewAnalyseDialog',
     data: () => ({
@@ -177,9 +191,10 @@
           short_description: '',
           full_description: '',
           analyse_type: '',
-          comments: ''
+          comments: '',
+          img: ''
         },
-        img: ''
+        username: 'user@angio.ru'
       },
       new_analyse_rules: {
         patient: {
@@ -210,12 +225,36 @@
         'Последующий анализ'
       ]
     }),
+    watch: {
+      new_analyse(newVal){
+        this.new_analyse = newVal
+      }
+    },
     methods: {
       startNewAnalyse (){
         if (this.$refs.form_new_analyse.validate()) {
           console.log(this.new_analyse)
-          this.dialog = false
-        }
+          newAnalyse(this.new_analyse)
+            .then(() => {
+              this.dialog = false
+              this.$root.$emit(
+                'showAlert',
+                {
+                  color: 'success',
+                  message: 'Новый анализ запущен. Ожидайте 2-3 минуты. Статус анализа можно наблюдать с списке анализов.',
+                  timeout: 15000
+                })
+            })
+            .catch(() => {
+              this.$root.$emit(
+                'showAlert',
+                {
+                  color: 'error',
+                  message: 'Ошибка запуска нового анализа',
+                  timeout: 5000
+                })
+            })
+          }
       },
       close () {
         this.dialog = false
@@ -225,11 +264,52 @@
         if (input.files && input.files[0]) {
           var reader = new FileReader()
           reader.onload = (e) => {
-            this.new_analyse.img = e.target.result
+            this.new_analyse.info.img = e.target.result
           }
           //base64 format
           reader.readAsDataURL(input.files[0])
         }
+      },
+      checkPolicy(){
+        checkPatientByPolicy(this.new_analyse.patient.policy)
+          .then((response) => {
+            console.log(response.data.contains)
+            console.log(response)
+              this.new_analyse.patient.firstname = response.data.patient.firstname
+              this.new_analyse.patient.lastname = response.data.patient.lastname
+              this.new_analyse.patient.patronymic = response.data.patient.patronymic
+              this.new_analyse.patient.email = response.data.patient.email
+              this.new_analyse.patient.phone = response.data.patient.phone
+              this.new_analyse.patient.bday = response.data.patient.bday
+              this.new_analyse.patient.address = response.data.patient.address
+              this.new_analyse.patient.work = response.data.patient.work
+              this.new_analyse.patient.comments = response.data.patient.comments
+              this.$root.$emit(
+                'showAlert',
+                {
+                  color: 'success',
+                  message: 'Пациент был успешно найден в базе, данные добавлены',
+                  timeout: 5000
+                })
+          })
+          .catch(() => {
+            this.new_analyse.patient.firstname = ''
+            this.new_analyse.patient.lastname = ''
+            this.new_analyse.patient.patronymic = ''
+            this.new_analyse.patient.email = ''
+            this.new_analyse.patient.phone = ''
+            this.new_analyse.patient.bday = ''
+            this.new_analyse.patient.address = ''
+            this.new_analyse.patient.work = ''
+            this.new_analyse.patient.comments = ''
+            this.$root.$emit(
+              'showAlert',
+              {
+                color: 'error',
+                message: 'Пациент с таким номером страхового полиса не был найден в базе',
+                timeout: 5000
+              })
+          })
       }
     },
     mounted () {

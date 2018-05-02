@@ -1,5 +1,6 @@
 package com.angio.app.security.entities;
 
+import com.angio.app.analyse.analyse_info.entities.AnalyseInfoEntity;
 import com.angio.app.userinfo.entities.UserInfoEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,7 @@ public class UserEntity implements UserDetails, Serializable {
     private Set<AuthorityEntity> authorities = new HashSet<>(0);
     private Date lastPasswordResetDate;
     private Set<UserInfoEntity> infoUsers = new HashSet<>(0);
+    private Set<AnalyseInfoEntity> analysesInfo = new HashSet<>(0);
 
     public UserEntity() {
 
@@ -90,6 +92,16 @@ public class UserEntity implements UserDetails, Serializable {
 
     public void setInfoUsers(Set<UserInfoEntity> infoUsers) {
         this.infoUsers = infoUsers;
+    }
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    public Set<AnalyseInfoEntity> getAnalysesInfo() {
+        return analysesInfo;
+    }
+
+    public void setAnalysesInfo(Set<AnalyseInfoEntity> analysesInfo) {
+        this.analysesInfo = analysesInfo;
     }
 
     @JsonIgnore
