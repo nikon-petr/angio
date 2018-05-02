@@ -1,3 +1,8 @@
+# ANGIO
+app/src/main/resources/static/images/analyses/*.png
+app/src/main/resources/static/images/analyses/*.bmp
+app/src/main/resources/static/images/analyses/*.jpg
+
 # JAVA
 # Compiled class file
 *.class
@@ -39,7 +44,7 @@ buildNumber.properties
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
 
-#Node
+# NODE
 # Logs
 logs
 *.log

@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import {getAnalyses} from '../api/analyses'
 import NewAnalyseDialog from './NewAnalyseDialog'
 
 export default {
@@ -93,7 +92,7 @@ export default {
   },
   methods: {
     load () {
-      getAnalyses()
+      this.axios.get('v1/all')
         .then((response) => {
           console.log(response)
           this.analyses = response.data

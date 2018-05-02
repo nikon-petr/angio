@@ -21,15 +21,13 @@ export default new Router({
       path: '/analyses',
       name: 'Analyses',
       component: Analyses,
-      meta: {auth: ['ROLE_USER']},
-      children: [
-        {
-          path: '/analyses/1',
-          name: 'DetailAnalyse',
-          component: DetailAnalyse,
-          meta: {auth: ['ROLE_USER']}
-        }
-      ]
+      meta: {auth: ['ROLE_USER']}
+    },
+    {
+      path: '/analyses/1',
+      name: 'DetailAnalyse',
+      component: DetailAnalyse,
+      meta: {auth: ['ROLE_USER']}
     },
     {
       path: '/user',

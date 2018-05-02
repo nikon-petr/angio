@@ -7,7 +7,7 @@
         <v-card id="inspire" dark>
           <v-card-title primary-title>
             <v-layout row justify-space-between>
-              <v-flex xs5>
+              <v-flex xs5 md5 lg5>
                 <h3>Информация о пациенте</h3>
                 <h3 class="headline mb-0">ФИО:</h3>
                 <div>{{ analyse.analyse_base_info.patient.lastname + ' '
@@ -28,7 +28,7 @@
                 <h3 class="headline mb-0" v-if="analyse.analyse_base_info.patient.comments.length > 0">Комментарий:</h3>
                 <div v-if="analyse.analyse_base_info.patient.comments.length > 0">{{ analyse.analyse_base_info.patient.comments }}</div>
               </v-flex>
-              <v-flex xs6>
+              <v-flex xs6 md6 lg6>
                 <h3>Информация о болезни</h3>
                 <h3 class="headline mb-0">Название:</h3>
                 <div>{{ analyse.analyse_base_info.info.name }}</div>
@@ -82,7 +82,6 @@
 
 <script>
 import {getDetailAnalyse} from '../api/analyses'
-
 export default {
   name: 'DetailAnalyse',
   data: () => ({

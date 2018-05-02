@@ -4,11 +4,11 @@
     <v-toolbar-title>AngioVision</v-toolbar-title>
     <v-spacer></v-spacer>
     <div v-show="$auth.check()">
-      <v-btn @click="logout()" flat large color="white">Выход</v-btn>
+      <v-btn @click="logout()" flat small color="white">Выход</v-btn>
     </div>
     <div v-show="!$auth.check()">
-      <v-btn @click="$root.$emit('showSignIn')" flat large color="white">Вход</v-btn>
-      <v-btn @click="$root.$emit('showSignUp')" flat large color="white">Регистрация</v-btn>
+      <v-btn @click="$root.$emit('showSignIn')" flat small color="white">Вход</v-btn>
+      <v-btn @click="$root.$emit('showSignUp')" flat small color="white">Регистрация</v-btn>
     </div>
   </v-toolbar>
 </template>

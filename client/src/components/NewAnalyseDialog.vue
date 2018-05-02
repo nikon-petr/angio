@@ -166,8 +166,6 @@
 </template>
 
 <script>
-import {newAnalyse, checkPatientByPolicy} from '../api/analyses'
-
 export default {
   name: 'NewAnalyseDialog',
   data: () => ({
@@ -194,7 +192,7 @@ export default {
         comments: '',
         img: ''
       },
-      username: 'user@angio.ru'
+      username: ''
     },
     new_analyse_rules: {
       patient: {
@@ -234,7 +232,8 @@ export default {
     startNewAnalyse () {
       if (this.$refs.form_new_analyse.validate()) {
         console.log(this.new_analyse)
-        newAnalyse(this.new_analyse)
+        this.new_analyse.username = this.$auth.user().email
+        this.axios.post('v1/new', this.new_analyse)
           .then(() => {
             this.dialog = false
             this.$root.$emit(
@@ -271,7 +270,7 @@ export default {
       }
     },
     checkPolicy () {
-      checkPatientByPolicy(this.new_analyse.patient.policy)
+      this.axios.post('v1/check_policy', {policy: this.new_analyse.patient.policy})
         .then((response) => {
           console.log(response.data.contains)
           console.log(response)

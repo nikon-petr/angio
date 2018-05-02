@@ -32,7 +32,7 @@ VALUES ('user@angio.ru', '$2a$04$YBwbgAAVn8S0luZ/mlO2V..SM.mmblq0lGs7zaCKIdnl8rh
 -- password: q1w2e3
 
 INSERT INTO public.users_info (username, firstName, lastName, modified_date)
-VALUES ('user@angio.ru', 'User', 'User', '2018-01-01');
+VALUES ('user@angio.ru', 'Геннадий', 'Врачебный', '2018-01-01');
 
 INSERT INTO public.authorities (username, authority)
 VALUES ('user@angio.ru', 'ROLE_USER');

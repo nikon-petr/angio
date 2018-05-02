@@ -57,7 +57,7 @@ export default {
   data () {
     return {
       showSignInForm: false,
-      showSignInPath: false,
+      showSignInPath: this.$route.fullPath === '/user/sign-in',
       valid: true,
       email: '',
       password: ''
@@ -65,9 +65,11 @@ export default {
   },
   watch: {
     '$route': function (value) {
-      if (value.path === '/user/sign-in') {
+      if (value.fullPath === '/user/sign-in') {
         this.showSignInPath = true
         this.$refs.form.reset()
+      } else {
+        this.showSignInPath = false
       }
     }
   },
@@ -107,11 +109,11 @@ export default {
         })
     },
     closeSignIn () {
-      if (this.$route.fullPath === '/user/sign-in') {
+      if (this.showSignInPath) {
         this.$router.push({path: '/'})
+      }
+      if (this.showSignInForm) {
         this.showSignInForm = false
-      } else {
-        this.showSignInForm = this.$route.meta.showSignInForm
       }
       this.$refs.form.reset()
     }

@@ -88,7 +88,7 @@ export default {
   data () {
     return {
       showSignUpForm: false,
-      showSignUpPath: false,
+      showSignUpPath: this.$route.fullPath === '/user/sign-up',
       valid: true,
       lastName: '',
       lastNameRules: [
@@ -129,10 +129,11 @@ export default {
   },
   watch: {
     '$route': function (value) {
-      console.log(value.path)
       if (value === '/user/sign-up') {
         this.showSignUpPath = true
         this.$refs.form.reset()
+      } else {
+        this.showSignUpPath = false
       }
     }
   },
