@@ -20,8 +20,8 @@ public class UserEntity implements UserDetails, Serializable {
     private boolean enabled;
     private Set<AuthorityEntity> authorities = new HashSet<>(0);
     private Date lastPasswordResetDate;
-    private Set<UserInfoEntity> infoUsers = new HashSet<>(0);
     private Set<AnalyseInfoEntity> analysesInfo = new HashSet<>(0);
+    private UserInfoEntity userInfo;
 
     public UserEntity() {
 
@@ -85,13 +85,14 @@ public class UserEntity implements UserDetails, Serializable {
     }
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    public Set<UserInfoEntity> getInfoUsers() {
-        return infoUsers;
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    public UserInfoEntity getUserInfo() {
+        return userInfo;
     }
 
-    public void setInfoUsers(Set<UserInfoEntity> infoUsers) {
-        this.infoUsers = infoUsers;
+    public void setUserInfo(UserInfoEntity userInfo) {
+        this.userInfo = userInfo;
     }
 
     @JsonIgnore

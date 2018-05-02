@@ -39,7 +39,8 @@ public class UserInfoEntity {
     }
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username", nullable = false)
     public UserEntity getUser() {
         return user;

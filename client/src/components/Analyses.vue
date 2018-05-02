@@ -57,67 +57,67 @@
 </template>
 
 <script>
-  import {getAnalyses} from '../api/analyses'
-  import NewAnalyseDialog from './NewAnalyseDialog'
+import {getAnalyses} from '../api/analyses'
+import NewAnalyseDialog from './NewAnalyseDialog'
 
-  export default {
-    name: 'Analyses',
-    data: () => ({
-      search: '',
-      headers: [
-        { text: 'Наименование', align: 'left' , value: 'name', width: '15%' },
-        { text: 'Краткое описание', align: 'left', value: 'short_description', width: '30%' },
-        { text: 'Тип анализа', align: 'left', value: 'analyse_type', width: '5%' },
-        { text: 'Пациент (ФИО)', align: 'left', value: 'patient', width: '10%' },
-        { text: '№ полиса', align: 'left', value: 'policy', width: '10%' },
-        { text: 'Диагност (ФИО)', align: 'left', value: 'diagnost', width: '10%' },
-        { text: 'Дата', align: 'left', value: 'date', width: '10%' },
-        { text: 'Действия', align: 'left', value: 'actions', sortable: false, width: '10%' }
-      ],
-      analyses: [],
-      defaultItem: {
-        id: '',
-        name: '',
-        short_description: '',
-        analyse_type: '',
-        patient: '',
-        policy: '',
-        diagnost: '',
-        date: '',
-        is_analyse_finished: true
-      },
-      loading_analyses: true
-    }),
-    mounted(){
-      this.load()
+export default {
+  name: 'Analyses',
+  data: () => ({
+    search: '',
+    headers: [
+      { text: 'Наименование', align: 'left', value: 'name', width: '15%' },
+      { text: 'Краткое описание', align: 'left', value: 'short_description', width: '30%' },
+      { text: 'Тип анализа', align: 'left', value: 'analyse_type', width: '5%' },
+      { text: 'Пациент (ФИО)', align: 'left', value: 'patient', width: '10%' },
+      { text: '№ полиса', align: 'left', value: 'policy', width: '10%' },
+      { text: 'Диагност (ФИО)', align: 'left', value: 'diagnost', width: '10%' },
+      { text: 'Дата', align: 'left', value: 'date', width: '10%' },
+      { text: 'Действия', align: 'left', value: 'actions', sortable: false, width: '10%' }
+    ],
+    analyses: [],
+    defaultItem: {
+      id: '',
+      name: '',
+      short_description: '',
+      analyse_type: '',
+      patient: '',
+      policy: '',
+      diagnost: '',
+      date: '',
+      is_analyse_finished: true
     },
-    methods: {
-      load(){
-        getAnalyses()
-          .then((response) => {
-            console.log(response)
-              this.analyses = response.data
-              this.loading_analyses = false
+    loading_analyses: true
+  }),
+  mounted () {
+    this.load()
+  },
+  methods: {
+    load () {
+      getAnalyses()
+        .then((response) => {
+          console.log(response)
+          this.analyses = response.data
+          this.loading_analyses = false
+        })
+        .catch(() => {
+          this.loading_analyses = false
+          this.$root.$emit(
+            'showAlert',
+            {
+              color: 'error',
+              message: 'Ошибка получения списка анализов',
+              timeout: 5000
             })
-            .catch(() => {
-              this.loading_analyses = false
-              this.$root.$emit(
-                'showAlert',
-                {
-                  color: 'error',
-                  message: 'Ошибка получения списка анализов',
-                  timeout: 5000
-                })
-            })
-      },
-      detailItem (item) {
-        this.$router.push({path: '/analyses/1'})
-      }
+        })
     },
-    components: {
-      NewAnalyseDialog
+    detailItem (item) {
+      this.$router.push({path: '/analyses/1'})
     }
+  },
+  components: {
+    NewAnalyseDialog
   }
+}
 </script>
 
 <style scoped>

@@ -17,25 +17,24 @@ services:
         volumes:
             - ~/.m2:/root/.m2:rw # Maven repository files
             - ./app:/app
-        expose: 
-            - "8080"
         ports:
             - 8000:8000 # Port for remote debug
+            - 80:80
         command: mvn clean spring-boot:run
         working_dir: /app
         depends_on:
             - db
 
-    nginx:
-        image: nginx:1.13
-        restart: always
-        volumes:
-            - ./nginx/conf.d:/etc/nginx/conf.d
-            - ./nginx/key/ssl:/etc/nginx/key/ssl
-            - ./app/src/main/resources/static:/app/static
-        ports:
-            - 80:80   # http port
-            - 443:443 # https port
-        depends_on:
-            - app
-        
+#    nginx:
+#        image: nginx:1.13
+#        restart: always
+#        volumes:
+#            - ./nginx/conf.d:/etc/nginx/conf.d
+#            - ./nginx/key/ssl:/etc/nginx/key/ssl
+#            - ./app/src/main/resources/static:/app/static
+#        ports:
+#            - 80:80   # http port
+#            - 443:443 # https port
+#        depends_on:
+#            - app
+    

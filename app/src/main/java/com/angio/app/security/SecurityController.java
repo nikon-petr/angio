@@ -8,8 +8,8 @@ import com.angio.app.security.jwt.JwtTokenUtil;
 import com.angio.app.security.requests.AuthRequest;
 import com.angio.app.security.requests.CheckUsernameRequest;
 import com.angio.app.security.requests.RevokeTokenRequest;
-import com.angio.app.security.responses.AuthenticationResponse;
 import com.angio.app.security.responses.CheckUsernameResponse;
+import com.angio.app.security.responses.UserAuthDataResponse;
 import com.angio.app.security.services.TokenException;
 import com.angio.app.security.services.TokenService;
 import com.angio.app.security.services.UserService;
@@ -29,6 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Date;
 
 @RestController
@@ -67,8 +68,8 @@ public class SecurityController {
             userService.registerNewUser(
                     registerRequest.getUsername(),
                     registerRequest.getPassword(),
-                    registerRequest.getFirstname(),
-                    registerRequest.getLastname(),
+                    registerRequest.getFirstName(),
+                    registerRequest.getLastName(),
                     new Date());
 
             return ResponseEntity.ok().body(null);
@@ -102,7 +103,26 @@ public class SecurityController {
         final String token = jwtTokenUtil.generateToken(userDetails, device);
         tokenService.putToken((UserEntity) userDetails, token);
 
-        return ResponseEntity.ok(new AuthenticationResponse(token, angioAppProperties.jwt.getTokenType()));
+//        return ResponseEntity.ok(new AuthenticationResponse(token, angioAppProperties.jwt.getTokenType()));
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + token)
+                .body(null);
+    }
+
+    @RequestMapping(path = "/api/v1/auth/user", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserAuthData(HttpServletRequest request){
+        final UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        final UserEntity userEntity = (UserEntity) userDetails;
+        return ResponseEntity.ok()
+                .body(new UserAuthDataResponse(
+                        userEntity.getUsername(),
+                        userEntity.getUserInfo().getFirstname(),
+                        userEntity.getUserInfo().getLastname(),
+                        userEntity.getAuthorities()
+                ));
     }
 
     @RequestMapping(path = "/api/v1/auth/refresh", method = RequestMethod.GET)
@@ -115,7 +135,10 @@ public class SecurityController {
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             tokenService.putToken(user, refreshedToken);
-            return ResponseEntity.ok(new AuthenticationResponse(refreshedToken, angioAppProperties.jwt.getTokenType()));
+            return ResponseEntity.ok()
+                    .header("Authorization", "Bearer " + refreshedToken)
+                    .body(null);
+//            return ResponseEntity.ok(new AuthenticationResponse(refreshedToken, angioAppProperties.jwt.getTokenType()));
         } else {
             return ResponseEntity.badRequest().body(null);
         }

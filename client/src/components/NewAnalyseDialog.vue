@@ -17,7 +17,7 @@
             <v-toolbar-title>Новый анализ</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-              <v-btn dark flat :disabled="new_analyse.info.img.length <= 0" @click.negative="startNewAnalyse()">Запустить</v-btn>
+              <v-btn dark flat :disabled="new_analyse.info.img.length <= 0" @click="startNewAnalyse()">Запустить</v-btn>
             </v-toolbar-items>
           </v-toolbar>
           <v-card-text>
@@ -41,7 +41,7 @@
                         :rules="new_analyse_rules.patient.policy"
                         required
                       ></v-text-field>
-                      <v-btn dark flat @click.negative="checkPolicy()">Проверить</v-btn>
+                      <v-btn dark flat @click="checkPolicy()">Проверить</v-btn>
                     </v-layout>
                     </v-container>
                   <v-text-field
@@ -168,157 +168,157 @@
 <script>
 import {newAnalyse, checkPatientByPolicy} from '../api/analyses'
 
-  export default {
-    name: 'NewAnalyseDialog',
-    data: () => ({
-      dialog: false,
-      valid: false,
-      new_analyse: {
-        patient: {
-          firstname: '',
-          lastname: '',
-          patronymic: '',
-          email: '',
-          phone: '',
-          policy: '',
-          bday: '',
-          address: '',
-          work: '',
-          comments: ''
-        },
-        info: {
-          name: '',
-          short_description: '',
-          full_description: '',
-          analyse_type: '',
-          comments: '',
-          img: ''
-        },
-        username: 'user@angio.ru'
+export default {
+  name: 'NewAnalyseDialog',
+  data: () => ({
+    dialog: false,
+    valid: false,
+    new_analyse: {
+      patient: {
+        firstname: '',
+        lastname: '',
+        patronymic: '',
+        email: '',
+        phone: '',
+        policy: '',
+        bday: '',
+        address: '',
+        work: '',
+        comments: ''
       },
-      new_analyse_rules: {
-        patient: {
-          default: [
-            v => !!v || 'Поле обязательно для заполнения'
-          ],
-          email: [
-            v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Неверный формат почты'
-          ],
-          phone: [
-            v => !!v || 'Поле обязательно для заполнения',
-            v => /^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{5}$/.test(v) || 'Неверный формат номера телефона'
-          ],
-          policy: [
-            v => !!v || 'Поле обязательно для заполнения',
-            v => /^\d( ?\d){15,15}$/.test(v) || 'Номер должен содержать 16 цифр',
-          ]
-        },
-        info: {
-          default: [
-            v => !!v || 'Поле обязательно для заполнения'
-          ]
-        }
+      info: {
+        name: '',
+        short_description: '',
+        full_description: '',
+        analyse_type: '',
+        comments: '',
+        img: ''
       },
-      menu_bday: false,
-      items_analyse_type: [
-        'Первичный анализ',
-        'Последующий анализ'
-      ]
-    }),
-    watch: {
-      new_analyse(newVal){
-        this.new_analyse = newVal
+      username: 'user@angio.ru'
+    },
+    new_analyse_rules: {
+      patient: {
+        default: [
+          v => !!v || 'Поле обязательно для заполнения'
+        ],
+        email: [
+          v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Неверный формат почты'
+        ],
+        phone: [
+          v => !!v || 'Поле обязательно для заполнения',
+          v => /^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{5}$/.test(v) || 'Неверный формат номера телефона'
+        ],
+        policy: [
+          v => !!v || 'Поле обязательно для заполнения',
+          v => /^\d( ?\d){15,15}$/.test(v) || 'Номер должен содержать 16 цифр'
+        ]
+      },
+      info: {
+        default: [
+          v => !!v || 'Поле обязательно для заполнения'
+        ]
       }
     },
-    methods: {
-      startNewAnalyse (){
-        if (this.$refs.form_new_analyse.validate()) {
-          console.log(this.new_analyse)
-          newAnalyse(this.new_analyse)
-            .then(() => {
-              this.dialog = false
-              this.$root.$emit(
-                'showAlert',
-                {
-                  color: 'success',
-                  message: 'Новый анализ запущен. Ожидайте 2-3 минуты. Статус анализа можно наблюдать с списке анализов.',
-                  timeout: 15000
-                })
-            })
-            .catch(() => {
-              this.$root.$emit(
-                'showAlert',
-                {
-                  color: 'error',
-                  message: 'Ошибка запуска нового анализа',
-                  timeout: 5000
-                })
-            })
-          }
-      },
-      close () {
-        this.dialog = false
-      },
-      previewImage: function(event) {
-        var input = event.target
-        if (input.files && input.files[0]) {
-          var reader = new FileReader()
-          reader.onload = (e) => {
-            this.new_analyse.info.img = e.target.result
-          }
-          //base64 format
-          reader.readAsDataURL(input.files[0])
-        }
-      },
-      checkPolicy(){
-        checkPatientByPolicy(this.new_analyse.patient.policy)
-          .then((response) => {
-            console.log(response.data.contains)
-            console.log(response)
-              this.new_analyse.patient.firstname = response.data.patient.firstname
-              this.new_analyse.patient.lastname = response.data.patient.lastname
-              this.new_analyse.patient.patronymic = response.data.patient.patronymic
-              this.new_analyse.patient.email = response.data.patient.email
-              this.new_analyse.patient.phone = response.data.patient.phone
-              this.new_analyse.patient.bday = response.data.patient.bday
-              this.new_analyse.patient.address = response.data.patient.address
-              this.new_analyse.patient.work = response.data.patient.work
-              this.new_analyse.patient.comments = response.data.patient.comments
-              this.$root.$emit(
-                'showAlert',
-                {
-                  color: 'success',
-                  message: 'Пациент был успешно найден в базе, данные добавлены',
-                  timeout: 5000
-                })
+    menu_bday: false,
+    items_analyse_type: [
+      'Первичный анализ',
+      'Последующий анализ'
+    ]
+  }),
+  watch: {
+    new_analyse (newVal) {
+      this.new_analyse = newVal
+    }
+  },
+  methods: {
+    startNewAnalyse () {
+      if (this.$refs.form_new_analyse.validate()) {
+        console.log(this.new_analyse)
+        newAnalyse(this.new_analyse)
+          .then(() => {
+            this.dialog = false
+            this.$root.$emit(
+              'showAlert',
+              {
+                color: 'success',
+                message: 'Новый анализ запущен. Ожидайте 2-3 минуты. Статус анализа можно наблюдать с списке анализов.',
+                timeout: 15000
+              })
           })
           .catch(() => {
-            this.new_analyse.patient.firstname = ''
-            this.new_analyse.patient.lastname = ''
-            this.new_analyse.patient.patronymic = ''
-            this.new_analyse.patient.email = ''
-            this.new_analyse.patient.phone = ''
-            this.new_analyse.patient.bday = ''
-            this.new_analyse.patient.address = ''
-            this.new_analyse.patient.work = ''
-            this.new_analyse.patient.comments = ''
             this.$root.$emit(
               'showAlert',
               {
                 color: 'error',
-                message: 'Пациент с таким номером страхового полиса не был найден в базе',
+                message: 'Ошибка запуска нового анализа',
                 timeout: 5000
               })
           })
       }
     },
-    mounted () {
-      this.$root.$on('showNewAnalyseDialog', () => {
-        console.log('show dialog')
-        this.dialog = true
-      })
+    close () {
+      this.dialog = false
+    },
+    previewImage: function (event) {
+      var input = event.target
+      if (input.files && input.files[0]) {
+        var reader = new FileReader()
+        reader.onload = (e) => {
+          this.new_analyse.info.img = e.target.result
+        }
+        // base64 format
+        reader.readAsDataURL(input.files[0])
+      }
+    },
+    checkPolicy () {
+      checkPatientByPolicy(this.new_analyse.patient.policy)
+        .then((response) => {
+          console.log(response.data.contains)
+          console.log(response)
+          this.new_analyse.patient.firstname = response.data.patient.firstname
+          this.new_analyse.patient.lastname = response.data.patient.lastname
+          this.new_analyse.patient.patronymic = response.data.patient.patronymic
+          this.new_analyse.patient.email = response.data.patient.email
+          this.new_analyse.patient.phone = response.data.patient.phone
+          this.new_analyse.patient.bday = response.data.patient.bday
+          this.new_analyse.patient.address = response.data.patient.address
+          this.new_analyse.patient.work = response.data.patient.work
+          this.new_analyse.patient.comments = response.data.patient.comments
+          this.$root.$emit(
+            'showAlert',
+            {
+              color: 'success',
+              message: 'Пациент был успешно найден в базе, данные добавлены',
+              timeout: 5000
+            })
+        })
+        .catch(() => {
+          this.new_analyse.patient.firstname = ''
+          this.new_analyse.patient.lastname = ''
+          this.new_analyse.patient.patronymic = ''
+          this.new_analyse.patient.email = ''
+          this.new_analyse.patient.phone = ''
+          this.new_analyse.patient.bday = ''
+          this.new_analyse.patient.address = ''
+          this.new_analyse.patient.work = ''
+          this.new_analyse.patient.comments = ''
+          this.$root.$emit(
+            'showAlert',
+            {
+              color: 'error',
+              message: 'Пациент с таким номером страхового полиса не был найден в базе',
+              timeout: 5000
+            })
+        })
     }
+  },
+  mounted () {
+    this.$root.$on('showNewAnalyseDialog', () => {
+      console.log('show dialog')
+      this.dialog = true
+    })
   }
+}
 </script>
 
 <style lang="css">

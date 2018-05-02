@@ -28,8 +28,8 @@ CREATE TABLE public.authorities (
 CREATE TABLE public.users_info (
       info_id        SERIAL NOT NULL PRIMARY KEY,
       username       VARCHAR(30) NOT NULL,
-      firstname      VARCHAR(30) NOT NULL,
-      lastname       VARCHAR(30) NOT NULL,
+      firstName      VARCHAR(30) NOT NULL,
+      lastName       VARCHAR(30) NOT NULL,
       modified_date  TIMESTAMP NOT NULL,
       CONSTRAINT fk_users_info_users FOREIGN KEY (username) REFERENCES users (username)
       ON DELETE CASCADE

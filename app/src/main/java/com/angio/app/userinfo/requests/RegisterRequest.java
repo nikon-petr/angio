@@ -5,18 +5,18 @@ import java.io.Serializable;
 public class RegisterRequest implements Serializable {
     private String username;
     private String password;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
 
     public RegisterRequest(){
         super();
     }
 
-    public RegisterRequest(String username, String password, String firstname, String lastname) {
+    public RegisterRequest(String username, String password, String firstName, String lastname) {
         this.username = username;
         this.password = password;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstName = firstName;
+        this.lastName = lastname;
     }
 
     public String getUsername() {
@@ -35,19 +35,19 @@ public class RegisterRequest implements Serializable {
         this.password = password;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

@@ -81,73 +81,73 @@
 </template>
 
 <script>
-  import {getDetailAnalyse} from '../api/analyses'
+import {getDetailAnalyse} from '../api/analyses'
 
-  export default {
-    name: 'DetailAnalyse',
-    data: () => ({
-      active: null,
-      loading_analyse: true,
-      analyse: {
-          analyse_base_info: {
-              patient: {
-                  firstname: '',
-                  lastname: '',
-                  patronymic: '',
-                  email: '',
-                  phone: '',
-                  policy: '',
-                  bday: '',
-                  address: '',
-                  work: '',
-                  comments: ''
-              },
-              info: {
-                  name: '',
-                  short_description: '',
-                  full_description: '',
-                  analyse_type: '',
-                  comments: ''
-              }
-          },
-          result: {
-              analyse_geometric_characteristic: {
-                  img: {
-                      original: '',
-                      binarized: '',
-                      skel: ''
-                  },
-                  vessels: []
-              },
-              conclusion: ''
-          }
+export default {
+  name: 'DetailAnalyse',
+  data: () => ({
+    active: null,
+    loading_analyse: true,
+    analyse: {
+      analyse_base_info: {
+        patient: {
+          firstname: '',
+          lastname: '',
+          patronymic: '',
+          email: '',
+          phone: '',
+          policy: '',
+          bday: '',
+          address: '',
+          work: '',
+          comments: ''
+        },
+        info: {
+          name: '',
+          short_description: '',
+          full_description: '',
+          analyse_type: '',
+          comments: ''
         }
-      }),
-      mounted(){
-        this.loadDetailAnalyse()
       },
-      methods: {
-        loadDetailAnalyse(){
-          getDetailAnalyse()
-            .then((response) => {
-                console.log(response)
-                this.analyse.analyse_base_info.patient = response.data.analyse.analyse_base_info.patient
-                this.analyse.analyse_base_info.info = response.data.analyse.analyse_base_info.info
-                this.analyse.result = response.data.analyse.result
-                this.loading_analyse = false
-              })
-              .catch(() => {
-                this.$root.$emit(
-                  'showAlert',
-                  {
-                    color: 'error',
-                    message: 'Ошибка получения анализа',
-                    timeout: 5000
-                  })
-              })
-        }
+      result: {
+        analyse_geometric_characteristic: {
+          img: {
+            original: '',
+            binarized: '',
+            skel: ''
+          },
+          vessels: []
+        },
+        conclusion: ''
       }
     }
+  }),
+  mounted () {
+    this.loadDetailAnalyse()
+  },
+  methods: {
+    loadDetailAnalyse () {
+      getDetailAnalyse()
+        .then((response) => {
+          console.log(response)
+          this.analyse.analyse_base_info.patient = response.data.analyse.analyse_base_info.patient
+          this.analyse.analyse_base_info.info = response.data.analyse.analyse_base_info.info
+          this.analyse.result = response.data.analyse.result
+          this.loading_analyse = false
+        })
+        .catch(() => {
+          this.$root.$emit(
+            'showAlert',
+            {
+              color: 'error',
+              message: 'Ошибка получения анализа',
+              timeout: 5000
+            })
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>

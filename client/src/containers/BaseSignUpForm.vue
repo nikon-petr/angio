@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-bind:value="showSignUpForm" persistent max-width="500px">
+    <v-dialog v-bind:value="showSignUpForm || showSignUpPath" persistent max-width="500px">
       <v-card>
         <v-card-title>
           <span class="headline">Регистрация</span>
@@ -83,13 +83,12 @@
 </template>
 
 <script>
-import {registerUser, checkEmail} from '../api/user'
-
 export default {
   name: 'BaseSignUpForm',
   data () {
     return {
-      showSignUpForm: this.$route.meta.showSignUpForm,
+      showSignUpForm: false,
+      showSignUpPath: false,
       valid: true,
       lastName: '',
       lastNameRules: [
@@ -129,8 +128,12 @@ export default {
     }
   },
   watch: {
-    '$route.meta' ({showSignInForm}) {
-      this.showSignInForm = showSignInForm
+    '$route': function (value) {
+      console.log(value.path)
+      if (value === '/user/sign-up') {
+        this.showSignUpPath = true
+        this.$refs.form.reset()
+      }
     }
   },
   mounted () {
@@ -142,7 +145,7 @@ export default {
   methods: {
     validateEmail () {
       this.checkingEmail = true
-      checkEmail(this.email)
+      this.axios.post('/v1/user/register/check-username', {username: this.email})
         .then((response) => {
           if (response.data.status === 'used') {
             this.emailError = true
@@ -172,12 +175,20 @@ export default {
     },
     submit () {
       if (this.$refs.form.validate()) {
-        registerUser(this.firstName, this.lastName, this.email, this.password)
+        this.$auth.register({
+          data: {
+            username: this.email,
+            lastName: this.lastName,
+            firstName: this.firstName,
+            password: this.password
+          }
+        })
           .then(() => {
-            if (this.$route.fullPath === '/user/sign-up') {
+            if (this.showSignUpPath) {
               this.$router.push({path: '/user/sign-in'})
-            } else {
-              this.showSignUpForm = this.$route.meta.showSignUpForm
+            }
+            if (this.showSignUpForm) {
+              this.showSignUpForm = false
               this.$root.$emit('showSignIn')
             }
             this.$root.$emit(
@@ -185,27 +196,26 @@ export default {
               {
                 color: 'success',
                 message: 'Вы успешно прошли регистрацию, на ваш E-mail отправлено письмо для подтверждения.',
-                timeout: 15000
+                timeout: 5000
               })
-          })
-          .catch(() => {
+          }, (res) => {
+            this.reset()
             this.$root.$emit(
               'showAlert',
               {
                 color: 'error',
                 message: 'Во время регистрации произшла ошибка.',
-                timeout: 15000
+                timeout: 5000
               })
-            this.reset()
           })
       }
     },
     closeSignUp () {
-      if (this.$route.fullPath === '/user/sign-up') {
+      if (this.showSignUpPath) {
         this.$router.push({path: '/'})
+      }
+      if (this.showSignUpForm) {
         this.showSignUpForm = false
-      } else {
-        this.showSignUpForm = this.$route.meta.showSignUpForm
       }
       this.reset()
     }

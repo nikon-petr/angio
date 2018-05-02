@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-bind:value="showSignInForm" persistent max-width="500px">
+    <v-dialog v-bind:value="showSignInForm || showSignInPath" persistent max-width="500px">
       <v-card>
         <v-card-title>
           <span class="headline">Авторизация</span>
@@ -50,16 +50,25 @@
 </template>
 
 <script>
-import {getToken} from '../api/auth'
+// import {getToken} from '../api/auth'
 
 export default {
   name: 'BaseSignInForm',
   data () {
     return {
-      showSignInForm: this.$route.meta.showSignInForm,
+      showSignInForm: false,
+      showSignInPath: false,
       valid: true,
       email: '',
       password: ''
+    }
+  },
+  watch: {
+    '$route': function (value) {
+      if (value.path === '/user/sign-in') {
+        this.showSignInPath = true
+        this.$refs.form.reset()
+      }
     }
   },
   mounted () {
@@ -70,9 +79,16 @@ export default {
   },
   methods: {
     submit () {
-      getToken(this.email, this.password)
-        .then((response) => {
-          console.log(response.data.token)
+      this.$auth.login({
+        data: {username: this.email, password: this.password}
+      })
+        .then(() => {
+          if (this.showSignInPath) {
+            this.$router.push({path: '/'})
+          }
+          if (this.showSignInForm) {
+            this.showSignInForm = false
+          }
           this.$root.$emit(
             'showAlert',
             {
@@ -80,14 +96,7 @@ export default {
               message: 'Добро пожаловать',
               timeout: 5000
             })
-          if (this.$route.fullPath === '/user/sign-in') {
-            this.$router.push({path: '/'})
-            this.showSignInForm = false
-          } else {
-            this.showSignInForm = this.$route.meta.showSignInForm
-          }
-        })
-        .catch(() => {
+        }, (res) => {
           this.$root.$emit(
             'showAlert',
             {
