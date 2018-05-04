@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
@@ -42,8 +43,15 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+            UserDetails userDetails;
+            try {
+                userDetails = this.userDetailsService.loadUserByUsername(username);
+            }
+            catch (UsernameNotFoundException e) {
+                userDetails = null;
+            }
+            
+            if (userDetails != null && jwtTokenUtil.validateToken(authToken, userDetails)) {
                 TokenEntity tokenEntity = tokenService.findByToken(authToken);
                 if (tokenEntity != null && tokenEntity.isEnabled()) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

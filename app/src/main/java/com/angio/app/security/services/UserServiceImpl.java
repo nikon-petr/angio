@@ -40,15 +40,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByUsername(s).get(0);
-        if(userEntity == null) throw new UsernameNotFoundException("Username does not exist.");
+        UserEntity userEntity = findByUsername(s);
         return userEntity;
     }
 
     @Override
     public UserEntity findByUsername(String username) throws UsernameNotFoundException{
-        UserEntity user = userRepository.findByUsername(username)
-                .stream()
+        UserEntity user = userRepository.findByUsername(username).stream()
                 .findFirst()
                 .orElse(null);
         if(user == null){
