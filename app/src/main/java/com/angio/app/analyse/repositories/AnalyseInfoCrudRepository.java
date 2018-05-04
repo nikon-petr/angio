@@ -1,6 +1,6 @@
-package com.angio.app.analyse.analyse_info.repositories;
+package com.angio.app.analyse.repositories;
 
-import com.angio.app.analyse.analyse_info.entities.AnalyseInfoEntity;
+import com.angio.app.analyse.entities.AnalyseInfoEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

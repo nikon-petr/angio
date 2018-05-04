@@ -1,10 +1,7 @@
-package com.angio.app.image;
+package com.angio.app.util.image;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.imgscalr.Scalr;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

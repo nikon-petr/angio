@@ -11,16 +11,16 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@websanova/vue-auth": "^2.21.9-beta",
     "axios": "^0.18.0",
     "jwt-decode": "^2.2.0",
     "vue": "^2.5.2",
+    "vue-auth": "^2.0.0-alpha.1",
     "vue-axios": "^2.1.1",
     "vue-moment": "^3.2.0",
     "vue-router": "^3.0.1",
     "vuetify": "^1.0.17",
-    "vuex": "^3.0.1",
-    "vue-auth": "^2.0.0-alpha.1",
-    "@websanova/vue-auth": "^2.21.9-beta"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

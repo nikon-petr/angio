@@ -2,10 +2,10 @@ DROP TABLE IF EXISTS public.users CASCADE;
 DROP TABLE IF EXISTS public.authorities CASCADE;
 DROP TABLE IF EXISTS public.users_info CASCADE;
 DROP TABLE IF EXISTS public.tokens CASCADE;
-DROP TABLE IF EXISTS public.analyse_info CASCADE;
-DROP TABLE IF EXISTS public.patient CASCADE;
-DROP TABLE IF EXISTS public.analyse_geometric CASCADE;
-DROP TABLE IF EXISTS public.vessel CASCADE;
+DROP TABLE IF EXISTS public.analyses_info CASCADE;
+DROP TABLE IF EXISTS public.patients CASCADE;
+DROP TABLE IF EXISTS public.analyses_geometric CASCADE;
+DROP TABLE IF EXISTS public.vessels CASCADE;
 
 CREATE TABLE public.users
 (
@@ -46,7 +46,7 @@ CREATE TABLE public.tokens (
       ON UPDATE CASCADE
 );
 
-CREATE TABLE public.patient (
+CREATE TABLE public.patients (
       id                    SERIAL NOT NULL PRIMARY KEY,
       firstname             VARCHAR(30) NOT NULL,
       lastname              VARCHAR(30) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE public.patient (
       comment               VARCHAR(1000)
 );
 
-CREATE TABLE public.analyse_info (
+CREATE TABLE public.analyses_info (
       id                    SERIAL NOT NULL PRIMARY KEY,
       username              VARCHAR(30) NOT NULL,
       patient_id            INT NOT NULL,
@@ -73,26 +73,26 @@ CREATE TABLE public.analyse_info (
       analyse_date          TIMESTAMP NOT NULL,
       finished           BOOLEAN NOT NULL,
       conclusion            VARCHAR(1000),
-      CONSTRAINT fk_analyse_info_users FOREIGN KEY (username) REFERENCES users (username)
+      CONSTRAINT fk_analyses_info_users FOREIGN KEY (username) REFERENCES users (username)
       ON DELETE CASCADE
       ON UPDATE CASCADE,
-      CONSTRAINT fk_analyse_info_patient FOREIGN KEY (patient_id) REFERENCES patient (id)
+      CONSTRAINT fk_analyses_info_patients FOREIGN KEY (patient_id) REFERENCES patients (id)
       ON DELETE CASCADE
       ON UPDATE CASCADE
 );
 
-CREATE TABLE public.analyse_geometric (
+CREATE TABLE public.analyses_geometric (
       id                    SERIAL NOT NULL PRIMARY KEY,
       analyse_info_id       INT NOT NULL,
       original_image        VARCHAR(400) NOT NULL,
       binarized_image       VARCHAR(400) NOT NULL,
       skel_image            VARCHAR(400) NOT NULL,
-      CONSTRAINT fk_analyse_geometric_analyse_info FOREIGN KEY (analyse_info_id) REFERENCES patient (id)
+      CONSTRAINT fk_analyses_geometric_analyses_info FOREIGN KEY (analyse_info_id) REFERENCES patients (id)
       ON DELETE CASCADE
       ON UPDATE CASCADE
 );
 
-CREATE TABLE public.vessel (
+CREATE TABLE public.vessels (
       id                    SERIAL NOT NULL PRIMARY KEY,
       analyse_geometric_id  INT NOT NULL,
       vessel_image          VARCHAR(400) NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE public.vessel (
       branching_degree      REAL NOT NULL,
       area                  REAL NOT NULL,
       area_percent          REAL NOT NULL,
-      CONSTRAINT fk_vessel_analyse_geometric FOREIGN KEY (analyse_geometric_id) REFERENCES analyse_geometric (id)
+      CONSTRAINT fk_vessels_analyses_geometric FOREIGN KEY (analyse_geometric_id) REFERENCES analyses_geometric (id)
       ON DELETE CASCADE
       ON UPDATE CASCADE
 );

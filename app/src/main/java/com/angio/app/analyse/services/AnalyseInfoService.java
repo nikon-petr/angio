@@ -1,7 +1,7 @@
-package com.angio.app.analyse.analyse_info.services;
+package com.angio.app.analyse.services;
 
-import com.angio.app.analyse.analyse_info.entities.AnalyseInfoEntity;
-import com.angio.app.analyse.patient.entities.PatientEntity;
+import com.angio.app.analyse.entities.AnalyseInfoEntity;
+import com.angio.app.analyse.entities.PatientEntity;
 import com.angio.app.security.entities.UserEntity;
 
 import java.util.List;

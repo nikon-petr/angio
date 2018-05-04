@@ -1,8 +1,8 @@
-package com.angio.app.analyse.request;
+package com.angio.app.analyse.responses;
 
 import java.io.Serializable;
 
-public class PatientRequest implements Serializable{
+public class PatientResponse implements Serializable {
     private String firstname;
     private String lastname;
     private String patronymic;
@@ -14,11 +14,11 @@ public class PatientRequest implements Serializable{
     private String work;
     private String comments;
 
-    public PatientRequest(){
+    public PatientResponse(){
 
     }
 
-    public PatientRequest(String firstname, String lastname, String patronymic,
+    public PatientResponse(String firstname, String lastname, String patronymic,
                           String email, String phone, String policy, String bday, String address, String work, String comments) {
         this.firstname = firstname;
         this.lastname = lastname;

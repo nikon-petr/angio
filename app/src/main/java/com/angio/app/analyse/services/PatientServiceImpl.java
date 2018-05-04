@@ -1,17 +1,10 @@
-package com.angio.app.analyse.patient.services;
+package com.angio.app.analyse.services;
 
-import com.angio.app.analyse.patient.entities.PatientEntity;
-import com.angio.app.analyse.patient.repositories.PatientCrudRepository;
+import com.angio.app.analyse.entities.PatientEntity;
+import com.angio.app.analyse.repositories.PatientCrudRepository;
+import com.angio.app.analyse.services.PatientExistsException;
+import com.angio.app.analyse.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.angio.app.security.entities.UserEntity;
-import com.angio.app.security.repositories.UserCrudRepository;
-import com.angio.app.userinfo.entities.UserInfoEntity;
-import com.angio.app.userinfo.repositories.UserInfoCrudRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

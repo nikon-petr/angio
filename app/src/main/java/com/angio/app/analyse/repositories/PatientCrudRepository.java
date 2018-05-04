@@ -1,6 +1,6 @@
-package com.angio.app.analyse.patient.repositories;
+package com.angio.app.analyse.repositories;
 
-import com.angio.app.analyse.patient.entities.PatientEntity;
+import com.angio.app.analyse.entities.PatientEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

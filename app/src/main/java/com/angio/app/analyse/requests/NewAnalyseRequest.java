@@ -1,4 +1,4 @@
-package com.angio.app.analyse.request;
+package com.angio.app.analyse.requests;
 
 import java.io.Serializable;
 

@@ -1,6 +1,6 @@
 package com.angio.app.security.entities;
 
-import com.angio.app.analyse.analyse_info.entities.AnalyseInfoEntity;
+import com.angio.app.analyse.entities.AnalyseInfoEntity;
 import com.angio.app.userinfo.entities.UserInfoEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.userdetails.UserDetails;

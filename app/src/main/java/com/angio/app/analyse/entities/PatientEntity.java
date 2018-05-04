@@ -1,6 +1,6 @@
-package com.angio.app.analyse.patient.entities;
+package com.angio.app.analyse.entities;
 
-import com.angio.app.analyse.analyse_info.entities.AnalyseInfoEntity;
+import com.angio.app.analyse.entities.AnalyseInfoEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "patient", catalog = "public")
+@Table(name = "patients", catalog = "public")
 public class PatientEntity {
     private long id;
     private String firstname;

@@ -1,12 +1,12 @@
-package com.angio.app.analyse.vessel.entities;
+package com.angio.app.analyse.entities;
 
-import com.angio.app.analyse.analyse_geometric.entities.AnalyseGeometricEntity;
+import com.angio.app.analyse.entities.AnalyseGeometricEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "vessel", catalog = "public")
+@Table(name = "vessels", catalog = "public")
 public class VesselEntity {
     private long id;
     private AnalyseGeometricEntity analyseGeometric;

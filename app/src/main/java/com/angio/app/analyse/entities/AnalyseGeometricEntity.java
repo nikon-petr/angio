@@ -1,7 +1,5 @@
-package com.angio.app.analyse.analyse_geometric.entities;
+package com.angio.app.analyse.entities;
 
-import com.angio.app.analyse.analyse_info.entities.AnalyseInfoEntity;
-import com.angio.app.analyse.vessel.entities.VesselEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -9,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "analyse_geometric", catalog = "public")
+@Table(name = "analyses_geometric", catalog = "public")
 public class AnalyseGeometricEntity {
     private long id;
     private AnalyseInfoEntity analyseInfo;
