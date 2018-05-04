@@ -14,10 +14,10 @@
 </template>
 
 <script>
-import BaseSignUpForm from './BaseSignUpForm'
+import BaseSignUpForm from './TheSignUpForm'
 
 export default {
-  name: 'BaseHeader',
+  name: 'TheHeader',
   components: {BaseSignUpForm},
   methods: {
     logout () {

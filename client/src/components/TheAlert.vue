@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'BaseAlert',
+  name: 'TheAlert',
   data () {
     return {
       color: undefined,

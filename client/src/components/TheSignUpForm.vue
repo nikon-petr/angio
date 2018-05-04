@@ -84,7 +84,7 @@
 
 <script>
 export default {
-  name: 'BaseSignUpForm',
+  name: 'TheSignUpForm',
   data () {
     return {
       showSignUpForm: false,

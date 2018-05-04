@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Landing from '../components/Landing'
-import Analyses from '../components/Analyses'
-import DetailAnalyse from '../components/DetailAnalyse'
-import BaseSignUpForm from '../containers/BaseSignUpForm'
-import BaseSignInForm from '../containers/BaseSignInForm'
+import Landing from '../pages/Landing'
+import Analyses from '../pages/Analyses'
+import DetailAnalyse from '../pages/DetailAnalyse'
+import BaseSignUpForm from '../components/TheSignUpForm'
+import BaseSignInForm from '../components/TheSignInForm'
 
 Vue.use(Router)
 

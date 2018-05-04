@@ -50,17 +50,16 @@
         <div style="flex: 1 1 auto;"></div>
       </v-app>
     </v-flex>
-    <NewAnalyseDialog>
-
-    </NewAnalyseDialog>
+    <TheNewAnalyseForm></TheNewAnalyseForm>
   </v-layout>
 </template>
 
 <script>
-import NewAnalyseDialog from './NewAnalyseDialog'
+import TheNewAnalyseForm from '../components/TheNewAnalyseForm'
 
 export default {
   name: 'Analyses',
+  components: {TheNewAnalyseForm},
   data: () => ({
     search: '',
     headers: [
@@ -112,9 +111,6 @@ export default {
     detailItem (item) {
       this.$router.push({path: '/analyses/1'})
     }
-  },
-  components: {
-    NewAnalyseDialog
   }
 }
 </script>

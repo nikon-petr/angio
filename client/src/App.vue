@@ -1,25 +1,25 @@
 <template>
   <v-app id="inspire" dark>
-    <BaseNavigation ref="drawer"></BaseNavigation>
-    <BaseHeader @toggle-drawer="$refs.drawer.drawer = !$refs.drawer.drawer"></BaseHeader>
+    <TheDrawer ref="drawer"></TheDrawer>
+    <TheHeader @toggle-drawer="$refs.drawer.drawer = !$refs.drawer.drawer"></TheHeader>
     <TheContent></TheContent>
     <TheFooter></TheFooter>
-    <BaseSignUpForm></BaseSignUpForm>
-    <BaseSignInForm></BaseSignInForm>
-    <BaseAlert></BaseAlert>
+    <TheSignUpForm></TheSignUpForm>
+    <TheSignInForm></TheSignInForm>
+    <TheAlert></TheAlert>
   </v-app>
 </template>
 
 <script>
-import BaseHeader from './containers/BaseHeader'
-import BaseNavigation from './containers/BaseNavigation'
-import TheContent from './containers/TheContent'
-import TheFooter from './containers/TheFooter'
-import BaseAlert from './containers/BaseAlert'
-import BaseSignUpForm from './containers/BaseSignUpForm'
-import BaseSignInForm from './containers/BaseSignInForm'
+import TheHeader from './components/TheHeader'
+import TheDrawer from './components/TheDrawer'
+import TheContent from './components/TheContent'
+import TheFooter from './components/TheFooter'
+import TheAlert from './components/TheAlert'
+import TheSignUpForm from './components/TheSignUpForm'
+import TheSignInForm from './components/TheSignInForm'
 
 export default {
-  components: {BaseSignInForm, BaseSignUpForm, BaseAlert, TheFooter, TheContent, BaseNavigation, BaseHeader}
+  components: {TheSignInForm, TheSignUpForm, TheAlert, TheFooter, TheContent, TheDrawer, TheHeader}
 }
 </script>

@@ -53,7 +53,7 @@
 // import {getToken} from '../api/auth'
 
 export default {
-  name: 'BaseSignInForm',
+  name: 'TheSignInForm',
   data () {
     return {
       showSignInForm: false,

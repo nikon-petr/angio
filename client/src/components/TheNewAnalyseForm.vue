@@ -167,7 +167,7 @@
 
 <script>
 export default {
-  name: 'NewAnalyseDialog',
+  name: 'TheNewAnalyseForm',
   data: () => ({
     dialog: false,
     valid: false,

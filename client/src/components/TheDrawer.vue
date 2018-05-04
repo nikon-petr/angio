@@ -49,7 +49,7 @@
 
 <script>
 export default {
-  name: 'BaseNavigation',
+  name: 'TheDrawer',
   data: () => ({
     drawer: false
   })
