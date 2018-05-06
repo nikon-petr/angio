@@ -6,7 +6,8 @@
         <h2>Основные сведения</h2>
         <v-card id="inspire" dark>
           <v-card-title primary-title>
-            <v-layout row justify-space-between>
+            <v-progress-linear v-if="loading_analyse" :indeterminate="true"></v-progress-linear>
+            <v-layout v-if="!loading_analyse" row justify-space-between>
               <v-flex xs5 md5 lg5>
                 <h3>Информация о пациенте</h3>
                 <h3 class="headline mb-0">ФИО:</h3>

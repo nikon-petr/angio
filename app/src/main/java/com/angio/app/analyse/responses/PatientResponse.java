@@ -1,6 +1,9 @@
 package com.angio.app.analyse.responses;
 
+import com.angio.app.analyse.entities.PatientEntity;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 
 public class PatientResponse implements Serializable {
     private String firstname;
@@ -30,6 +33,22 @@ public class PatientResponse implements Serializable {
         this.address = address;
         this.work = work;
         this.comments = comments;
+    }
+
+    public PatientResponse(PatientEntity patientEntity){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM");
+        String date = sdf.format(patientEntity.getBday());
+
+        this.firstname = patientEntity.getFirstname();
+        this.lastname = patientEntity.getLastname();
+        this.patronymic = patientEntity.getPatronymic();
+        this.email = patientEntity.getEmail();
+        this.phone = patientEntity.getPhone();
+        this.policy = patientEntity.getPolicy();
+        this.bday = date;
+        this.address = patientEntity.getLocation_address();
+        this.work = patientEntity.getWork_address();
+        this.comments = patientEntity.getComment();
     }
 
     public String getFirstname() {

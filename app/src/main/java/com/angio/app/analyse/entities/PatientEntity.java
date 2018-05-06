@@ -1,9 +1,13 @@
 package com.angio.app.analyse.entities;
 
 import com.angio.app.analyse.entities.AnalyseInfoEntity;
+import com.angio.app.analyse.requests.PatientRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,6 +44,26 @@ public class PatientEntity {
         this.work_address = work_address;
         this.comment = comment;
         this.policy = policy;
+    }
+
+    public PatientEntity(PatientRequest patientRequest){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM");
+            Date bDay = sdf.parse(patientRequest.getBday());
+            this.firstname = patientRequest.getFirstname();
+            this.lastname = patientRequest.getLastname();
+            this.patronymic = patientRequest.getPatronymic();
+            this.email = patientRequest.getEmail();
+            this.phone = patientRequest.getPhone();
+            this.bday = new Timestamp(bDay.getTime());
+            this.phone = patientRequest.getPhone();
+            this.work_address = patientRequest.getWork();
+            this.location_address = patientRequest.getAddress();
+            this.comment = patientRequest.getComments();
+            this.policy = patientRequest.getPolicy();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Id

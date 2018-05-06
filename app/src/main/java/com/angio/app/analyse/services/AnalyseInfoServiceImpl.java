@@ -4,7 +4,7 @@ import com.angio.app.analyse.entities.AnalyseInfoEntity;
 import com.angio.app.analyse.repositories.AnalyseInfoCrudRepository;
 import com.angio.app.analyse.entities.PatientEntity;
 import com.angio.app.analyse.repositories.PatientCrudRepository;
-import com.angio.app.analyse.services.AnalyseInfoService;
+import com.angio.app.analyse.requests.AnalyseInfoRequest;
 import com.angio.app.util.image.ImageOperation;
 import com.angio.app.security.entities.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +34,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     }
 
     @Override
-    public AnalyseInfoEntity addNewAnalyse(UserEntity user,
-                                           PatientEntity patient,
-                                           String name,
-                                           String short_description,
-                                           String full_description,
-                                           String analyse_type,
-                                           String comment,
-                                           String img) throws Exception {
+    public AnalyseInfoEntity addNewAnalyse(UserEntity user, PatientEntity patient, AnalyseInfoRequest analyseInfoRequest) throws Exception {
         PatientEntity patientEntityFromDB = patientCrudRepository.findByPolicy(patient.getPolicy()).stream()
                 .findFirst()
                 .orElse(null);
@@ -62,9 +55,10 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
             patientEntityFromDB.setPolicy(patient.getPolicy());
             patientEntity = patientCrudRepository.save(patientEntityFromDB);
         }
-        String imgFileName = new ImageOperation().save(img);
-        AnalyseInfoEntity analyseInfoEntity = new AnalyseInfoEntity(user, patientEntity, name, short_description,
-                full_description, analyse_type, comment, imgFileName, new Timestamp(System.currentTimeMillis()), "", false);
+        String imgFileName = new ImageOperation().save(analyseInfoRequest.getImg());
+        AnalyseInfoEntity analyseInfoEntity = new AnalyseInfoEntity(user, patientEntity, analyseInfoRequest.getName(),
+                analyseInfoRequest.getShort_description(), analyseInfoRequest.getFull_description(), analyseInfoRequest.getAnalyse_type(),
+                analyseInfoRequest.getComments(), imgFileName, new Timestamp(System.currentTimeMillis()), "", false);
         analyseInfoEntity = analyseInfoCrudRepository.save(analyseInfoEntity);
 
 //        TODO: run matlab analyses
