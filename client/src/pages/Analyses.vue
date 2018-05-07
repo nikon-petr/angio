@@ -32,9 +32,9 @@
             <td class="text-xs-right">{{ props.item.date }}</td>
             <td class="justify-center layout px-0">
               <v-btn
-                :loading=!props.item.is_analyse_finished
+                :loading=!props.item._analyse_finished
                 @click="detailItem(props.item)"
-                :disabled=!props.item.is_analyse_finished
+                :disabled=!props.item._analyse_finished
                 color="transparent"
                 class="white--text"
               >
@@ -82,7 +82,7 @@ export default {
       policy: '',
       diagnost: '',
       date: '',
-      is_analyse_finished: true
+      _analyse_finished: true
     },
     loading_analyses: true
   }),
