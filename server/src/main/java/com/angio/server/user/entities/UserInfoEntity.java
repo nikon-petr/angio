@@ -1,4 +1,4 @@
-package com.angio.server.userinfo.entities;
+package com.angio.server.user.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.angio.server.security.entities.UserEntity;

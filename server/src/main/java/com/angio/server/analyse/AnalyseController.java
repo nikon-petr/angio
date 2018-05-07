@@ -10,7 +10,7 @@ import com.angio.server.analyse.services.AnalyseInfoService;
 import com.angio.server.analyse.services.PatientExistsException;
 import com.angio.server.analyse.services.PatientService;
 import com.angio.server.security.entities.UserEntity;
-import com.angio.server.userinfo.services.UserInfoService;
+import com.angio.server.user.services.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;

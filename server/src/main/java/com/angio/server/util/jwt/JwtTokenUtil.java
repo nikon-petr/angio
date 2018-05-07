@@ -1,4 +1,4 @@
-package com.angio.server.security.jwt;
+package com.angio.server.util.jwt;
 
 import com.angio.server.AngioAppProperties;
 import com.angio.server.security.entities.UserEntity;

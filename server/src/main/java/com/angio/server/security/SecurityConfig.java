@@ -1,11 +1,10 @@
 package com.angio.server.security;
 
 import com.angio.server.AngioAppProperties;
-import com.angio.server.security.jwt.JwtAuthenticationEntryPoint;
-import com.angio.server.security.jwt.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -57,18 +56,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/api/v1/user/register/**").permitAll()
-                .antMatchers("/api/v1/auth/token").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/auth/token").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/user/username-exists/*").permitAll()
                 .antMatchers("/api/v1/all").permitAll()
                 .antMatchers("/api/v1/new").permitAll()
                 .antMatchers("/api/v1/check_policy").permitAll()
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/refresh").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/v1/user/self").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/v1/auth/refresh").hasRole("USER")
 
-                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                .antMatchers("/api/v1/auth/revoke").hasRole("ADMIN")
+                .antMatchers("/api/v1/auth/revoke/*").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
 

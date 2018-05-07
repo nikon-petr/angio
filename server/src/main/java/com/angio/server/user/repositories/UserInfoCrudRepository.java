@@ -1,7 +1,7 @@
-package com.angio.server.userinfo.repositories;
+package com.angio.server.user.repositories;
 
 import com.angio.server.security.entities.UserEntity;
-import com.angio.server.userinfo.entities.UserInfoEntity;
+import com.angio.server.user.entities.UserInfoEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

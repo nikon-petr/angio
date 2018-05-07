@@ -22,11 +22,11 @@ Vue.use(require('@websanova/vue-auth'), {
   router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
   rolesVar: 'authorities',
   authRedirect: {path: '/user/sign-in'},
-  registerData: {url: 'v1/user/register', method: 'POST', redirect: false},
+  registerData: {url: 'v1/user', method: 'POST', redirect: false},
   loginData: {url: 'v1/auth/token', method: 'POST', redirect: false, fetchUser: true},
-  logoutData: {url: 'v1/auth/logout', method: 'GET', redirect: '/', makeRequest: true},
-  fetchData: {url: 'v1/auth/user', method: 'GET', enabled: true},
-  refreshData: {url: 'v1/auth/refresh', method: 'GET', enabled: true, interval: 30}
+  logoutData: {url: 'v1/auth/logout', method: 'POST', redirect: '/', makeRequest: true},
+  fetchData: {url: 'v1/user/self', method: 'GET', enabled: true},
+  refreshData: {url: 'v1/auth/token/refresh', method: 'POST', enabled: true, interval: 30}
 })
 
 Vue.config.productionTip = false

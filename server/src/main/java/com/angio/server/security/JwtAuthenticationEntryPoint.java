@@ -1,4 +1,4 @@
-package com.angio.server.security.jwt;
+package com.angio.server.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

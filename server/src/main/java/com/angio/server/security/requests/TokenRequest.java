@@ -2,15 +2,15 @@ package com.angio.server.security.requests;
 
 import java.io.Serializable;
 
-public class AuthRequest implements Serializable {
+public class TokenRequest implements Serializable {
     private String username;
     private String password;
 
-    public AuthRequest() {
+    public TokenRequest() {
         super();
     }
 
-    public AuthRequest(String username, String password) {
+    public TokenRequest(String username, String password) {
         this.setUsername(username);
         this.setPassword(password);
     }

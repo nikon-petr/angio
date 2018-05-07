@@ -1,18 +1,18 @@
-package com.angio.server.userinfo.requests;
+package com.angio.server.user.requests;
 
 import java.io.Serializable;
 
-public class RegisterRequest implements Serializable {
+public class CreateUserRequest implements Serializable {
     private String username;
     private String password;
     private String firstName;
     private String lastName;
 
-    public RegisterRequest(){
+    public CreateUserRequest(){
         super();
     }
 
-    public RegisterRequest(String username, String password, String firstName, String lastname) {
+    public CreateUserRequest(String username, String password, String firstName, String lastname) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;

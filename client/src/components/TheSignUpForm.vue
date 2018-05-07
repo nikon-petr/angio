@@ -146,16 +146,18 @@ export default {
   methods: {
     validateEmail () {
       this.checkingEmail = true
-      this.axios.post('/v1/user/register/check-username', {username: this.email})
-        .then((response) => {
-          if (response.data.status === 'used') {
-            this.emailError = true
-            this.emailErrorMessages = ['Данный E-mail уже зарегистрирован']
-          } else {
-            this.emailError = false
-            this.emailErrorMessages = []
-          }
-        })
+      if (this.email != null && this.email !== '') {
+        this.axios.get('v1/user/username-exists/' + this.email)
+          .then((response) => {
+            if (response.data.exists === true) {
+              this.emailError = true
+              this.emailErrorMessages = ['Данный E-mail уже зарегистрирован']
+            } else {
+              this.emailError = false
+              this.emailErrorMessages = []
+            }
+          })
+      }
       this.checkingEmail = false
     },
     checkPasswordConfirm () {

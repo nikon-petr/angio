@@ -1,4 +1,4 @@
-package com.angio.server.security.responses;
+package com.angio.server.user.responses;
 
 import com.angio.server.security.entities.AuthorityEntity;
 
@@ -6,10 +6,10 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class UserAuthDataResponse implements Serializable {
+public class SelfUserResponse implements Serializable {
     private Data data;
 
-    public UserAuthDataResponse(String email, String firstName, String lastName, Set<AuthorityEntity> authorities) {
+    public SelfUserResponse(String email, String firstName, String lastName, Set<AuthorityEntity> authorities) {
         data = new Data();
         data.setEmail(email);
         data.setFirstName(firstName);

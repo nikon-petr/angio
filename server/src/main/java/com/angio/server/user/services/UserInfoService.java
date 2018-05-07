@@ -1,8 +1,8 @@
-package com.angio.server.userinfo.services;
+package com.angio.server.user.services;
 
 
 import com.angio.server.security.entities.UserEntity;
-import com.angio.server.userinfo.entities.UserInfoEntity;
+import com.angio.server.user.entities.UserInfoEntity;
 
 import java.util.Date;
 
