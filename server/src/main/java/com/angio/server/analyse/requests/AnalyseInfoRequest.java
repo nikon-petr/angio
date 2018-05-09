@@ -7,7 +7,7 @@ public class AnalyseInfoRequest implements Serializable{
     private String short_description;
     private String full_description;
     private String analyse_type;
-    private String comments;
+    private String comment;
     private String img;
 
     public AnalyseInfoRequest(){
@@ -20,7 +20,7 @@ public class AnalyseInfoRequest implements Serializable{
         this.short_description = short_description;
         this.full_description = full_description;
         this.analyse_type = analyse_type;
-        this.comments = comments;
+        this.comment = comments;
         this.img = img;
     }
 
@@ -57,11 +57,11 @@ public class AnalyseInfoRequest implements Serializable{
     }
 
     public String getComments() {
-        return comments;
+        return comment;
     }
 
     public void setComments(String comments) {
-        this.comments = comments;
+        this.comment = comments;
     }
 
     public String getImg() {

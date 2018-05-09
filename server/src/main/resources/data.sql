@@ -47,8 +47,8 @@ INSERT INTO public.patients (firstname, lastname, patronymic, email, phone, bday
 
 -- **************** analyse_info ****************
 INSERT INTO public.analyses_info (username, patient_id, name, short_description, full_description, analyse_type, comment, img, analyse_date, finished, conclusion)
-    VALUES ('user@angio.ru', 1, 'Оценка сосудистой системы глазного дна', 'Анализ глазного дна с целью выявления основных геометрических характеристик сосудов', '', 'Первичный анализ', '', '02.05.2018 07:40:27.630.png', '2018-04-05 12:09:00.000000', true, '');
+    VALUES ('user@angio.ru', 1, 'Оценка сосудистой системы глазного дна', 'Анализ глазного дна с целью выявления основных геометрических характеристик сосудов', '', 'Первичный анализ', '', '02.05.2018 07:40:27.630.png', '2018-04-05 12:09:00.000000', false, '');
 INSERT INTO public.analyses_info (username, patient_id, name, short_description, full_description, analyse_type, comment, img, analyse_date, finished, conclusion)
-    VALUES ('user@angio.ru', 2, 'Первичный анализ глазного дна', 'Выявление проблемных зон, большое кол-во зон ишемии', '', 'Первичный анализ', '', '02.05.2018 07:40:27.630.png', '2018-04-06 11:21:00.000000', true, '');
+    VALUES ('user@angio.ru', 2, 'Первичный анализ глазного дна', 'Выявление проблемных зон, большое кол-во зон ишемии', '', 'Первичный анализ', '', '02.05.2018 07:40:27.630.png', '2018-04-06 11:21:00.000000', false, '');
 INSERT INTO public.analyses_info (username, patient_id, name, short_description, full_description, analyse_type, comment, img, analyse_date, finished, conclusion)
     VALUES ('user@angio.ru', 3, 'Вторичный анализ, результаты', 'Определение улучшений', '', 'Вторичный анализ', '', '02.05.2018 07:40:27.630.png', '2018-05-06 09:29:00.000000', false, '');

@@ -8,6 +8,7 @@ import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import 'vuetify/dist/vuetify.min.css'
+import VueImg from 'v-img'
 
 Vue.router = router
 
@@ -15,6 +16,8 @@ Vue.use(VueAxios, axios)
 Vue.axios.defaults.baseURL = 'http://localhost/api'
 
 Vue.use(Vuetify)
+
+Vue.use(VueImg)
 
 Vue.use(require('@websanova/vue-auth'), {
   auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),

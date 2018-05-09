@@ -107,7 +107,7 @@
                     name="input-4-3"
                     multi-line
                     label="Комментарий"
-                    v-model="new_analyse.patient.comments"
+                    v-model="new_analyse.patient.comment"
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs6>
@@ -144,14 +144,14 @@
                     name="input-2-1"
                     multi-line
                     label="Комментарий"
-                    v-model="new_analyse.info.comments"
+                    v-model="new_analyse.info.comment"
                   ></v-text-field>
                   <div>
                     Загрузить изображение:
                     <input type="file" @change="previewImage" accept="image/*">
                   </div>
                   <div v-if="new_analyse.info.img.length > 0">
-                    <img class="preview" :src="new_analyse.info.img">
+                    <img v-img class="preview" :src="new_analyse.info.img">
                   </div>
                 </v-flex>
               </v-layout>
@@ -182,14 +182,14 @@ export default {
         bday: '',
         address: '',
         work: '',
-        comments: ''
+        comment: ''
       },
       info: {
         name: '',
         short_description: '',
         full_description: '',
         analyse_type: '',
-        comments: '',
+        comment: '',
         img: ''
       },
       username: ''
@@ -236,6 +236,7 @@ export default {
         this.axios.post('v1/new', this.new_analyse)
           .then(() => {
             this.dialog = false
+            this.$root.$emit('refreshAnalyses')
             this.$root.$emit(
               'showAlert',
               {
@@ -282,7 +283,7 @@ export default {
           this.new_analyse.patient.bday = response.data.patient.bday
           this.new_analyse.patient.address = response.data.patient.address
           this.new_analyse.patient.work = response.data.patient.work
-          this.new_analyse.patient.comments = response.data.patient.comments
+          this.new_analyse.patient.comment = response.data.patient.comment
           this.$root.$emit(
             'showAlert',
             {
@@ -300,7 +301,7 @@ export default {
           this.new_analyse.patient.bday = ''
           this.new_analyse.patient.address = ''
           this.new_analyse.patient.work = ''
-          this.new_analyse.patient.comments = ''
+          this.new_analyse.patient.comment = ''
           this.$root.$emit(
             'showAlert',
             {

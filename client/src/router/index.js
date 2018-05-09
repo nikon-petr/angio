@@ -24,11 +24,23 @@ export default new Router({
       meta: {auth: ['ROLE_USER']}
     },
     {
-      path: '/analyses/1',
+      path: '/analyses/detail',
       name: 'DetailAnalyse',
       component: DetailAnalyse,
       meta: {auth: ['ROLE_USER']}
     },
+    {
+      path: 'analyses/detail/update_conclusion',
+      name: 'DetailAnalyse',
+      component: DetailAnalyse,
+      meta: {auth: ['ROLE_USER']}
+    },
+    // {
+    //   path: '/analyses/1',
+    //   name: 'DetailAnalyse',
+    //   component: DetailAnalyse,
+    //   meta: {auth: ['ROLE_USER']}
+    // },
     {
       path: '/user',
       name: 'User',

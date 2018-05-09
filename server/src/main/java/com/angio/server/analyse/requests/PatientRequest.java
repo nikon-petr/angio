@@ -12,7 +12,7 @@ public class PatientRequest implements Serializable{
     private String bday;
     private String address;
     private String work;
-    private String comments;
+    private String comment;
 
     public PatientRequest(){
 
@@ -29,7 +29,7 @@ public class PatientRequest implements Serializable{
         this.bday = bday;
         this.address = address;
         this.work = work;
-        this.comments = comments;
+        this.comment = comments;
     }
 
     public String getFirstname() {
@@ -105,10 +105,10 @@ public class PatientRequest implements Serializable{
     }
 
     public String getComments() {
-        return comments;
+        return comment;
     }
 
     public void setComments(String comments) {
-        this.comments = comments;
+        this.comment = comments;
     }
 }

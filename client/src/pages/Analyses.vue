@@ -88,6 +88,9 @@ export default {
   }),
   mounted () {
     this.load()
+    this.$root.$on('refreshAnalyses', () => {
+      this.load()
+    })
   },
   methods: {
     load () {
@@ -109,7 +112,8 @@ export default {
         })
     },
     detailItem (item) {
-      this.$router.push({path: '/analyses/1'})
+      this.$store.test_id = item.id
+      this.$router.push({path: '/analyses/detail'})
     }
   }
 }

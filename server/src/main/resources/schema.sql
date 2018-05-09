@@ -71,7 +71,7 @@ CREATE TABLE public.analyses_info (
       comment               VARCHAR(1000),
       img                   VARCHAR(400) NOT NULL,
       analyse_date          TIMESTAMP NOT NULL,
-      finished           BOOLEAN NOT NULL,
+      finished              BOOLEAN NOT NULL,
       conclusion            VARCHAR(1000),
       CONSTRAINT fk_analyses_info_users FOREIGN KEY (username) REFERENCES users (username)
       ON DELETE CASCADE
@@ -87,7 +87,7 @@ CREATE TABLE public.analyses_geometric (
       original_image        VARCHAR(400) NOT NULL,
       binarized_image       VARCHAR(400) NOT NULL,
       skel_image            VARCHAR(400) NOT NULL,
-      CONSTRAINT fk_analyses_geometric_analyses_info FOREIGN KEY (analyse_info_id) REFERENCES patients (id)
+      CONSTRAINT fk_analyses_geometric_analyses_info FOREIGN KEY (analyse_info_id) REFERENCES analyses_info (id)
       ON DELETE CASCADE
       ON UPDATE CASCADE
 );
