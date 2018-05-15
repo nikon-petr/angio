@@ -66,18 +66,21 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- JWT -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.7.0</version>
 		</dependency>
 
+		<!-- Device  -->
 		<dependency>
-			<groupId>org.springframework.mobile</groupId>
-			<artifactId>spring-mobile-device</artifactId>
+			<groupId>eu.bitwalker</groupId>
+			<artifactId>UserAgentUtils</artifactId>
+			<version>1.19</version>
 		</dependency>
 
-		<!-- test matlab lib -->
+		<!-- Test matlab lib -->
         <dependency>
             <groupId>makeImageBinarization</groupId>
             <artifactId>makeImageBinarization</artifactId>
@@ -86,7 +89,7 @@
             <systemPath>${basedir}/lib/makeImageBinarization.jar</systemPath>
         </dependency>
 
-		<!-- blood flow analyse -->
+		<!-- Blood flow analyse -->
 		<dependency>
 			<groupId>bloodFlowAnalyses</groupId>
 			<artifactId>bloodFlowAnalyses</artifactId>
@@ -95,7 +98,7 @@
 			<systemPath>${basedir}/lib/bloodFlowAnalyse.jar</systemPath>
 		</dependency>
 
-		<!-- java builder from matlab runtime -->
+		<!-- Java builder from matlab runtime -->
         <dependency>
             <groupId>GeometricAnalyse</groupId>
             <artifactId>GeometricAnalyse</artifactId>
@@ -112,18 +115,21 @@
             <systemPath>/matlabruntime/v92/toolbox/javabuilder/jar/javabuilder.jar</systemPath>
         </dependency>
 
+		<!-- Security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
             <version>4.2.4.RELEASE</version>
         </dependency>
 
+		<!-- Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
 			<version>4.2.4.RELEASE</version>
 		</dependency>
 
+		<!-- Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
@@ -136,6 +142,7 @@
             <version>2.5</version>
         </dependency>
 
+		<!-- Json -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>

@@ -4,13 +4,13 @@ package com.angio.server.security;
 import com.angio.server.AngioAppProperties;
 import com.angio.server.security.entities.TokenEntity;
 import com.angio.server.security.entities.UserEntity;
-import com.angio.server.util.jwt.JwtTokenUtil;
 import com.angio.server.security.requests.TokenRequest;
 import com.angio.server.security.services.TokenException;
 import com.angio.server.security.services.TokenService;
+import com.angio.server.util.jwt.JwtTokenUtil;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,7 +38,7 @@ public class SecurityController {
             AuthenticationManager authenticationManager,
             JwtTokenUtil jwtTokenUtil,
             UserDetailsService userDetailsService,
-            TokenService tokenService){
+            TokenService tokenService) {
         this.angioAppProperties = angioAppProperties;
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -47,7 +47,7 @@ public class SecurityController {
     }
 
     @RequestMapping(path = "/api/v1/auth/token", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody TokenRequest tokenRequest, Device device)
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody TokenRequest tokenRequest, @RequestHeader("User-Agent") String userAgentHeader)
             throws AuthenticationException {
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -57,16 +57,21 @@ public class SecurityController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        UserAgent userAgent = UserAgent.parseUserAgentString(userAgentHeader);
+        String device = userAgent.getOperatingSystem().getDeviceType().getName();
+        String os = userAgent.getOperatingSystem().getName();
+        String browserVersionString = userAgent.getBrowserVersion() != null ? " " + userAgent.getBrowserVersion().getMajorVersion() : "";
+        String browser = userAgent.getBrowser().getName() + browserVersionString;
+
         final UserDetails userDetails = userDetailsService.loadUserByUsername(tokenRequest.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails, device);
-        tokenService.putToken((UserEntity) userDetails, token);
+        TokenEntity tokenEntity = tokenService.putToken((UserEntity) userDetails, os, browser, device);
+        final String token = jwtTokenUtil.generateToken(userDetails, tokenEntity.getId(), device);
+        tokenService.putTokenExpiration(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token));
 
         return ResponseEntity.noContent()
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", angioAppProperties.jwt.getTokenType() + token)
                 .build();
     }
-
-
 
     @RequestMapping(path = "/api/v1/auth/token/refresh", method = RequestMethod.POST)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
@@ -75,11 +80,19 @@ public class SecurityController {
         String username = jwtTokenUtil.getUsernameFromToken(token);
         UserEntity user = (UserEntity) userDetailsService.loadUserByUsername(username);
 
+        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+        String device = userAgent.getOperatingSystem().getDeviceType().getName();
+        String os = userAgent.getOperatingSystem().getName();
+        String browserVersionString = userAgent.getBrowserVersion() != null ? " " + userAgent.getBrowserVersion().getMajorVersion() : "";
+        String browser = userAgent.getBrowser().getName() + browserVersionString;
+
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
-            String refreshedToken = jwtTokenUtil.refreshToken(token);
-            tokenService.putToken(user, refreshedToken);
+            TokenEntity tokenEntity = tokenService.putToken(user, os, browser, device);
+            String refreshedToken = jwtTokenUtil.refreshToken(token, tokenEntity.getId());
+            tokenService.putTokenExpiration(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token));
+            tokenService.revokeToken(jwtTokenUtil.getIdFromToken(token));
             return ResponseEntity.noContent()
-                    .header("Authorization", "Bearer " + refreshedToken)
+                    .header("Authorization", angioAppProperties.jwt.getTokenType() + refreshedToken)
                     .build();
         } else {
             return ResponseEntity.badRequest().body(null);
@@ -87,21 +100,20 @@ public class SecurityController {
     }
 
     @RequestMapping(path = "/api/v1/auth/logout", method = RequestMethod.POST)
-    public ResponseEntity<?> logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader) {
         try {
-            String token = request.getHeader(angioAppProperties.jwt.getHeader());
-            token = jwtTokenUtil.getTokenBody(token);
-            TokenEntity tokenEntity = tokenService.findByToken(token);
+            String token = jwtTokenUtil.getTokenBody(authorizationHeader);
+            TokenEntity tokenEntity = tokenService.findById(jwtTokenUtil.getIdFromToken(token));
             tokenService.revokeToken(tokenEntity.getId());
             return ResponseEntity.noContent().build();
-        } catch (TokenException e){
+        } catch (TokenException e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
 
     @RequestMapping(path = "/api/v1/auth/revoke/{id}", method = RequestMethod.POST)
-    public ResponseEntity<?> revokeAuthenticationToken(@PathVariable("id") long id){
-        try{
+    public ResponseEntity<?> revokeAuthenticationToken(@PathVariable("id") long id) {
+        try {
             tokenService.revokeToken(id);
             return ResponseEntity.noContent().build();
         } catch (TokenException e) {

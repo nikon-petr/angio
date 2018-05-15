@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service("tokenService")
 @Transactional
 public class TokenServiceImpl implements TokenService {
@@ -28,18 +30,26 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public TokenEntity findByToken(String token) {
-        TokenEntity tokenEntity = tokenRepository.findByToken(token).stream()
-                .findFirst()
-                .orElse(null);
+    public TokenEntity findById(long id) {
+        TokenEntity tokenEntity = tokenRepository.findOne(id);
+        if (tokenEntity == null){
+            throw new TokenException(String.format("Token with id: %s not found", id));
+        }
+        return tokenRepository.findOne(id);
+    }
+
+    @Override
+    @Transactional
+    public TokenEntity putToken(UserEntity user, String os, String browser, String device) {
+        TokenEntity tokenEntity = new TokenEntity(user, true, os, browser, device, null);
+        tokenEntity = tokenRepository.save(tokenEntity);
         return tokenEntity;
     }
 
     @Override
-    public TokenEntity putToken(UserEntity user, String token) {
-        TokenEntity tokenEntity = new TokenEntity(user, token, true);
-        tokenEntity = tokenRepository.save(tokenEntity);
-        return tokenEntity;
+    public TokenEntity putTokenExpiration(TokenEntity tokenEntity, Date expiration) {
+        tokenEntity.setExpiration(expiration);
+        return tokenRepository.save(tokenEntity);
     }
 
     @Override

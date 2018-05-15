@@ -2,6 +2,7 @@ package com.angio.server.security;
 
 import com.angio.server.AngioAppProperties;
 import com.angio.server.security.entities.TokenEntity;
+import com.angio.server.security.services.TokenException;
 import com.angio.server.util.jwt.JwtTokenUtil;
 import com.angio.server.security.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,12 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
             }
             
             if (userDetails != null && jwtTokenUtil.validateToken(authToken, userDetails)) {
-                TokenEntity tokenEntity = tokenService.findByToken(authToken);
+                TokenEntity tokenEntity;
+                try {
+                    tokenEntity = tokenService.findById(jwtTokenUtil.getIdFromToken(authToken));
+                } catch (TokenException e) {
+                    tokenEntity = null;
+                }
                 if (tokenEntity != null && tokenEntity.isEnabled()) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));

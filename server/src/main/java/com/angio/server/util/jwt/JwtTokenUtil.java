@@ -2,11 +2,11 @@ package com.angio.server.util.jwt;
 
 import com.angio.server.AngioAppProperties;
 import com.angio.server.security.entities.UserEntity;
+import eu.bitwalker.useragentutils.DeviceType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -23,13 +24,8 @@ public class JwtTokenUtil implements Serializable {
     @Autowired
     private AngioAppProperties angioAppProperties;
 
-    private static final String CLAIM_KEY_USERNAME = "username";
-    private static final String CLAIM_KEY_AUTHORITIES = "authorities";
-
-    private static final String AUDIENCE_UNKNOWN = "unknown";
-    private static final String AUDIENCE_WEB = "web";
-    private static final String AUDIENCE_MOBILE = "mobile";
-    private static final String AUDIENCE_TABLET = "tablet";
+    private static final String CLAIM_KEY_USERNAME = "usr";
+    private static final String CLAIM_KEY_AUTHORITIES = "aut";
 
     public String getTokenBody(String token){
         if (token != null) {
@@ -83,16 +79,15 @@ public class JwtTokenUtil implements Serializable {
         return audience;
     }
 
-    private String generateAudience(Device device) {
-        String audience = AUDIENCE_UNKNOWN;
-        if (device.isNormal()) {
-            audience = AUDIENCE_WEB;
-        } else if (device.isTablet()) {
-            audience = AUDIENCE_TABLET;
-        } else if (device.isMobile()) {
-            audience = AUDIENCE_MOBILE;
+    public long getIdFromToken(String token) {
+        String id;
+        try {
+            final Claims claims = getClaimsFromToken(token);
+            id = claims.getId();
+        } catch (Exception e) {
+            id = null;
         }
-        return audience;
+        return Long.valueOf(Objects.requireNonNull(id));
     }
 
     private Claims getClaimsFromToken(String token) {
@@ -120,10 +115,10 @@ public class JwtTokenUtil implements Serializable {
 
     private Boolean ignoreTokenExpiration(String token) {
         String audience = getAudienceFromToken(token);
-        return (AUDIENCE_TABLET.equals(audience) || AUDIENCE_MOBILE.equals(audience));
+        return (DeviceType.TABLET.getName().equals(audience) || DeviceType.MOBILE.getName().equals(audience));
     }
 
-    public String generateToken(UserDetails userDetails, Device device) {
+    public String generateToken(UserDetails userDetails, long id, String deviceType) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
         claims.put(CLAIM_KEY_AUTHORITIES, userDetails.getAuthorities()
@@ -133,17 +128,19 @@ public class JwtTokenUtil implements Serializable {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setAudience(generateAudience(device))
+                .setId(String.valueOf(id))
+                .setAudience(deviceType)
                 .setExpiration(new Date(System.currentTimeMillis() + angioAppProperties.jwt.getExpiration() * 1000))
                 .signWith(SignatureAlgorithm.HS512, angioAppProperties.jwt.getSecret())
                 .compact();
     }
 
-    public String generateToken(Claims claims, String device){
+    public String generateToken(Claims claims, long id, String deviceType){
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setAudience(device)
+                .setId(String.valueOf(id))
+                .setAudience(deviceType)
                 .setExpiration(new Date(System.currentTimeMillis() + angioAppProperties.jwt.getExpiration() * 1000))
                 .signWith(SignatureAlgorithm.HS512, angioAppProperties.jwt.getSecret())
                 .compact();
@@ -155,11 +152,11 @@ public class JwtTokenUtil implements Serializable {
                 && (!isTokenExpired(token) || ignoreTokenExpiration(token));
     }
 
-    public String refreshToken(String token) {
+    public String refreshToken(String token, long id) {
         String refreshedToken;
         try {
             final Claims claims = getClaimsFromToken(token);
-            refreshedToken = generateToken(claims, getAudienceFromToken(token));
+            refreshedToken = generateToken(claims, id, getAudienceFromToken(token));
         } catch (Exception e) {
             refreshedToken = null;
         }

@@ -58,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 .antMatchers("/api/v1/test-matlab").permitAll()
+                .antMatchers("/api/v1/greeting").permitAll()
 
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/token").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
@@ -74,9 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/v1/user/self").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/api/v1/auth/refresh").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/v1/auth/refresh").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/v1/auth/logout").hasRole("USER")
 
-                .antMatchers("/api/v1/auth/revoke/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/auth/revoke/*").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
 

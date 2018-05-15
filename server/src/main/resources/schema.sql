@@ -37,10 +37,13 @@ CREATE TABLE public.users_info (
 );
 
 CREATE TABLE public.tokens (
-      id        SERIAL NOT NULL PRIMARY KEY,
-      username  VARCHAR(30) NOT NULL,
-      token     VARCHAR(1000) NOT NULL,
-      enabled   BOOLEAN NOT NULL,
+      id         SERIAL NOT NULL PRIMARY KEY,
+      username   VARCHAR(30) NOT NULL,
+      enabled    BOOLEAN NOT NULL,
+      os         VARCHAR(255) NOT NULL,
+      browser    VARCHAR(255) NOT NULL,
+      device     VARCHAR(255) NOT NULL,
+      expiration TIMESTAMP,
       CONSTRAINT fk_tokens_users FOREIGN KEY (username) REFERENCES users (username)
       ON DELETE CASCADE
       ON UPDATE CASCADE
