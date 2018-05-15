@@ -77,6 +77,7 @@
 			<artifactId>spring-mobile-device</artifactId>
 		</dependency>
 
+		<!-- test matlab lib -->
         <dependency>
             <groupId>makeImageBinarization</groupId>
             <artifactId>makeImageBinarization</artifactId>
@@ -85,6 +86,16 @@
             <systemPath>${basedir}/lib/makeImageBinarization.jar</systemPath>
         </dependency>
 
+		<!-- blood flow analyse -->
+		<dependency>
+			<groupId>bloodFlowAnalyses</groupId>
+			<artifactId>bloodFlowAnalyses</artifactId>
+			<scope>system</scope>
+			<version>1.0</version>
+			<systemPath>${basedir}/lib/bloodFlowAnalyse.jar</systemPath>
+		</dependency>
+
+		<!-- java builder from matlab runtime -->
         <dependency>
             <groupId>GeometricAnalyse</groupId>
             <artifactId>GeometricAnalyse</artifactId>
