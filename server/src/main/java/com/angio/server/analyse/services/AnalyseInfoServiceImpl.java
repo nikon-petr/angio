@@ -11,6 +11,9 @@ import com.angio.server.analyse.repositories.VesselCrudRepository;
 import com.angio.server.analyse.requests.AnalyseInfoRequest;
 import com.angio.server.util.image.ImageOperation;
 import com.angio.server.security.entities.UserEntity;
+import com.angio.server.util.matlab.geometric.GeometricAnalyseAdapter;
+import com.angio.server.util.matlab.geometric.model.GeometricAnalyseModel;
+import com.angio.server.util.matlab.geometric.model.VesselModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,22 +65,28 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
             patientEntityFromDB.setPolicy(patient.getPolicy());
             patientEntity = patientCrudRepository.save(patientEntityFromDB);
         }
-        String imgFileName = new ImageOperation().save(analyseInfoRequest.getImg());
+
+        ImageOperation imageOperation = new ImageOperation();
+        String imgFileName = imageOperation.save(analyseInfoRequest.getImg());
         AnalyseInfoEntity analyseInfoEntity = new AnalyseInfoEntity(user, patientEntity, analyseInfoRequest.getName(),
                 analyseInfoRequest.getShort_description(), analyseInfoRequest.getFull_description(), analyseInfoRequest.getAnalyse_type(),
                 analyseInfoRequest.getComments(), imgFileName, new Timestamp(System.currentTimeMillis()), "", false);
         analyseInfoEntity = analyseInfoCrudRepository.save(analyseInfoEntity);
-        System.out.println("id of new analyse = " + analyseInfoEntity.getId());
 
-//        //TODO: run matlab analyses instead of test data
+        GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfoEntity.getImg());
+
+        String originalImage = imageOperation.save(geometricAnalyseModel.getOriginal());
+        String binarizedImage = imageOperation.save(geometricAnalyseModel.getBinarized());
+        String skelImage = imageOperation.save(geometricAnalyseModel.getSkel());
         analyseInfoEntity.setFinished(true);
-        String testImg = imgFileName;
         AnalyseGeometricEntity analyseGeometricEntity = analyseGeometricCrudRepository.save(new AnalyseGeometricEntity(
-                analyseInfoEntity, testImg, testImg, testImg));
-        for (int i = 0; i < 5; i++){
-            vesselCrudRepository.save(
-                    new VesselEntity(analyseGeometricEntity, testImg, testImg, Float.parseFloat((1 + (i/10)) + ""),
-                            i + 3, Float.parseFloat(((i+1) * 5) + ""), Float.parseFloat((31*i) + ""), Float.parseFloat((3*i) + "")));
+                analyseInfoEntity, originalImage, binarizedImage, skelImage));
+        for (VesselModel vesselModel: geometricAnalyseModel.getAnalyse_result()){
+            String vesselImage = imageOperation.save(vesselModel.getVessel_image());
+            String mainVessel = imageOperation.save(vesselModel.getMain_vessel());
+            vesselCrudRepository.save(new VesselEntity(analyseGeometricEntity, vesselImage, mainVessel,
+                    (float) vesselModel.getTortuosity(), vesselModel.getCount_of_branches_of_1_orders(),
+                    (float) vesselModel.getBranching(), (float) vesselModel.getArea(), (float) vesselModel.getArea_percent()));
         }
 
         return analyseInfoEntity;

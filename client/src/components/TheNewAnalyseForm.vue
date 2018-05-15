@@ -191,8 +191,7 @@ export default {
         analyse_type: '',
         comment: '',
         img: ''
-      },
-      username: ''
+      }
     },
     new_analyse_rules: {
       patient: {
@@ -232,17 +231,23 @@ export default {
     startNewAnalyse () {
       if (this.$refs.form_new_analyse.validate()) {
         console.log(this.new_analyse)
-        this.new_analyse.username = this.$auth.user().email
+        this.dialog = false
+        this.$root.$emit(
+          'showAlert',
+          {
+            color: 'success',
+            message: 'Новый анализ запущен. Ожидайте 2-3 минуты. Статус анализа можно наблюдать с списке анализов.',
+            timeout: 15000
+          })
         this.axios.post('v1/new', this.new_analyse)
           .then(() => {
-            this.dialog = false
             this.$root.$emit('refreshAnalyses')
             this.$root.$emit(
               'showAlert',
               {
                 color: 'success',
-                message: 'Новый анализ запущен. Ожидайте 2-3 минуты. Статус анализа можно наблюдать с списке анализов.',
-                timeout: 15000
+                message: 'Анализ успешно завершён. Список анализов успешно обновлён.',
+                timeout: 30000
               })
           })
           .catch(() => {

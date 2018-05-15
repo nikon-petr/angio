@@ -64,7 +64,7 @@ public class AnalyseController {
     }
 
     @RequestMapping(value="/api/v1/new", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<?> startNewAnalyse(@RequestBody NewAnalyseRequest newAnalyseRequest){
+    public ResponseEntity<?> startNewAnalyse(@RequestBody NewAnalyseRequest newAnalyseRequest){
         try {
             PatientRequest patientRequest = newAnalyseRequest.getPatient();
             AnalyseInfoRequest analyseInfoRequest = newAnalyseRequest.getInfo();
@@ -79,7 +79,7 @@ public class AnalyseController {
     }
 
     @RequestMapping(value="/api/v1/check_policy", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<?> checkPatientByPolicy(@RequestBody PolicyRequest policyRequest){
+    public ResponseEntity<?> checkPatientByPolicy(@RequestBody PolicyRequest policyRequest){
         CheckPatientResponse checkPatientResponse = new CheckPatientResponse();
         try {
             checkPatientResponse.setContains(true);
@@ -97,7 +97,7 @@ public class AnalyseController {
     }
 
     @RequestMapping(value = "/api/v1/analyses/detail", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<?> detailAnalyse(@RequestBody AnalyseInfoIdRequest analyseInfoIdRequest) {
+    public ResponseEntity<?> detailAnalyse(@RequestBody AnalyseInfoIdRequest analyseInfoIdRequest) {
         try {
             AnalyseInfoEntity analyseInfoEntity = analyseInfoService.getAnalyseInfoEntity(analyseInfoIdRequest.getId());
             PatientEntity patientEntity = analyseInfoEntity.getPatient();
@@ -113,7 +113,7 @@ public class AnalyseController {
     }
 
     @RequestMapping(value = "/api/v1/analyses/detail/update_conclusion", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<?> updateAnalyseInfoConclusion(@RequestBody UpdateAnalyseInfoConclusionRequest request) {
+    public ResponseEntity<?> updateAnalyseInfoConclusion(@RequestBody UpdateAnalyseInfoConclusionRequest request) {
         try {
             AnalyseInfoEntity analyseInfoEntity = analyseInfoService.updateAnalyseInfoConclusion(request.getId(), request.getConclusion());
 
@@ -126,7 +126,7 @@ public class AnalyseController {
     }
 
     @RequestMapping(value = "/api/v1/analyses/detail/delete", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<?> deleteAnalyse(@RequestBody IdRequest idRequest) {
+    public ResponseEntity<?> deleteAnalyse(@RequestBody IdRequest idRequest) {
         try {
             analyseInfoService.deleteAnalyse(idRequest.getId());
 
@@ -137,7 +137,7 @@ public class AnalyseController {
     }
 
     @RequestMapping(value = "/api/v1/analyses/detail/delete_vessel", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<?> deleteVessel(@RequestBody IdRequest idRequest) {
+    public ResponseEntity<?> deleteVessel(@RequestBody IdRequest idRequest) {
         try {
             analyseGeometricService.deleteVessel(idRequest.getId());
 

@@ -1,5 +1,6 @@
 package com.angio.server.analyse.entities;
 
+import com.angio.server.util.matlab.geometric.model.VesselModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

@@ -38,7 +38,7 @@ public class VesselResponse implements Serializable {
         this.count_of_branches = vesselEntity.getCount_of_branches();
         this.branching_degree = vesselEntity.getBranching_degree();
         this.area = vesselEntity.getArea();
-        this.area_percent = vesselEntity.getArea();
+        this.area_percent = vesselEntity.getArea_percent();
     }
 
     public long getId() {

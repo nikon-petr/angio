@@ -2,6 +2,8 @@ package com.angio.server.util.image;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -37,5 +39,20 @@ public class ImageOperation {
 
             return imageName;
         } else throw new Exception("Illegal image format");
+    }
+
+    public String save(BufferedImage bi) throws IOException {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String imageName = String.format("%s_%s", sdf.format(timestamp), new Random().nextInt(9));
+        imageName += ".png";
+
+        File outputfile = new File("src/main/resources/static/images/analyses/" + imageName);
+        ImageIO.write(bi, "png", outputfile);
+
+        return imageName;
+    }
+
+    public static String getFullFilename(String filename){
+        return "src/main/resources/static/images/analyses/" + filename;
     }
 }

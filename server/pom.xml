@@ -86,6 +86,14 @@
         </dependency>
 
         <dependency>
+            <groupId>GeometricAnalyse</groupId>
+            <artifactId>GeometricAnalyse</artifactId>
+            <scope>system</scope>
+            <version>1.0</version>
+            <systemPath>${basedir}/lib/GeometricAnalyse.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>javabuilder</groupId>
             <artifactId>javabuilder</artifactId>
             <scope>system</scope>
