@@ -24,14 +24,24 @@ public class AnalyseInfoEntity {
     private boolean finished;
     private String conclusion;
     private Set<AnalyseGeometricEntity> analyseGeometric = new HashSet<>(0);
+    private AnalyseBloodFlowEntity analyseBloodFlow;
 
     public AnalyseInfoEntity(){
 
     }
 
-    public AnalyseInfoEntity(UserEntity user, PatientEntity patient, String name, String short_description,
-                             String full_description, String analyse_type, String comment, String img,
-                             Date analyse_date, String conclusion, boolean finished) {
+    public AnalyseInfoEntity(
+            UserEntity user,
+            PatientEntity patient,
+            String name,
+            String short_description,
+            String full_description,
+            String analyse_type,
+            String comment,
+            String img,
+            Date analyse_date,
+            String conclusion,
+            boolean finished) {
         this.user = user;
         this.patient = patient;
         this.name = name;
@@ -158,6 +168,16 @@ public class AnalyseInfoEntity {
 
     public void setAnalyseGeometric(Set<AnalyseGeometricEntity> analyseGeometric) {
         this.analyseGeometric = analyseGeometric;
+    }
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "analyseInfo")
+    public AnalyseBloodFlowEntity getAnalyseBloodFlow() {
+        return analyseBloodFlow;
+    }
+
+    public void setAnalyseBloodFlow(AnalyseBloodFlowEntity analyseBloodFlow) {
+        this.analyseBloodFlow = analyseBloodFlow;
     }
 
     @Column(name = "finished", nullable = false)

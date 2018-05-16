@@ -1,9 +1,6 @@
 package com.angio.server.analyse;
 
-import com.angio.server.analyse.entities.AnalyseGeometricEntity;
-import com.angio.server.analyse.entities.AnalyseInfoEntity;
-import com.angio.server.analyse.entities.PatientEntity;
-import com.angio.server.analyse.entities.VesselEntity;
+import com.angio.server.analyse.entities.*;
 import com.angio.server.analyse.requests.*;
 import com.angio.server.analyse.responses.*;
 import com.angio.server.analyse.services.AnalyseGeometricService;
@@ -12,6 +9,7 @@ import com.angio.server.analyse.services.PatientExistsException;
 import com.angio.server.analyse.services.PatientService;
 import com.angio.server.security.entities.UserEntity;
 import com.angio.server.user.services.UserInfoService;
+import com.angio.server.util.url.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
@@ -20,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +72,7 @@ public class AnalyseController {
         }
     }
 
+//  TODO change method type to GET
     @RequestMapping(value="/api/v1/analyse/policy-exists", method = RequestMethod.POST)
     public ResponseEntity<?> checkPatientByPolicy(@RequestBody PolicyRequest policyRequest){
         CheckPatientResponse checkPatientResponse = new CheckPatientResponse();
@@ -94,15 +94,28 @@ public class AnalyseController {
         }
     }
 
+//  TODO change method type to GET
     @RequestMapping(value = "/api/v1/analyse/detail", method = RequestMethod.POST)
-    public ResponseEntity<?> detailAnalyse(@RequestBody AnalyseInfoIdRequest analyseInfoIdRequest) {
+    public ResponseEntity<?> detailAnalyse(@RequestBody AnalyseInfoIdRequest analyseInfoIdRequest, HttpServletRequest request) {
         try {
             AnalyseInfoEntity analyseInfoEntity = analyseInfoService.getAnalyseInfoEntity(analyseInfoIdRequest.getId());
             PatientEntity patientEntity = analyseInfoEntity.getPatient();
             AnalyseGeometricEntity analyseGeometricEntity = analyseGeometricService.getAnalyseGeometric(analyseInfoEntity);
             List<VesselEntity> vessels = analyseGeometricService.getVessels(analyseGeometricEntity);
 
-            DetailAnalyseResponse detailAnalyseResponse = new DetailAnalyseResponse(patientEntity, analyseInfoEntity, analyseGeometricEntity, vessels, analyseInfoEntity.getUser().getUsername());
+            AnalyseBloodFlowEntity analyseBloodFlowEntity = analyseInfoEntity.getAnalyseBloodFlow();
+            String ishemiaImageFilePath = UrlUtil.getBaseUrl(request) + UrlUtil.ANALYSE_IMAGE_CONTEXT_PATH + analyseBloodFlowEntity.getIshemiaImageFileName();
+            String densityImageFilePath = UrlUtil.getBaseUrl(request) + UrlUtil.ANALYSE_IMAGE_CONTEXT_PATH + analyseBloodFlowEntity.getDensityImageFileName();
+
+            DetailAnalyseResponse detailAnalyseResponse = new DetailAnalyseResponse(
+                    patientEntity,
+                    analyseInfoEntity,
+                    analyseGeometricEntity,
+                    vessels,
+                    analyseInfoEntity.getUser().getUsername(),
+                    analyseBloodFlowEntity,
+                    ishemiaImageFilePath,
+                    densityImageFilePath);
 
             return ResponseEntity.ok().body(detailAnalyseResponse);
         } catch (Exception e) {
@@ -110,6 +123,7 @@ public class AnalyseController {
         }
     }
 
+//  TODO change method type to POST
     @RequestMapping(value = "/api/v1/analyse/detail/conclusion", method = RequestMethod.PUT)
     public ResponseEntity<?> updateConclusion(@RequestBody UpdateAnalyseInfoConclusionRequest request) {
         try {

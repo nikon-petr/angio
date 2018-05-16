@@ -1,4 +1,4 @@
-package com.angio.server.util.matlab;
+package com.angio.server.util.matlab.bloodflow;
 
 import java.awt.image.BufferedImage;
 

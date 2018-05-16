@@ -1,6 +1,6 @@
 package com.angio.server.test;
 
-import com.angio.server.util.matlab.BloodFlowAnalyseResult;
+import com.angio.server.util.matlab.bloodflow.BloodFlowAnalyseResult;
 
 import java.io.Serializable;
 

@@ -6,6 +6,10 @@ DROP TABLE IF EXISTS public.analyses_info CASCADE;
 DROP TABLE IF EXISTS public.patients CASCADE;
 DROP TABLE IF EXISTS public.analyses_geometric CASCADE;
 DROP TABLE IF EXISTS public.vessels CASCADE;
+DROP TABLE IF EXISTS public.analyses_bloodflow CASCADE;
+DROP TABLE IF EXISTS public.makulas CASCADE;
+DROP TABLE IF EXISTS public.ischemias CASCADE;
+DROP TABLE IF EXISTS public.densities CASCADE;
 
 CREATE TABLE public.users
 (
@@ -105,6 +109,50 @@ CREATE TABLE public.vessels (
       area                  REAL NOT NULL,
       area_percent          REAL NOT NULL,
       CONSTRAINT fk_vessels_analyses_geometric FOREIGN KEY (analyse_geometric_id) REFERENCES analyses_geometric (id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+);
+
+CREATE TABLE public.analyses_bloodflow (
+      id              SERIAL NOT NULL PRIMARY KEY,
+      analyse_info_id INT NOT NULL,
+      ishemia_image   VARCHAR(400) NOT NULL,
+      density_image   VARCHAR(400) NOT NULL,
+      CONSTRAINT fk_analyses_bloodflow_analyses_info FOREIGN KEY (analyse_info_id) REFERENCES analyses_info (id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+);
+
+CREATE TABLE public.makulas (
+      id                   SERIAL NOT NULL PRIMARY KEY,
+      analyse_bloodflow_id INT NOT NULL,
+      area                 REAL NOT NULL,
+      radius                 REAL NOT NULL,
+      x                    REAL NOT NULL,
+      y                    REAL NOT NULL,
+      CONSTRAINT fk_ishemia_areas_analyses_bloodflow FOREIGN KEY (analyse_bloodflow_id) REFERENCES analyses_bloodflow (id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+);
+
+CREATE TABLE public.ischemias (
+      id                   SERIAL NOT NULL PRIMARY KEY,
+      analyse_bloodflow_id INT NOT NULL,
+      area                 REAL NOT NULL,
+      zone_number               INT NOT NULL,
+      x                    REAL NOT NULL,
+      y                    REAL NOT NULL,
+      CONSTRAINT fk_ishemia_centers_analyses_bloodflow FOREIGN KEY (analyse_bloodflow_id) REFERENCES analyses_bloodflow (id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+);
+
+CREATE TABLE public.densities (
+      id                   SERIAL NOT NULL PRIMARY KEY,
+      analyse_bloodflow_id INT NOT NULL,
+      sector_number        INT NOT NULL,
+      density              REAL NOT NULL,
+      CONSTRAINT fk_densities_analyses_bloodflow FOREIGN KEY (analyse_bloodflow_id) REFERENCES analyses_bloodflow (id)
       ON DELETE CASCADE
       ON UPDATE CASCADE
 );

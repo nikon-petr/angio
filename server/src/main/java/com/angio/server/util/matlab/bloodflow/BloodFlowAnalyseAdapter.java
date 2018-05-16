@@ -1,4 +1,4 @@
-package com.angio.server.util.matlab;
+package com.angio.server.util.matlab.bloodflow;
 
 import bloodFlowAnalyse.BloodFlowAnalyser;
 import com.mathworks.toolbox.javabuilder.Images;
