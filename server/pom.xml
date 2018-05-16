@@ -80,15 +80,6 @@
 			<version>1.19</version>
 		</dependency>
 
-		<!-- Test matlab lib -->
-        <dependency>
-            <groupId>makeImageBinarization</groupId>
-            <artifactId>makeImageBinarization</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/lib/makeImageBinarization.jar</systemPath>
-        </dependency>
-
 		<!-- Blood flow analyse -->
 		<dependency>
 			<groupId>bloodFlowAnalyses</groupId>
@@ -98,7 +89,7 @@
 			<systemPath>${basedir}/lib/bloodFlowAnalyse.jar</systemPath>
 		</dependency>
 
-		<!-- Java builder from matlab runtime -->
+		<!-- Geometric analyse -->
         <dependency>
             <groupId>GeometricAnalyse</groupId>
             <artifactId>GeometricAnalyse</artifactId>
@@ -107,6 +98,7 @@
             <systemPath>${basedir}/lib/GeometricAnalyse.jar</systemPath>
         </dependency>
 
+		<!-- Java builder from matlab runtime -->
         <dependency>
             <groupId>javabuilder</groupId>
             <artifactId>javabuilder</artifactId>
