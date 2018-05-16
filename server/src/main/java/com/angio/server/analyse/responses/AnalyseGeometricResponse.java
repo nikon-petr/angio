@@ -24,8 +24,8 @@ public class AnalyseGeometricResponse implements Serializable {
         this.vessels = new ArrayList<>();
     }
 
-    public AnalyseGeometricResponse(AnalyseGeometricEntity analyseGeometricEntity, List<VesselEntity> vessels){
-        this.original_image = analyseGeometricEntity.getOriginal_image();
+    public AnalyseGeometricResponse(AnalyseGeometricEntity analyseGeometricEntity, List<VesselEntity> vessels, String original_image){
+        this.original_image = original_image;
         this.binarized_image = analyseGeometricEntity.getBinarized_image();
         this.skel_image = analyseGeometricEntity.getSkel_image();
         this.vessels = new ArrayList<>();

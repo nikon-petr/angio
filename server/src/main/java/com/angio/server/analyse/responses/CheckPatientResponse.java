@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 public class CheckPatientResponse implements Serializable{
     private PatientResponse patient;
-    private boolean isContains;
+    private boolean exists;
 
     public CheckPatientResponse(){
 
     }
 
-    public CheckPatientResponse(PatientResponse patient, boolean isContains) {
+    public CheckPatientResponse(PatientResponse patient, boolean exists) {
         this.patient = patient;
-        this.isContains = isContains;
+        this.exists = exists;
     }
 
     public PatientResponse getPatient() {
@@ -23,11 +23,11 @@ public class CheckPatientResponse implements Serializable{
         this.patient = patient;
     }
 
-    public boolean isContains() {
-        return isContains;
+    public boolean isExists() {
+        return exists;
     }
 
-    public void setContains(boolean contains) {
-        isContains = contains;
+    public void setExists(boolean exists) {
+        this.exists = exists;
     }
 }

@@ -14,18 +14,13 @@ import com.angio.server.security.entities.UserEntity;
 import com.angio.server.user.services.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.support.ServletContextResource;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +40,7 @@ public class AnalyseController {
         this.analyseGeometricService = analyseGeometricService;
     }
 
-    @RequestMapping(path = "/api/v1/all", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/v1/analyse", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAnalyses(){
         try {
             List<AnalyseInfoEntity> analyses = analyseInfoService.getAllBaseAnalyseInfo();
@@ -54,7 +49,6 @@ public class AnalyseController {
                 analyseResponses.add(new AnalyseResponse(analyse,
                         userInfoService.findByUser(analyse.getUser()).getLastname() + " " +
                                 userInfoService.findByUser(analyse.getUser()).getFirstname()));
-                System.out.print("flag: " + analyse.isFinished());
             }
             return ResponseEntity.ok().body(analyseResponses);
         } catch (Exception e) {
@@ -63,7 +57,7 @@ public class AnalyseController {
         }
     }
 
-    @RequestMapping(value="/api/v1/new", method = RequestMethod.POST)
+    @RequestMapping(value="/api/v1/analyse", method = RequestMethod.POST)
     public ResponseEntity<?> startNewAnalyse(@RequestBody NewAnalyseRequest newAnalyseRequest){
         try {
             PatientRequest patientRequest = newAnalyseRequest.getPatient();
@@ -72,31 +66,35 @@ public class AnalyseController {
             UserEntity userEntity = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             analyseInfoService.addNewAnalyse(userEntity, new PatientEntity(patientRequest), analyseInfoRequest);
 
-            return ResponseEntity.ok().body(null);
+            return ResponseEntity.noContent().build();
         } catch(Exception e) {
+            e.printStackTrace();
             return ResponseEntity.unprocessableEntity().body(null);
         }
     }
 
-    @RequestMapping(value="/api/v1/check_policy", method = RequestMethod.POST)
+    @RequestMapping(value="/api/v1/analyse/policy-exists", method = RequestMethod.POST)
     public ResponseEntity<?> checkPatientByPolicy(@RequestBody PolicyRequest policyRequest){
         CheckPatientResponse checkPatientResponse = new CheckPatientResponse();
         try {
-            checkPatientResponse.setContains(true);
+            checkPatientResponse.setExists(true);
             checkPatientResponse.setPatient(new PatientResponse(patientService.getPatientByPolicy(policyRequest.getPolicy())));
 
             return ResponseEntity.ok().body(checkPatientResponse);
         } catch (PatientExistsException ex){
-            checkPatientResponse.setContains(false);
+            ex.printStackTrace();
+
+            checkPatientResponse.setExists(false);
             checkPatientResponse.setPatient(null);
 
             return ResponseEntity.ok().body(checkPatientResponse);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.unprocessableEntity().body(null);
         }
     }
 
-    @RequestMapping(value = "/api/v1/analyses/detail", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/analyse/detail", method = RequestMethod.POST)
     public ResponseEntity<?> detailAnalyse(@RequestBody AnalyseInfoIdRequest analyseInfoIdRequest) {
         try {
             AnalyseInfoEntity analyseInfoEntity = analyseInfoService.getAnalyseInfoEntity(analyseInfoIdRequest.getId());
@@ -112,8 +110,8 @@ public class AnalyseController {
         }
     }
 
-    @RequestMapping(value = "/api/v1/analyses/detail/update_conclusion", method = RequestMethod.POST)
-    public ResponseEntity<?> updateAnalyseInfoConclusion(@RequestBody UpdateAnalyseInfoConclusionRequest request) {
+    @RequestMapping(value = "/api/v1/analyse/detail/conclusion", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateConclusion(@RequestBody UpdateAnalyseInfoConclusionRequest request) {
         try {
             AnalyseInfoEntity analyseInfoEntity = analyseInfoService.updateAnalyseInfoConclusion(request.getId(), request.getConclusion());
 
@@ -125,29 +123,29 @@ public class AnalyseController {
         }
     }
 
-    @RequestMapping(value = "/api/v1/analyses/detail/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteAnalyse(@RequestBody IdRequest idRequest) {
+    @RequestMapping(value = "/api/v1/analyse/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteAnalyse(@PathVariable("id") long id) {
         try {
-            analyseInfoService.deleteAnalyse(idRequest.getId());
+            analyseInfoService.deleteAnalyse(id);
 
-            return ResponseEntity.ok().body(null);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(null);
         }
     }
 
-    @RequestMapping(value = "/api/v1/analyses/detail/delete_vessel", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteVessel(@RequestBody IdRequest idRequest) {
+    @RequestMapping(value = "/api/v1/analyse/vessel/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteVessel(@PathVariable("id") long id) {
         try {
-            analyseGeometricService.deleteVessel(idRequest.getId());
+            analyseGeometricService.deleteVessel(id);
 
-            return ResponseEntity.ok().body(null);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(null);
         }
     }
 
-    @RequestMapping(value = "/api/v1/analyses/detail/image", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+    @RequestMapping(value = "/api/v1/image", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getImage(@RequestParam(value="filename", required=true) String filename) throws IOException{
         ClassPathResource imgFile = new ClassPathResource("static/images/analyses/" + filename);
         byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());

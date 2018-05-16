@@ -11,7 +11,6 @@ import java.util.Set;
 public class AnalyseGeometricEntity {
     private long id;
     private AnalyseInfoEntity analyseInfo;
-    private String original_image;
     private String binarized_image;
     private String skel_image;
     private Set<VesselEntity> vessels = new HashSet<>(0);
@@ -20,9 +19,8 @@ public class AnalyseGeometricEntity {
 
     }
 
-    public AnalyseGeometricEntity(AnalyseInfoEntity analyseInfo, String original_image, String binarized_image, String skel_image) {
+    public AnalyseGeometricEntity(AnalyseInfoEntity analyseInfo, String binarized_image, String skel_image) {
         this.analyseInfo = analyseInfo;
-        this.original_image = original_image;
         this.binarized_image = binarized_image;
         this.skel_image = skel_image;
     }
@@ -47,15 +45,6 @@ public class AnalyseGeometricEntity {
 
     public void setAnalyseInfo(AnalyseInfoEntity analyseInfo) {
         this.analyseInfo = analyseInfo;
-    }
-
-    @Column(name = "original_image", nullable = false, length = 400)
-    public String getOriginal_image() {
-        return original_image;
-    }
-
-    public void setOriginal_image(String original_image) {
-        this.original_image = original_image;
     }
 
     @Column(name = "binarized_image", nullable = false, length = 400)

@@ -75,12 +75,11 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
         GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfoEntity.getImg());
 
-        String originalImage = imageOperation.save(geometricAnalyseModel.getOriginal());
         String binarizedImage = imageOperation.save(geometricAnalyseModel.getBinarized());
         String skelImage = imageOperation.save(geometricAnalyseModel.getSkel());
         analyseInfoEntity.setFinished(true);
         AnalyseGeometricEntity analyseGeometricEntity = analyseGeometricCrudRepository.save(new AnalyseGeometricEntity(
-                analyseInfoEntity, originalImage, binarizedImage, skelImage));
+                analyseInfoEntity, binarizedImage, skelImage));
         for (VesselModel vesselModel: geometricAnalyseModel.getAnalyse_result()){
             String vesselImage = imageOperation.save(vesselModel.getVessel_image());
             String mainVessel = imageOperation.save(vesselModel.getMain_vessel());

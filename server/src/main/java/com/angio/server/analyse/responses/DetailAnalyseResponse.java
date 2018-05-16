@@ -22,7 +22,7 @@ public class DetailAnalyseResponse implements Serializable {
                                  AnalyseGeometricEntity analyseGeometricEntity, List<VesselEntity> vesselsEntity, String username) {
         this.patient = new PatientResponse(patientEntity);
         this.info = new DetailAnalyseInfoResponse(analyseInfoEntity);
-        this.geometric_analyse = new AnalyseGeometricResponse(analyseGeometricEntity, vesselsEntity);
+        this.geometric_analyse = new AnalyseGeometricResponse(analyseGeometricEntity, vesselsEntity, analyseInfoEntity.getImg());
         this.username = username;
     }
 

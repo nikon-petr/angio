@@ -239,7 +239,7 @@ export default {
             message: 'Новый анализ запущен. Ожидайте 2-3 минуты. Статус анализа можно наблюдать с списке анализов.',
             timeout: 15000
           })
-        this.axios.post('v1/new', this.new_analyse)
+        this.axios.post('v1/analyse', this.new_analyse)
           .then(() => {
             this.$root.$emit('refreshAnalyses')
             this.$root.$emit(
@@ -276,7 +276,7 @@ export default {
       }
     },
     checkPolicy () {
-      this.axios.post('v1/check_policy', {policy: this.new_analyse.patient.policy})
+      this.axios.post('v1/analyse/policy-exists', {policy: this.new_analyse.patient.policy})
         .then((response) => {
           console.log(response.data.contains)
           console.log(response)

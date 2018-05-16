@@ -115,19 +115,19 @@
                   <v-flex xs4>
                     <v-card dark>
                       <v-card-text>Оригинальное изображение</v-card-text>
-                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/analyses/detail/image?filename=' + analyse.result.geometric_analyse.original_image">
+                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.original_image">
                     </v-card>
                   </v-flex>
                   <v-flex xs4>
                     <v-card dark>
                       <v-card-text>Бинаризованное изображение</v-card-text>
-                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/analyses/detail/image?filename=' + analyse.result.geometric_analyse.binarized_image">
+                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.binarized_image">
                     </v-card>
                   </v-flex>
                   <v-flex xs4>
                     <v-card dark>
                       <v-card-text>Скелетизованное изображение</v-card-text>
-                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/analyses/detail/image?filename=' + analyse.result.geometric_analyse.skel_image">
+                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.skel_image">
                     </v-card>
                   </v-flex>
                 </v-layout>
@@ -143,8 +143,8 @@
                   <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
                   <template slot="items" slot-scope="props">
                     <td>{{ props.item.id }}</td>
-                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/analyses/detail/image?filename=' + props.item.vessel_image"></td>
-                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/analyses/detail/image?filename=' + props.item.main_vessel_image"></td>
+                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/image?filename=' + props.item.vessel_image"></td>
+                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/image?filename=' + props.item.main_vessel_image"></td>
                     <td>{{ props.item.count_of_branches }}</td>
                     <td class="text-xs-right">{{ props.item.tortuosity_degree }}</td>
                     <td class="text-xs-right">{{ props.item.branching_degree }}</td>
@@ -289,7 +289,7 @@ export default {
   }),
   methods: {
     loadDetailAnalyse () {
-      this.axios.post('v1/analyses/detail', {id: this.detail_analyse_id})
+      this.axios.post('v1/analyse/detail', {id: this.detail_analyse_id})
         .then((response) => {
           this.analyse.analyse_base_info.patient = response.data.patient
           this.analyse.analyse_base_info.info = response.data.info
@@ -334,8 +334,8 @@ export default {
       this.dialogDelete = true
     },
     deleteItemConfirmed () {
-      this.axios.post('v1/analyses/detail/delete_vessel', {id: this.delete_vessel_id})
-        .then((response) => {
+      this.axios.delete('v1/analyse/vessel/' + this.delete_vessel_id)
+        .then(() => {
           this.analyse.result.geometric_analyse.vessels.splice(this.delete_index, 1)
           this.dialogDelete = false
           this.$root.$emit(
@@ -357,7 +357,7 @@ export default {
         })
     },
     editConclusion () {
-      this.axios.post('v1/analyses/detail/update_conclusion', {id: this.analyse.analyse_base_info.info.id, conclusion: this.editConclusionContent})
+      this.axios.put('v1/analyse/detail/conclusion', {id: this.analyse.analyse_base_info.info.id, conclusion: this.editConclusionContent})
         .then((response) => {
           this.dialogEditConclusion = false
           this.analyse.analyse_base_info.info.conclusion = response.data.conclusion
@@ -380,8 +380,8 @@ export default {
         })
     },
     deleteAnalyseConfirmed () {
-      this.axios.post('v1/analyses/detail/delete', {id: this.analyse.analyse_base_info.info.id})
-        .then((response) => {
+      this.axios.delete('v1/analyse/' + this.analyse.analyse_base_info.info.id)
+        .then(() => {
           this.dialogDeleteAnalyse = false
           this.$router.replace({path: '/analyses'})
           this.$root.$emit(

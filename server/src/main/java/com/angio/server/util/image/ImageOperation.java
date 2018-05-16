@@ -5,14 +5,15 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class ImageOperation {
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy_HH:mm:ss.SSS");
-
     public String save(String base64) throws Exception {
         ArrayList<String> imageFormates = new ArrayList<String>();
         imageFormates.add("png");
@@ -29,8 +30,8 @@ public class ImageOperation {
 
         if (stringType.equals("base64") && base64FileType.equals("image") && imageFormates.contains(base64FormatType)) {
             byte[] imageByte = Base64.decodeBase64(base64Data);
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            String imageName = String.format("%s_%s", sdf.format(timestamp), new Random().nextInt(9));
+
+            String imageName = generateMD5Filename();
             imageName += "." + base64FormatType;
             File mFile = new File("src/main/resources/static/images/analyses/" + imageName);
             BufferedOutputStream stream_original = new BufferedOutputStream(new FileOutputStream(mFile));
@@ -42,8 +43,7 @@ public class ImageOperation {
     }
 
     public String save(BufferedImage bi) throws IOException {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String imageName = String.format("%s_%s", sdf.format(timestamp), new Random().nextInt(9));
+        String imageName = generateMD5Filename();
         imageName += ".png";
 
         File outputfile = new File("src/main/resources/static/images/analyses/" + imageName);
@@ -54,5 +54,23 @@ public class ImageOperation {
 
     public static String getFullFilename(String filename){
         return "src/main/resources/static/images/analyses/" + filename;
+    }
+
+    private String generateMD5Filename(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy_HH:mm:ss.SSS");
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String imageName = String.format("%s_%s", sdf.format(timestamp), new Random().nextInt(9));
+
+        String strMD5 = "";
+        try {
+            MessageDigest m = MessageDigest.getInstance("MD5");
+            m.update(imageName.getBytes(), 0, imageName.length());
+            strMD5 = new BigInteger(1,m.digest()).toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return strMD5;
     }
 }

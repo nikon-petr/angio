@@ -29,12 +29,6 @@ export default new Router({
       component: DetailAnalyse,
       meta: {auth: ['ROLE_USER']}
     },
-    {
-      path: 'analyses/detail/update_conclusion',
-      name: 'DetailAnalyse',
-      component: DetailAnalyse,
-      meta: {auth: ['ROLE_USER']}
-    },
     // {
     //   path: '/analyses/1',
     //   name: 'DetailAnalyse',

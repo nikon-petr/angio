@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     load () {
-      this.axios.get('v1/all')
+      this.axios.get('v1/analyse')
         .then((response) => {
           console.log(response)
           this.analyses = response.data

@@ -87,7 +87,6 @@ CREATE TABLE public.analyses_info (
 CREATE TABLE public.analyses_geometric (
       id                    SERIAL NOT NULL PRIMARY KEY,
       analyse_info_id       INT NOT NULL,
-      original_image        VARCHAR(400) NOT NULL,
       binarized_image       VARCHAR(400) NOT NULL,
       skel_image            VARCHAR(400) NOT NULL,
       CONSTRAINT fk_analyses_geometric_analyses_info FOREIGN KEY (analyse_info_id) REFERENCES analyses_info (id)
