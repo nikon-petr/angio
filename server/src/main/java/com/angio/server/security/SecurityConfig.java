@@ -75,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/v1/user/self").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/refresh").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/logout").hasRole("USER")
+                .antMatchers("images/analyses/*").hasRole("USER")
 
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/revoke/*").hasRole("ADMIN")
                 .anyRequest().authenticated()

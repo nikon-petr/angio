@@ -69,7 +69,7 @@ public class SecurityController {
         tokenService.putTokenExpiration(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token));
 
         return ResponseEntity.noContent()
-                .header("Authorization", angioAppProperties.jwt.getTokenType() + token)
+                .header("Authorization", "Bearer " + token)
                 .build();
     }
 
@@ -92,7 +92,7 @@ public class SecurityController {
             tokenService.putTokenExpiration(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token));
             tokenService.revokeToken(jwtTokenUtil.getIdFromToken(token));
             return ResponseEntity.noContent()
-                    .header("Authorization", angioAppProperties.jwt.getTokenType() + refreshedToken)
+                    .header("Authorization", "Bearer "+ refreshedToken)
                     .build();
         } else {
             return ResponseEntity.badRequest().body(null);
