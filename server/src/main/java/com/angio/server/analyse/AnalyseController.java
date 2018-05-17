@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.List;
 
 @RestController
 public class AnalyseController {
+
     private final AnalyseInfoService analyseInfoService;
     private final UserInfoService userInfoService;
     private final PatientService patientService;
@@ -40,7 +42,7 @@ public class AnalyseController {
     }
 
     @RequestMapping(path = "/api/v1/analyse", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllAnalyses(){
+    public ResponseEntity<?> getAllAnalyses() {
         try {
             List<AnalyseInfoEntity> analyses = analyseInfoService.getAllBaseAnalyseInfo();
             List<AnalyseResponse> analyseResponses = new ArrayList<>();
@@ -56,32 +58,39 @@ public class AnalyseController {
         }
     }
 
-    @RequestMapping(value="/api/v1/analyse", method = RequestMethod.POST)
-    public ResponseEntity<?> startNewAnalyse(@RequestBody NewAnalyseRequest newAnalyseRequest){
-        try {
-            PatientRequest patientRequest = newAnalyseRequest.getPatient();
-            AnalyseInfoRequest analyseInfoRequest = newAnalyseRequest.getInfo();
+    @RequestMapping(value = "/api/v1/analyse", method = RequestMethod.POST)
+    public DeferredResult<ResponseEntity<?>> startNewAnalyse(@RequestBody NewAnalyseRequest newAnalyseRequest) throws Exception {
 
-            UserEntity userEntity = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            analyseInfoService.addNewAnalyse(userEntity, new PatientEntity(patientRequest), analyseInfoRequest);
+        PatientRequest patientRequest = newAnalyseRequest.getPatient();
+        AnalyseInfoRequest analyseInfoRequest = newAnalyseRequest.getInfo();
 
-            return ResponseEntity.noContent().build();
-        } catch(Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.unprocessableEntity().body(null);
-        }
+        UserEntity userEntity = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AnalyseInfoEntity analyseInfo = analyseInfoService.addNewAnalyse(userEntity, new PatientEntity(patientRequest), analyseInfoRequest);
+
+        DeferredResult<ResponseEntity<?>> result = new DeferredResult<>(30 * 60 * 1000L);
+
+        new Thread(() -> {
+            try {
+                analyseInfoService.runAnalyses(analyseInfo);
+                result.setResult(ResponseEntity.noContent().build());
+            } catch (Exception e) {
+                result.setResult(ResponseEntity.unprocessableEntity().body(null));
+            }
+        }).start();
+
+        return result;
     }
 
-//  TODO change method type to GET
-    @RequestMapping(value="/api/v1/analyse/policy-exists", method = RequestMethod.POST)
-    public ResponseEntity<?> checkPatientByPolicy(@RequestBody PolicyRequest policyRequest){
+    //  TODO change method type to GET
+    @RequestMapping(value = "/api/v1/analyse/policy-exists", method = RequestMethod.POST)
+    public ResponseEntity<?> checkPatientByPolicy(@RequestBody PolicyRequest policyRequest) {
         CheckPatientResponse checkPatientResponse = new CheckPatientResponse();
         try {
             checkPatientResponse.setExists(true);
             checkPatientResponse.setPatient(new PatientResponse(patientService.getPatientByPolicy(policyRequest.getPolicy())));
 
             return ResponseEntity.ok().body(checkPatientResponse);
-        } catch (PatientExistsException ex){
+        } catch (PatientExistsException ex) {
             ex.printStackTrace();
 
             checkPatientResponse.setExists(false);
@@ -94,7 +103,7 @@ public class AnalyseController {
         }
     }
 
-//  TODO change method type to GET
+    //  TODO change method type to GET
     @RequestMapping(value = "/api/v1/analyse/detail", method = RequestMethod.POST)
     public ResponseEntity<?> detailAnalyse(@RequestBody AnalyseInfoIdRequest analyseInfoIdRequest, HttpServletRequest request) {
         try {
@@ -123,7 +132,7 @@ public class AnalyseController {
         }
     }
 
-//  TODO change method type to POST
+    //  TODO change method type to POST
     @RequestMapping(value = "/api/v1/analyse/detail/conclusion", method = RequestMethod.PUT)
     public ResponseEntity<?> updateConclusion(@RequestBody UpdateAnalyseInfoConclusionRequest request) {
         try {
@@ -160,7 +169,7 @@ public class AnalyseController {
     }
 
     @RequestMapping(value = "/api/v1/image", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getImage(@RequestParam(value="filename", required=true) String filename) throws IOException{
+    public ResponseEntity<byte[]> getImage(@RequestParam(value = "filename", required = true) String filename) throws IOException {
         ClassPathResource imgFile = new ClassPathResource("static/images/analyses/" + filename);
         byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
 

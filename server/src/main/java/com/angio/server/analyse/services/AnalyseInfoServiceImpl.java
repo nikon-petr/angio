@@ -22,6 +22,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mathworks.toolbox.javabuilder.MWException;
+
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -59,6 +62,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     }
 
     @Override
+    @Transactional
     public AnalyseInfoEntity addNewAnalyse(UserEntity user, PatientEntity patient, AnalyseInfoRequest analyseInfoRequest) throws Exception {
         PatientEntity patientEntityFromDB = patientCrudRepository.findByPolicy(patient.getPolicy()).stream()
                 .findFirst()
@@ -83,19 +87,34 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
         ImageOperation imageOperation = new ImageOperation();
         String imgFileName = imageOperation.save(analyseInfoRequest.getImg());
-        AnalyseInfoEntity analyseInfoEntity = new AnalyseInfoEntity(user, patientEntity, analyseInfoRequest.getName(),
-                analyseInfoRequest.getShort_description(), analyseInfoRequest.getFull_description(), analyseInfoRequest.getAnalyse_type(),
-                analyseInfoRequest.getComments(), imgFileName, new Timestamp(System.currentTimeMillis()), "", false);
+        AnalyseInfoEntity analyseInfoEntity = new AnalyseInfoEntity(
+                user,
+                patientEntity,
+                analyseInfoRequest.getName(),
+                analyseInfoRequest.getShort_description(),
+                analyseInfoRequest.getFull_description(),
+                analyseInfoRequest.getAnalyse_type(),
+                analyseInfoRequest.getComments(),
+                imgFileName,
+                new Timestamp(System.currentTimeMillis()),
+                "",
+                false);
         analyseInfoEntity = analyseInfoCrudRepository.save(analyseInfoEntity);
 
-//      Geometric analyse
-        GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfoEntity.getImg());
+        return analyseInfoEntity;
+    }
+
+    @Override
+    public AnalyseInfoEntity runAnalyses(AnalyseInfoEntity analyseInfo) throws IOException, MWException {
+        ImageOperation imageOperation = new ImageOperation();
+
+        //      Geometric analyse
+        GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfo.getImg());
 
         String binarizedImage = imageOperation.save(geometricAnalyseModel.getBinarized());
         String skelImage = imageOperation.save(geometricAnalyseModel.getSkel());
-        analyseInfoEntity.setFinished(true);
         AnalyseGeometricEntity analyseGeometricEntity = analyseGeometricCrudRepository.save(new AnalyseGeometricEntity(
-                analyseInfoEntity, binarizedImage, skelImage));
+                analyseInfo, binarizedImage, skelImage));
         for (VesselModel vesselModel : geometricAnalyseModel.getAnalyse_result()) {
             String vesselImage = imageOperation.save(vesselModel.getVessel_image());
             String mainVessel = imageOperation.save(vesselModel.getMain_vessel());
@@ -105,7 +124,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
         }
 
 //      Blood flow analyse
-        String originalImage = new ClassPathResource(angioAppProperties.getAnalyseImagesDirectory() + analyseInfoEntity.getImg())
+        String originalImage = new ClassPathResource(angioAppProperties.getAnalyseImagesDirectory() + analyseInfo.getImg())
                 .getFile()
                 .getAbsolutePath();
         BloodFlowAnalyseResult bloodFlowAnalyseResult = new BloodFlowAnalyseAdapter().runAnalyse(originalImage);
@@ -113,9 +132,12 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
         String ishemiaImagePath = imageOperation.save(bloodFlowAnalyseResult.getIshemiaImage());
         String densityImagePath = imageOperation.save(bloodFlowAnalyseResult.getCapillarDensityImage());
 
-        analyseBloodFlowService.addNewAnalyse(analyseInfoEntity, ishemiaImagePath, densityImagePath, bloodFlowAnalyseResult);
+        analyseBloodFlowService.addNewAnalyse(analyseInfo, ishemiaImagePath, densityImagePath, bloodFlowAnalyseResult);
 
-        return analyseInfoEntity;
+        analyseInfo.setFinished(true);
+        analyseInfoCrudRepository.save(analyseInfo);
+
+        return analyseInfo;
     }
 
     @Override
