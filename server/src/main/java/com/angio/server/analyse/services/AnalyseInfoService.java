@@ -12,8 +12,8 @@ import java.util.List;
 
 public interface AnalyseInfoService {
     List<AnalyseInfoEntity> getAllBaseAnalyseInfo() throws Exception;
-    AnalyseInfoEntity addNewAnalyse(UserEntity user, PatientEntity patient, AnalyseInfoRequest analyseInfoRequest) throws Exception;
-    AnalyseInfoEntity runAnalyses(AnalyseInfoEntity analyseInfo) throws IOException, MWException;
+    AnalyseInfoEntity addNewAnalyseInfo(UserEntity user, PatientEntity patient, AnalyseInfoRequest analyseInfoRequest) throws Exception;
+    AnalyseInfoEntity startNewAnalyse(long id) throws Exception;
     AnalyseInfoEntity getAnalyseInfoEntity(long id) throws Exception;
     AnalyseInfoEntity updateAnalyseInfoConclusion(long id, String conclusion) throws Exception;
     void deleteAnalyse(long id) throws Exception;

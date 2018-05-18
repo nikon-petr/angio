@@ -63,7 +63,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
     @Override
     @Transactional
-    public AnalyseInfoEntity addNewAnalyse(UserEntity user, PatientEntity patient, AnalyseInfoRequest analyseInfoRequest) throws Exception {
+    public AnalyseInfoEntity addNewAnalyseInfo(UserEntity user, PatientEntity patient, AnalyseInfoRequest analyseInfoRequest) throws Exception {
         PatientEntity patientEntityFromDB = patientCrudRepository.findByPolicy(patient.getPolicy()).stream()
                 .findFirst()
                 .orElse(null);
@@ -105,26 +105,28 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     }
 
     @Override
-    public AnalyseInfoEntity runAnalyses(AnalyseInfoEntity analyseInfo) throws IOException, MWException {
+    public AnalyseInfoEntity startNewAnalyse(long id) throws Exception {
+        AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findOne(id);
+
+        GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfoEntity.getImg());
+
         ImageOperation imageOperation = new ImageOperation();
-
-        //      Geometric analyse
-        GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfo.getImg());
-
         String binarizedImage = imageOperation.save(geometricAnalyseModel.getBinarized());
         String skelImage = imageOperation.save(geometricAnalyseModel.getSkel());
         AnalyseGeometricEntity analyseGeometricEntity = analyseGeometricCrudRepository.save(new AnalyseGeometricEntity(
-                analyseInfo, binarizedImage, skelImage));
-        for (VesselModel vesselModel : geometricAnalyseModel.getAnalyse_result()) {
+                analyseInfoEntity, binarizedImage, skelImage));
+        for (VesselModel vesselModel: geometricAnalyseModel.getAnalyse_result()) {
             String vesselImage = imageOperation.save(vesselModel.getVessel_image());
             String mainVessel = imageOperation.save(vesselModel.getMain_vessel());
             vesselCrudRepository.save(new VesselEntity(analyseGeometricEntity, vesselImage, mainVessel,
                     (float) vesselModel.getTortuosity(), vesselModel.getCount_of_branches_of_1_orders(),
                     (float) vesselModel.getBranching(), (float) vesselModel.getArea(), (float) vesselModel.getArea_percent()));
         }
+        analyseInfoEntity.setFinished(true);
+        analyseInfoEntity = analyseInfoCrudRepository.save(analyseInfoEntity);
 
 //      Blood flow analyse
-        String originalImage = new ClassPathResource(angioAppProperties.getAnalyseImagesDirectory() + analyseInfo.getImg())
+        String originalImage = new ClassPathResource(angioAppProperties.getAnalyseImagesDirectory() + analyseInfoEntity.getImg())
                 .getFile()
                 .getAbsolutePath();
         BloodFlowAnalyseResult bloodFlowAnalyseResult = new BloodFlowAnalyseAdapter().runAnalyse(originalImage);
@@ -132,12 +134,12 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
         String ishemiaImagePath = imageOperation.save(bloodFlowAnalyseResult.getIshemiaImage());
         String densityImagePath = imageOperation.save(bloodFlowAnalyseResult.getCapillarDensityImage());
 
-        analyseBloodFlowService.addNewAnalyse(analyseInfo, ishemiaImagePath, densityImagePath, bloodFlowAnalyseResult);
+        analyseBloodFlowService.addNewAnalyse(analyseInfoEntity, ishemiaImagePath, densityImagePath, bloodFlowAnalyseResult);
 
-        analyseInfo.setFinished(true);
-        analyseInfoCrudRepository.save(analyseInfo);
+        analyseInfoEntity.setFinished(true);
+        analyseInfoCrudRepository.save(analyseInfoEntity);
 
-        return analyseInfo;
+        return analyseInfoEntity;
     }
 
     @Override

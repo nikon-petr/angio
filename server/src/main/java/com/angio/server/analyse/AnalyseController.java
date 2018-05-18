@@ -58,23 +58,32 @@ public class AnalyseController {
         }
     }
 
+    @RequestMapping(value="/api/v1/analyse/info", method = RequestMethod.POST)
+    public ResponseEntity<?> addNewAnalyseInfo(@RequestBody NewAnalyseRequest newAnalyseRequest){
+        try {
+            PatientRequest patientRequest = newAnalyseRequest.getPatient();
+            AnalyseInfoRequest analyseInfoRequest = newAnalyseRequest.getInfo();
+
+            UserEntity userEntity = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            AnalyseInfoEntity analyseInfoEntity = analyseInfoService.addNewAnalyseInfo(userEntity, new PatientEntity(patientRequest), analyseInfoRequest);
+
+            return ResponseEntity.ok().body(new IdResponse(analyseInfoEntity.getId()));
+        } catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.unprocessableEntity().body(null);
+        }
+    }
+
     @RequestMapping(value = "/api/v1/analyse", method = RequestMethod.POST)
-    public DeferredResult<ResponseEntity<?>> startNewAnalyse(@RequestBody NewAnalyseRequest newAnalyseRequest) throws Exception {
-
-        PatientRequest patientRequest = newAnalyseRequest.getPatient();
-        AnalyseInfoRequest analyseInfoRequest = newAnalyseRequest.getInfo();
-
-        UserEntity userEntity = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        AnalyseInfoEntity analyseInfo = analyseInfoService.addNewAnalyse(userEntity, new PatientEntity(patientRequest), analyseInfoRequest);
-
+    public DeferredResult<ResponseEntity<?>> startNewAnalyse(@RequestBody IdRequest idRequest) {
         DeferredResult<ResponseEntity<?>> result = new DeferredResult<>(30 * 60 * 1000L);
 
         new Thread(() -> {
             try {
-                analyseInfoService.runAnalyses(analyseInfo);
+                analyseInfoService.startNewAnalyse(idRequest.getId());
                 result.setResult(ResponseEntity.noContent().build());
             } catch (Exception e) {
-                result.setResult(ResponseEntity.unprocessableEntity().body(null));
+                result.setResult(ResponseEntity.unprocessableEntity().body(idRequest.getId()));
             }
         }).start();
 
@@ -82,8 +91,8 @@ public class AnalyseController {
     }
 
     //  TODO change method type to GET
-    @RequestMapping(value = "/api/v1/analyse/policy-exists", method = RequestMethod.POST)
-    public ResponseEntity<?> checkPatientByPolicy(@RequestBody PolicyRequest policyRequest) {
+    @RequestMapping(value="/api/v1/analyse/policy-exists", method = RequestMethod.POST)
+    public ResponseEntity<?> checkPatientByPolicy(@RequestBody PolicyRequest policyRequest){
         CheckPatientResponse checkPatientResponse = new CheckPatientResponse();
         try {
             checkPatientResponse.setExists(true);

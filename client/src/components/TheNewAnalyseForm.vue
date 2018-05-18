@@ -11,7 +11,7 @@
         >
         <v-card tile>
           <v-toolbar card dark color="primary">
-            <v-btn icon @click.native="dialog = false" dark>
+            <v-btn icon @click.native="close()" dark>
               <v-icon>close</v-icon>
             </v-btn>
             <v-toolbar-title>Новый анализ</v-toolbar-title>
@@ -107,6 +107,7 @@
                     name="input-4-3"
                     multi-line
                     label="Комментарий"
+                    textarea
                     v-model="new_analyse.patient.comment"
                   ></v-text-field>
                 </v-flex>
@@ -118,20 +119,6 @@
                     :rules="new_analyse_rules.info.default"
                     required
                   ></v-text-field>
-                  <v-text-field
-                    label="Краткое описание"
-                    v-model="new_analyse.info.short_description"
-                    :rules="new_analyse_rules.info.default"
-                    required
-                    name="input-2-1"
-                    multi-line
-                  ></v-text-field>
-                  <v-text-field
-                    label="Подробное описание"
-                    v-model="new_analyse.info.full_description"
-                    name="input-3-2"
-                    multi-line
-                  ></v-text-field>
                   <v-select
                     label="Тип анализа"
                     v-model="new_analyse.info.analyse_type"
@@ -141,9 +128,26 @@
                     required
                   ></v-select>
                   <v-text-field
+                    label="Краткое описание"
+                    v-model="new_analyse.info.short_description"
+                    :rules="new_analyse_rules.info.default"
+                    required
+                    textarea
+                    name="input-2-1"
+                    multi-line
+                  ></v-text-field>
+                  <v-text-field
+                    label="Подробное описание"
+                    v-model="new_analyse.info.full_description"
+                    name="input-3-2"
+                    textarea
+                    multi-line
+                  ></v-text-field>
+                  <v-text-field
                     name="input-2-1"
                     multi-line
                     label="Комментарий"
+                    textarea
                     v-model="new_analyse.info.comment"
                   ></v-text-field>
                   <div>
@@ -230,27 +234,24 @@ export default {
   methods: {
     startNewAnalyse () {
       if (this.$refs.form_new_analyse.validate()) {
-        console.log(this.new_analyse)
         this.dialog = false
-        this.$root.$emit(
-          'showAlert',
-          {
-            color: 'success',
-            message: 'Новый анализ запущен. Ожидайте 2-3 минуты. Статус анализа можно наблюдать с списке анализов.',
-            timeout: 15000
-          })
-        this.axios.post('v1/analyse', this.new_analyse)
-          .then(() => {
+        this.axios.post('v1/analyse/info', this.new_analyse)
+          .then((response) => {
+            this.runAnalyse(response.data.id)
+            this.$refs.form_new_analyse.reset()
+            this.new_analyse.info.img = ''
             this.$root.$emit('refreshAnalyses')
             this.$root.$emit(
               'showAlert',
               {
                 color: 'success',
-                message: 'Анализ успешно завершён. Список анализов успешно обновлён.',
-                timeout: 30000
+                message: 'Новый анализ запущен. Ожидайте 2-3 минуты. Статус анализа можно наблюдать с списке анализов.',
+                timeout: 15000
               })
           })
           .catch(() => {
+            this.$refs.form_new_analyse.reset()
+            this.new_analyse.info.img = ''
             this.$root.$emit(
               'showAlert',
               {
@@ -261,7 +262,32 @@ export default {
           })
       }
     },
+    runAnalyse (id) {
+      this.axios.post('v1/analyse', {id: id})
+        .then(() => {
+          console.log('analyse finished...')
+          this.$root.$emit('refreshAnalyses')
+          this.$root.$emit(
+            'showAlert',
+            {
+              color: 'success',
+              message: 'Анализ успешно завершён',
+              timeout: 30000
+            })
+        })
+        .catch((response) => {
+          this.$root.$emit(
+            'showAlert',
+            {
+              color: 'error',
+              message: 'Ошибка в ходе работы анализов. Для дальнейших действий обратитесь к администратору.',
+              timeout: 5000
+            })
+        })
+    },
     close () {
+      this.$refs.form_new_analyse.reset()
+      this.new_analyse.info.img = ''
       this.dialog = false
     },
     previewImage: function (event) {

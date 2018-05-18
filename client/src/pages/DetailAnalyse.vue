@@ -315,24 +315,6 @@ export default {
               timeout: 5000
             })
         })
-        // getDetailAnalyse()
-        // .then((response) => {
-        // console.log(response)
-        // this.analyse.analyse_base_info.patient = response.data.analyse.analyse_base_info.patient
-        // this.analyse.analyse_base_info.info = response.data.analyse.analyse_base_info.info
-        // this.analyse.result = response.data.analyse.result
-        // this.loading_analyse = false
-        // this.editConclusionContent = this.analyse.analyse_base_info.info.conclusion
-        // })
-        // .catch(() => {
-        // this.$root.$emit(
-        // 'showAlert',
-        // {
-        // color: 'error',
-        // message: 'Ошибка получения анализа',
-        // timeout: 5000
-        // })
-        // })
     },
     deleteItem (item) {
       const index = this.analyse.result.geometric_analyse.vessels.indexOf(item)
