@@ -52,7 +52,7 @@
         <v-flex xs12 md6>
           <v-card flat>
             <v-card-text>
-              <img v-img v-bind:width="imageHeight" v-bind:src="ishemiaBase64Img">
+              <img v-img v-bind:width="imageHeight" v-bind:src="densityBase64Img">
             </v-card-text>
           </v-card>
         </v-flex>
@@ -61,14 +61,11 @@
             :headers="densityTableHeaders"
             :items="densityArr"
             class="elevation-1"
-            :rows-per-page-items="rowNumbersDensity"
+            hide-actions
           >
             <template slot="items" slot-scope="props">
               <td>{{ props.item.sectorNumber }}</td>
               <td class="text-xs-center">{{ Math.round(props.item.density  * 100) / 100 }}</td>
-            </template>
-            <template slot="pageText" slot-scope="props">
-              Строки {{ props.pageStart }} - {{ props.pageStop }} из {{ props.itemsLength }}
             </template>
           </v-data-table>
         </v-flex>
@@ -93,7 +90,6 @@ export default {
       {text: 'Плотность (px)', value: 'density', sortable: true}
     ],
     rowNumbersIshemia: [5],
-    rowNumbersDensity: [8],
     ishemiaBase64Img: '',
     densityBase64Img: ''
   }),
