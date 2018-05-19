@@ -108,6 +108,7 @@
           <v-tab ripple>
             Геометрическая характеристика СС
           </v-tab>
+          <!-- TODO move tab to a separate component -->
           <v-tab-item>
             <v-card flat>
               <v-container grid-list-md text-xs-center>
@@ -177,20 +178,16 @@
             </v-card>
           </v-tab-item>
           <v-tab ripple>
-            Анализ макулы
+            Степень кровоснабжения сс
           </v-tab>
           <v-tab-item>
-            <v-card flat>
-              <v-card-text>Макула</v-card-text>
-            </v-card>
-          </v-tab-item>
-          <v-tab ripple>
-            Анализ зон ишемии
-          </v-tab>
-          <v-tab-item>
-            <v-card flat>
-              <v-card-text>Ишемия</v-card-text>
-            </v-card>
+            <BloodFlowAnalyseTab
+              v-bind:ishemia-src="analyse.result.bloodFlowAnalyse.ishemiaImageUrl"
+              v-bind:density-src="analyse.result.bloodFlowAnalyse.densityImageUrl"
+              v-bind:ishemia-arr="analyse.result.bloodFlowAnalyse.ischemias"
+              v-bind:makula="analyse.result.bloodFlowAnalyse.makula"
+              v-bind:density-arr="analyse.result.bloodFlowAnalyse.densities"
+            ></BloodFlowAnalyseTab>
           </v-tab-item>
         </v-tabs>
         <v-btn block color="red" :disabled="false" @click="dialogDeleteAnalyse = true" dark>Удалить анализ</v-btn>
@@ -201,8 +198,10 @@
 </template>
 
 <script>
+import BloodFlowAnalyseTab from '../components/BloodFlowAnalyseTab'
 export default {
   name: 'DetailAnalyse',
+  components: {BloodFlowAnalyseTab},
   created () {
     this.detail_analyse_id = this.$store.test_id
     if (this.detail_analyse_id === undefined) {
@@ -253,6 +252,13 @@ export default {
           binarized_image: '',
           skel_image: '',
           vessels: []
+        },
+        bloodFlowAnalyse: {
+          ishemiaImageUrl: '',
+          densityImageUrl: '',
+          ischemias: [],
+          makula: {},
+          densities: []
         }
       },
       username: ''
@@ -294,6 +300,7 @@ export default {
           this.analyse.analyse_base_info.patient = response.data.patient
           this.analyse.analyse_base_info.info = response.data.info
           this.analyse.result.geometric_analyse = response.data.geometric_analyse
+          this.analyse.result.bloodFlowAnalyse = response.data.analyseBloodFlowResponse
           this.analyse.result.username = response.data.username
           this.editConclusionContent = this.analyse.analyse_base_info.info.conclusion
           this.loading_analyse = false
