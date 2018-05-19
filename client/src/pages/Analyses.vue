@@ -33,7 +33,7 @@
             <td class="justify-center layout px-0">
               <v-btn
                 :loading=!props.item._analyse_finished
-                @click="detailItem(props.item)"
+                :to="{ path: '/analyses/' + props.item.id }"
                 :disabled=!props.item._analyse_finished
                 color="transparent"
                 class="white--text"
@@ -110,10 +110,6 @@ export default {
               timeout: 5000
             })
         })
-    },
-    detailItem (item) {
-      this.$store.test_id = item.id
-      this.$router.push({path: '/analyses/detail'})
     }
   }
 }

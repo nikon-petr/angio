@@ -24,17 +24,11 @@ export default new Router({
       meta: {auth: ['ROLE_USER']}
     },
     {
-      path: '/analyses/detail',
+      path: '/analyses/:id',
       name: 'DetailAnalyse',
       component: DetailAnalyse,
       meta: {auth: ['ROLE_USER']}
     },
-    // {
-    //   path: '/analyses/1',
-    //   name: 'DetailAnalyse',
-    //   component: DetailAnalyse,
-    //   meta: {auth: ['ROLE_USER']}
-    // },
     {
       path: '/user',
       name: 'User',
@@ -43,17 +37,13 @@ export default new Router({
           path: '/user/sign-up',
           name: 'SignUp',
           component: BaseSignUpForm,
-          meta: {
-            auth: false
-          }
+          meta: {auth: false}
         },
         {
           path: '/user/sign-in',
           name: 'SignIn',
           component: BaseSignInForm,
-          meta: {
-            auth: false
-          }
+          meta: {auth: false}
         }
       ]
     }
