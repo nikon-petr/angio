@@ -8,46 +8,46 @@ import java.text.SimpleDateFormat;
 public class AnalyseResponse implements Serializable {
     private long id;
     private String name;
-    private String short_description;
-    private String analyse_type;
+    private String shortDescription;
+    private String analyseType;
     private String patient;
     private String policy;
-    private String diagnost;
-    private String date;
-    private boolean is_analyse_finished;
+    private String user;
+    private String analyseDate;
+    private boolean analyseFinished;
 
     public AnalyseResponse() {
 
     }
 
-    public AnalyseResponse(long id, String name, String short_description, String analyse_type, String patient,
-                           String policy, String diagnost, String date, boolean is_analyse_finished) {
+    public AnalyseResponse(long id, String name, String shortDescription, String analyseType, String patient,
+                           String policy, String user, String analyseDate, boolean analyseFinished) {
         this.id = id;
         this.name = name;
-        this.short_description = short_description;
-        this.analyse_type = analyse_type;
+        this.shortDescription = shortDescription;
+        this.analyseType = analyseType;
         this.patient = patient;
         this.policy = policy;
-        this.diagnost = diagnost;
-        this.date = date;
-        this.is_analyse_finished = is_analyse_finished;
+        this.user = user;
+        this.analyseDate = analyseDate;
+        this.analyseFinished = analyseFinished;
     }
 
-    public AnalyseResponse(AnalyseInfoEntity analyseInfoEntity, String diagnost){
+    public AnalyseResponse(AnalyseInfoEntity analyseInfoEntity, String user){
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String date = sdf.format(analyseInfoEntity.getAnalyse_date());
+        String date = sdf.format(analyseInfoEntity.getAnalyseDate());
 
         this.id = analyseInfoEntity.getId();
         this.name = analyseInfoEntity.getName();
-        this.short_description = analyseInfoEntity.getShort_description();
-        this.analyse_type = analyseInfoEntity.getAnalyse_type();
+        this.shortDescription = analyseInfoEntity.getShortDescription();
+        this.analyseType = analyseInfoEntity.getAnalyseType();
         this.patient = analyseInfoEntity.getPatient().getLastname() + " " +
                 analyseInfoEntity.getPatient().getFirstname() + " " +
                 analyseInfoEntity.getPatient().getPatronymic();
         this.policy = analyseInfoEntity.getPatient().getPolicy();
-        this.diagnost = diagnost;
-        this.date = date;
-        this.is_analyse_finished = analyseInfoEntity.isFinished();
+        this.user = user;
+        this.analyseDate = date;
+        this.analyseFinished = analyseInfoEntity.isFinished();
     }
 
     public long getId() {
@@ -66,20 +66,20 @@ public class AnalyseResponse implements Serializable {
         this.name = name;
     }
 
-    public String getShort_description() {
-        return short_description;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setShort_description(String short_description) {
-        this.short_description = short_description;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
-    public String getAnalyse_type() {
-        return analyse_type;
+    public String getAnalyseType() {
+        return analyseType;
     }
 
-    public void setAnalyse_type(String analyse_type) {
-        this.analyse_type = analyse_type;
+    public void setAnalyseType(String analyseType) {
+        this.analyseType = analyseType;
     }
 
     public String getPatient() {
@@ -98,27 +98,27 @@ public class AnalyseResponse implements Serializable {
         this.policy = policy;
     }
 
-    public String getDiagnost() {
-        return diagnost;
+    public String getUser() {
+        return user;
     }
 
-    public void setDiagnost(String diagnost) {
-        this.diagnost = diagnost;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public String getDate() {
-        return date;
+    public String getAnalyseDate() {
+        return analyseDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setAnalyseDate(String analyseDate) {
+        this.analyseDate = analyseDate;
     }
 
-    public boolean is_analyse_finished() {
-        return is_analyse_finished;
+    public boolean isAnalyseFinished() {
+        return analyseFinished;
     }
 
-    public void setIs_analyse_finished(boolean is_analyse_finished) {
-        this.is_analyse_finished = is_analyse_finished;
+    public void setAnalyseFinished(boolean analyseFinished) {
+        this.analyseFinished = analyseFinished;
     }
 }

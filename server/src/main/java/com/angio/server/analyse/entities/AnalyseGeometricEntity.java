@@ -11,18 +11,18 @@ import java.util.Set;
 public class AnalyseGeometricEntity {
     private long id;
     private AnalyseInfoEntity analyseInfo;
-    private String binarized_image;
-    private String skel_image;
+    private String binarizedImage;
+    private String skelImage;
     private Set<VesselEntity> vessels = new HashSet<>(0);
 
     public AnalyseGeometricEntity() {
 
     }
 
-    public AnalyseGeometricEntity(AnalyseInfoEntity analyseInfo, String binarized_image, String skel_image) {
+    public AnalyseGeometricEntity(AnalyseInfoEntity analyseInfo, String binarizedImage, String skelImage) {
         this.analyseInfo = analyseInfo;
-        this.binarized_image = binarized_image;
-        this.skel_image = skel_image;
+        this.binarizedImage = binarizedImage;
+        this.skelImage = skelImage;
     }
 
     @Id
@@ -48,21 +48,21 @@ public class AnalyseGeometricEntity {
     }
 
     @Column(name = "binarized_image", nullable = false, length = 400)
-    public String getBinarized_image() {
-        return binarized_image;
+    public String getBinarizedImage() {
+        return binarizedImage;
     }
 
-    public void setBinarized_image(String binarized_image) {
-        this.binarized_image = binarized_image;
+    public void setBinarizedImage(String binarizedImage) {
+        this.binarizedImage = binarizedImage;
     }
 
     @Column(name = "skel_image", nullable = false, length = 400)
-    public String getSkel_image() {
-        return skel_image;
+    public String getSkelImage() {
+        return skelImage;
     }
 
-    public void setSkel_image(String skel_image) {
-        this.skel_image = skel_image;
+    public void setSkelImage(String skel_image) {
+        this.skelImage = skel_image;
     }
 
     @JsonIgnore

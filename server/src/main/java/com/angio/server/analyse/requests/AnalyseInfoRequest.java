@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class AnalyseInfoRequest implements Serializable{
     private String name;
-    private String short_description;
-    private String full_description;
-    private String analyse_type;
+    private String shortDescription;
+    private String fullDescription;
+    private String analyseType;
     private String comment;
     private String img;
 
@@ -14,12 +14,12 @@ public class AnalyseInfoRequest implements Serializable{
 
     }
 
-    public AnalyseInfoRequest(String name, String short_description, String full_description, String analyse_type,
+    public AnalyseInfoRequest(String name, String shortDescription, String fullDescription, String analyseType,
                               String comments, String img) {
         this.name = name;
-        this.short_description = short_description;
-        this.full_description = full_description;
-        this.analyse_type = analyse_type;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.analyseType = analyseType;
         this.comment = comments;
         this.img = img;
     }
@@ -32,36 +32,36 @@ public class AnalyseInfoRequest implements Serializable{
         this.name = name;
     }
 
-    public String getShort_description() {
-        return short_description;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setShort_description(String short_description) {
-        this.short_description = short_description;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
-    public String getFull_description() {
-        return full_description;
+    public String getFullDescription() {
+        return fullDescription;
     }
 
-    public void setFull_description(String full_description) {
-        this.full_description = full_description;
+    public void setFullDescription(String fullDescription) {
+        this.fullDescription = fullDescription;
     }
 
-    public String getAnalyse_type() {
-        return analyse_type;
+    public String getAnalyseType() {
+        return analyseType;
     }
 
-    public void setAnalyse_type(String analyse_type) {
-        this.analyse_type = analyse_type;
+    public void setAnalyseType(String analyseType) {
+        this.analyseType = analyseType;
     }
 
-    public String getComments() {
+    public String getComment() {
         return comment;
     }
 
-    public void setComments(String comments) {
-        this.comment = comments;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getImg() {

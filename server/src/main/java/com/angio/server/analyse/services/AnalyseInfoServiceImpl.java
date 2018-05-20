@@ -18,6 +18,10 @@ import com.angio.server.util.matlab.geometric.GeometricAnalyseAdapter;
 import com.angio.server.util.matlab.geometric.model.GeometricAnalyseModel;
 import com.angio.server.util.matlab.geometric.model.VesselModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +30,6 @@ import com.mathworks.toolbox.javabuilder.MWException;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Service("analyseInfoService")
 @Transactional
@@ -57,8 +60,60 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     }
 
     @Override
-    public List<AnalyseInfoEntity> getAllBaseAnalyseInfo() throws Exception {
-        return analyseInfoCrudRepository.findAll();
+    public Page<AnalyseInfoEntity> listAllByPageAndSortAndFilter(Pageable pageable, String search, String date) throws Exception {
+        if (search == null) search = "";
+        if (date == null) date = "";
+
+        String sortField = null;
+        boolean isAscending = false;
+        if (pageable.getSort() != null) {
+            String[] sortData = pageable.getSort().toString().replaceAll(" ", "").split(":");
+            sortField = sortData[0];
+            isAscending = sortData[1].equals("ASC");
+        }
+
+        String formattedDate = null;
+        if (!date.equals("")){
+            String[] values = date.split("-"); //dd-MM-yyyy
+            formattedDate = values[2] + "-" + values[1] + "-" + values[0]; //yyyy-MM-dd
+        }
+
+        if (sortField != null && (sortField.equals("patient") || sortField.equals("policy") || sortField.equals("user"))){
+            String sortProperty = null;
+            switch (sortField){
+                case "patient":
+                    sortProperty = "patient.lastname";
+                    break;
+                case "policy":
+                    sortProperty = "patient.policy";
+                    break;
+                case "user":
+                    sortProperty = "user.userInfo.lastname";
+                    break;
+            }
+            if (formattedDate == null) {
+                return analyseInfoCrudRepository.findAll(search, new PageRequest(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        new Sort(
+                                new Sort.Order(
+                                        isAscending ? Sort.Direction.ASC : Sort.Direction.DESC,
+                                        sortProperty)
+                        )));
+            } else{
+                return analyseInfoCrudRepository.findAll(search, formattedDate, new PageRequest(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        new Sort(
+                                new Sort.Order(
+                                        isAscending ? Sort.Direction.ASC : Sort.Direction.DESC,
+                                        sortProperty)
+                        )));
+            }
+        } else{
+            if (formattedDate == null) return analyseInfoCrudRepository.findAll(search, pageable);
+            else return analyseInfoCrudRepository.findAll(search, formattedDate, pageable);
+        }
     }
 
     @Override
@@ -87,18 +142,9 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
         ImageOperation imageOperation = new ImageOperation();
         String imgFileName = imageOperation.save(analyseInfoRequest.getImg());
-        AnalyseInfoEntity analyseInfoEntity = new AnalyseInfoEntity(
-                user,
-                patientEntity,
-                analyseInfoRequest.getName(),
-                analyseInfoRequest.getShort_description(),
-                analyseInfoRequest.getFull_description(),
-                analyseInfoRequest.getAnalyse_type(),
-                analyseInfoRequest.getComments(),
-                imgFileName,
-                new Timestamp(System.currentTimeMillis()),
-                "",
-                false);
+        AnalyseInfoEntity analyseInfoEntity = new AnalyseInfoEntity(user, patientEntity, analyseInfoRequest.getName(),
+                analyseInfoRequest.getShortDescription(), analyseInfoRequest.getFullDescription(), analyseInfoRequest.getAnalyseType(),
+                analyseInfoRequest.getComment(), imgFileName, new Timestamp(System.currentTimeMillis()), "", false);
         analyseInfoEntity = analyseInfoCrudRepository.save(analyseInfoEntity);
 
         return analyseInfoEntity;
@@ -115,14 +161,15 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
         String skelImage = imageOperation.save(geometricAnalyseModel.getSkel());
         AnalyseGeometricEntity analyseGeometricEntity = analyseGeometricCrudRepository.save(new AnalyseGeometricEntity(
                 analyseInfoEntity, binarizedImage, skelImage));
-        for (VesselModel vesselModel: geometricAnalyseModel.getAnalyse_result()) {
-            String vesselImage = imageOperation.save(vesselModel.getVessel_image());
-            String mainVessel = imageOperation.save(vesselModel.getMain_vessel());
+        for (VesselModel vesselModel: geometricAnalyseModel.getAnalyseResult()) {
+            String vesselImage = imageOperation.save(vesselModel.getVesselImage());
+            String mainVessel = imageOperation.save(vesselModel.getMainVessel());
             vesselCrudRepository.save(new VesselEntity(analyseGeometricEntity, vesselImage, mainVessel,
-                    (float) vesselModel.getTortuosity(), vesselModel.getCount_of_branches_of_1_orders(),
-                    (float) vesselModel.getBranching(), (float) vesselModel.getArea(), (float) vesselModel.getArea_percent()));
+                    (float) vesselModel.getTortuosity(), vesselModel.getCountOfBranchesOf1Orders(),
+                    (float) vesselModel.getBranching(), (float) vesselModel.getArea(), (float) vesselModel.getAreaPercent()));
         }
         analyseInfoEntity.setFinished(true);
+        analyseInfoEntity.setAnalyseDate(new Timestamp(System.currentTimeMillis()));
         analyseInfoEntity = analyseInfoCrudRepository.save(analyseInfoEntity);
 
 //      Blood flow analyse
@@ -158,5 +205,16 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     @Override
     public void deleteAnalyse(long id) throws Exception {
         analyseInfoCrudRepository.delete(id);
+    }
+
+    @Override
+    public long getCountOfAnalyses(String search, String date) throws Exception {
+        if (date == null) date = "";
+        String formattedDate = null;
+        if (!date.equals("")){
+            String[] values = date.split("-"); //dd-MM-yyyy
+            formattedDate = values[2] + "-" + values[1] + "-" + values[0]; //yyyy-MM-dd
+        }
+        return date.equals("") ? analyseInfoCrudRepository.count(search) : analyseInfoCrudRepository.count(search, formattedDate);
     }
 }

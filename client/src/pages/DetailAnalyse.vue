@@ -2,15 +2,15 @@
   <v-layout>
     <v-flex>
       <v-app id="inspire" dark>
-        <h1>Подробный анализ</h1>
-        <h2>Основные сведения</h2>
+        <div class="display-1">Подробный анализ</div>
+        <div class="headline my-3">Основные сведения</div>
         <v-card id="inspire" dark>
           <v-card-title primary-title>
             <v-progress-linear v-if="loading_analyse" :indeterminate="true"></v-progress-linear>
             <v-layout v-if="!loading_analyse" justify-space-between>
               <v-flex xs4 md4 lg4>
                 <h3>Дата</h3>
-                <div class="headline mb-0">{{ analyse.analyse_base_info.info.analyse_date }}</div>
+                <div class="headline mb-0">{{ analyse.analyse_base_info.info.analyseDate }}</div>
               </v-flex>
             </v-layout>
           </v-card-title>
@@ -42,11 +42,11 @@
               <h3 class="headline mb-0">Название:</h3>
               <div>{{ analyse.analyse_base_info.info.name }}</div>
               <h3 class="headline mb-0">Краткое описание:</h3>
-              <div>{{ analyse.analyse_base_info.info.short_description }}</div>
-              <h3 class="headline mb-0" v-if="analyse.analyse_base_info.info.full_description != null">Подробное описание:</h3>
-              <div v-if="analyse.analyse_base_info.info.full_description != null">{{ analyse.analyse_base_info.info.full_description }}</div>
+              <div>{{ analyse.analyse_base_info.info.shortDescription }}</div>
+              <h3 class="headline mb-0" v-if="analyse.analyse_base_info.info.fullDescription != null">Подробное описание:</h3>
+              <div v-if="analyse.analyse_base_info.info.fullDescription != null">{{ analyse.analyse_base_info.info.fullDescription }}</div>
               <h3 class="headline mb-0">Тип анализа:</h3>
-              <div>{{ analyse.analyse_base_info.info.analyse_type }}</div>
+              <div>{{ analyse.analyse_base_info.info.analyseType }}</div>
               <h3 class="headline mb-0" v-if="analyse.analyse_base_info.info.comment != null">Комментарий:</h3>
               <div v-if="analyse.analyse_base_info.info.comment != null">{{ analyse.analyse_base_info.info.comment }}</div>
             </v-flex>
@@ -100,9 +100,21 @@
             </v-dialog>
           </v-layout>
         </v-card-title>
-        <v-btn block color="transparent" :disabled="$auth.user().email == analyse.username" @click.native="dialogEditConclusion = true" dark>Редактировать заключение</v-btn>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue accent-3" :disabled="$auth.user().email == analyse.username" @click.native="dialogEditConclusion = true" fab dark>
+            <v-icon>add_comment</v-icon>
+          </v-btn>
+          <v-btn color="orange" fab dark>
+            <v-icon>picture_as_pdf</v-icon>
+          </v-btn>
+          <v-btn color="red" :disabled="false" @click="dialogDeleteAnalyse = true" fab dark>
+            <v-icon>delete</v-icon>
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
       </v-card>
-      <h2>Результаты анализа</h2>
+      <div class="headline my-3">Результаты анализа</div>
       <div>
         <v-tabs v-model="active" dark centered>
           <v-tab ripple>
@@ -116,19 +128,19 @@
                   <v-flex xs4>
                     <v-card dark>
                       <v-card-text>Оригинальное изображение</v-card-text>
-                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.original_image">
+                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.originalImage">
                     </v-card>
                   </v-flex>
                   <v-flex xs4>
                     <v-card dark>
                       <v-card-text>Бинаризованное изображение</v-card-text>
-                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.binarized_image">
+                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.binarizedImage">
                     </v-card>
                   </v-flex>
                   <v-flex xs4>
                     <v-card dark>
                       <v-card-text>Скелетизованное изображение</v-card-text>
-                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.skel_image">
+                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.skelImage">
                     </v-card>
                   </v-flex>
                 </v-layout>
@@ -144,13 +156,13 @@
                   <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
                   <template slot="items" slot-scope="props">
                     <td>{{ props.item.id }}</td>
-                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/image?filename=' + props.item.vessel_image"></td>
-                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/image?filename=' + props.item.main_vessel_image"></td>
-                    <td>{{ props.item.count_of_branches }}</td>
-                    <td class="text-xs-right">{{ props.item.tortuosity_degree }}</td>
-                    <td class="text-xs-right">{{ props.item.branching_degree }}</td>
+                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/image?filename=' + props.item.vesselImage"></td>
+                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/image?filename=' + props.item.mainVesselImage"></td>
+                    <td>{{ props.item.countOfBranches }}</td>
+                    <td class="text-xs-right">{{ props.item.tortuosityDegree }}</td>
+                    <td class="text-xs-right">{{ props.item.branchingDegree }}</td>
                     <td class="text-xs-right">{{ props.item.area }}</td>
-                    <td class="text-xs-right">{{ props.item.area_percent }}</td>
+                    <td class="text-xs-right">{{ props.item.areaPercent }}</td>
                     <td class="center">
                       <v-btn icon class="mx-0" @click="deleteItem(props.item)">
                         <v-icon color="pink">delete</v-icon>
@@ -190,7 +202,6 @@
             ></BloodFlowAnalyseTab>
           </v-tab-item>
         </v-tabs>
-        <v-btn block color="red" :disabled="false" @click="dialogDeleteAnalyse = true" dark>Удалить анализ</v-btn>
       </div>
       </v-app>
     </v-flex>
@@ -238,19 +249,19 @@ export default {
         info: {
           id: 0,
           name: '',
-          short_description: '',
-          full_description: '',
-          analyse_type: '',
+          shortDescription: '',
+          fullDescription: '',
+          analyseType: '',
           comment: '',
-          analyse_date: '',
+          analyseDate: '',
           conclusion: ''
         }
       },
       result: {
         geometric_analyse: {
-          original_image: '',
-          binarized_image: '',
-          skel_image: '',
+          originalImage: '',
+          binarizedImage: '',
+          skelImage: '',
           vessels: []
         },
         bloodFlowAnalyse: {
@@ -275,13 +286,13 @@ export default {
     ],
     headers: [
       { text: '№', align: 'left', value: 'id', width: '5%' },
-      { text: 'Сосуд', align: 'left', value: 'vessel_image', sortable: false, width: '20%' },
-      { text: 'Русло', align: 'left', value: 'main_vessel_image', sortable: false, width: '20%' },
-      { text: 'Ветви', align: 'left', value: 'count_of_branches', width: '10%' },
-      { text: 'Извилистость', align: 'left', value: 'tortuosity_degree', width: '10%' },
-      { text: 'Ветвистость', align: 'left', value: 'branching_degree', width: '10%' },
+      { text: 'Сосуд', align: 'left', value: 'vesselImage', sortable: false, width: '20%' },
+      { text: 'Русло', align: 'left', value: 'mainVesselImage', sortable: false, width: '20%' },
+      { text: 'Ветви', align: 'left', value: 'countOfBranches', width: '10%' },
+      { text: 'Извилистость', align: 'left', value: 'tortuosityDegree', width: '10%' },
+      { text: 'Ветвистость', align: 'left', value: 'branchingDegree', width: '10%' },
       { text: 'S (px)', align: 'left', value: 'area', width: '10%' },
-      { text: 'S (%)', align: 'left', value: 'area_percent', width: '10%' },
+      { text: 'S (%)', align: 'left', value: 'areaPercent', width: '10%' },
       { text: 'Действия', align: 'left', value: 'actions', sortable: false, width: '5%' }
     ],
     headers_result: [
@@ -299,7 +310,7 @@ export default {
         .then((response) => {
           this.analyse.analyse_base_info.patient = response.data.patient
           this.analyse.analyse_base_info.info = response.data.info
-          this.analyse.result.geometric_analyse = response.data.geometric_analyse
+          this.analyse.result.geometric_analyse = response.data.geometricAnalyse
           this.analyse.result.bloodFlowAnalyse = response.data.analyseBloodFlowResponse
           this.analyse.result.username = response.data.username
           this.editConclusionContent = this.analyse.analyse_base_info.info.conclusion
@@ -400,19 +411,19 @@ export default {
     },
     sumCountOfBranches: function () {
       return this.analyse.result.geometric_analyse.vessels.reduce(function (sumCountOfBranches, item) {
-        return sumCountOfBranches + item.count_of_branches
+        return sumCountOfBranches + item.countOfBranches
       }, 0)
     },
     avgTortuosityDegree: function () {
       var total = this.analyse.result.geometric_analyse.vessels.length
       return this.analyse.result.geometric_analyse.vessels.reduce(function (avgTortuosityDegree, item) {
-        return (avgTortuosityDegree + (item.tortuosity_degree / total))
+        return (avgTortuosityDegree + (item.tortuosityDegree / total))
       }, 0)
     },
     avgBranchingDegree: function () {
       var total = this.analyse.result.geometric_analyse.vessels.length
       return this.analyse.result.geometric_analyse.vessels.reduce(function (avgBranchingDegree, item) {
-        return (avgBranchingDegree + (item.branching_degree / total))
+        return (avgBranchingDegree + (item.branchingDegree / total))
       }, 0)
     },
     sumArea: function () {
@@ -422,7 +433,7 @@ export default {
     },
     sumAreaPercent: function () {
       return this.analyse.result.geometric_analyse.vessels.reduce(function (sumAreaPercent, item) {
-        return (sumAreaPercent + item.area_percent)
+        return (sumAreaPercent + item.areaPercent)
       }, 0)
     }
   }

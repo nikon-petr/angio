@@ -12,6 +12,8 @@ import com.angio.server.user.services.UserInfoService;
 import com.angio.server.util.url.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,16 +44,22 @@ public class AnalyseController {
     }
 
     @RequestMapping(path = "/api/v1/analyse", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllAnalyses() {
+    public ResponseEntity<?> getAllAnalyses(@RequestParam(value = "search", required = false) String search,
+                                            @RequestParam(value = "date", required = false) String date,
+                                            Pageable pageable){
         try {
-            List<AnalyseInfoEntity> analyses = analyseInfoService.getAllBaseAnalyseInfo();
+            Page<AnalyseInfoEntity> analyses = analyseInfoService.listAllByPageAndSortAndFilter(pageable, search, date);
+            long countOfAll = analyseInfoService.getCountOfAnalyses(search, date);
             List<AnalyseResponse> analyseResponses = new ArrayList<>();
-            for (AnalyseInfoEntity analyse : analyses) {
+            for (AnalyseInfoEntity analyse : analyses.getContent()) {
                 analyseResponses.add(new AnalyseResponse(analyse,
                         userInfoService.findByUser(analyse.getUser()).getLastname() + " " +
                                 userInfoService.findByUser(analyse.getUser()).getFirstname()));
             }
-            return ResponseEntity.ok().body(analyseResponses);
+
+            AnalyseResponseFull analyseResponseFull = new AnalyseResponseFull(analyseResponses, countOfAll);
+
+            return ResponseEntity.ok().body(analyseResponseFull);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.unprocessableEntity().body(null);

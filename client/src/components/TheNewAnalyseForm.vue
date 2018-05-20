@@ -84,12 +84,12 @@
                   <v-text-field
                     slot="activator"
                     label="Укажите дату рождения"
-                    v-model="new_analyse.patient.bday"
+                    v-model="bday_formatted"
                     :rules="new_analyse_rules.patient.default"
                     readonly
                     required
                   ></v-text-field>
-                  <v-date-picker v-model="new_analyse.patient.bday" @input="$refs.menu_bday.save(new_analyse.patient.bday)"></v-date-picker>
+                  <v-date-picker v-model="bday" @input="menu_bday = false"></v-date-picker>
                   </v-menu>
                   <v-text-field
                     label="Место жительства"
@@ -121,7 +121,7 @@
                   ></v-text-field>
                   <v-select
                     label="Тип анализа"
-                    v-model="new_analyse.info.analyse_type"
+                    v-model="new_analyse.info.analyseType"
                     :rules="new_analyse_rules.info.default"
                     :items="items_analyse_type"
                     data-vv-name="new_analyse.info.analyse_type"
@@ -129,7 +129,7 @@
                   ></v-select>
                   <v-text-field
                     label="Краткое описание"
-                    v-model="new_analyse.info.short_description"
+                    v-model="new_analyse.info.shortDescription"
                     :rules="new_analyse_rules.info.default"
                     required
                     textarea
@@ -138,7 +138,7 @@
                   ></v-text-field>
                   <v-text-field
                     label="Подробное описание"
-                    v-model="new_analyse.info.full_description"
+                    v-model="new_analyse.info.fullDescription"
                     name="input-3-2"
                     textarea
                     multi-line
@@ -190,9 +190,9 @@ export default {
       },
       info: {
         name: '',
-        short_description: '',
-        full_description: '',
-        analyse_type: '',
+        shortDescription: '',
+        fullDescription: '',
+        analyseType: '',
         comment: '',
         img: ''
       }
@@ -220,19 +220,30 @@ export default {
         ]
       }
     },
+    bday: '',
+    bday_formatted: '',
     menu_bday: false,
     items_analyse_type: [
       'Первичный анализ',
       'Последующий анализ'
     ]
   }),
+  computed: {
+    computedDateFormatted () {
+      return this.formatDate(this.bday)
+    }
+  },
   watch: {
+    bday (val) {
+      this.bday_formatted = this.formatDate(this.bday)
+    },
     new_analyse (newVal) {
       this.new_analyse = newVal
     }
   },
   methods: {
     startNewAnalyse () {
+      this.new_analyse.patient.bday = this.bday_formatted
       if (this.$refs.form_new_analyse.validate()) {
         this.dialog = false
         this.axios.post('v1/analyse/info', this.new_analyse)
@@ -289,6 +300,8 @@ export default {
       this.$refs.form_new_analyse.reset()
       this.new_analyse.info.img = ''
       this.dialog = false
+      this.bday_formatted = null
+      this.bday = null
     },
     previewImage: function (event) {
       var input = event.target
@@ -315,6 +328,8 @@ export default {
           this.new_analyse.patient.address = response.data.patient.address
           this.new_analyse.patient.work = response.data.patient.work
           this.new_analyse.patient.comment = response.data.patient.comment
+          const [day, month, year] = response.data.patient.bday.split('-')
+          this.bday = `${year}-${month}-${day}`
           this.$root.$emit(
             'showAlert',
             {
@@ -333,6 +348,8 @@ export default {
           this.new_analyse.patient.address = ''
           this.new_analyse.patient.work = ''
           this.new_analyse.patient.comment = ''
+          this.bday_formatted = null
+          this.bday = null
           this.$root.$emit(
             'showAlert',
             {
@@ -341,6 +358,18 @@ export default {
               timeout: 5000
             })
         })
+    },
+    formatDate (date) {
+      if (!date) return null
+
+      const [year, month, day] = date.split('-')
+      return `${day}-${month}-${year}`
+    },
+    parseDate (date) {
+      if (!date) return null
+
+      const [month, day, year] = date.split('/')
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     }
   },
   mounted () {

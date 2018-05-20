@@ -15,12 +15,12 @@ public class AnalyseInfoEntity {
     private UserEntity user;
     private PatientEntity patient;
     private String name;
-    private String short_description;
-    private String full_description;
-    private String analyse_type;
+    private String shortDescription;
+    private String fullDescription;
+    private String analyseType;
     private String comment;
     private String img;
-    private Date analyse_date;
+    private Date analyseDate;
     private boolean finished;
     private String conclusion;
     private Set<AnalyseGeometricEntity> analyseGeometric = new HashSet<>(0);
@@ -30,27 +30,18 @@ public class AnalyseInfoEntity {
 
     }
 
-    public AnalyseInfoEntity(
-            UserEntity user,
-            PatientEntity patient,
-            String name,
-            String short_description,
-            String full_description,
-            String analyse_type,
-            String comment,
-            String img,
-            Date analyse_date,
-            String conclusion,
-            boolean finished) {
+    public AnalyseInfoEntity(UserEntity user, PatientEntity patient, String name, String shortDescription,
+                             String fullDescription, String analyseType, String comment, String img,
+                             Date analyseDate, String conclusion, boolean finished) {
         this.user = user;
         this.patient = patient;
         this.name = name;
-        this.short_description = short_description;
-        this.full_description = full_description;
-        this.analyse_type = analyse_type;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.analyseType = analyseType;
         this.comment = comment;
         this.img = img;
-        this.analyse_date = analyse_date;
+        this.analyseDate = analyseDate;
         this.conclusion = conclusion;
         this.finished = finished;
     }
@@ -98,30 +89,30 @@ public class AnalyseInfoEntity {
     }
 
     @Column(name = "short_description", nullable = false, length = 500)
-    public String getShort_description() {
-        return short_description;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setShort_description(String short_description) {
-        this.short_description = short_description;
+    public void setShortDescription(String short_description) {
+        this.shortDescription = short_description;
     }
 
     @Column(name = "full_description", length = 1000)
-    public String getFull_description() {
-        return full_description;
+    public String getFullDescription() {
+        return fullDescription;
     }
 
-    public void setFull_description(String full_description) {
-        this.full_description = full_description;
+    public void setFullDescription(String fullDescription) {
+        this.fullDescription = fullDescription;
     }
 
     @Column(name = "analyse_type", nullable = false, length = 200)
-    public String getAnalyse_type() {
-        return analyse_type;
+    public String getAnalyseType() {
+        return analyseType;
     }
 
-    public void setAnalyse_type(String analyse_type) {
-        this.analyse_type = analyse_type;
+    public void setAnalyseType(String analyseType) {
+        this.analyseType = analyseType;
     }
 
     @Column(name = "comment", nullable = false, length = 1000)
@@ -143,12 +134,12 @@ public class AnalyseInfoEntity {
     }
 
     @Column(name = "analyse_date", nullable = false)
-    public Date getAnalyse_date() {
-        return analyse_date;
+    public Date getAnalyseDate() {
+        return analyseDate;
     }
 
-    public void setAnalyse_date(Date analyse_date) {
-        this.analyse_date = analyse_date;
+    public void setAnalyseDate(Date analyse_date) {
+        this.analyseDate = analyse_date;
     }
 
     @Column(name = "conclusion", length = 1000)

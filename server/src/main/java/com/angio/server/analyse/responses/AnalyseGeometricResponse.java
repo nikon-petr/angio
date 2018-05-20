@@ -8,52 +8,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnalyseGeometricResponse implements Serializable {
-    private String original_image;
-    private String binarized_image;
-    private String skel_image;
+    private String originalImage;
+    private String binarizedImage;
+    private String skelImage;
     private List<VesselResponse> vessels;
 
     public AnalyseGeometricResponse(){
         this.vessels = new ArrayList<>();
     }
 
-    public AnalyseGeometricResponse(String original_image, String binarized_image, String skel_image) {
-        this.original_image = original_image;
-        this.binarized_image = binarized_image;
-        this.skel_image = skel_image;
+    public AnalyseGeometricResponse(String originalImage, String binarizedImage, String skelImage) {
+        this.originalImage = originalImage;
+        this.binarizedImage = binarizedImage;
+        this.skelImage = skelImage;
         this.vessels = new ArrayList<>();
     }
 
-    public AnalyseGeometricResponse(AnalyseGeometricEntity analyseGeometricEntity, List<VesselEntity> vessels, String original_image){
-        this.original_image = original_image;
-        this.binarized_image = analyseGeometricEntity.getBinarized_image();
-        this.skel_image = analyseGeometricEntity.getSkel_image();
+    public AnalyseGeometricResponse(AnalyseGeometricEntity analyseGeometricEntity, List<VesselEntity> vessels, String originalImage){
+        this.originalImage = originalImage;
+        this.binarizedImage = analyseGeometricEntity.getBinarizedImage();
+        this.skelImage = analyseGeometricEntity.getSkelImage();
         this.vessels = new ArrayList<>();
         for (VesselEntity vessel : vessels) this.vessels.add(new VesselResponse(vessel));
     }
 
-    public String getOriginal_image() {
-        return original_image;
+    public String getOriginalImage() {
+        return originalImage;
     }
 
-    public void setOriginal_image(String original_image) {
-        this.original_image = original_image;
+    public void setOriginalImage(String originalImage) {
+        this.originalImage = originalImage;
     }
 
-    public String getBinarized_image() {
-        return binarized_image;
+    public String getBinarizedImage() {
+        return binarizedImage;
     }
 
-    public void setBinarized_image(String binarized_image) {
-        this.binarized_image = binarized_image;
+    public void setBinarizedImage(String binarizedImage) {
+        this.binarizedImage = binarizedImage;
     }
 
-    public String getSkel_image() {
-        return skel_image;
+    public String getSkelImage() {
+        return skelImage;
     }
 
-    public void setSkel_image(String skel_image) {
-        this.skel_image = skel_image;
+    public void setSkelImage(String skelImage) {
+        this.skelImage = skelImage;
     }
 
     public List<VesselResponse> getVessels() {

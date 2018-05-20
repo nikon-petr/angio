@@ -15,14 +15,14 @@ public class PatientResponse implements Serializable {
     private String bday;
     private String address;
     private String work;
-    private String comments;
+    private String comment;
 
     public PatientResponse(){
 
     }
 
     public PatientResponse(String firstname, String lastname, String patronymic,
-                          String email, String phone, String policy, String bday, String address, String work, String comments) {
+                          String email, String phone, String policy, String bday, String address, String work, String comment) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.patronymic = patronymic;
@@ -32,11 +32,11 @@ public class PatientResponse implements Serializable {
         this.bday = bday;
         this.address = address;
         this.work = work;
-        this.comments = comments;
+        this.comment = comment;
     }
 
     public PatientResponse(PatientEntity patientEntity){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String date = sdf.format(patientEntity.getBday());
 
         this.firstname = patientEntity.getFirstname();
@@ -48,7 +48,7 @@ public class PatientResponse implements Serializable {
         this.bday = date;
         this.address = patientEntity.getLocation_address();
         this.work = patientEntity.getWork_address();
-        this.comments = patientEntity.getComment();
+        this.comment = patientEntity.getComment();
     }
 
     public String getFirstname() {
@@ -123,11 +123,11 @@ public class PatientResponse implements Serializable {
         this.work = work;
     }
 
-    public String getComments() {
-        return comments;
+    public String getComment() {
+        return comment;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setComment(String comments) {
+        this.comment = comments;
     }
 }

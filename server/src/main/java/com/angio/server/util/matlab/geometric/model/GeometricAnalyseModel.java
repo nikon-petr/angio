@@ -8,17 +8,17 @@ public class GeometricAnalyseModel {
     private BufferedImage original;
     private BufferedImage binarized;
     private BufferedImage skel;
-    private List<VesselModel> analyse_result;
+    private List<VesselModel> analyseResult;
 
     public GeometricAnalyseModel(){
-        this.analyse_result = new ArrayList<>();
+        this.analyseResult = new ArrayList<>();
     }
 
     public GeometricAnalyseModel(BufferedImage original, BufferedImage binarized, BufferedImage skel){
         this.original = original;
         this.binarized = binarized;
         this.skel = skel;
-        this.analyse_result = new ArrayList<>();
+        this.analyseResult = new ArrayList<>();
     }
 
     public BufferedImage getOriginal() {
@@ -45,15 +45,15 @@ public class GeometricAnalyseModel {
         this.skel = skel;
     }
 
-    public List<VesselModel> getAnalyse_result() {
-        return analyse_result;
+    public List<VesselModel> getAnalyseResult() {
+        return analyseResult;
     }
 
-    public void setAnalyse_result(List<VesselModel> analyse_result) {
-        this.analyse_result = analyse_result;
+    public void setAnalyseResult(List<VesselModel> analyseResult) {
+        this.analyseResult = analyseResult;
     }
 
-    public void addAnalyse_result(VesselModel vesselModel){
-        this.analyse_result.add(vesselModel);
+    public void addAnalyseResult(VesselModel vesselModel){
+        this.analyseResult.add(vesselModel);
     }
 }

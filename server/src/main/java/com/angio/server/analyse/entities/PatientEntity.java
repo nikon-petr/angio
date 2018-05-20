@@ -47,7 +47,7 @@ public class PatientEntity {
 
     public PatientEntity(PatientRequest patientRequest){
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             Date bDay = sdf.parse(patientRequest.getBday());
             this.firstname = patientRequest.getFirstname();
             this.lastname = patientRequest.getLastname();
@@ -58,7 +58,7 @@ public class PatientEntity {
             this.phone = patientRequest.getPhone();
             this.work_address = patientRequest.getWork();
             this.location_address = patientRequest.getAddress();
-            this.comment = patientRequest.getComments();
+            this.comment = patientRequest.getComment();
             this.policy = patientRequest.getPolicy();
         } catch (ParseException e) {
             e.printStackTrace();

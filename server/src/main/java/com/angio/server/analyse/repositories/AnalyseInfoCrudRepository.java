@@ -1,10 +1,72 @@
 package com.angio.server.analyse.repositories;
 
 import com.angio.server.analyse.entities.AnalyseInfoEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+public interface AnalyseInfoCrudRepository extends PagingAndSortingRepository<AnalyseInfoEntity, Long> {
+    @Query("SELECT a from AnalyseInfoEntity a " +
+            "  JOIN a.patient p " +
+            "  JOIN a.user u " +
+            "  JOIN u.userInfo ui " +
+            "WHERE (LOWER(a.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(a.shortDescription) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(a.analyseType) LIKE LOWER(CONCAT('%', :search, '%'))" +
+            "      OR LOWER(p.firstname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.lastname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.patronymic) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.policy) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(ui.firstname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(ui.lastname) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<AnalyseInfoEntity> findAll(@Param("search") String search, Pageable pageable);
 
-public interface AnalyseInfoCrudRepository extends CrudRepository<AnalyseInfoEntity, Long>{
-    List<AnalyseInfoEntity> findAll();
+    @Query("SELECT a from AnalyseInfoEntity a " +
+            "  JOIN a.patient p " +
+            "  JOIN a.user u " +
+            "  JOIN u.userInfo ui " +
+            "WHERE (LOWER(a.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(a.shortDescription) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(a.analyseType) LIKE LOWER(CONCAT('%', :search, '%'))" +
+            "      OR LOWER(p.firstname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.lastname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.patronymic) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.policy) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(ui.firstname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(ui.lastname) LIKE LOWER(CONCAT('%', :search, '%')))" +
+            "      AND (DATE(a.analyseDate) = DATE(:date))")
+    Page<AnalyseInfoEntity> findAll(@Param("search") String search, @Param("date") String date, Pageable pageable);
+
+    @Query("SELECT COUNT(a) from AnalyseInfoEntity a " +
+            "  JOIN a.patient p " +
+            "  JOIN a.user u " +
+            "  JOIN u.userInfo ui " +
+            "WHERE (LOWER(a.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(a.shortDescription) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(a.analyseType) LIKE LOWER(CONCAT('%', :search, '%'))" +
+            "      OR LOWER(p.firstname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.lastname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.patronymic) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.policy) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(ui.firstname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(ui.lastname) LIKE LOWER(CONCAT('%', :search, '%')))")
+    long count(@Param("search") String search);
+
+    @Query("SELECT COUNT(a) from AnalyseInfoEntity a " +
+            "  JOIN a.patient p " +
+            "  JOIN a.user u " +
+            "  JOIN u.userInfo ui " +
+            "WHERE (LOWER(a.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(a.shortDescription) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(a.analyseType) LIKE LOWER(CONCAT('%', :search, '%'))" +
+            "      OR LOWER(p.firstname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.lastname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.patronymic) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(p.policy) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(ui.firstname) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "      OR LOWER(ui.lastname) LIKE LOWER(CONCAT('%', :search, '%')))" +
+            "      AND (DATE(a.analyseDate) = DATE(:date))")
+    long count(@Param("search") String search, @Param("date") String date);
 }

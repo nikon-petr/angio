@@ -10,29 +10,29 @@ import javax.persistence.*;
 public class VesselEntity {
     private long id;
     private AnalyseGeometricEntity analyseGeometric;
-    private String vessel_image;
-    private String main_vessel_image;
-    private float tortuosity_degree;
-    private int count_of_branches;
-    private float branching_degree;
+    private String vesselImage;
+    private String mainVesselImage;
+    private float tortuosityDegree;
+    private int countOfBranches;
+    private float branchingDegree;
     private float area;
-    private float area_percent;
+    private float areaPercent;
 
     public VesselEntity(){
 
     }
 
-    public VesselEntity(AnalyseGeometricEntity analyseGeometric, String vessel_image, String main_vessel_image,
-                        float tortuosity_degree, int count_of_branches, float branching_degree,
-                        float area, float area_percent) {
+    public VesselEntity(AnalyseGeometricEntity analyseGeometric, String vesselImage, String mainVesselImage,
+                        float tortuosityDegree, int countOfBranches, float branchingDegree,
+                        float area, float areaPercent) {
         this.analyseGeometric = analyseGeometric;
-        this.vessel_image = vessel_image;
-        this.main_vessel_image = main_vessel_image;
-        this.tortuosity_degree = tortuosity_degree;
-        this.count_of_branches = count_of_branches;
-        this.branching_degree = branching_degree;
+        this.vesselImage = vesselImage;
+        this.mainVesselImage = mainVesselImage;
+        this.tortuosityDegree = tortuosityDegree;
+        this.countOfBranches = countOfBranches;
+        this.branchingDegree = branchingDegree;
         this.area = area;
-        this.area_percent = area_percent;
+        this.areaPercent = areaPercent;
     }
 
     @Id
@@ -58,48 +58,48 @@ public class VesselEntity {
     }
 
     @Column(name = "vessel_image", nullable = false, length = 400)
-    public String getVessel_image() {
-        return vessel_image;
+    public String getVesselImage() {
+        return vesselImage;
     }
 
-    public void setVessel_image(String vessel_image) {
-        this.vessel_image = vessel_image;
+    public void setVesselImage(String vesselImage) {
+        this.vesselImage = vesselImage;
     }
 
     @Column(name = "main_vessel_image", nullable = false, length = 400)
-    public String getMain_vessel_image() {
-        return main_vessel_image;
+    public String getMainVesselImage() {
+        return mainVesselImage;
     }
 
-    public void setMain_vessel_image(String main_vessel_image) {
-        this.main_vessel_image = main_vessel_image;
+    public void setMainVesselImage(String mainVesselImage) {
+        this.mainVesselImage = mainVesselImage;
     }
 
     @Column(name = "tortuosity_degree", nullable = false)
-    public float getTortuosity_degree() {
-        return tortuosity_degree;
+    public float getTortuosityDegree() {
+        return tortuosityDegree;
     }
 
-    public void setTortuosity_degree(float tortuosity_degree) {
-        this.tortuosity_degree = tortuosity_degree;
+    public void setTortuosityDegree(float tortuosityDegree) {
+        this.tortuosityDegree = tortuosityDegree;
     }
 
     @Column(name = "count_of_branches", nullable = false)
-    public int getCount_of_branches() {
-        return count_of_branches;
+    public int getCountOfBranches() {
+        return countOfBranches;
     }
 
-    public void setCount_of_branches(int count_of_branches) {
-        this.count_of_branches = count_of_branches;
+    public void setCountOfBranches(int countOfBranches) {
+        this.countOfBranches = countOfBranches;
     }
 
     @Column(name = "branching_degree", nullable = false)
-    public float getBranching_degree() {
-        return branching_degree;
+    public float getBranchingDegree() {
+        return branchingDegree;
     }
 
-    public void setBranching_degree(float branching_degree) {
-        this.branching_degree = branching_degree;
+    public void setBranchingDegree(float branchingDegree) {
+        this.branchingDegree = branchingDegree;
     }
 
     @Column(name = "area", nullable = false)
@@ -112,11 +112,11 @@ public class VesselEntity {
     }
 
     @Column(name = "area_percent", nullable = false)
-    public float getArea_percent() {
-        return area_percent;
+    public float getAreaPercent() {
+        return areaPercent;
     }
 
-    public void setArea_percent(float area_percent) {
-        this.area_percent = area_percent;
+    public void setAreaPercent(float areaPercent) {
+        this.areaPercent = areaPercent;
     }
 }

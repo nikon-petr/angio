@@ -41,8 +41,7 @@ public class GeometricAnalyseAdapter {
 
         GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseModel(biOriginal, biBinarized, biSkel);
         for (int i = 1; i <= (size-1)/8; i++){
-            int increment = i;
-            geometricAnalyseModel.addAnalyse_result(new VesselModel(
+            geometricAnalyseModel.addAnalyseResult(new VesselModel(
                     (long)((double[])mWStructArrayVessels.getField(((i-1)*8)+1).getData())[0],
                     renderArrayData((MWNumericArray) mWStructArrayVessels.getField(((i-1)*8)+2)),
                     renderArrayData((MWNumericArray) mWStructArrayVessels.getField(((i-1)*8)+3)),

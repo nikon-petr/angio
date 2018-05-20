@@ -4,28 +4,28 @@ import java.awt.image.BufferedImage;
 
 public class VesselModel {
     private long id;
-    private BufferedImage vessel_image;
-    private BufferedImage main_vessel;
-    private int count_of_branches_of_1_orders;
+    private BufferedImage vesselImage;
+    private BufferedImage mainVessel;
+    private int countOfBranchesOf1Orders;
     private double tortuosity;
     private double branching;
     private double area;
-    private double area_percent;
+    private double areaPercent;
 
     public VesselModel(){
 
     }
 
-    public VesselModel(long id, BufferedImage vessel_image, BufferedImage main_vessel, int count_of_branches_of_1_orders,
-                       double tortuosity, double branching, double area, double area_percent) {
+    public VesselModel(long id, BufferedImage vesselImage, BufferedImage mainVessel, int countOfBranchesOf1Orders,
+                       double tortuosity, double branching, double area, double areaPercent) {
         this.id = id;
-        this.vessel_image = vessel_image;
-        this.main_vessel = main_vessel;
-        this.count_of_branches_of_1_orders = count_of_branches_of_1_orders;
+        this.vesselImage = vesselImage;
+        this.mainVessel = mainVessel;
+        this.countOfBranchesOf1Orders = countOfBranchesOf1Orders;
         this.tortuosity = tortuosity;
         this.branching = branching;
         this.area = area;
-        this.area_percent = area_percent;
+        this.areaPercent = areaPercent;
     }
 
     public long getId() {
@@ -36,28 +36,28 @@ public class VesselModel {
         this.id = id;
     }
 
-    public BufferedImage getVessel_image() {
-        return vessel_image;
+    public BufferedImage getVesselImage() {
+        return vesselImage;
     }
 
-    public void setVessel_image(BufferedImage vessel_image) {
-        this.vessel_image = vessel_image;
+    public void setVesselImage(BufferedImage vesselImage) {
+        this.vesselImage = vesselImage;
     }
 
-    public BufferedImage getMain_vessel() {
-        return main_vessel;
+    public BufferedImage getMainVessel() {
+        return mainVessel;
     }
 
-    public void setMain_vessel(BufferedImage main_vessel) {
-        this.main_vessel = main_vessel;
+    public void setMainVessel(BufferedImage mainVessel) {
+        this.mainVessel = mainVessel;
     }
 
-    public int getCount_of_branches_of_1_orders() {
-        return count_of_branches_of_1_orders;
+    public int getCountOfBranchesOf1Orders() {
+        return countOfBranchesOf1Orders;
     }
 
-    public void setCount_of_branches_of_1_orders(int count_of_branches_of_1_orders) {
-        this.count_of_branches_of_1_orders = count_of_branches_of_1_orders;
+    public void setCountOfBranchesOf1Orders(int countOfBranchesOf1Orders) {
+        this.countOfBranchesOf1Orders = countOfBranchesOf1Orders;
     }
 
     public double getTortuosity() {
@@ -84,11 +84,11 @@ public class VesselModel {
         this.area = area;
     }
 
-    public double getArea_percent() {
-        return area_percent;
+    public double getAreaPercent() {
+        return areaPercent;
     }
 
-    public void setArea_percent(double area_percent) {
-        this.area_percent = area_percent;
+    public void setAreaPercent(double areaPercent) {
+        this.areaPercent = areaPercent;
     }
 }

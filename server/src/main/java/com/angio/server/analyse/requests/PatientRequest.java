@@ -19,7 +19,7 @@ public class PatientRequest implements Serializable{
     }
 
     public PatientRequest(String firstname, String lastname, String patronymic,
-                          String email, String phone, String policy, String bday, String address, String work, String comments) {
+                          String email, String phone, String policy, String bday, String address, String work, String comment) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.patronymic = patronymic;
@@ -29,7 +29,7 @@ public class PatientRequest implements Serializable{
         this.bday = bday;
         this.address = address;
         this.work = work;
-        this.comment = comments;
+        this.comment = comment;
     }
 
     public String getFirstname() {
@@ -104,11 +104,11 @@ public class PatientRequest implements Serializable{
         this.work = work;
     }
 
-    public String getComments() {
+    public String getComment() {
         return comment;
     }
 
-    public void setComments(String comments) {
-        this.comment = comments;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

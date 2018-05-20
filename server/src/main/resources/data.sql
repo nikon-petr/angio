@@ -39,11 +39,11 @@ VALUES ('user@angio.ru', 'ROLE_USER');
 
 -- **************** patient ****************
 INSERT INTO public.patients (firstname, lastname, patronymic, email, phone, bday, location_address, work_address, policy, comment)
-    VALUES('Иван', 'Заболевальный', 'Семёнович', 'ivan_sem@gmail.com', '89271237898', '1985-05-06 00:00:00.000000', 'Саратов, ул. Посадского 228/226, 10', 'Саратов, ул. Московская 56', '9087675467878954', '');
+    VALUES('Иван', 'Заболевальный', 'Семёнович', 'ivan_sem@gmail.com', '89271237898', '1985-11-11 00:00:00.000000', 'Саратов, ул. Посадского 228/226, 10', 'Саратов, ул. Московская 56', '9087675467878954', '');
 INSERT INTO public.patients (firstname, lastname, patronymic, email, phone, bday, location_address, work_address, policy, comment)
     VALUES('Пётр', 'Семакин', 'Владимирович', 'semakin_sem@mail.ru', '89279385898', '1960-12-12 00:00:00.000000', 'Саратов, ул. Рахова 21, 90', 'На пенсии', '8207675467872250', '');
 INSERT INTO public.patients (firstname, lastname, patronymic, email, phone, bday, location_address, work_address, policy, comment)
-    VALUES('Николай', 'Козловский', 'Николаевич', 'kozlito@yandex.ru', '89699389098', '1992-02-16 00:00:00.000000', 'Саратов, ул. Чернышевского 240, 1', 'Саратов, ул. Степана Разина 8', '1276215467890790', '');
+    VALUES('Николай', 'Козловский', 'Николаевич', 'kozlito@yandex.ru', '89699389098', '1992-10-10 00:00:00.000000', 'Саратов, ул. Чернышевского 240, 1', 'Саратов, ул. Степана Разина 8', '1276215467890790', '');
 
 -- **************** analyse_info ****************
 INSERT INTO public.analyses_info (username, patient_id, name, short_description, full_description, analyse_type, comment, img, analyse_date, finished, conclusion)
@@ -51,4 +51,10 @@ INSERT INTO public.analyses_info (username, patient_id, name, short_description,
 INSERT INTO public.analyses_info (username, patient_id, name, short_description, full_description, analyse_type, comment, img, analyse_date, finished, conclusion)
     VALUES ('user@angio.ru', 2, 'Первичный анализ глазного дна', 'Выявление проблемных зон, большое кол-во зон ишемии', '', 'Первичный анализ', '', '02.05.2018 07:40:27.630.png', '2018-04-06 11:21:00.000000', false, '');
 INSERT INTO public.analyses_info (username, patient_id, name, short_description, full_description, analyse_type, comment, img, analyse_date, finished, conclusion)
-    VALUES ('user@angio.ru', 3, 'Вторичный анализ, результаты', 'Определение улучшений', '', 'Вторичный анализ', '', '02.05.2018 07:40:27.630.png', '2018-05-06 09:29:00.000000', false, '');
+    VALUES ('user@angio.ru', 3, 'Последующий анализ, результаты', 'Определение улучшений', '', 'Последующий анализ', '', '02.05.2018 07:40:27.630.png', '2018-05-06 09:29:00.000000', false, '');
+INSERT INTO public.analyses_info (username, patient_id, name, short_description, full_description, analyse_type, comment, img, analyse_date, finished, conclusion)
+    VALUES ('user@angio.ru', 2, 'Анализ', 'Детальный анализ глазного дна', '', 'Последующий анализ', '', '02.04.2018 17:23:27.630.png', '2018-03-03 09:29:00.000000', false, '');
+INSERT INTO public.analyses_info (username, patient_id, name, short_description, full_description, analyse_type, comment, img, analyse_date, finished, conclusion)
+    VALUES ('user@angio.ru', 2, 'Повторный детальный анализ', 'Детальный анализ глазного дна (повторный)', '', 'Последующий анализ', '', '02.04.2018 17:30:27.630.png', '2018-03-03 09:39:00.000000', false, '');
+INSERT INTO public.analyses_info (username, patient_id, name, short_description, full_description, analyse_type, comment, img, analyse_date, finished, conclusion)
+    VALUES ('user@angio.ru', 1, 'Повторная оценка СС глазного дна', 'Та же', '', 'Первичный анализ', '', '02.04.2018 17:30:27.630.png', '2018-03-02 19:21:14.000000', false, '');

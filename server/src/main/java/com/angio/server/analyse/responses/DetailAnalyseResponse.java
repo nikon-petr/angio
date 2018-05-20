@@ -9,7 +9,7 @@ import java.util.Set;
 public class DetailAnalyseResponse implements Serializable {
     private PatientResponse patient;
     private DetailAnalyseInfoResponse info;
-    private AnalyseGeometricResponse geometric_analyse;
+    private AnalyseGeometricResponse geometricAnalyse;
     private AnalyseBloodFlowResponse analyseBloodFlowResponse;
     private String username;
 
@@ -28,7 +28,7 @@ public class DetailAnalyseResponse implements Serializable {
             String densityImageFileName) {
         this.patient = new PatientResponse(patientEntity);
         this.info = new DetailAnalyseInfoResponse(analyseInfoEntity);
-        this.geometric_analyse = new AnalyseGeometricResponse(analyseGeometricEntity, vesselsEntity, analyseInfoEntity.getImg());
+        this.geometricAnalyse = new AnalyseGeometricResponse(analyseGeometricEntity, vesselsEntity, analyseInfoEntity.getImg());
         this.username = username;
         this.analyseBloodFlowResponse = new AnalyseBloodFlowResponse(
                 ishemiaImageFileName,
@@ -54,12 +54,12 @@ public class DetailAnalyseResponse implements Serializable {
         this.info = info;
     }
 
-    public AnalyseGeometricResponse getGeometric_analyse() {
-        return geometric_analyse;
+    public AnalyseGeometricResponse getGeometricAnalyse() {
+        return geometricAnalyse;
     }
 
-    public void setGeometric_analyse(AnalyseGeometricResponse geometric_analyse) {
-        this.geometric_analyse = geometric_analyse;
+    public void setGeometricAnalyse(AnalyseGeometricResponse geometric_analyse) {
+        this.geometricAnalyse = geometric_analyse;
     }
 
     public String getUsername() {
