@@ -10,7 +10,7 @@
             <v-layout v-if="!loading_analyse" justify-space-between>
               <v-flex xs4 md4 lg4>
                 <h3>Дата</h3>
-                <div class="headline mb-0">{{ analyse.analyse_base_info.info.analyseDate }}</div>
+                <div class="headline mb-0">{{ formatFullDate(analyse.analyse_base_info.info.analyseDate) }}</div>
               </v-flex>
             </v-layout>
           </v-card-title>
@@ -34,8 +34,8 @@
               <div>{{ analyse.analyse_base_info.patient.address }}</div>
               <h3 class="headline mb-0">Место работы/учёбы:</h3>
               <div>{{ analyse.analyse_base_info.patient.work }}</div>
-              <h3 class="headline mb-0" v-if="analyse.analyse_base_info.patient.comment != null">Комментарий:</h3>
-              <div v-if="analyse.analyse_base_info.patient.comment != null">{{ analyse.analyse_base_info.patient.comment }}</div>
+              <h3 class="headline mb-0" v-if="analyse.analyse_base_info.patient.comment != null && analyse.analyse_base_info.patient.comment.length > 0">Комментарий:</h3>
+              <div v-if="analyse.analyse_base_info.patient.comment != null && analyse.analyse_base_info.patient.comment.length > 0">{{ analyse.analyse_base_info.patient.comment}}</div>
             </v-flex>
             <v-flex xs5 md5 lg5>
               <h3>Информация о болезни</h3>
@@ -43,29 +43,18 @@
               <div>{{ analyse.analyse_base_info.info.name }}</div>
               <h3 class="headline mb-0">Краткое описание:</h3>
               <div>{{ analyse.analyse_base_info.info.shortDescription }}</div>
-              <h3 class="headline mb-0" v-if="analyse.analyse_base_info.info.fullDescription != null">Подробное описание:</h3>
-              <div v-if="analyse.analyse_base_info.info.fullDescription != null">{{ analyse.analyse_base_info.info.fullDescription }}</div>
+              <h3 class="headline mb-0" v-if="analyse.analyse_base_info.info.fullDescription != null && analyse.analyse_base_info.info.fullDescription.length > 0">Подробное описание:</h3>
+              <div v-if="analyse.analyse_base_info.info.fullDescription != null && analyse.analyse_base_info.info.fullDescription.length > 0">{{ analyse.analyse_base_info.info.fullDescription }}</div>
               <h3 class="headline mb-0">Тип анализа:</h3>
               <div>{{ analyse.analyse_base_info.info.analyseType }}</div>
-              <h3 class="headline mb-0" v-if="analyse.analyse_base_info.info.comment != null">Комментарий:</h3>
-              <div v-if="analyse.analyse_base_info.info.comment != null">{{ analyse.analyse_base_info.info.comment }}</div>
+              <h3 class="headline mb-0" v-if="analyse.analyse_base_info.info.comment != null && analyse.analyse_base_info.info.comment.length > 0">Комментарий:</h3>
+              <div v-if="analyse.analyse_base_info.info.comment != null && analyse.analyse_base_info.info.comment.length > 0">{{ analyse.analyse_base_info.info.comment }}</div>
             </v-flex>
             <v-flex xs6 md6 lg6>
               <h3>Заключение о болезни</h3>
               <h3 class="headline mb-0" v-if="analyse.analyse_base_info.info.conclusion == null || analyse.analyse_base_info.info.conclusion.length <= 0">Заключение отсутствует</h3>
-              <div v-if="analyse.analyse_base_info.info.conclusion != null">{{ analyse.analyse_base_info.info.conclusion }}</div>
+              <div v-if="analyse.analyse_base_info.info.conclusion != null && analyse.analyse_base_info.info.conclusion.length > 0">{{ analyse.analyse_base_info.info.conclusion }}</div>
             </v-flex>
-            <v-dialog v-model="dialogDelete" max-width="290">
-              <v-card>
-                <v-card-title class="headline">Подтвердите действие</v-card-title>
-                <v-card-text>Вы действительно хотите удалить текущий сосуд из анализа?</v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" flat="flat" @click.native="dialogDelete = false">Отмена</v-btn>
-                  <v-btn color="blue darken-1" flat="flat" @click="deleteItemConfirmed()">Удалить</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
             <v-dialog v-model="dialogDeleteAnalyse" max-width="290">
               <v-card>
                 <v-card-title class="headline">Подтвердите действие</v-card-title>
@@ -120,74 +109,10 @@
           <v-tab ripple>
             Геометрическая характеристика СС
           </v-tab>
-          <!-- TODO move tab to a separate component -->
           <v-tab-item>
-            <v-card flat>
-              <v-container grid-list-md text-xs-center>
-                <v-layout row wrap>
-                  <v-flex xs4>
-                    <v-card dark>
-                      <v-card-text>Оригинальное изображение</v-card-text>
-                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.originalImage">
-                    </v-card>
-                  </v-flex>
-                  <v-flex xs4>
-                    <v-card dark>
-                      <v-card-text>Бинаризованное изображение</v-card-text>
-                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.binarizedImage">
-                    </v-card>
-                  </v-flex>
-                  <v-flex xs4>
-                    <v-card dark>
-                      <v-card-text>Скелетизованное изображение</v-card-text>
-                      <img v-img style="width: 90%;" v-bind:src="'http://localhost/api/v1/image?filename=' + analyse.result.geometric_analyse.skelImage">
-                    </v-card>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-              <v-container grid-list-md text-xs-center>
-                <v-card-text>Анализ сосудистой системы глаза по отдельным сосудам</v-card-text>
-                <v-data-table
-                  :headers="headers"
-                  :items="analyse.result.geometric_analyse.vessels"
-                  hide-actions
-                  class="elevation-1"
-                  >
-                  <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
-                  <template slot="items" slot-scope="props">
-                    <td>{{ props.item.id }}</td>
-                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/image?filename=' + props.item.vesselImage"></td>
-                    <td><img v-img style="width: 100px;" v-bind:src="'http://localhost/api/v1/image?filename=' + props.item.mainVesselImage"></td>
-                    <td>{{ props.item.countOfBranches }}</td>
-                    <td class="text-xs-right">{{ props.item.tortuosityDegree }}</td>
-                    <td class="text-xs-right">{{ props.item.branchingDegree }}</td>
-                    <td class="text-xs-right">{{ props.item.area }}</td>
-                    <td class="text-xs-right">{{ props.item.areaPercent }}</td>
-                    <td class="center">
-                      <v-btn icon class="mx-0" @click="deleteItem(props.item)">
-                        <v-icon color="pink">delete</v-icon>
-                      </v-btn>
-                    </td>
-                  </template>
-                </v-data-table>
-                <v-card-text>Результаты анализа сосудистой системы глаза по отдельным сосудам </v-card-text>
-                <v-data-table
-                  :headers="headers_result"
-                  :items="result"
-                  hide-actions
-                  class="elevation-1"
-                  >
-                  <template slot="items" slot-scope="props">
-                    <td>{{ sumId }}</td>
-                    <td>{{ sumCountOfBranches }}</td>
-                    <td class="text-xs-right">{{ avgTortuosityDegree.toFixed(4) }}</td>
-                    <td class="text-xs-right">{{ avgBranchingDegree.toFixed(4) }}</td>
-                    <td class="text-xs-right">{{ sumArea.toFixed(4) }}</td>
-                    <td class="text-xs-right">{{ sumAreaPercent.toFixed(4) }}</td>
-                  </template>
-                </v-data-table>
-              </v-container>
-            </v-card>
+            <GeometricAnalyseTab
+              v-bind:geometric="analyse.result.geometric_analyse"
+            ></GeometricAnalyseTab>
           </v-tab-item>
           <v-tab ripple>
             Степень кровоснабжения сс
@@ -210,27 +135,20 @@
 
 <script>
 import BloodFlowAnalyseTab from '../components/BloodFlowAnalyseTab'
+import GeometricAnalyseTab from '../components/GeometricAnalyseTab'
 export default {
   name: 'DetailAnalyse',
-  components: {BloodFlowAnalyseTab},
+  components: {BloodFlowAnalyseTab, GeometricAnalyseTab},
   created () {
-    this.detail_analyse_id = this.$store.test_id
-    if (this.detail_analyse_id === undefined) {
-      this.detail_analyse_id = parseInt(localStorage.getItem('detail_analyse_id'))
-    } else {
-      localStorage.setItem('detail_analyse_id', this.detail_analyse_id + '')
-    }
+    this.detail_analyse_id = this.$route.params.id
     this.loadDetailAnalyse()
   },
   data: () => ({
     detail_analyse_id: 0,
     active: null,
-    dialogDelete: false,
     dialogEditConclusion: false,
     dialogDeleteAnalyse: false,
     editConclusionContent: '',
-    delete_index: -1,
-    delete_vessel_id: -1,
     loading_analyse: true,
     analyse: {
       analyse_base_info: {
@@ -273,49 +191,27 @@ export default {
         }
       },
       username: ''
-    },
-    result: [
-      {
-        sum_id: 0,
-        sum_count_of_branches: 0,
-        avg_tortuosity_degree: 0,
-        avg_branching_degree: 0,
-        sum_area: 0,
-        sum_area_percent: 0
-      }
-    ],
-    headers: [
-      { text: '№', align: 'left', value: 'id', width: '5%' },
-      { text: 'Сосуд', align: 'left', value: 'vesselImage', sortable: false, width: '20%' },
-      { text: 'Русло', align: 'left', value: 'mainVesselImage', sortable: false, width: '20%' },
-      { text: 'Ветви', align: 'left', value: 'countOfBranches', width: '10%' },
-      { text: 'Извилистость', align: 'left', value: 'tortuosityDegree', width: '10%' },
-      { text: 'Ветвистость', align: 'left', value: 'branchingDegree', width: '10%' },
-      { text: 'S (px)', align: 'left', value: 'area', width: '10%' },
-      { text: 'S (%)', align: 'left', value: 'areaPercent', width: '10%' },
-      { text: 'Действия', align: 'left', value: 'actions', sortable: false, width: '5%' }
-    ],
-    headers_result: [
-      { text: 'Количество сосудов', align: 'left', value: 'sum_id', sortable: false, width: '20%' },
-      { text: 'Количество ветвей', align: 'left', value: 'sum_count_of_branches', sortable: false, width: '20%' },
-      { text: 'Средняя извилистость', align: 'left', value: 'avg_tortuosity_degree', sortable: false, width: '20%' },
-      { text: 'Средняя ветвистость', align: 'left', value: 'avg_branching_degree', sortable: false, width: '200%' },
-      { text: 'Общая S (px)', align: 'left', value: 'sum_area', sortable: false, width: '10%' },
-      { text: 'Общая S (%)', align: 'left', value: 'sum_area_percent', sortable: false, width: '10%' }
-    ]
+    }
   }),
   methods: {
     loadDetailAnalyse () {
-      this.axios.post('v1/analyse/detail', {id: this.detail_analyse_id})
+      this.axios.get('v1/analyse/detail/' + this.detail_analyse_id)
         .then((response) => {
+          console.log(response)
           this.analyse.analyse_base_info.patient = response.data.patient
           this.analyse.analyse_base_info.info = response.data.info
           this.analyse.result.geometric_analyse = response.data.geometricAnalyse
           this.analyse.result.bloodFlowAnalyse = response.data.analyseBloodFlowResponse
+          // this.analyse.result.geometric_analyse.vessels = response.data.geometricAnalyse.vessels
           this.analyse.result.username = response.data.username
           this.editConclusionContent = this.analyse.analyse_base_info.info.conclusion
+          // images
+          // this.originalImageSrc = response.data.geometricAnalyse.originalImage
+          // this.binarizedImageSrc = response.data.geometricAnalyse.binarizedImage
+          // this.skelImageSrc = response.data.geometricAnalyse.skelImage
+          // this.vessels = response.data.geometricAnalyse.vessels
+          // stop loading
           this.loading_analyse = false
-          console.log(response)
         })
         .catch(() => {
           this.$root.$emit(
@@ -327,37 +223,8 @@ export default {
             })
         })
     },
-    deleteItem (item) {
-      const index = this.analyse.result.geometric_analyse.vessels.indexOf(item)
-      this.delete_index = index
-      this.delete_vessel_id = item.id
-      this.dialogDelete = true
-    },
-    deleteItemConfirmed () {
-      this.axios.delete('v1/analyse/vessel/' + this.delete_vessel_id)
-        .then(() => {
-          this.analyse.result.geometric_analyse.vessels.splice(this.delete_index, 1)
-          this.dialogDelete = false
-          this.$root.$emit(
-            'showAlert',
-            {
-              color: 'success',
-              message: 'Сосуд успешно удалён',
-              timeout: 3000
-            })
-        })
-        .catch(() => {
-          this.$root.$emit(
-            'showAlert',
-            {
-              color: 'error',
-              message: 'Ошибка удаления сосуда',
-              timeout: 5000
-            })
-        })
-    },
     editConclusion () {
-      this.axios.put('v1/analyse/detail/conclusion', {id: this.analyse.analyse_base_info.info.id, conclusion: this.editConclusionContent})
+      this.axios.post('v1/analyse/detail/conclusion', {id: this.analyse.analyse_base_info.info.id, conclusion: this.editConclusionContent})
         .then((response) => {
           this.dialogEditConclusion = false
           this.analyse.analyse_base_info.info.conclusion = response.data.conclusion
@@ -401,40 +268,13 @@ export default {
               timeout: 5000
             })
         })
-    }
-  },
-  computed: {
-    sumId: function () {
-      return this.analyse.result.geometric_analyse.vessels.reduce(function (sumId, item) {
-        return sumId + 1
-      }, 0)
     },
-    sumCountOfBranches: function () {
-      return this.analyse.result.geometric_analyse.vessels.reduce(function (sumCountOfBranches, item) {
-        return sumCountOfBranches + item.countOfBranches
-      }, 0)
-    },
-    avgTortuosityDegree: function () {
-      var total = this.analyse.result.geometric_analyse.vessels.length
-      return this.analyse.result.geometric_analyse.vessels.reduce(function (avgTortuosityDegree, item) {
-        return (avgTortuosityDegree + (item.tortuosityDegree / total))
-      }, 0)
-    },
-    avgBranchingDegree: function () {
-      var total = this.analyse.result.geometric_analyse.vessels.length
-      return this.analyse.result.geometric_analyse.vessels.reduce(function (avgBranchingDegree, item) {
-        return (avgBranchingDegree + (item.branchingDegree / total))
-      }, 0)
-    },
-    sumArea: function () {
-      return this.analyse.result.geometric_analyse.vessels.reduce(function (sumArea, item) {
-        return (sumArea + item.area)
-      }, 0)
-    },
-    sumAreaPercent: function () {
-      return this.analyse.result.geometric_analyse.vessels.reduce(function (sumAreaPercent, item) {
-        return (sumAreaPercent + item.areaPercent)
-      }, 0)
+    formatFullDate (date) {
+      if (!date) return ''
+
+      const [day, month, year, hour, minutes, seconds] = date.split('-')
+      var thisHour = Number(hour) + 4
+      return `${day}-${month}-${year} ${thisHour}:${minutes}:${seconds}`
     }
   }
 }

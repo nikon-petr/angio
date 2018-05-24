@@ -15,12 +15,7 @@ const ANGIO_PUBLIC = axios.create({
   baseURL: 'https://localhost/api'
 })
 
-const ANGIO_MOCK = axios.create({
-  baseURL: ''
-})
-
 export {
   ANGIO_AUTHORIZED,
-  ANGIO_PUBLIC,
-  ANGIO_MOCK
+  ANGIO_PUBLIC
 }

@@ -32,7 +32,7 @@ public class DetailAnalyseInfoResponse implements Serializable {
     }
 
     public DetailAnalyseInfoResponse(AnalyseInfoEntity analyseInfoEntity) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
         String date = sdf.format(analyseInfoEntity.getAnalyseDate());
 
         this.id = analyseInfoEntity.getId();

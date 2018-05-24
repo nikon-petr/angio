@@ -154,6 +154,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     public AnalyseInfoEntity startNewAnalyse(long id) throws Exception {
         AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findOne(id);
 
+//      Geometric analyse
         GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfoEntity.getImg());
 
         ImageOperation imageOperation = new ImageOperation();
@@ -169,7 +170,6 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
                     (float) vesselModel.getBranching(), (float) vesselModel.getArea(), (float) vesselModel.getAreaPercent()));
         }
         analyseInfoEntity.setFinished(true);
-        analyseInfoEntity.setAnalyseDate(new Timestamp(System.currentTimeMillis()));
         analyseInfoEntity = analyseInfoCrudRepository.save(analyseInfoEntity);
 
 //      Blood flow analyse

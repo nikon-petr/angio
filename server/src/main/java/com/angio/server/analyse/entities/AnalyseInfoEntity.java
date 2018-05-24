@@ -23,7 +23,7 @@ public class AnalyseInfoEntity {
     private Date analyseDate;
     private boolean finished;
     private String conclusion;
-    private Set<AnalyseGeometricEntity> analyseGeometric = new HashSet<>(0);
+    private AnalyseGeometricEntity analyseGeometric;
     private AnalyseBloodFlowEntity analyseBloodFlow;
 
     public AnalyseInfoEntity(){
@@ -152,12 +152,12 @@ public class AnalyseInfoEntity {
     }
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "analyseInfo")
-    public Set<AnalyseGeometricEntity> getAnalyseGeometric() {
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "analyseInfo")
+    public AnalyseGeometricEntity getAnalyseGeometric() {
         return analyseGeometric;
     }
 
-    public void setAnalyseGeometric(Set<AnalyseGeometricEntity> analyseGeometric) {
+    public void setAnalyseGeometric(AnalyseGeometricEntity analyseGeometric) {
         this.analyseGeometric = analyseGeometric;
     }
 

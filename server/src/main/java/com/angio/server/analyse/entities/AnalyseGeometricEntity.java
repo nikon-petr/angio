@@ -37,7 +37,7 @@ public class AnalyseGeometricEntity {
     }
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analyse_info_id", nullable = false)
     public AnalyseInfoEntity getAnalyseInfo() {
         return analyseInfo;

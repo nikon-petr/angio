@@ -55,8 +55,8 @@
             <td class="text-xs-right">{{ props.item.patient }}</td>
             <td class="text-xs-right">{{ props.item.policy }}</td>
             <td class="text-xs-right">{{ props.item.user }}</td>
-            <td class="text-xs-right">{{ props.item.analyseDate }}</td>
-            <td class="justify-center layout px-0">
+            <td class="text-xs-right">{{ formatFullDate(props.item.analyseDate) }}</td>
+            <td class="text-xs-center px-0">
               <v-btn
                 :loading=!props.item.analyseFinished
                 :to="{ path: '/analyses/' + props.item.id }"
@@ -184,9 +184,12 @@ export default {
             })
         })
     },
-    detailItem (item) {
-      this.$store.test_id = item.id
-      this.$router.push({path: '/analyses/detail'})
+    formatFullDate (date) {
+      if (!date) return ''
+
+      const [day, month, year, hour, minutes, seconds] = date.split('-')
+      var thisHour = Number(hour) + 4
+      return `${day}-${month}-${year} ${thisHour}:${minutes}:${seconds}`
     },
     formatDate (date) {
       if (!date) return ''

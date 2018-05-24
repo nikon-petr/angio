@@ -98,13 +98,12 @@ public class AnalyseController {
         return result;
     }
 
-    //  TODO change method type to GET
-    @RequestMapping(value="/api/v1/analyse/policy-exists", method = RequestMethod.POST)
-    public ResponseEntity<?> checkPatientByPolicy(@RequestBody PolicyRequest policyRequest){
+    @RequestMapping(value="/api/v1/analyse/policy-exists/{policy}", method = RequestMethod.GET)
+    public ResponseEntity<?> checkPatientByPolicy(@PathVariable("policy") String policy){
         CheckPatientResponse checkPatientResponse = new CheckPatientResponse();
         try {
             checkPatientResponse.setExists(true);
-            checkPatientResponse.setPatient(new PatientResponse(patientService.getPatientByPolicy(policyRequest.getPolicy())));
+            checkPatientResponse.setPatient(new PatientResponse(patientService.getPatientByPolicy(policy)));
 
             return ResponseEntity.ok().body(checkPatientResponse);
         } catch (PatientExistsException ex) {
@@ -120,11 +119,10 @@ public class AnalyseController {
         }
     }
 
-    //  TODO change method type to GET
-    @RequestMapping(value = "/api/v1/analyse/detail", method = RequestMethod.POST)
-    public ResponseEntity<?> detailAnalyse(@RequestBody AnalyseInfoIdRequest analyseInfoIdRequest, HttpServletRequest request) {
+    @RequestMapping(value = "/api/v1/analyse/detail/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> detailAnalyse(@PathVariable("id") long id, HttpServletRequest request) {
         try {
-            AnalyseInfoEntity analyseInfoEntity = analyseInfoService.getAnalyseInfoEntity(analyseInfoIdRequest.getId());
+            AnalyseInfoEntity analyseInfoEntity = analyseInfoService.getAnalyseInfoEntity(id);
             PatientEntity patientEntity = analyseInfoEntity.getPatient();
             AnalyseGeometricEntity analyseGeometricEntity = analyseGeometricService.getAnalyseGeometric(analyseInfoEntity);
             List<VesselEntity> vessels = analyseGeometricService.getVessels(analyseGeometricEntity);
@@ -132,6 +130,21 @@ public class AnalyseController {
             AnalyseBloodFlowEntity analyseBloodFlowEntity = analyseInfoEntity.getAnalyseBloodFlow();
             String ishemiaImageFilePath = UrlUtil.getBaseUrl(request) + UrlUtil.ANALYSE_IMAGE_CONTEXT_PATH + analyseBloodFlowEntity.getIshemiaImageFileName();
             String densityImageFilePath = UrlUtil.getBaseUrl(request) + UrlUtil.ANALYSE_IMAGE_CONTEXT_PATH + analyseBloodFlowEntity.getDensityImageFileName();
+
+            String originalImageFilePath = UrlUtil.getBaseUrl(request) + UrlUtil.ANALYSE_IMAGE_CONTEXT_PATH + analyseInfoEntity.getImg();
+            analyseInfoEntity.setImg(originalImageFilePath);
+
+            String binarizedImageFilePath = UrlUtil.getBaseUrl(request) + UrlUtil.ANALYSE_IMAGE_CONTEXT_PATH + analyseGeometricEntity.getBinarizedImage();
+            String skelImageFilePath = UrlUtil.getBaseUrl(request) + UrlUtil.ANALYSE_IMAGE_CONTEXT_PATH + analyseGeometricEntity.getSkelImage();
+            analyseGeometricEntity.setBinarizedImage(binarizedImageFilePath);
+            analyseGeometricEntity.setSkelImage(skelImageFilePath);
+
+            for (VesselEntity v : analyseGeometricEntity.getVessels()){
+                String vesselImageFilePath = UrlUtil.getBaseUrl(request) + UrlUtil.ANALYSE_IMAGE_CONTEXT_PATH + v.getVesselImage();
+                String vesselMainImageFilePath = UrlUtil.getBaseUrl(request) + UrlUtil.ANALYSE_IMAGE_CONTEXT_PATH + v.getMainVesselImage();
+                v.setVesselImage(vesselImageFilePath);
+                v.setMainVesselImage(vesselMainImageFilePath);
+            }
 
             DetailAnalyseResponse detailAnalyseResponse = new DetailAnalyseResponse(
                     patientEntity,
@@ -149,8 +162,7 @@ public class AnalyseController {
         }
     }
 
-    //  TODO change method type to POST
-    @RequestMapping(value = "/api/v1/analyse/detail/conclusion", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/v1/analyse/detail/conclusion", method = RequestMethod.POST)
     public ResponseEntity<?> updateConclusion(@RequestBody UpdateAnalyseInfoConclusionRequest request) {
         try {
             AnalyseInfoEntity analyseInfoEntity = analyseInfoService.updateAnalyseInfoConclusion(request.getId(), request.getConclusion());

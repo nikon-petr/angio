@@ -315,7 +315,7 @@ export default {
       }
     },
     checkPolicy () {
-      this.axios.post('v1/analyse/policy-exists', {policy: this.new_analyse.patient.policy})
+      this.axios.get('v1/analyse/policy-exists/' + this.new_analyse.patient.policy)
         .then((response) => {
           console.log(response.data.contains)
           console.log(response)
