@@ -128,7 +128,7 @@ export default {
     skelBase64Img: '',
     // vessels and their images
     vessels: [],
-    vesselsImagesBase64: '',
+    vesselsImagesBase64: ''
   }),
   watch: {
     geometric (newVal) {
@@ -140,7 +140,7 @@ export default {
     },
     vessels: {
       immediate: true,
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         this.vessels = val
         for (var i = 0; i < this.vessels.length; i++) {
           this.vessels[i].vesselImageBase64 = this.downloadImage(this.vessels[i].vesselImage)
@@ -203,7 +203,7 @@ export default {
               (data, byte) => data + String.fromCharCode(byte),
               ''
             ))
-            return 'data:;base64,' + base64
+          return 'data:;base64,' + base64
         })
     },
     deleteItem (item) {
