@@ -4,6 +4,8 @@ import com.angio.server.analyse.entities.AnalyseInfoEntity;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class DetailAnalyseInfoResponse implements Serializable {
     private long id;
@@ -33,6 +35,7 @@ public class DetailAnalyseInfoResponse implements Serializable {
 
     public DetailAnalyseInfoResponse(AnalyseInfoEntity analyseInfoEntity) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Samara"));
         String date = sdf.format(analyseInfoEntity.getAnalyseDate());
 
         this.id = analyseInfoEntity.getId();

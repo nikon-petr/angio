@@ -126,9 +126,8 @@ export default {
     originalBase64Img: '',
     binarizedBase64Img: '',
     skelBase64Img: '',
-    // vessels and their images
-    vessels: [],
-    vesselsImagesBase64: ''
+    // vessels
+    vessels: []
   }),
   watch: {
     geometric (newVal) {
@@ -142,19 +141,38 @@ export default {
       immediate: true,
       handler: function (val, oldVal) {
         this.vessels = val
-        for (var i = 0; i < this.vessels.length; i++) {
-          this.vessels[i].vesselImageBase64 = this.downloadImage(this.vessels[i].vesselImage)
-          console.log(this.vessels[i].vesselImageBase64)
-          // this.axios.get(this.vessels[i].vesselImage, { responseType: 'arraybuffer' })
-          //   .then(response => {
-          //     const base64 = btoa(
-          //       new Uint8Array(response.data).reduce(
-          //         (data, byte) => data + String.fromCharCode(byte),
-          //         ''
-          //       ))
-          //       thit.vesselsImagesBase64[i] = 'data:;base64,' + base64
-          //   })
-        }
+        this.vessels.forEach((item) => {
+          this.axios.get(item.vesselImage, { responseType: 'arraybuffer' })
+            .then(function(response) {
+              const base64 = btoa(
+              new Uint8Array(response.data).reduce(
+                (data, byte) => data + String.fromCharCode(byte),
+                ''
+              ))
+              item.vesselImageBase64 = 'data:;base64,' + base64
+              console.log('data:;base64,' + base64)
+              $this.vessels.push(item)
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+          })
+        this.vessels.forEach((item) => {
+          this.axios.get(item.mainVesselImage, { responseType: 'arraybuffer' })
+            .then(function(response) {
+              const base64 = btoa(
+              new Uint8Array(response.data).reduce(
+                (data, byte) => data + String.fromCharCode(byte),
+                ''
+              ))
+              item.mainVesselImageBase64 = 'data:;base64,' + base64
+              console.log('data:;base64,' + base64)
+              $this.vessels.push(item)
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+          })
       }
     },
     originalImageSrc (newVal) {
@@ -204,6 +222,9 @@ export default {
               ''
             ))
           return 'data:;base64,' + base64
+        })
+        .catch(() => {
+          console.log('err')
         })
     },
     deleteItem (item) {

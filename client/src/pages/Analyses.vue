@@ -188,8 +188,7 @@ export default {
       if (!date) return ''
 
       const [day, month, year, hour, minutes, seconds] = date.split('-')
-      var thisHour = Number(hour) + 4
-      return `${day}-${month}-${year} ${thisHour}:${minutes}:${seconds}`
+      return `${day}.${month}.${year} ${hour}:${minutes}:${seconds}`
     },
     formatDate (date) {
       if (!date) return ''

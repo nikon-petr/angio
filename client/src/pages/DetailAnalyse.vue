@@ -15,7 +15,7 @@
             </v-layout>
           </v-card-title>
           <v-card-title primary-title>
-          <v-layout v-if="!loading_analyse" row justify-space-between>
+          <v-layout id="pdf" v-if="!loading_analyse" row justify-space-between>
             <v-flex xs4 md4 lg4>
               <h3>Информация о пациенте</h3>
               <h3 class="headline mb-0">ФИО:</h3>
@@ -66,6 +66,17 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
+            <v-dialog v-model="dialogSavePDF" max-width="290">
+              <v-card>
+                <v-card-title class="headline">Подтвердите действие</v-card-title>
+                <v-card-text>Вы действительно хотите сохранить результат анализа в PDF?</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" flat="flat" @click.native="dialogSavePDF = false">Отмена</v-btn>
+                  <v-btn color="blue darken-1" flat="flat" @click="generateAndSavePDF()">Сохранить</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
             <v-dialog v-model="dialogEditConclusion" max-width="800">
               <v-card>
                 <v-card-title class="headline">Редактирование заключения</v-card-title>
@@ -94,7 +105,7 @@
           <v-btn color="blue accent-3" :disabled="$auth.user().email == analyse.username" @click.native="dialogEditConclusion = true" fab dark>
             <v-icon>add_comment</v-icon>
           </v-btn>
-          <v-btn color="orange" fab dark>
+          <v-btn color="orange" @click="dialogSavePDF = true" fab dark>
             <v-icon>picture_as_pdf</v-icon>
           </v-btn>
           <v-btn color="red" :disabled="false" @click="dialogDeleteAnalyse = true" fab dark>
@@ -136,6 +147,10 @@
 <script>
 import BloodFlowAnalyseTab from '../components/BloodFlowAnalyseTab'
 import GeometricAnalyseTab from '../components/GeometricAnalyseTab'
+import pdfMake from 'pdfmake/build/pdfmake'
+import pdfFonts from 'pdfmake/build/vfs_fonts'
+pdfMake.vfs = pdfFonts.pdfMake.vfs
+
 export default {
   name: 'DetailAnalyse',
   components: {BloodFlowAnalyseTab, GeometricAnalyseTab},
@@ -147,6 +162,7 @@ export default {
     detail_analyse_id: 0,
     active: null,
     dialogEditConclusion: false,
+    dialogSavePDF: false,
     dialogDeleteAnalyse: false,
     editConclusionContent: '',
     loading_analyse: true,
@@ -202,15 +218,12 @@ export default {
           this.analyse.analyse_base_info.info = response.data.info
           this.analyse.result.geometric_analyse = response.data.geometricAnalyse
           this.analyse.result.bloodFlowAnalyse = response.data.analyseBloodFlowResponse
-          // this.analyse.result.geometric_analyse.vessels = response.data.geometricAnalyse.vessels
           this.analyse.result.username = response.data.username
           this.editConclusionContent = this.analyse.analyse_base_info.info.conclusion
-          // images
-          // this.originalImageSrc = response.data.geometricAnalyse.originalImage
-          // this.binarizedImageSrc = response.data.geometricAnalyse.binarizedImage
-          // this.skelImageSrc = response.data.geometricAnalyse.skelImage
-          // this.vessels = response.data.geometricAnalyse.vessels
-          // stop loading
+          for (var i = 0; i < this.analyse.result.geometric_analyse.vessels.length; i++){
+            this.analyse.result.geometric_analyse.vessels[i].vesselImageBase64 = ''
+            this.analyse.result.geometric_analyse.vessels[i].mainVesselImageBase64 = ''
+          }
           this.loading_analyse = false
         })
         .catch(() => {
@@ -273,8 +286,13 @@ export default {
       if (!date) return ''
 
       const [day, month, year, hour, minutes, seconds] = date.split('-')
-      var thisHour = Number(hour) + 4
-      return `${day}-${month}-${year} ${thisHour}:${minutes}:${seconds}`
+      return `${day}.${month}.${year} ${hour}:${minutes}:${seconds}`
+    },
+    generateAndSavePDF () {
+      this.dialogSavePDF = false
+      // generate pdf
+      var docDefinition = { content: 'Это Ё' }
+      pdfMake.createPdf(docDefinition).download()
     }
   }
 }
