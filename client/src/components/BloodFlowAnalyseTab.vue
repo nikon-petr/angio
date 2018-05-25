@@ -104,6 +104,7 @@ export default {
               ''
             ))
           this.ishemiaBase64Img = 'data:;base64,' + base64
+          this.$root.$emit('ishemia', 'data:image/png;base64,' + base64)
         })
     },
     densitySrc (newVal) {
@@ -116,6 +117,7 @@ export default {
               ''
             ))
           this.densityBase64Img = 'data:;base64,' + base64
+          this.$root.$emit('density', 'data:image/png;base64,' + base64)
         })
     }
   },

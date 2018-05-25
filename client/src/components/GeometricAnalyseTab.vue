@@ -143,36 +143,28 @@ export default {
         this.vessels = val
         this.vessels.forEach((item) => {
           this.axios.get(item.vesselImage, { responseType: 'arraybuffer' })
-            .then(function(response) {
+            .then(function (response) {
               const base64 = btoa(
-              new Uint8Array(response.data).reduce(
-                (data, byte) => data + String.fromCharCode(byte),
-                ''
-              ))
+                new Uint8Array(response.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ''
+                ))
               item.vesselImageBase64 = 'data:;base64,' + base64
-              console.log('data:;base64,' + base64)
-              $this.vessels.push(item)
+              // $this.vessels.push(item)
             })
-            .catch(function(error) {
-              console.log(error);
-            });
-          })
+        })
         this.vessels.forEach((item) => {
           this.axios.get(item.mainVesselImage, { responseType: 'arraybuffer' })
-            .then(function(response) {
+            .then(function (response) {
               const base64 = btoa(
-              new Uint8Array(response.data).reduce(
-                (data, byte) => data + String.fromCharCode(byte),
-                ''
-              ))
+                new Uint8Array(response.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ''
+                ))
               item.mainVesselImageBase64 = 'data:;base64,' + base64
-              console.log('data:;base64,' + base64)
-              $this.vessels.push(item)
+              // $this.vessels.push(item)
             })
-            .catch(function(error) {
-              console.log(error);
-            });
-          })
+        })
       }
     },
     originalImageSrc (newVal) {
@@ -185,6 +177,7 @@ export default {
               ''
             ))
           this.originalBase64Img = 'data:;base64,' + base64
+          this.$root.$emit('original', 'data:image/png;base64,' + base64)
         })
     },
     binarizedImageSrc (newVal) {
@@ -197,6 +190,7 @@ export default {
               ''
             ))
           this.binarizedBase64Img = 'data:;base64,' + base64
+          this.$root.$emit('binarized', 'data:image/png;base64,' + base64)
         })
     },
     skelImageSrc (newVal) {
@@ -209,6 +203,7 @@ export default {
               ''
             ))
           this.skelBase64Img = 'data:;base64,' + base64
+          this.$root.$emit('skel', 'data:image/png;base64,' + base64)
         })
     }
   },
@@ -286,6 +281,7 @@ export default {
       }, 0)
     },
     sumAreaPercent: function () {
+      this.$root.$emit('resultGeometric', this.result)
       return this.geometric.vessels.reduce(function (sumAreaPercent, item) {
         return (sumAreaPercent + item.areaPercent)
       }, 0)
