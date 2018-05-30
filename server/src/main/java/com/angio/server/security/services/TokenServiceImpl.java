@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service("tokenService")
 @Transactional
@@ -22,11 +23,8 @@ public class TokenServiceImpl implements TokenService {
 
 
     @Override
-    public TokenEntity findByUser(UserEntity user) {
-        TokenEntity tokenEntity = tokenRepository.findByUsername(user).stream()
-                .findFirst()
-                .orElse(null);
-        return tokenEntity;
+    public List<TokenEntity> findByUsername(String username) {
+        return tokenRepository.findByUserUsernameAndEnabledTrueOrderByIssuedAtDesc(username);
     }
 
     @Override
@@ -41,20 +39,32 @@ public class TokenServiceImpl implements TokenService {
     @Override
     @Transactional
     public TokenEntity putToken(UserEntity user, String os, String browser, String device) {
-        TokenEntity tokenEntity = new TokenEntity(user, true, os, browser, device, null);
+        TokenEntity tokenEntity = new TokenEntity(user, true, os, browser, device);
         tokenEntity = tokenRepository.save(tokenEntity);
         return tokenEntity;
     }
 
     @Override
-    public TokenEntity putTokenExpiration(TokenEntity tokenEntity, Date expiration) {
+    public TokenEntity putTokenExpirationAndIssuedAt(TokenEntity tokenEntity, Date expiration, Date issuedAt) {
         tokenEntity.setExpiration(expiration);
+        tokenEntity.setIssuedAt(issuedAt);
         return tokenRepository.save(tokenEntity);
     }
 
     @Override
-    public TokenEntity revokeToken(long id) {
+    public TokenEntity revokeTokenAsAdmin(long id) {
         TokenEntity tokenEntity = tokenRepository.findOne(id);
+        if (tokenEntity == null){
+            throw new TokenException("Token does not exists");
+        }
+        tokenEntity.setEnabled(false);
+        tokenRepository.save(tokenEntity);
+        return tokenEntity;
+    }
+
+    @Override
+    public TokenEntity revokeTokenAsUser(long id, String username) {
+        TokenEntity tokenEntity = tokenRepository.findOneByIdAndUserUsername(id, username);
         if (tokenEntity == null){
             throw new TokenException("Token does not exists");
         }

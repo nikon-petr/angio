@@ -48,6 +48,7 @@ CREATE TABLE public.tokens (
       browser    VARCHAR(255) NOT NULL,
       device     VARCHAR(255) NOT NULL,
       expiration TIMESTAMP,
+      issued_at TIMESTAMP,
       CONSTRAINT fk_tokens_users FOREIGN KEY (username) REFERENCES users (username)
       ON DELETE CASCADE
       ON UPDATE CASCADE

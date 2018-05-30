@@ -9,12 +9,13 @@ import java.util.stream.Collectors;
 public class SelfUserResponse implements Serializable {
     private Data data;
 
-    public SelfUserResponse(String email, String firstName, String lastName, Set<AuthorityEntity> authorities) {
+    public SelfUserResponse(String email, String firstName, String lastName, Set<AuthorityEntity> authorities, Long activeToken) {
         data = new Data();
         data.setEmail(email);
         data.setFirstName(firstName);
         data.setLastName(lastName);
         data.setAuthorities(authorities);
+        data.setActiveToken(activeToken);
     }
 
     public class Data{
@@ -22,6 +23,7 @@ public class SelfUserResponse implements Serializable {
         private String firstName;
         private String lastName;
         private Set<String> authorities;
+        private long activeToken;
 
         public String getEmail() {
             return email;
@@ -55,6 +57,14 @@ public class SelfUserResponse implements Serializable {
             this.authorities = authorities.stream()
                     .map(AuthorityEntity::getAuthority)
                     .collect(Collectors.toSet());
+        }
+
+        public long getActiveToken() {
+            return activeToken;
+        }
+
+        public void setActiveToken(long activeToken) {
+            this.activeToken = activeToken;
         }
     }
 

@@ -13,11 +13,12 @@ public class TokenEntity {
     private String browser;
     private String device;
     private Date expiration;
+    private Date issuedAt;
 
     public TokenEntity() {
     }
 
-    public TokenEntity(UserEntity user, boolean enabled, String os, String browser, String device, Date expiration) {
+    public TokenEntity(UserEntity user, boolean enabled, String os, String browser, String device) {
         this.user = user;
         this.enabled = enabled;
         this.os = os;
@@ -25,7 +26,7 @@ public class TokenEntity {
         this.device = device;
     }
 
-    public TokenEntity(long id, UserEntity user, boolean enabled, String os, String browser, String device, Date expiration) {
+    public TokenEntity(long id, UserEntity user, boolean enabled, String os, String browser, String device) {
         this.id = id;
         this.user = user;
         this.enabled = enabled;
@@ -47,11 +48,11 @@ public class TokenEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username", nullable = false)
-    public UserEntity getUsername() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUsername(UserEntity user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 
@@ -98,5 +99,14 @@ public class TokenEntity {
 
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
+    }
+
+    @Column(name = "issued_at", nullable = true)
+    public Date getIssuedAt() {
+        return issuedAt;
+    }
+
+    public void setIssuedAt(Date issuedAt) {
+        this.issuedAt = issuedAt;
     }
 }

@@ -25,6 +25,7 @@ Vue.use(require('@websanova/vue-auth'), {
   router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
   rolesVar: 'authorities',
   authRedirect: {path: '/user/sign-in'},
+  notFoundRedirect: {path: '/not-found'},
   registerData: {url: 'v1/user', method: 'POST', redirect: false},
   loginData: {url: 'v1/auth/token', method: 'POST', redirect: false, fetchUser: true},
   logoutData: {url: 'v1/auth/logout', method: 'POST', redirect: '/', makeRequest: true},

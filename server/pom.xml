@@ -45,6 +45,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
+        <!-- Model mapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>0.7.4</version>
+		</dependency>
+
 		<!-- Tomcat -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -127,6 +134,13 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>4.2.4.RELEASE</version>
 		</dependency>
+
+        <!-- Email -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>1.4.3.RELEASE</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>

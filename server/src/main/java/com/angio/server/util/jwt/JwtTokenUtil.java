@@ -68,6 +68,18 @@ public class JwtTokenUtil implements Serializable {
         return expiration;
     }
 
+    public Date getIssuedAtDateFromToken(String token) {
+        Date expiration;
+        Date date = new Date();
+        try {
+            final Claims claims = getClaimsFromToken(token);
+            expiration = claims.getIssuedAt();
+        } catch (Exception e) {
+            expiration = null;
+        }
+        return expiration;
+    }
+
     public String getAudienceFromToken(String token) {
         String audience;
         try {
@@ -156,6 +168,18 @@ public class JwtTokenUtil implements Serializable {
         String refreshedToken;
         try {
             final Claims claims = getClaimsFromToken(token);
+            refreshedToken = generateToken(claims, id, getAudienceFromToken(token));
+        } catch (Exception e) {
+            refreshedToken = null;
+        }
+        return refreshedToken;
+    }
+
+    public String refreshToken(String token, long id, String username) {
+        String refreshedToken;
+        try {
+            final Claims claims = getClaimsFromToken(token);
+            claims.put(CLAIM_KEY_USERNAME, username);
             refreshedToken = generateToken(claims, id, getAudienceFromToken(token));
         } catch (Exception e) {
             refreshedToken = null;

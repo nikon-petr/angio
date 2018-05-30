@@ -52,7 +52,7 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
                 userDetails = null;
             }
             
-            if (userDetails != null && jwtTokenUtil.validateToken(authToken, userDetails)) {
+            if (userDetails != null && userDetails.isEnabled() && jwtTokenUtil.validateToken(authToken, userDetails)) {
                 TokenEntity tokenEntity;
                 try {
                     tokenEntity = tokenService.findById(jwtTokenUtil.getIdFromToken(authToken));

@@ -73,11 +73,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/v1/user/self").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/v1/user/sessions").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/v1/user/change-email").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/v1/user/change-password").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/refresh").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/logout").hasRole("USER")
                 .antMatchers("images/analyses/*").hasRole("USER")
 
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/revoke/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/user/*/sessions").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/user/*/enable").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/user/*/disable").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
 

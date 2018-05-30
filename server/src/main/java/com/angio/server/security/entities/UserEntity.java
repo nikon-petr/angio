@@ -21,6 +21,7 @@ public class UserEntity implements UserDetails, Serializable {
     private Set<AuthorityEntity> authorities = new HashSet<>(0);
     private Date lastPasswordResetDate;
     private Set<AnalyseInfoEntity> analysesInfo = new HashSet<>(0);
+    private Set<TokenEntity> tokens = new HashSet<>(0);
     private UserInfoEntity userInfo;
 
     public UserEntity() {
@@ -99,6 +100,16 @@ public class UserEntity implements UserDetails, Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     public Set<AnalyseInfoEntity> getAnalysesInfo() {
         return analysesInfo;
+    }
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    public Set<TokenEntity> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(Set<TokenEntity> tokens) {
+        this.tokens = tokens;
     }
 
     public void setAnalysesInfo(Set<AnalyseInfoEntity> analysesInfo) {

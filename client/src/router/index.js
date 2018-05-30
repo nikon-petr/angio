@@ -5,6 +5,10 @@ import Analyses from '../pages/Analyses'
 import DetailAnalyse from '../pages/DetailAnalyse'
 import BaseSignUpForm from '../components/TheSignUpForm'
 import BaseSignInForm from '../components/TheSignInForm'
+import User from '../pages/User'
+import UserList from '../pages/UserList'
+import UserSessionList from '../pages/UserSessionList'
+import NotFound from '../pages/NotFound'
 
 Vue.use(Router)
 
@@ -15,6 +19,12 @@ export default new Router({
       path: '/',
       name: 'Landing',
       component: Landing,
+      meta: {auth: undefined}
+    },
+    {
+      path: '/not-found',
+      name: 'not-found',
+      component: NotFound,
       meta: {auth: undefined}
     },
     {
@@ -31,7 +41,6 @@ export default new Router({
     },
     {
       path: '/user',
-      name: 'User',
       children: [
         {
           path: '/user/sign-up',
@@ -46,6 +55,24 @@ export default new Router({
           meta: {auth: false}
         }
       ]
+    },
+    {
+      path: '/user/me',
+      name: 'Me',
+      component: User,
+      meta: {auth: ['ROLE_USER']}
+    },
+    {
+      path: '/user/list',
+      name: 'Users',
+      component: UserList,
+      meta: {auth: ['ROLE_ADMIN']}
+    },
+    {
+      path: '/user/:username/sessions',
+      name: 'UserSessionsList',
+      component: UserSessionList,
+      meta: {auth: ['ROLE_USER']}
     }
   ]
 })

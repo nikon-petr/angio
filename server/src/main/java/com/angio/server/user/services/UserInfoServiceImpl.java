@@ -2,7 +2,7 @@ package com.angio.server.user.services;
 
 
 import com.angio.server.security.entities.UserEntity;
-import com.angio.server.security.repositories.UserCrudRepository;
+import com.angio.server.security.repositories.UserRepository;
 import com.angio.server.user.entities.UserInfoEntity;
 import com.angio.server.user.repositories.UserInfoCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +16,13 @@ import java.util.Date;
 @Transactional
 public class UserInfoServiceImpl implements UserInfoService {
     UserInfoCrudRepository userInfoCrudRepository;
-    UserCrudRepository userCrudRepository;
+    UserRepository userRepository;
 
     @Autowired
     public UserInfoServiceImpl(UserInfoCrudRepository userInfoCrudRepository,
-                               UserCrudRepository userCrudRepository) {
+                               UserRepository userRepository) {
         this.userInfoCrudRepository = userInfoCrudRepository;
-        this.userCrudRepository = userCrudRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setFirstname(firstname);
         userInfo.setLastname(lastname);
         userInfo.setModified_date(modified_date);
-        userInfo.setUser(userCrudRepository.findOne(username));
+        userInfo.setUser(userRepository.findOne(username));
         userInfoCrudRepository.save(userInfo);
     }
 }

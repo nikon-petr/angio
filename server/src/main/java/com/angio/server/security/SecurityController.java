@@ -7,6 +7,8 @@ import com.angio.server.security.entities.UserEntity;
 import com.angio.server.security.requests.TokenRequest;
 import com.angio.server.security.services.TokenException;
 import com.angio.server.security.services.TokenService;
+import com.angio.server.security.services.UserService;
+import com.angio.server.security.services.UsernameExistsException;
 import com.angio.server.util.jwt.JwtTokenUtil;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 @RestController
 @RequestMapping
@@ -30,6 +33,7 @@ public class SecurityController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsService userDetailsService;
+    private final UserService userService;
     private final TokenService tokenService;
 
     @Autowired
@@ -38,11 +42,12 @@ public class SecurityController {
             AuthenticationManager authenticationManager,
             JwtTokenUtil jwtTokenUtil,
             UserDetailsService userDetailsService,
-            TokenService tokenService) {
+            UserService userService, TokenService tokenService) {
         this.angioAppProperties = angioAppProperties;
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userDetailsService = userDetailsService;
+        this.userService = userService;
         this.tokenService = tokenService;
     }
 
@@ -66,7 +71,7 @@ public class SecurityController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(tokenRequest.getUsername());
         TokenEntity tokenEntity = tokenService.putToken((UserEntity) userDetails, os, browser, device);
         final String token = jwtTokenUtil.generateToken(userDetails, tokenEntity.getId(), device);
-        tokenService.putTokenExpiration(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token));
+        tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token), jwtTokenUtil.getIssuedAtDateFromToken(token));
 
         return ResponseEntity.noContent()
                 .header("Authorization", "Bearer " + token)
@@ -89,8 +94,8 @@ public class SecurityController {
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             TokenEntity tokenEntity = tokenService.putToken(user, os, browser, device);
             String refreshedToken = jwtTokenUtil.refreshToken(token, tokenEntity.getId());
-            tokenService.putTokenExpiration(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token));
-            tokenService.revokeToken(jwtTokenUtil.getIdFromToken(token));
+            tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token), jwtTokenUtil.getIssuedAtDateFromToken(token));
+            tokenService.revokeTokenAsAdmin(jwtTokenUtil.getIdFromToken(token));
             return ResponseEntity.noContent()
                     .header("Authorization", "Bearer "+ refreshedToken)
                     .build();
@@ -104,7 +109,7 @@ public class SecurityController {
         try {
             String token = jwtTokenUtil.getTokenBody(authorizationHeader);
             TokenEntity tokenEntity = tokenService.findById(jwtTokenUtil.getIdFromToken(token));
-            tokenService.revokeToken(tokenEntity.getId());
+            tokenService.revokeTokenAsAdmin(tokenEntity.getId());
             return ResponseEntity.noContent().build();
         } catch (TokenException e) {
             return ResponseEntity.badRequest().body(null);
@@ -114,7 +119,37 @@ public class SecurityController {
     @RequestMapping(path = "/api/v1/auth/revoke/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> revokeAuthenticationToken(@PathVariable("id") long id) {
         try {
-            tokenService.revokeToken(id);
+            tokenService.revokeTokenAsAdmin(id);
+            return ResponseEntity.noContent().build();
+        } catch (TokenException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @RequestMapping(path = "/api/v1/user/{username:.+}/disable", method = RequestMethod.POST)
+    public ResponseEntity<?> disableUser(@PathVariable("username") String username) {
+        try {
+            userService.setUserEnabled(username, false);
+            return ResponseEntity.noContent().build();
+        } catch (UsernameExistsException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @RequestMapping(path = "/api/v1/user/{username:.+}/enable", method = RequestMethod.POST)
+    public ResponseEntity<?> enableUser(@PathVariable("username") String username) {
+        try {
+            userService.setUserEnabled(username, true);
+            return ResponseEntity.noContent().build();
+        } catch (UsernameExistsException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @RequestMapping(path = "/api/v1/auth/close-session/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> revokeAuthenticationTokenAsUser(@PathVariable("id") long id, Principal principal) {
+        try {
+            tokenService.revokeTokenAsUser(id, principal.getName());
             return ResponseEntity.noContent().build();
         } catch (TokenException e) {
             return ResponseEntity.badRequest().body(null);

@@ -64,8 +64,8 @@
             hide-actions
           >
             <template slot="items" slot-scope="props">
-              <td>{{ props.item.sectorNumber }}</td>
-              <td class="text-xs-center">{{ Math.round(props.item.density  * 100) / 100 }}</td>
+                <td>{{ props.item.sectorNumber }}</td>
+                <td class="text-xs-center">{{ Math.round(props.item.density  * 100) / 100 }}</td>
             </template>
           </v-data-table>
         </v-flex>
@@ -86,7 +86,7 @@ export default {
       {text: 'y (px)', sortable: false}
     ],
     densityTableHeaders: [
-      {text: 'Номер сектора', value: 'zoneNumber', sortable: true},
+      {text: 'Номер сектора', value: 'sectorNumber', sortable: true},
       {text: 'Плотность (px)', value: 'density', sortable: true}
     ],
     rowNumbersIshemia: [5],
