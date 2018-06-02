@@ -3,6 +3,7 @@ package com.angio.server.analyse.requests;
 import java.io.Serializable;
 
 public class PatientRequest implements Serializable{
+    private long id;
     private String firstname;
     private String lastname;
     private String patronymic;
@@ -18,8 +19,9 @@ public class PatientRequest implements Serializable{
 
     }
 
-    public PatientRequest(String firstname, String lastname, String patronymic,
+    public PatientRequest(long id, String firstname, String lastname, String patronymic,
                           String email, String phone, String policy, String bday, String address, String work, String comment) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.patronymic = patronymic;
@@ -30,6 +32,14 @@ public class PatientRequest implements Serializable{
         this.address = address;
         this.work = work;
         this.comment = comment;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getFirstname() {

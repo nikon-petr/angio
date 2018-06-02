@@ -31,8 +31,9 @@ public class PatientEntity {
 
     }
 
-    public PatientEntity(String firstname, String lastname, String patronymic, String email, String phone, Date bday,
+    public PatientEntity(long id, String firstname, String lastname, String patronymic, String email, String phone, Date bday,
                          String location_address, String work_address, String comment, String policy) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.patronymic = patronymic;
@@ -49,6 +50,7 @@ public class PatientEntity {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             Date bDay = sdf.parse(patientRequest.getBday());
+            this.id = patientRequest.getId();
             this.firstname = patientRequest.getFirstname();
             this.lastname = patientRequest.getLastname();
             this.patronymic = patientRequest.getPatronymic();

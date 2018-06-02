@@ -47,23 +47,28 @@
                   <v-text-field
                     label="Фамилия"
                     v-model="new_analyse.patient.lastname"
-                    :rules="new_analyse_rules.patient.default"
+                    :rules="new_analyse_rules.patient.lastname"
+                    :counter="30"
                     required
                   ></v-text-field>
                   <v-text-field
                     label="Имя"
                     v-model="new_analyse.patient.firstname"
-                    :rules="new_analyse_rules.patient.default"
+                    :rules="new_analyse_rules.patient.firstname"
+                    :counter="30"
                     required
                   ></v-text-field>
                   <v-text-field
                     label="Отчество"
                     v-model="new_analyse.patient.patronymic"
+                    :rules="new_analyse_rules.patient.patronymic"
+                    :counter="30"
                   ></v-text-field>
                   <v-text-field
                     label="E-mail"
                     v-model="new_analyse.patient.email"
                     :rules="new_analyse_rules.patient.email"
+                    :counter="100"
                     required
                   ></v-text-field>
                   <v-text-field
@@ -85,7 +90,7 @@
                     slot="activator"
                     label="Укажите дату рождения"
                     v-model="bday_formatted"
-                    :rules="new_analyse_rules.patient.default"
+                    :rules="new_analyse_rules.patient.bday"
                     readonly
                     required
                   ></v-text-field>
@@ -94,13 +99,15 @@
                   <v-text-field
                     label="Место жительства"
                     v-model="new_analyse.patient.address"
-                    :rules="new_analyse_rules.patient.default"
+                    :rules="new_analyse_rules.patient.address"
+                    :counter="100"
                     required
                   ></v-text-field>
                   <v-text-field
                     label="Место работы/учёбы"
                     v-model="new_analyse.patient.work"
-                    :rules="new_analyse_rules.patient.default"
+                    :rules="new_analyse_rules.patient.work"
+                    :counter="100"
                     required
                   ></v-text-field>
                   <v-text-field
@@ -109,6 +116,8 @@
                     label="Комментарий"
                     textarea
                     v-model="new_analyse.patient.comment"
+                    :rules="new_analyse_rules.patient.comment"
+                    :counter="1000"
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs6>
@@ -116,21 +125,23 @@
                   <v-text-field
                     label="Название"
                     v-model="new_analyse.info.name"
-                    :rules="new_analyse_rules.info.default"
+                    :rules="new_analyse_rules.info.name"
+                    :counter="200"
                     required
                   ></v-text-field>
                   <v-select
                     label="Тип анализа"
                     v-model="new_analyse.info.analyseType"
-                    :rules="new_analyse_rules.info.default"
+                    :rules="new_analyse_rules.info.analyse_type"
                     :items="items_analyse_type"
-                    data-vv-name="new_analyse.info.analyse_type"
+                    data-vv-name="new_analyse.info.analyseType"
                     required
                   ></v-select>
                   <v-text-field
                     label="Краткое описание"
                     v-model="new_analyse.info.shortDescription"
-                    :rules="new_analyse_rules.info.default"
+                    :rules="new_analyse_rules.info.shortDescription"
+                    :counter="500"
                     required
                     textarea
                     name="input-2-1"
@@ -139,6 +150,8 @@
                   <v-text-field
                     label="Подробное описание"
                     v-model="new_analyse.info.fullDescription"
+                    :rules="new_analyse_rules.info.fullDescription"
+                    :counter="1000"
                     name="input-3-2"
                     textarea
                     multi-line
@@ -147,12 +160,17 @@
                     name="input-2-1"
                     multi-line
                     label="Комментарий"
+                    :rules="new_analyse_rules.info.comment"
+                    :counter="1000"
                     textarea
                     v-model="new_analyse.info.comment"
                   ></v-text-field>
-                  <div>
+                  <small>Требования системы для загрузки изображений:</small>
+                  <pre></pre>
+                  <small>Формат: .bmp</small>
+                  <div class="file_upload">
                     Загрузить изображение:
-                    <input type="file" @change="previewImage" accept="image/*">
+                    <input type="file" @change="previewImage" accept=".bmp" id="uploadeImage">
                   </div>
                   <div v-if="new_analyse.info.img.length > 0">
                     <img v-img class="preview" :src="new_analyse.info.img">
@@ -177,6 +195,7 @@ export default {
     valid: false,
     new_analyse: {
       patient: {
+        id: -1,
         firstname: '',
         lastname: '',
         patronymic: '',
@@ -199,11 +218,32 @@ export default {
     },
     new_analyse_rules: {
       patient: {
-        default: [
-          v => !!v || 'Поле обязательно для заполнения'
+        lastname: [
+          v => !!v || 'Поле обязательно для заполнения',
+          v => v.length <= 30 || 'Превышена допустимая длина'
+        ],
+        firstname: [
+          v => !!v || 'Поле обязательно для заполнения',
+          v => v.length <= 30 || 'Превышена допустимая длина'
+        ],
+        patronymic: [
+          v => v || v.length <= 30 || 'Превышена допустимая длина'
         ],
         email: [
-          v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Неверный формат почты'
+          v => !!v || 'Поле обязательно для заполнения',
+          v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Неверный формат почты',
+          v => v.length <= 100 || 'Превышена допустимая длина'
+        ],
+        address: [
+          v => !!v || 'Поле обязательно для заполнения',
+          v => v.length <= 100 || 'Превышена допустимая длина'
+        ],
+        work: [
+          v => !!v || 'Поле обязательно для заполнения',
+          v => v.length <= 100 || 'Превышена допустимая длина'
+        ],
+        comment: [
+          v => v || v.length <= 1000 || 'Превышена допустимая длина'
         ],
         phone: [
           v => !!v || 'Поле обязательно для заполнения',
@@ -212,11 +252,28 @@ export default {
         policy: [
           v => !!v || 'Поле обязательно для заполнения',
           v => /^\d( ?\d){15,15}$/.test(v) || 'Номер должен содержать 16 цифр'
+        ],
+        bday: [
+          v => !!v || 'Поле обязательно для заполнения'
         ]
       },
       info: {
-        default: [
+        name: [
+          v => !!v || 'Поле обязательно для заполнения',
+          v => !!v || v.length <= 200 || 'Превышена допустимая длина'
+        ],
+        analyseType: [
           v => !!v || 'Поле обязательно для заполнения'
+        ],
+        shortDescription: [
+          v => !!v || 'Поле обязательно для заполнения',
+          v => v.length <= 500 || 'Превышена допустимая длина'
+        ],
+        fullDescription: [
+          v => v || (v.length <= 1000 || 'Превышена допустимая длина')
+        ],
+        comment: [
+          v => v || (v.length <= 1000 || 'Превышена допустимая длина')
         ]
       }
     },
@@ -291,27 +348,54 @@ export default {
             'showAlert',
             {
               color: 'error',
-              message: 'Ошибка в ходе работы анализов. Для дальнейших действий обратитесь к администратору.',
+              message: 'Ошибка в ходе работы анализов',
               timeout: 5000
             })
         })
     },
     close () {
+      document.getElementById("uploadeImage").value = ""
       this.$refs.form_new_analyse.reset()
-      this.new_analyse.info.img = ''
       this.dialog = false
       this.bday_formatted = null
       this.bday = null
+      this.new_analyse.info.img = ''
     },
     previewImage: function (event) {
       var input = event.target
+      this.imageUploaded(input, function(result){
+        console.log(result)
+        // if (result[0].width === 1024 && result[0].height === 1024) {
+        //   console.log('yes')
+        // } else {
+        //   console.log('no')
+        //   document.getElementById("uploadeImage").value = ""
+        //   this.new_analyse.info.img = ''
+        //   this.$root.$emit(
+        //     'showAlert',
+        //     {
+        //       color: 'error',
+        //       message: 'Изображение не соответствует требованиям системы. Допустимое разрешение: 1024x1024.',
+        //       timeout: 7500
+        //     })
+        // }
+      })
+    },
+    imageUploaded (input, callback) {
       if (input.files && input.files[0]) {
         var reader = new FileReader()
-        reader.onload = (e) => {
-          this.new_analyse.info.img = e.target.result
-        }
-        // base64 format
         reader.readAsDataURL(input.files[0])
+        reader.onload = (e) =>{
+          var image = new Image()
+          image.src = e.target.result
+          this.new_analyse.info.img = image.src
+          image.onload = function () {
+            var result = [{ width: this.width, height: this.height }]
+            callback(result)
+          }
+        }
+      } else{
+        this.new_analyse.info.img = ''
       }
     },
     checkPolicy () {
@@ -319,6 +403,7 @@ export default {
         .then((response) => {
           console.log(response.data.contains)
           console.log(response)
+          this.new_analyse.patient.id = response.data.patient.id
           this.new_analyse.patient.firstname = response.data.patient.firstname
           this.new_analyse.patient.lastname = response.data.patient.lastname
           this.new_analyse.patient.patronymic = response.data.patient.patronymic
@@ -339,6 +424,7 @@ export default {
             })
         })
         .catch(() => {
+          this.new_analyse.patient.id = -1
           this.new_analyse.patient.firstname = ''
           this.new_analyse.patient.lastname = ''
           this.new_analyse.patient.patronymic = ''
@@ -374,7 +460,6 @@ export default {
   },
   mounted () {
     this.$root.$on('showNewAnalyseDialog', () => {
-      console.log('show dialog')
       this.dialog = true
     })
   }

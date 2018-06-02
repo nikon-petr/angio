@@ -89,6 +89,8 @@
                       name="input-1"
                       textarea
                       v-model="editConclusionContent"
+                      :rules="rules.conclusion"
+                      :counter="1000"
                       ></v-text-field>
                     </v-flex>
                   </v-layout>
@@ -210,6 +212,11 @@ export default {
       },
       username: ''
     },
+    rules: {
+      conclusion: [
+        v => v.length <= 1000 || 'Превышена допустимая длина'
+      ]
+    },
     // data to pdf from tabs
     originalBase64Img: '',
     binarizedBase64Img: '',
@@ -306,27 +313,29 @@ export default {
         })
     },
     editConclusion () {
-      this.axios.post('v1/analyse/detail/conclusion', {id: this.analyse.analyse_base_info.info.id, conclusion: this.editConclusionContent})
-        .then((response) => {
-          this.dialogEditConclusion = false
-          this.analyse.analyse_base_info.info.conclusion = response.data.conclusion
-          this.$root.$emit(
-            'showAlert',
-            {
-              color: 'success',
-              message: 'Изменения заключения сохранены',
-              timeout: 3000
-            })
-        })
-        .catch(() => {
-          this.$root.$emit(
-            'showAlert',
-            {
-              color: 'error',
-              message: 'Ошибка изменения заключения',
-              timeout: 5000
-            })
-        })
+      if (this.editConclusionContent.length <= 1000) {
+        this.axios.post('v1/analyse/detail/conclusion', {id: this.analyse.analyse_base_info.info.id, conclusion: this.editConclusionContent})
+          .then((response) => {
+            this.dialogEditConclusion = false
+            this.analyse.analyse_base_info.info.conclusion = response.data.conclusion
+            this.$root.$emit(
+              'showAlert',
+              {
+                color: 'success',
+                message: 'Изменения заключения сохранены',
+                timeout: 3000
+              })
+          })
+          .catch(() => {
+            this.$root.$emit(
+              'showAlert',
+              {
+                color: 'error',
+                message: 'Ошибка изменения заключения',
+                timeout: 5000
+              })
+          })
+      }
     },
     deleteAnalyseConfirmed () {
       this.axios.delete('v1/analyse/' + this.analyse.analyse_base_info.info.id)
@@ -346,7 +355,7 @@ export default {
             'showAlert',
             {
               color: 'error',
-              message: 'Ошибка изменения заключения',
+              message: 'Ошибка при удалении',
               timeout: 5000
             })
         })

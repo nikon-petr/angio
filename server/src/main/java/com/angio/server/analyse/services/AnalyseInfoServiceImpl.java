@@ -1,10 +1,7 @@
 package com.angio.server.analyse.services;
 
 import com.angio.server.AngioAppProperties;
-import com.angio.server.analyse.entities.AnalyseGeometricEntity;
-import com.angio.server.analyse.entities.AnalyseInfoEntity;
-import com.angio.server.analyse.entities.PatientEntity;
-import com.angio.server.analyse.entities.VesselEntity;
+import com.angio.server.analyse.entities.*;
 import com.angio.server.analyse.repositories.AnalyseGeometricCrudRepository;
 import com.angio.server.analyse.repositories.AnalyseInfoCrudRepository;
 import com.angio.server.analyse.repositories.PatientCrudRepository;
@@ -30,6 +27,8 @@ import com.mathworks.toolbox.javabuilder.MWException;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Set;
 
 @Service("analyseInfoService")
 @Transactional
@@ -119,11 +118,12 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     @Override
     @Transactional
     public AnalyseInfoEntity addNewAnalyseInfo(UserEntity user, PatientEntity patient, AnalyseInfoRequest analyseInfoRequest) throws Exception {
-        PatientEntity patientEntityFromDB = patientCrudRepository.findByPolicy(patient.getPolicy()).stream()
-                .findFirst()
-                .orElse(null);
+        PatientEntity patientEntityFromDB = null;
+        if (patient != null) {
+            patientEntityFromDB = patientCrudRepository.findOne(patient.getId());
+        }
 
-        PatientEntity patientEntity = null;
+        PatientEntity patientEntity;
         if (patientEntityFromDB == null) {
             patientEntity = patientCrudRepository.save(patient);
         } else {
@@ -204,6 +204,30 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
     @Override
     public void deleteAnalyse(long id) throws Exception {
+        ImageOperation imageOperation = new ImageOperation();
+        AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findOne(id);
+        imageOperation.deleteImage(analyseInfoEntity.getImg());
+
+        AnalyseGeometricEntity analyseGeometricEntity = analyseInfoEntity.getAnalyseGeometric();
+        if (analyseGeometricEntity != null){
+            imageOperation.deleteImage(analyseGeometricEntity.getBinarizedImage());
+            imageOperation.deleteImage(analyseGeometricEntity.getSkelImage());
+            Set<VesselEntity> vessels = analyseGeometricEntity.getVessels();
+            if (vessels != null && vessels.size() > 0){
+                for (VesselEntity vesselEntity : vessels){
+                    imageOperation.deleteImage(vesselEntity.getVesselImage());
+                    imageOperation.deleteImage(vesselEntity.getMainVesselImage());
+                }
+            }
+        }
+
+        AnalyseBloodFlowEntity analyseBloodFlowEntity = analyseInfoEntity.getAnalyseBloodFlow();
+        if (analyseBloodFlowEntity != null){
+            imageOperation.deleteImage(analyseBloodFlowEntity.getDensityImageFileName());
+            imageOperation.deleteImage(analyseBloodFlowEntity.getIshemiaImageFileName());
+        }
+
+
         analyseInfoCrudRepository.delete(id);
     }
 

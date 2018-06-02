@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 public class PatientResponse implements Serializable {
+    private long id;
     private String firstname;
     private String lastname;
     private String patronymic;
@@ -21,8 +22,9 @@ public class PatientResponse implements Serializable {
 
     }
 
-    public PatientResponse(String firstname, String lastname, String patronymic,
+    public PatientResponse(long id, String firstname, String lastname, String patronymic,
                           String email, String phone, String policy, String bday, String address, String work, String comment) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.patronymic = patronymic;
@@ -39,6 +41,7 @@ public class PatientResponse implements Serializable {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String date = sdf.format(patientEntity.getBday());
 
+        this.id = patientEntity.getId();
         this.firstname = patientEntity.getFirstname();
         this.lastname = patientEntity.getLastname();
         this.patronymic = patientEntity.getPatronymic();
@@ -49,6 +52,14 @@ public class PatientResponse implements Serializable {
         this.address = patientEntity.getLocation_address();
         this.work = patientEntity.getWork_address();
         this.comment = patientEntity.getComment();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getFirstname() {

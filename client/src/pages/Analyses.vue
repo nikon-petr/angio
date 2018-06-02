@@ -56,16 +56,19 @@
             <td class="text-xs-right">{{ props.item.policy }}</td>
             <td class="text-xs-right">{{ props.item.user }}</td>
             <td class="text-xs-right">{{ formatFullDate(props.item.analyseDate) }}</td>
-            <td class="text-xs-center px-0">
+            <td class="justify-center layout px-0">
               <v-btn
                 :loading=!props.item.analyseFinished
                 :to="{ path: '/analyses/' + props.item.id }"
                 :disabled=!props.item.analyseFinished
                 color="transparent"
-                class="white--text"
+                class="white--text mx-0"
               >
                 Подробнее
                 <v-icon white dark>chevron-right</v-icon>
+              </v-btn>
+              <v-btn icon class="mx-0" @click="deleteItem(props.item.id)">
+                <v-icon color="pink">delete</v-icon>
               </v-btn>
             </td>
           </template>
@@ -77,6 +80,17 @@
       </v-app>
     </v-flex>
     <TheNewAnalyseForm></TheNewAnalyseForm>
+    <v-dialog v-model="dialogDeleteAnalyse" max-width="290">
+      <v-card>
+        <v-card-title class="headline">Подтвердите действие</v-card-title>
+        <v-card-text>Вы действительно хотите удалить анализ?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat="flat" @click.native="dialogDeleteAnalyse = false">Отмена</v-btn>
+          <v-btn color="blue darken-1" flat="flat" @click="deleteAnalyseConfirmed()">Удалить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 
@@ -118,7 +132,9 @@ export default {
       analyseDate: '',
       analyseFinished: true
     },
-    loading_analyses: true
+    loading_analyses: true,
+    dialogDeleteAnalyse: false,
+    analyseIdDelete: -1
   }),
   computed: {
     computedDateFormatted () {
@@ -205,7 +221,34 @@ export default {
     clearDate () {
       this.search_date = ''
       this.search_date_formatted = ''
-    }
+    },
+    deleteItem (id) {
+      this.analyseIdDelete = id
+      this.dialogDeleteAnalyse = true
+    },
+    deleteAnalyseConfirmed () {
+      this.axios.delete('v1/analyse/' + this.analyseIdDelete)
+        .then(() => {
+          this.dialogDeleteAnalyse = false
+          this.$root.$emit('refreshAnalyses')
+          this.$root.$emit(
+            'showAlert',
+            {
+              color: 'success',
+              message: 'Анализ успешно удалён',
+              timeout: 3000
+            })
+        })
+        .catch(() => {
+          this.$root.$emit(
+            'showAlert',
+            {
+              color: 'error',
+              message: 'Ошибка при удалении',
+              timeout: 5000
+            })
+        })
+    },
   }
 }
 </script>

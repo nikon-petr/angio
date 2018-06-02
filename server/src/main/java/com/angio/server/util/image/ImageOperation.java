@@ -6,6 +6,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
@@ -49,6 +52,8 @@ public class ImageOperation {
                 }
             }
 
+            deleteImage(imageName);
+
             return formattedImageName;
         } else throw new Exception("Illegal image format");
     }
@@ -61,6 +66,12 @@ public class ImageOperation {
         ImageIO.write(bi, "png", outputfile);
 
         return imageName;
+    }
+
+    public void deleteImage(String filename) throws IOException {
+        Path deletedPath = Paths.get("src/main/resources/static/images/analyses/" + filename);
+        File file = new File("src/main/resources/static/images/analyses/" + filename);
+        if (file.exists()) Files.delete(deletedPath);
     }
 
     public static String getFullFilename(String filename){
