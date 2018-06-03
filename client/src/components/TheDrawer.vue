@@ -41,14 +41,6 @@
           <v-list-tile-title>Список пользователей</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
-      <v-list-tile>
-        <v-list-tile-action>
-          <v-icon>info_outline</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title>О приложении</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
     </v-list>
   </v-navigation-drawer>
 </template>

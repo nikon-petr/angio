@@ -132,15 +132,15 @@
                   <v-select
                     label="Тип анализа"
                     v-model="new_analyse.info.analyseType"
-                    :rules="new_analyse_rules.info.analyse_type"
+                    :rules="new_analyse_rules.info.analysetype"
                     :items="items_analyse_type"
-                    data-vv-name="new_analyse.info.analyseType"
+                    data-vv-name="new_analyse.info.analyse_type"
                     required
                   ></v-select>
                   <v-text-field
                     label="Краткое описание"
                     v-model="new_analyse.info.shortDescription"
-                    :rules="new_analyse_rules.info.shortDescription"
+                    :rules="new_analyse_rules.info.shortdescription"
                     :counter="500"
                     required
                     textarea
@@ -150,7 +150,7 @@
                   <v-text-field
                     label="Подробное описание"
                     v-model="new_analyse.info.fullDescription"
-                    :rules="new_analyse_rules.info.fullDescription"
+                    :rules="new_analyse_rules.info.fulldescription"
                     :counter="1000"
                     name="input-3-2"
                     textarea
@@ -227,7 +227,7 @@ export default {
           v => v.length <= 30 || 'Превышена допустимая длина'
         ],
         patronymic: [
-          v => v || v.length <= 30 || 'Превышена допустимая длина'
+          v => v.length <= 30 || 'Превышена допустимая длина'
         ],
         email: [
           v => !!v || 'Поле обязательно для заполнения',
@@ -243,7 +243,7 @@ export default {
           v => v.length <= 100 || 'Превышена допустимая длина'
         ],
         comment: [
-          v => v || v.length <= 1000 || 'Превышена допустимая длина'
+          v => v.length <= 1000 || 'Превышена допустимая длина'
         ],
         phone: [
           v => !!v || 'Поле обязательно для заполнения',
@@ -262,18 +262,18 @@ export default {
           v => !!v || 'Поле обязательно для заполнения',
           v => !!v || v.length <= 200 || 'Превышена допустимая длина'
         ],
-        analyseType: [
+        analysetype: [
           v => !!v || 'Поле обязательно для заполнения'
         ],
-        shortDescription: [
+        shortdescription: [
           v => !!v || 'Поле обязательно для заполнения',
           v => v.length <= 500 || 'Превышена допустимая длина'
         ],
-        fullDescription: [
-          v => v || (v.length <= 1000 || 'Превышена допустимая длина')
+        fulldescription: [
+          v => v.length <= 1000 || 'Превышена допустимая длина'
         ],
         comment: [
-          v => v || (v.length <= 1000 || 'Превышена допустимая длина')
+          v => v.length <= 1000 || 'Превышена допустимая длина'
         ]
       }
     },
@@ -354,7 +354,7 @@ export default {
         })
     },
     close () {
-      document.getElementById("uploadeImage").value = ""
+      document.getElementById('uploadeImage').value = ''
       this.$refs.form_new_analyse.reset()
       this.dialog = false
       this.bday_formatted = null
@@ -363,7 +363,7 @@ export default {
     },
     previewImage: function (event) {
       var input = event.target
-      this.imageUploaded(input, function(result){
+      this.imageUploaded(input, function (result) {
         console.log(result)
         // if (result[0].width === 1024 && result[0].height === 1024) {
         //   console.log('yes')
@@ -385,7 +385,7 @@ export default {
       if (input.files && input.files[0]) {
         var reader = new FileReader()
         reader.readAsDataURL(input.files[0])
-        reader.onload = (e) =>{
+        reader.onload = (e) => {
           var image = new Image()
           image.src = e.target.result
           this.new_analyse.info.img = image.src
@@ -394,7 +394,7 @@ export default {
             callback(result)
           }
         }
-      } else{
+      } else {
         this.new_analyse.info.img = ''
       }
     },

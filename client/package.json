@@ -13,6 +13,7 @@
   "dependencies": {
     "@websanova/vue-auth": "^2.21.9-beta",
     "axios": "^0.18.0",
+    "dateformat": "^3.0.3",
     "jwt-decode": "^2.2.0",
     "pdfmake": "^0.1.36",
     "v-img": "^0.2.0",
