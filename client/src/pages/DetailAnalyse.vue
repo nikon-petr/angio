@@ -289,7 +289,6 @@ export default {
     loadDetailAnalyse () {
       this.axios.get('v1/analyse/detail/' + this.detail_analyse_id)
         .then((response) => {
-          console.log(response)
           this.analyse.analyse_base_info.patient = response.data.patient
           this.analyse.analyse_base_info.info = response.data.info
           this.analyse.result.geometric_analyse = response.data.geometricAnalyse

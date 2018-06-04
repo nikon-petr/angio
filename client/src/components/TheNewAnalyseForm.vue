@@ -150,7 +150,6 @@
                   <v-text-field
                     label="Подробное описание"
                     v-model="new_analyse.info.fullDescription"
-                    :rules="new_analyse_rules.info.fulldescription"
                     :counter="1000"
                     name="input-3-2"
                     textarea
@@ -160,10 +159,9 @@
                     name="input-2-1"
                     multi-line
                     label="Комментарий"
-                    :rules="new_analyse_rules.info.comment"
+                    v-model="new_analyse.info.comment"
                     :counter="1000"
                     textarea
-                    v-model="new_analyse.info.comment"
                   ></v-text-field>
                   <small>Требования системы для загрузки изображений:</small>
                   <pre></pre>
@@ -260,7 +258,7 @@ export default {
       info: {
         name: [
           v => !!v || 'Поле обязательно для заполнения',
-          v => !!v || v.length <= 200 || 'Превышена допустимая длина'
+          v => v.length <= 200 || 'Превышена допустимая длина'
         ],
         analysetype: [
           v => !!v || 'Поле обязательно для заполнения'
@@ -268,12 +266,6 @@ export default {
         shortdescription: [
           v => !!v || 'Поле обязательно для заполнения',
           v => v.length <= 500 || 'Превышена допустимая длина'
-        ],
-        fulldescription: [
-          v => v.length <= 1000 || 'Превышена допустимая длина'
-        ],
-        comment: [
-          v => v.length <= 1000 || 'Превышена допустимая длина'
         ]
       }
     },
