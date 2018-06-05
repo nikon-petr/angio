@@ -94,8 +94,8 @@ export default {
               'showAlert',
               {
                 color: 'success',
-                message: 'Для продолжения смены E-mail подтвердите его, перейдя по ссылке в письме',
-                timeout: 7000
+                message: 'E-mail успешно изменен',
+                timeout: 5000
               })
           }).catch((res) => {
             this.$root.$emit(

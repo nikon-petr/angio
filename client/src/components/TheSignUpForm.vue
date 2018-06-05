@@ -198,7 +198,7 @@ export default {
               'showAlert',
               {
                 color: 'success',
-                message: 'Вы успешно прошли регистрацию, на ваш E-mail отправлено письмо для подтверждения.',
+                message: 'Вы успешно прошли регистрацию',
                 timeout: 5000
               })
           }, (res) => {
