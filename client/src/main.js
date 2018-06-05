@@ -15,6 +15,17 @@ Vue.router = router
 Vue.use(VueAxios, axios)
 Vue.axios.defaults.baseURL = 'http://localhost/api'
 
+Vue.axios.interceptors.request.use((config) => {
+  return config
+}, (error) => {
+  if (error.status === 401) {
+    Vue.auth.logout({
+      redirect: {path: '/user/sign-in'}
+    })
+  }
+  return Promise.reject(error)
+})
+
 Vue.use(Vuetify)
 
 Vue.use(VueImg)
