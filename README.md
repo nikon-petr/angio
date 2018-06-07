@@ -1,5 +1,21 @@
 # Angio
+
 Application for the analysis of retinal angiograms
+
+### Built With
+
+* data base
+  * PostgreSQL
+* server
+  * Spring Boot
+  * Spring Security
+  * JWT
+* client
+  * vue
+  * vue-router
+  * vue-auth
+  * vue-axios
+  * vuetify
 
 ### Run
 
@@ -23,4 +39,3 @@ docker-compose up
 ### Debug
 
 Remote debugging is available on port 8000
-
