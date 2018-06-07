@@ -8,6 +8,7 @@ Application for the analysis of retinal angiograms
   * PostgreSQL
 * server
   * Spring Boot
+  * Spring Data JPA
   * Spring Security
   * JWT
 * client
