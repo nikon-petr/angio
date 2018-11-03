@@ -1,0 +1,48 @@
+databaseChangeLog:
+- changeSet:
+    id: 003_1
+    author: nikon-petr
+    changes:
+    - loadData:
+        tableName: users
+        encoding: UTF-8
+        file: db/csv/users.csv
+        quotchar: "'"
+- changeSet:
+    id: 003_2
+    author: nikon-petr
+    changes:
+    - loadData:
+        tableName: authorities
+        encoding: UTF-8
+        file: db/csv/authorities.csv
+        quotchar: "'"
+- changeSet:
+    id: 003_3
+    author: nikon-petr
+    changes:
+    - loadData:
+        tableName: users_info
+        encoding: UTF-8
+        file: db/csv/users_info.csv
+        quotchar: "'"
+- changeSet:
+    id: 003_4
+    author: nikon-petr
+    context: demo
+    changes:
+    - loadData:
+        tableName: patients
+        encoding: UTF-8
+        file: db/csv/patients.csv
+        quotchar: "'"
+- changeSet:
+    id: 003_5
+    author: nikon-petr
+    context: demo
+    changes:
+    - loadData:
+        tableName: analyses_info
+        encoding: UTF-8
+        file: db/csv/analyses_info.csv
+        quotchar: "'"

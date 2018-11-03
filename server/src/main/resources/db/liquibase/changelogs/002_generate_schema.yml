@@ -1,0 +1,644 @@
+databaseChangeLog:
+- changeSet:
+    id: 1541247022483-1
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: analyses_bloodflow
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: analyses_bloodflow_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_info_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: ishemia_image
+            type: VARCHAR(400)
+        - column:
+            constraints:
+              nullable: false
+            name: density_image
+            type: VARCHAR(400)
+- changeSet:
+    id: 1541247022483-2
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: analyses_geometric
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: analyses_geometric_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_info_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: binarized_image
+            type: VARCHAR(400)
+        - column:
+            constraints:
+              nullable: false
+            name: skel_image
+            type: VARCHAR(400)
+- changeSet:
+    id: 1541247022483-3
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: analyses_info
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: analyses_info_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: username
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: patient_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(200)
+        - column:
+            constraints:
+              nullable: false
+            name: short_description
+            type: VARCHAR(500)
+        - column:
+            name: full_description
+            type: VARCHAR(1000)
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_type
+            type: VARCHAR(200)
+        - column:
+            name: comment
+            type: VARCHAR(1000)
+        - column:
+            constraints:
+              nullable: false
+            name: img
+            type: VARCHAR(400)
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_date
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: finished
+            type: BOOLEAN
+        - column:
+            name: conclusion
+            type: VARCHAR(1000)
+- changeSet:
+    id: 1541247022483-4
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: authorities
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: authorities_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: username
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: authority
+            type: VARCHAR(30)
+- changeSet:
+    id: 1541247022483-5
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: densities
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: densities_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_bloodflow_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: sector_number
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: density
+            type: FLOAT
+- changeSet:
+    id: 1541247022483-6
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: ischemias
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: ischemias_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_bloodflow_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: area
+            type: FLOAT
+        - column:
+            constraints:
+              nullable: false
+            name: zone_number
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: x
+            type: FLOAT
+        - column:
+            constraints:
+              nullable: false
+            name: y
+            type: FLOAT
+- changeSet:
+    id: 1541247022483-7
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: makulas
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: makulas_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_bloodflow_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: area
+            type: FLOAT
+        - column:
+            constraints:
+              nullable: false
+            name: radius
+            type: FLOAT
+        - column:
+            constraints:
+              nullable: false
+            name: x
+            type: FLOAT
+        - column:
+            constraints:
+              nullable: false
+            name: y
+            type: FLOAT
+- changeSet:
+    id: 1541247022483-8
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: patients
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: patients_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: firstname
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: lastname
+            type: VARCHAR(30)
+        - column:
+            name: patronymic
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: email
+            type: VARCHAR(100)
+        - column:
+            constraints:
+              nullable: false
+            name: phone
+            type: VARCHAR(11)
+        - column:
+            constraints:
+              nullable: false
+            name: bday
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: location_address
+            type: VARCHAR(100)
+        - column:
+            constraints:
+              nullable: false
+            name: work_address
+            type: VARCHAR(100)
+        - column:
+            constraints:
+              nullable: false
+            name: policy
+            type: VARCHAR(16)
+        - column:
+            name: comment
+            type: VARCHAR(1000)
+- changeSet:
+    id: 1541247022483-9
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: tokens
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: tokens_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: username
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: enabled
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: os
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: browser
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: device
+            type: VARCHAR(255)
+        - column:
+            name: expiration
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: issued_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+- changeSet:
+    id: 1541247022483-10
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: users
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: username
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: password
+            type: VARCHAR(120)
+        - column:
+            constraints:
+              nullable: false
+            name: enabled
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: last_password_reset_date
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+- changeSet:
+    id: 1541247022483-11
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: users_info
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: users_info_pkey
+            name: info_id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: username
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: firstname
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: lastname
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: modified_date
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+- changeSet:
+    id: 1541247022483-12
+    author: nikon-petr (generated)
+    changes:
+    - createTable:
+        tableName: vessels
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: vessels_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_geometric_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: vessel_image
+            type: VARCHAR(400)
+        - column:
+            constraints:
+              nullable: false
+            name: main_vessel_image
+            type: VARCHAR(400)
+        - column:
+            constraints:
+              nullable: false
+            name: tortuosity_degree
+            type: FLOAT4
+        - column:
+            constraints:
+              nullable: false
+            name: count_of_branches
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: branching_degree
+            type: FLOAT4
+        - column:
+            constraints:
+              nullable: false
+            name: area
+            type: FLOAT4
+        - column:
+            constraints:
+              nullable: false
+            name: area_percent
+            type: FLOAT4
+- changeSet:
+    id: 1541247022483-13
+    author: nikon-petr (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: username
+        constraintName: users_pkey
+        tableName: users
+- changeSet:
+    id: 1541247022483-14
+    author: nikon-petr (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: username, authority
+        constraintName: unique_authorities
+        tableName: authorities
+- changeSet:
+    id: 1541247022483-15
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: analyse_info_id
+        baseTableName: analyses_bloodflow
+        constraintName: fk_analyses_bloodflow_analyses_info
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: id
+        referencedTableName: analyses_info
+- changeSet:
+    id: 1541247022483-16
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: analyse_info_id
+        baseTableName: analyses_geometric
+        constraintName: fk_analyses_geometric_analyses_info
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: id
+        referencedTableName: analyses_info
+- changeSet:
+    id: 1541247022483-17
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: patient_id
+        baseTableName: analyses_info
+        constraintName: fk_analyses_info_patients
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: id
+        referencedTableName: patients
+- changeSet:
+    id: 1541247022483-18
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: username
+        baseTableName: analyses_info
+        constraintName: fk_analyses_info_users
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: username
+        referencedTableName: users
+- changeSet:
+    id: 1541247022483-19
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: username
+        baseTableName: authorities
+        constraintName: fk_authorities_users
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: username
+        referencedTableName: users
+- changeSet:
+    id: 1541247022483-20
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: analyse_bloodflow_id
+        baseTableName: densities
+        constraintName: fk_densities_analyses_bloodflow
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: id
+        referencedTableName: analyses_bloodflow
+- changeSet:
+    id: 1541247022483-21
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: analyse_bloodflow_id
+        baseTableName: makulas
+        constraintName: fk_ishemia_areas_analyses_bloodflow
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: id
+        referencedTableName: analyses_bloodflow
+- changeSet:
+    id: 1541247022483-22
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: analyse_bloodflow_id
+        baseTableName: ischemias
+        constraintName: fk_ishemia_centers_analyses_bloodflow
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: id
+        referencedTableName: analyses_bloodflow
+- changeSet:
+    id: 1541247022483-23
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: username
+        baseTableName: tokens
+        constraintName: fk_tokens_users
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: username
+        referencedTableName: users
+- changeSet:
+    id: 1541247022483-24
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: username
+        baseTableName: users_info
+        constraintName: fk_users_info_users
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: username
+        referencedTableName: users
+- changeSet:
+    id: 1541247022483-25
+    author: nikon-petr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: analyse_geometric_id
+        baseTableName: vessels
+        constraintName: fk_vessels_analyses_geometric
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: CASCADE
+        referencedColumnNames: id
+        referencedTableName: analyses_geometric
+

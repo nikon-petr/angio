@@ -1,0 +1,6 @@
+databaseChangeLog:
+- changeSet:
+    id: 001
+    author: nikon-petr
+    changes:
+    - empty: {}
