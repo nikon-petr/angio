@@ -1,0 +1,46 @@
+Configuration:
+    name: Default
+    Properties:
+        Property:
+            name: log-path
+            value: target/public/logs
+
+    Appenders:
+        Console:
+            name: Console_Appender
+            target: SYSTEM_OUT
+            PatternLayout:
+                pattern: "%highlight{[%-5level]}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=cyan, TRACE=black} \
+                    %style{%d{MM-dd HH:mm:ss}}{magenta} %style{[%15t]}{bold, cyan} %style{%logger{1}}{bright, green} - %msg%n%style{%throwable{full}}{red, bold}"
+        File:
+            name: File_Appender
+            fileName: ${log-path}/logfile.log
+            PatternLayout:
+                pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+        RollingFile:
+            name: RollingFile_Appender
+            fileName: ${log-path}/rollingfile.log
+            filePattern: "target/public/logs/archive/rollingfile.log.%d{yyyy-MM-dd_HH:mm:ss}.gz"
+            PatternLayout:
+                pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+            Policies:
+                SizeBasedTriggeringPolicy:
+                    size: 1 KB
+            DefaultRollOverStrategy:
+                max: 30
+
+    Loggers:
+        Root:
+            level: info
+            AppenderRef:
+            - ref: Console_Appender
+            - ref: File_Appender
+            - ref: RollingFile_Appender
+        Logger:
+            name: com.angio.server
+            additivity: false
+            level: info
+            AppenderRef:
+            - ref: Console_Appender
+            - ref: File_Appender
+            - ref: RollingFile_Appender
