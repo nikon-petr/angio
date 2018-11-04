@@ -14,15 +14,33 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.10.RELEASE</version>
+		<version>1.5.17.RELEASE</version>
 		<relativePath/>
 	</parent>
 
 	<properties>
+		<!-- compiler properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+
+		<!-- angio matlab libs -->
+		<blood-flow-analyse.version>1.0</blood-flow-analyse.version>
+		<geometric-analyse.version>1.0</geometric-analyse.version>
+		<javabuilder.version>1.0</javabuilder.version>
+
+		<!-- libs -->
+		<model-mapper.version>0.7.4</model-mapper.version>
 		<liquibase.version>3.5.5</liquibase.version>
+		<user-agent.version>1.19</user-agent.version>
+		<jsonwebtoken.version>0.7.0</jsonwebtoken.version>
+		<commons-io.version>2.5</commons-io.version>
+
+		<!-- datasource -->
+		<liquibase.plugin-url>jdbc:postgresql://localhost:5432/angio_app_db</liquibase.plugin-url>
+		<liquibase.user>angio_app</liquibase.user>
+		<liquibase.password>q1w2e3</liquibase.password>
+		<liquibase.changelog-master>src/main/resources/db/liquibase/master.yml</liquibase.changelog-master>
 	</properties>
 
 	<dependencies>
@@ -67,7 +85,7 @@
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
-			<version>0.7.4</version>
+			<version>${model-mapper.version}</version>
 		</dependency>
 
 		<!-- Tomcat -->
@@ -95,14 +113,14 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
-			<version>0.7.0</version>
+			<version>${jsonwebtoken.version}</version>
 		</dependency>
 
 		<!-- Device  -->
 		<dependency>
 			<groupId>eu.bitwalker</groupId>
 			<artifactId>UserAgentUtils</artifactId>
-			<version>1.19</version>
+			<version>${user-agent.version}</version>
 		</dependency>
 
 		<!-- Blood flow analyse -->
@@ -110,7 +128,7 @@
 			<groupId>bloodFlowAnalyses</groupId>
 			<artifactId>bloodFlowAnalyses</artifactId>
 			<scope>system</scope>
-			<version>1.0</version>
+			<version>${blood-flow-analyse.version}</version>
 			<systemPath>${basedir}/lib/bloodFlowAnalyse.jar</systemPath>
 		</dependency>
 
@@ -119,7 +137,7 @@
             <groupId>GeometricAnalyse</groupId>
             <artifactId>GeometricAnalyse</artifactId>
             <scope>system</scope>
-            <version>1.0</version>
+            <version>${geometric-analyse.version}</version>
             <systemPath>${basedir}/lib/GeometricAnalyse.jar</systemPath>
         </dependency>
 
@@ -128,7 +146,7 @@
             <groupId>javabuilder</groupId>
             <artifactId>javabuilder</artifactId>
             <scope>system</scope>
-            <version>1.0</version>
+            <version>${javabuilder.version}</version>
             <systemPath>/matlabruntime/v92/toolbox/javabuilder/jar/javabuilder.jar</systemPath>
         </dependency>
 
@@ -136,39 +154,34 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>4.2.4.RELEASE</version>
         </dependency>
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>4.2.4.RELEASE</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>4.2.4.RELEASE</version>
 		</dependency>
 
         <!-- Email -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <version>1.4.3.RELEASE</version>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>${commons-io.version}</version>
         </dependency>
 
 		<!-- Json -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20140107</version>
         </dependency>
 
 		<!-- logging -->
@@ -195,7 +208,9 @@
     </dependencies>
 
 	<build>
+
 		<plugins>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -208,18 +223,20 @@
 					</jvmArguments>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.liquibase</groupId>
 				<artifactId>liquibase-maven-plugin</artifactId>
 				<version>${liquibase.version}</version>
 				<configuration>
-					<changeLogFile>src/main/resources/db/liquibase/master.yml</changeLogFile>
+					<changeLogFile>${liquibase.changelog-master}</changeLogFile>
 					<driver>org.postgresql.Driver</driver>
-					<url>jdbc:postgresql://localhost:5432/angio_app_db</url>
-					<username>angio_app</username>
-					<password>q1w2e3</password>
+					<url>${liquibase.plugin-url}</url>
+					<username>${liquibase.user}</username>
+					<password>${liquibase.password}</password>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 

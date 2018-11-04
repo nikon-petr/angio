@@ -16,7 +16,6 @@ spring:
         password: q1w2e3
         driver-class-name: org.postgresql.Driver
 
-
     mail:
         host: smtp.mail.ru
         port: 465
