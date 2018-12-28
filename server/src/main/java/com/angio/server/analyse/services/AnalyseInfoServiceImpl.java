@@ -14,6 +14,7 @@ import com.angio.server.util.matlab.bloodflow.BloodFlowAnalyseResult;
 import com.angio.server.util.matlab.geometric.GeometricAnalyseAdapter;
 import com.angio.server.util.matlab.geometric.model.GeometricAnalyseModel;
 import com.angio.server.util.matlab.geometric.model.VesselModel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service("analyseInfoService")
 @Transactional
 public class AnalyseInfoServiceImpl implements AnalyseInfoService {
@@ -152,11 +154,15 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
     @Override
     public AnalyseInfoEntity startNewAnalyse(long id) throws Exception {
+        log.info("startNewAnalyse() - start");
+
+        log.info("startNewAnalyse() - find analyse info");
         AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findOne(id);
 
-//      Geometric analyse
+        log.info("startNewAnalyse() - geometric analyse");
         GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfoEntity.getImg());
 
+        log.info("startNewAnalyse() - save images of geometric analyse");
         ImageOperation imageOperation = new ImageOperation();
         String binarizedImage = imageOperation.save(geometricAnalyseModel.getBinarized());
         String skelImage = imageOperation.save(geometricAnalyseModel.getSkel());
@@ -169,23 +175,26 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
                     (float) vesselModel.getTortuosity(), vesselModel.getCountOfBranchesOf1Orders(),
                     (float) vesselModel.getBranching(), (float) vesselModel.getArea(), (float) vesselModel.getAreaPercent()));
         }
-        analyseInfoEntity.setFinished(true);
-        analyseInfoEntity = analyseInfoCrudRepository.save(analyseInfoEntity);
 
-//      Blood flow analyse
-        String originalImage = new ClassPathResource(angioAppProperties.getAnalyseImagesDirectory() + analyseInfoEntity.getImg())
+        log.info("startNewAnalyse() - blood flow analyse");
+        String originalImage = new ClassPathResource(
+                angioAppProperties.getAnalyseImagesDirectory() + "/" + analyseInfoEntity.getImg())
                 .getFile()
                 .getAbsolutePath();
         BloodFlowAnalyseResult bloodFlowAnalyseResult = new BloodFlowAnalyseAdapter().runAnalyse(originalImage);
 
+        log.info("startNewAnalyse() - save images of blood flow analyse");
         String ishemiaImagePath = imageOperation.save(bloodFlowAnalyseResult.getIshemiaImage());
         String densityImagePath = imageOperation.save(bloodFlowAnalyseResult.getCapillarDensityImage());
 
+        log.info("startNewAnalyse() - save blood flow analyse result");
         analyseBloodFlowService.addNewAnalyse(analyseInfoEntity, ishemiaImagePath, densityImagePath, bloodFlowAnalyseResult);
 
+        log.info("startNewAnalyse() - save completed analyse info");
         analyseInfoEntity.setFinished(true);
         analyseInfoCrudRepository.save(analyseInfoEntity);
 
+        log.info("startNewAnalyse() - end");
         return analyseInfoEntity;
     }
 
