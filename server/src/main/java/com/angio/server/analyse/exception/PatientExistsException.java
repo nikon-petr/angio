@@ -1,4 +1,4 @@
-package com.angio.server.analyse.services;
+package com.angio.server.analyse.exception;
 
 public class PatientExistsException extends Exception {
     public PatientExistsException(String message) {

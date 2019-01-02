@@ -1,6 +1,8 @@
 package com.angio.server.security.services;
 
 import com.angio.server.security.entities.UserEntity;
+import com.angio.server.security.exception.IncorrectPasswordException;
+import com.angio.server.security.exception.UsernameExistsException;
 import com.angio.server.user.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

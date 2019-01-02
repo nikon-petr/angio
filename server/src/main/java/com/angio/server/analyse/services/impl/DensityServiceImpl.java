@@ -1,7 +1,8 @@
-package com.angio.server.analyse.services;
+package com.angio.server.analyse.services.impl;
 
 import com.angio.server.analyse.entities.DensityEntity;
 import com.angio.server.analyse.repositories.DensityCrudRepository;
+import com.angio.server.analyse.services.DensityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

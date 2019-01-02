@@ -1,7 +1,11 @@
-package com.angio.server.analyse.services;
+package com.angio.server.analyse.services.impl;
 
 import com.angio.server.analyse.entities.*;
 import com.angio.server.analyse.repositories.AnalyseBloodFlowCrudRepository;
+import com.angio.server.analyse.services.AnalyseBloodFlowService;
+import com.angio.server.analyse.services.DensityService;
+import com.angio.server.analyse.services.IshemiaService;
+import com.angio.server.analyse.services.MakulaService;
 import com.angio.server.util.matlab.bloodflow.BloodFlowAnalyseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

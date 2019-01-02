@@ -19,7 +19,7 @@ import com.angio.server.analyse.responses.IdResponse;
 import com.angio.server.analyse.responses.PatientResponse;
 import com.angio.server.analyse.services.AnalyseGeometricService;
 import com.angio.server.analyse.services.AnalyseInfoService;
-import com.angio.server.analyse.services.PatientExistsException;
+import com.angio.server.analyse.exception.PatientExistsException;
 import com.angio.server.analyse.services.PatientService;
 import com.angio.server.security.entities.UserEntity;
 import com.angio.server.user.services.UserInfoService;

@@ -1,7 +1,8 @@
-package com.angio.server.analyse.services;
+package com.angio.server.analyse.services.impl;
 
 import com.angio.server.analyse.entities.IshemiaEntity;
 import com.angio.server.analyse.repositories.IshemiaCrudRepository;
+import com.angio.server.analyse.services.IshemiaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

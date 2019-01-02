@@ -1,4 +1,4 @@
-package com.angio.server.security.services;
+package com.angio.server.security.exception;
 
 public class UsernameExistsException extends Exception {
     public UsernameExistsException(String message) {

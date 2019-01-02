@@ -1,7 +1,8 @@
-package com.angio.server.analyse.services;
+package com.angio.server.analyse.services.impl;
 
 import com.angio.server.analyse.entities.MakulaEntity;
 import com.angio.server.analyse.repositories.MakulaCrudRepository;
+import com.angio.server.analyse.services.MakulaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

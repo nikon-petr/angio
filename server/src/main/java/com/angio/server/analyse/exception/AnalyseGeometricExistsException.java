@@ -1,4 +1,4 @@
-package com.angio.server.analyse.services;
+package com.angio.server.analyse.exception;
 
 public class AnalyseGeometricExistsException extends Exception {
     public AnalyseGeometricExistsException(String message) {

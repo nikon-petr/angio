@@ -1,4 +1,4 @@
-package com.angio.server.analyse.services;
+package com.angio.server.analyse.services.impl;
 
 import com.angio.server.AngioAppProperties;
 import com.angio.server.analyse.entities.*;
@@ -7,6 +7,8 @@ import com.angio.server.analyse.repositories.AnalyseInfoCrudRepository;
 import com.angio.server.analyse.repositories.PatientCrudRepository;
 import com.angio.server.analyse.repositories.VesselCrudRepository;
 import com.angio.server.analyse.requests.AnalyseInfoRequest;
+import com.angio.server.analyse.services.AnalyseBloodFlowService;
+import com.angio.server.analyse.services.AnalyseInfoService;
 import com.angio.server.security.entities.UserEntity;
 import com.angio.server.util.image.ImageOperation;
 import com.angio.server.util.matlab.bloodflow.BloodFlowAnalyseAdapter;
