@@ -36,6 +36,7 @@
 		<jsonwebtoken.version>0.7.0</jsonwebtoken.version>
 		<commons-io.version>2.5</commons-io.version>
 		<lombok.version>1.18.4</lombok.version>
+		<orika.version>1.4.6</orika.version>
 
 		<!-- datasource -->
 		<liquibase.plugin-url>jdbc:postgresql://localhost:5432/angio_app_db</liquibase.plugin-url>
@@ -212,6 +213,13 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- orika -->
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+			<version>${orika.version}</version>
 		</dependency>
 
     </dependencies>

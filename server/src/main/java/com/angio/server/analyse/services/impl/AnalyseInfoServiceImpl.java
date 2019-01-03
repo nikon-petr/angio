@@ -2,11 +2,15 @@ package com.angio.server.analyse.services.impl;
 
 import com.angio.server.AngioAppProperties;
 import com.angio.server.analyse.entities.*;
+import com.angio.server.analyse.mappers.AnalyseInfoMapper;
+import com.angio.server.analyse.mappers.PatientMapper;
 import com.angio.server.analyse.repositories.AnalyseGeometricCrudRepository;
 import com.angio.server.analyse.repositories.AnalyseInfoCrudRepository;
 import com.angio.server.analyse.repositories.PatientCrudRepository;
 import com.angio.server.analyse.repositories.VesselCrudRepository;
 import com.angio.server.analyse.requests.AnalyseInfoRequest;
+import com.angio.server.analyse.requests.NewAnalyseRequest;
+import com.angio.server.analyse.requests.PatientRequest;
 import com.angio.server.analyse.services.AnalyseBloodFlowService;
 import com.angio.server.analyse.services.AnalyseInfoService;
 import com.angio.server.security.entities.UserEntity;
@@ -16,51 +20,36 @@ import com.angio.server.util.matlab.bloodflow.BloodFlowAnalyseResult;
 import com.angio.server.util.matlab.geometric.GeometricAnalyseAdapter;
 import com.angio.server.util.matlab.geometric.model.GeometricAnalyseModel;
 import com.angio.server.util.matlab.geometric.model.VesselModel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mathworks.toolbox.javabuilder.MWException;
 
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service("analyseInfoService")
 @Transactional
 public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
-    AnalyseInfoCrudRepository analyseInfoCrudRepository;
-    PatientCrudRepository patientCrudRepository;
-    AnalyseGeometricCrudRepository analyseGeometricCrudRepository;
-    VesselCrudRepository vesselCrudRepository;
+    private final AnalyseInfoMapper analyseInfoMapper;
+    private final PatientMapper patientMapper;
+    private final AnalyseInfoCrudRepository analyseInfoCrudRepository;
+    private final PatientCrudRepository patientCrudRepository;
+    private final AnalyseGeometricCrudRepository analyseGeometricCrudRepository;
+    private final VesselCrudRepository vesselCrudRepository;
     private final AnalyseBloodFlowService analyseBloodFlowService;
     private final AngioAppProperties angioAppProperties;
-
-
-    @Autowired
-    public AnalyseInfoServiceImpl(
-            AnalyseInfoCrudRepository analyseInfoCrudRepository,
-            PatientCrudRepository patientCrudRepository,
-            AnalyseGeometricCrudRepository analyseGeometricCrudRepository,
-            VesselCrudRepository vesselCrudRepository,
-            AnalyseBloodFlowService analyseBloodFlowService,
-            AngioAppProperties angioAppProperties) {
-        this.analyseInfoCrudRepository = analyseInfoCrudRepository;
-        this.patientCrudRepository = patientCrudRepository;
-        this.analyseGeometricCrudRepository = analyseGeometricCrudRepository;
-        this.vesselCrudRepository = vesselCrudRepository;
-        this.analyseBloodFlowService = analyseBloodFlowService;
-        this.angioAppProperties = angioAppProperties;
-    }
 
     @Override
     public Page<AnalyseInfoEntity> listAllByPageAndSortAndFilter(Pageable pageable, String search, String date) throws Exception {
@@ -121,34 +110,49 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
     @Override
     @Transactional
-    public AnalyseInfoEntity addNewAnalyseInfo(UserEntity user, PatientEntity patient, AnalyseInfoRequest analyseInfoRequest) throws Exception {
+    public AnalyseInfoEntity addNewAnalyseInfo(NewAnalyseRequest newAnalyseRequest)
+            throws Exception {
+
+        log.info("addNewAnalyseInfo() - find patient by id");
         PatientEntity patientEntityFromDB = null;
-        if (patient != null) {
-            patientEntityFromDB = patientCrudRepository.findOne(patient.getId());
+        if (newAnalyseRequest.getPatient() != null) {
+            patientEntityFromDB = patientCrudRepository.findOne(newAnalyseRequest.getPatient().getId());
         }
 
         PatientEntity patientEntity;
         if (patientEntityFromDB == null) {
-            patientEntity = patientCrudRepository.save(patient);
+
+            log.info("addNewAnalyseInfo() - map patient request to new entity");
+            patientEntity = patientMapper.map(newAnalyseRequest.getPatient(), PatientEntity.class);
+
+            log.info("addNewAnalyseInfo() - create new patient entity: {}", patientEntity);
+            patientEntity = patientCrudRepository.save(patientEntity);
         } else {
-            patientEntityFromDB.setFirstname(patient.getFirstname());
-            patientEntityFromDB.setLastname(patient.getLastname());
-            patientEntityFromDB.setPatronymic(patient.getPatronymic());
-            patientEntityFromDB.setEmail(patient.getEmail());
-            patientEntityFromDB.setPhone(patient.getPhone());
-            patientEntityFromDB.setBday(patient.getBday());
-            patientEntityFromDB.setLocation_address(patient.getLocation_address());
-            patientEntityFromDB.setWork_address(patient.getWork_address());
-            patientEntityFromDB.setComment(patient.getComment());
-            patientEntityFromDB.setPolicy(patient.getPolicy());
+
+            log.info("addNewAnalyseInfo() - map patient request for update entity");
+            patientMapper.map(newAnalyseRequest.getPatient(), patientEntityFromDB);
+
+            log.info("addNewAnalyseInfo() - save updated patient entity: {}", patientEntityFromDB);
             patientEntity = patientCrudRepository.save(patientEntityFromDB);
         }
 
+        log.info("addNewAnalyseInfo() - save original image");
         ImageOperation imageOperation = new ImageOperation();
-        String imgFileName = imageOperation.save(analyseInfoRequest.getImg());
-        AnalyseInfoEntity analyseInfoEntity = new AnalyseInfoEntity(user, patientEntity, analyseInfoRequest.getName(),
-                analyseInfoRequest.getShortDescription(), analyseInfoRequest.getFullDescription(), analyseInfoRequest.getAnalyseType(),
-                analyseInfoRequest.getComment(), imgFileName, new Timestamp(System.currentTimeMillis()), "", false);
+        String imgFileName = imageOperation.save(newAnalyseRequest.getInfo().getImg());
+
+        log.info("addNewAnalyseInfo() - get user principal");
+        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        log.info("addNewAnalyseInfo() - map new analyse request to entity");
+        AnalyseInfoEntity analyseInfoEntity = analyseInfoMapper.map(newAnalyseRequest.getInfo(), AnalyseInfoEntity.class);
+        analyseInfoEntity.setPatient(patientEntity);
+        analyseInfoEntity.setUser(user);
+        analyseInfoEntity.setImg(imgFileName);
+        analyseInfoEntity.setAnalyseDate(new Date());
+        analyseInfoEntity.setConclusion("");
+        analyseInfoEntity.setFinished(false);
+
+        log.info("addNewAnalyseInfo() - save analyse info entity");
         analyseInfoEntity = analyseInfoCrudRepository.save(analyseInfoEntity);
 
         return analyseInfoEntity;
@@ -158,7 +162,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     public AnalyseInfoEntity startNewAnalyse(long id) throws Exception {
         log.info("startNewAnalyse() - start");
 
-        log.info("startNewAnalyse() - find analyse info");
+        log.info("startNewAnalyse() - find analyse info with id: {}", id);
         AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findOne(id);
 
         log.info("startNewAnalyse() - geometric analyse");
@@ -201,15 +205,26 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     }
 
     @Override
-    public AnalyseInfoEntity getAnalyseInfoEntity(long id) throws Exception {
-        return analyseInfoCrudRepository.findOne(id);
+    public AnalyseInfoEntity getAnalyseInfoById(long id) {
+
+        log.info("getAnalyseInfoById() - start - search analyse info with id: {}", id);
+        AnalyseInfoEntity analyseInfo = analyseInfoCrudRepository.findOne(id);
+
+        log.info("getAnalyseInfoById() - end - found: {}", analyseInfo);
+        return analyseInfo;
     }
 
     @Override
-    public AnalyseInfoEntity updateAnalyseInfoConclusion(long id, String conclusion) throws Exception {
+    public AnalyseInfoEntity updateAnalyseInfoConclusion(long id, String conclusion) {
+        log.info("updateAnalyseInfoConclusion() - start");
+
+        log.info("updateAnalyseInfoConclusion() - search analyse info entity with id:", id);
         AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findOne(id);
+
+        log.info("updateAnalyseInfoConclusion() - update conclusion field with: {}", conclusion);
         analyseInfoEntity.setConclusion(conclusion);
 
+        log.info("updateAnalyseInfoConclusion() - end - save updated analyse info entity");
         return analyseInfoCrudRepository.save(analyseInfoEntity);
     }
 
@@ -243,7 +258,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     }
 
     @Override
-    public long getCountOfAnalyses(String search, String date) throws Exception {
+    public long getCountOfAnalyses(String search, String date) {
         if (date == null) date = "";
         String formattedDate = null;
         if (!date.equals("")){

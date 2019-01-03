@@ -5,10 +5,8 @@ import com.angio.server.analyse.entities.AnalyseGeometricEntity;
 import com.angio.server.analyse.entities.AnalyseInfoEntity;
 import com.angio.server.analyse.entities.PatientEntity;
 import com.angio.server.analyse.entities.VesselEntity;
-import com.angio.server.analyse.requests.AnalyseInfoRequest;
 import com.angio.server.analyse.requests.IdRequest;
 import com.angio.server.analyse.requests.NewAnalyseRequest;
-import com.angio.server.analyse.requests.PatientRequest;
 import com.angio.server.analyse.requests.UpdateAnalyseInfoConclusionRequest;
 import com.angio.server.analyse.responses.AnalyseInfoConclusionResponse;
 import com.angio.server.analyse.responses.AnalyseResponse;
@@ -21,7 +19,6 @@ import com.angio.server.analyse.services.AnalyseGeometricService;
 import com.angio.server.analyse.services.AnalyseInfoService;
 import com.angio.server.analyse.exception.PatientExistsException;
 import com.angio.server.analyse.services.PatientService;
-import com.angio.server.security.entities.UserEntity;
 import com.angio.server.user.services.UserInfoService;
 import com.angio.server.util.url.UrlUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -91,12 +87,8 @@ public class AnalyseController {
     @RequestMapping(value = "/api/v1/analyse/info", method = RequestMethod.POST)
     public ResponseEntity<?> addNewAnalyseInfo(@RequestBody NewAnalyseRequest newAnalyseRequest) {
         try {
-            PatientRequest patientRequest = newAnalyseRequest.getPatient();
-            AnalyseInfoRequest analyseInfoRequest = newAnalyseRequest.getInfo();
 
-            UserEntity userEntity = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            AnalyseInfoEntity analyseInfoEntity = analyseInfoService.addNewAnalyseInfo(userEntity, new PatientEntity(
-                    patientRequest), analyseInfoRequest);
+            AnalyseInfoEntity analyseInfoEntity = analyseInfoService.addNewAnalyseInfo(newAnalyseRequest);
 
             return ResponseEntity.ok().body(new IdResponse(analyseInfoEntity.getId()));
         } catch (Exception e) {
@@ -152,7 +144,7 @@ public class AnalyseController {
     @RequestMapping(value = "/api/v1/analyse/detail/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> detailAnalyse(@PathVariable("id") long id, HttpServletRequest request) {
         try {
-            AnalyseInfoEntity analyseInfoEntity = analyseInfoService.getAnalyseInfoEntity(id);
+            AnalyseInfoEntity analyseInfoEntity = analyseInfoService.getAnalyseInfoById(id);
             PatientEntity patientEntity = analyseInfoEntity.getPatient();
             AnalyseGeometricEntity analyseGeometricEntity = analyseGeometricService.getAnalyseGeometric(
                     analyseInfoEntity);

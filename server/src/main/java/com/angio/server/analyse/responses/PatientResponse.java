@@ -49,8 +49,8 @@ public class PatientResponse implements Serializable {
         this.phone = patientEntity.getPhone();
         this.policy = patientEntity.getPolicy();
         this.bday = date;
-        this.address = patientEntity.getLocation_address();
-        this.work = patientEntity.getWork_address();
+        this.address = patientEntity.getLocationAddress();
+        this.work = patientEntity.getWorkAddress();
         this.comment = patientEntity.getComment();
     }
 
