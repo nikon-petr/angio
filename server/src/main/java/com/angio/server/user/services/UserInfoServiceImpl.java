@@ -40,11 +40,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public void update(long userInfo_id, String username, String firstname, String lastname, Date modified_date) throws Exception {
-        UserInfoEntity userInfo = userInfoCrudRepository.findOne(userInfo_id);
-        userInfo.setFirstname(firstname);
-        userInfo.setLastname(lastname);
-        userInfo.setModified_date(modified_date);
-        userInfo.setUser(userRepository.findOne(username));
+        UserInfoEntity userInfo = userInfoCrudRepository.findById(userInfo_id).get();
+        userInfo.getFullName().setFirstname(firstname);
+        userInfo.getFullName().setLastname(lastname);
+        userInfo.setModifiedDate(modified_date);
+        userInfo.setUser(userRepository.findById(username).get());
         userInfoCrudRepository.save(userInfo);
     }
 }

@@ -1,18 +1,22 @@
 package com.angio.server.analyse.services.impl;
 
 import com.angio.server.AngioAppProperties;
-import com.angio.server.analyse.entities.*;
+import com.angio.server.analyse.dto.AnalyseShortItemDto;
+import com.angio.server.analyse.entities.AnalyseBloodFlowEntity;
+import com.angio.server.analyse.entities.AnalyseGeometricEntity;
+import com.angio.server.analyse.entities.AnalyseInfoEntity;
+import com.angio.server.analyse.entities.PatientEntity;
+import com.angio.server.analyse.entities.VesselEntity;
 import com.angio.server.analyse.mappers.AnalyseInfoMapper;
 import com.angio.server.analyse.mappers.PatientMapper;
 import com.angio.server.analyse.repositories.AnalyseGeometricCrudRepository;
 import com.angio.server.analyse.repositories.AnalyseInfoCrudRepository;
 import com.angio.server.analyse.repositories.PatientCrudRepository;
 import com.angio.server.analyse.repositories.VesselCrudRepository;
-import com.angio.server.analyse.requests.AnalyseInfoRequest;
 import com.angio.server.analyse.requests.NewAnalyseRequest;
-import com.angio.server.analyse.requests.PatientRequest;
 import com.angio.server.analyse.services.AnalyseBloodFlowService;
 import com.angio.server.analyse.services.AnalyseInfoService;
+import com.angio.server.analyse.specifications.AnalyseInfoSpecification;
 import com.angio.server.security.entities.UserEntity;
 import com.angio.server.util.image.ImageOperation;
 import com.angio.server.util.matlab.bloodflow.BloodFlowAnalyseAdapter;
@@ -22,19 +26,24 @@ import com.angio.server.util.matlab.geometric.model.GeometricAnalyseModel;
 import com.angio.server.util.matlab.geometric.model.VesselModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mathworks.toolbox.javabuilder.MWException;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,6 +51,7 @@ import java.util.Set;
 @Transactional
 public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
+    private final AnalyseInfoSpecification analyseInfoSpecification;
     private final AnalyseInfoMapper analyseInfoMapper;
     private final PatientMapper patientMapper;
     private final AnalyseInfoCrudRepository analyseInfoCrudRepository;
@@ -50,6 +60,51 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     private final VesselCrudRepository vesselCrudRepository;
     private final AnalyseBloodFlowService analyseBloodFlowService;
     private final AngioAppProperties angioAppProperties;
+
+    @Override
+    public Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Pageable pageable) {
+
+        log.info("filterAnalysesByQueryString() - build analyse info specification");
+        Specification<AnalyseInfoEntity> specs = analyseInfoSpecification.getAnalyseInfoFilter(queryString)
+                .and(analyseInfoSpecification.analyseDate(date));
+
+        log.info("filterAnalysesByQueryString() - map sorting fields");
+        Pageable mappedPageRequest = mapSortingFields(pageable);
+
+        log.info("filterAnalysesByQueryString() - filter analyse info");
+        Page<AnalyseInfoEntity> analyseInfoEntityPage = analyseInfoCrudRepository.findAll(specs, mappedPageRequest);
+
+        log.info("filterAnalysesByQueryString() - map and return analyse page");
+        return analyseInfoEntityPage.map(e -> analyseInfoMapper.map(e, AnalyseShortItemDto.class));
+    }
+
+    private Pageable mapSortingFields(Pageable pageable) {
+        log.info("mapSortingFields() - start mapping for: {}", pageable);
+        Map<String, String> dtoSortingFields = new HashMap<>();
+        dtoSortingFields.put("patient", "patient.lastname");
+        dtoSortingFields.put("policy", "patient.policy");
+        dtoSortingFields.put("user", "user.userInfo.lastname");
+
+        List<Sort.Order> orders = new ArrayList<>();
+
+        for (Sort.Order order : pageable.getSort()) {
+            if (order.getDirection() != null && !isEmpty(order.getProperty())) {
+
+                String field = dtoSortingFields.getOrDefault(order.getProperty(), null);
+
+                if (field == null) {
+                    field = order.getProperty();
+                }
+
+                Sort.Order copyOrder = new Sort.Order(order.getDirection(), field);
+                orders.add(copyOrder);
+            }
+        }
+
+        PageRequest result = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(orders));
+        log.info("mapSortingFields() - mapping result: {}", result);
+        return result;
+    }
 
     @Override
     public Page<AnalyseInfoEntity> listAllByPageAndSortAndFilter(Pageable pageable, String search, String date) throws Exception {
@@ -84,19 +139,19 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
                     break;
             }
             if (formattedDate == null) {
-                return analyseInfoCrudRepository.findAll(search, new PageRequest(
+                return analyseInfoCrudRepository.findAll(search, PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
-                        new Sort(
+                        Sort.by(
                                 new Sort.Order(
                                         isAscending ? Sort.Direction.ASC : Sort.Direction.DESC,
                                         sortProperty)
                         )));
             } else{
-                return analyseInfoCrudRepository.findAll(search, formattedDate, new PageRequest(
+                return analyseInfoCrudRepository.findAll(search, formattedDate, PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
-                        new Sort(
+                        Sort.by(
                                 new Sort.Order(
                                         isAscending ? Sort.Direction.ASC : Sort.Direction.DESC,
                                         sortProperty)
@@ -116,7 +171,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
         log.info("addNewAnalyseInfo() - find patient by id");
         PatientEntity patientEntityFromDB = null;
         if (newAnalyseRequest.getPatient() != null) {
-            patientEntityFromDB = patientCrudRepository.findOne(newAnalyseRequest.getPatient().getId());
+            patientEntityFromDB = patientCrudRepository.findById(newAnalyseRequest.getPatient().getId()).get();
         }
 
         PatientEntity patientEntity;
@@ -163,7 +218,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
         log.info("startNewAnalyse() - start");
 
         log.info("startNewAnalyse() - find analyse info with id: {}", id);
-        AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findOne(id);
+        AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findById(id).get();
 
         log.info("startNewAnalyse() - geometric analyse");
         GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfoEntity.getImg());
@@ -208,7 +263,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     public AnalyseInfoEntity getAnalyseInfoById(long id) {
 
         log.info("getAnalyseInfoById() - start - search analyse info with id: {}", id);
-        AnalyseInfoEntity analyseInfo = analyseInfoCrudRepository.findOne(id);
+        AnalyseInfoEntity analyseInfo = analyseInfoCrudRepository.findById(id).get();
 
         log.info("getAnalyseInfoById() - end - found: {}", analyseInfo);
         return analyseInfo;
@@ -219,7 +274,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
         log.info("updateAnalyseInfoConclusion() - start");
 
         log.info("updateAnalyseInfoConclusion() - search analyse info entity with id:", id);
-        AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findOne(id);
+        AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findById(id).get();
 
         log.info("updateAnalyseInfoConclusion() - update conclusion field with: {}", conclusion);
         analyseInfoEntity.setConclusion(conclusion);
@@ -231,7 +286,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     @Override
     public void deleteAnalyse(long id) throws Exception {
         ImageOperation imageOperation = new ImageOperation();
-        AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findOne(id);
+        AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findById(id).get();
         imageOperation.deleteImage(analyseInfoEntity.getImg());
 
         AnalyseGeometricEntity analyseGeometricEntity = analyseInfoEntity.getAnalyseGeometric();
@@ -254,7 +309,7 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
         }
 
 
-        analyseInfoCrudRepository.delete(id);
+        analyseInfoCrudRepository.deleteById(id);
     }
 
     @Override

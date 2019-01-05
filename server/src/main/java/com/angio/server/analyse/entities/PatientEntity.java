@@ -1,11 +1,20 @@
 package com.angio.server.analyse.entities;
 
+import com.angio.server.common.embeddable.FullName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +23,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = {"analysesInfo"})
 @Entity
-@Table(name = "patients", catalog = "public")
+@Table(name = "patients", schema = "public")
 public class PatientEntity {
 
     @Id
@@ -22,14 +31,8 @@ public class PatientEntity {
     @Column(name = "id", nullable = false)
     private long id;
 
-    @Column(name = "firstname", nullable = false, length = 30)
-    private String firstname;
-
-    @Column(name = "lastname", nullable = false, length = 30)
-    private String lastname;
-
-    @Column(name = "patronymic", length = 30)
-    private String patronymic;
+    @Embedded
+    private FullName fullName;
 
     @Column(name = "email", nullable = false, length = 100)
     private String email;

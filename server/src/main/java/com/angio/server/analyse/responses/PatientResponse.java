@@ -42,9 +42,9 @@ public class PatientResponse implements Serializable {
         String date = sdf.format(patientEntity.getBday());
 
         this.id = patientEntity.getId();
-        this.firstname = patientEntity.getFirstname();
-        this.lastname = patientEntity.getLastname();
-        this.patronymic = patientEntity.getPatronymic();
+        this.firstname = patientEntity.getFullName().getFirstname();
+        this.lastname = patientEntity.getFullName().getLastname();
+        this.patronymic = patientEntity.getFullName().getPatronymic();
         this.email = patientEntity.getEmail();
         this.phone = patientEntity.getPhone();
         this.policy = patientEntity.getPolicy();

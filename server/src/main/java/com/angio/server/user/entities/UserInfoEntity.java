@@ -1,78 +1,48 @@
 package com.angio.server.user.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.angio.server.common.embeddable.FullName;
 import com.angio.server.security.entities.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Data
+@NoArgsConstructor
 @Entity
-@Table(name = "users_info", catalog = "public")
+@Table(name = "users_info", schema = "public")
 public class UserInfoEntity {
-    private long info_id;
-    private UserEntity user;
-    private String firstname;
-    private String lastname;
-    private Date modified_date;
-
-    public UserInfoEntity(){
-
-    }
-
-    public UserInfoEntity(UserEntity user, String firstname, String lastname, Date modified_date) {
-        this.user = user;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.modified_date = modified_date;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "info_id", nullable = false)
-    public long getInfo_id() {
-        return info_id;
-    }
-
-    public void setInfo_id(long info_id) {
-        this.info_id = info_id;
-    }
+    private long infoId;
 
     @JsonIgnore
-//    @ManyToOne(fetch = FetchType.LAZY)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username", nullable = false)
-    public UserEntity getUser() {
-        return user;
-    }
+    private UserEntity user;
 
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    @Column(name = "firstname", nullable = false, length = 30)
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    @Column(name = "lastname", nullable = false, length = 30)
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+    @Embedded
+    private FullName fullName;
 
     @Column(name = "modified_date", nullable = false)
-    public Date getModified_date() {
-        return modified_date;
-    }
+    private Date modifiedDate;
 
-    public void setModified_date(Date modified_date) {
-        this.modified_date = modified_date;
+    public UserInfoEntity(UserEntity user, FullName fullName, Date modifiedDate) {
+        this.user = user;
+        this.fullName = fullName;
+        this.modifiedDate = modifiedDate;
     }
 }

@@ -13,7 +13,7 @@ import com.angio.server.user.requests.ChangeUsernameRequest;
 import com.angio.server.user.requests.CreateUserRequest;
 import com.angio.server.user.responses.SelfUserResponse;
 import com.angio.server.user.responses.UserExistsResponse;
-import com.angio.server.util.jwt.JwtTokenUtil;
+import com.angio.server.util.JwtTokenUtil;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,8 +145,8 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(new SelfUserResponse(
                         userEntity.getUsername(),
-                        userEntity.getUserInfo().getFirstname(),
-                        userEntity.getUserInfo().getLastname(),
+                        userEntity.getUserInfo().getFullName().getFirstname(),
+                        userEntity.getUserInfo().getFullName().getLastname(),
                         userEntity.getAuthorities(),
                         jwtTokenUtil.getIdFromToken(token)
                 ));

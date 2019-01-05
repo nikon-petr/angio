@@ -46,6 +46,6 @@ public class AnalyseGeometricServiceImpl implements AnalyseGeometricService {
 
     @Override
     public void deleteVessel(long id) throws Exception {
-        vesselCrudRepository.delete(id);
+        vesselCrudRepository.deleteById(id);
     }
 }

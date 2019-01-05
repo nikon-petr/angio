@@ -9,7 +9,7 @@ import com.angio.server.security.exception.TokenException;
 import com.angio.server.security.services.TokenService;
 import com.angio.server.security.services.UserService;
 import com.angio.server.security.exception.UsernameExistsException;
-import com.angio.server.util.jwt.JwtTokenUtil;
+import com.angio.server.util.JwtTokenUtil;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

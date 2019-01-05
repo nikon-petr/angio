@@ -43,9 +43,7 @@ public class AnalyseResponse implements Serializable {
         this.name = analyseInfoEntity.getName();
         this.shortDescription = analyseInfoEntity.getShortDescription();
         this.analyseType = analyseInfoEntity.getAnalyseType();
-        this.patient = analyseInfoEntity.getPatient().getLastname() + " " +
-                analyseInfoEntity.getPatient().getFirstname() + " " +
-                analyseInfoEntity.getPatient().getPatronymic();
+        this.patient = analyseInfoEntity.getPatient().getFullName().getFullNameString();
         this.policy = analyseInfoEntity.getPatient().getPolicy();
         this.user = user;
         this.analyseDate = date;

@@ -31,11 +31,11 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public TokenEntity findById(long id) {
-        TokenEntity tokenEntity = tokenRepository.findOne(id);
+        TokenEntity tokenEntity = tokenRepository.findById(id).get();
         if (tokenEntity == null){
             throw new TokenException(String.format("Token with id: %s not found", id));
         }
-        return tokenRepository.findOne(id);
+        return tokenRepository.findById(id).get();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public TokenEntity revokeTokenAsAdmin(long id) {
-        TokenEntity tokenEntity = tokenRepository.findOne(id);
+        TokenEntity tokenEntity = tokenRepository.findById(id).get();
         if (tokenEntity == null){
             throw new TokenException("Token does not exists");
         }

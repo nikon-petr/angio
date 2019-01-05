@@ -1,9 +1,9 @@
 package com.angio.server.security.services.impl;
 
+import com.angio.server.common.embeddable.FullName;
 import com.angio.server.security.exception.IncorrectPasswordException;
 import com.angio.server.security.services.UserService;
 import com.angio.server.security.exception.UsernameExistsException;
-import com.angio.server.util.email.EmailService;
 import com.angio.server.analyse.entities.AnalyseInfoEntity;
 import com.angio.server.analyse.repositories.AnalyseInfoCrudRepository;
 import com.angio.server.security.entities.AuthorityEntity;
@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             TokenCrudRepository tokenCrudRepository,
             AnalyseInfoCrudRepository analyseInfoCrudRepository,
             PasswordEncoder passwordEncoder,
-            EmailService emailService,
             ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.userInfoCrudRepository = userInfoCrudRepository;
@@ -90,7 +89,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             String firstname,
             String lastname,
             Date modified_date) throws UsernameExistsException {
-        if(userRepository.exists(username)){
+        if(userRepository.existsById(username)){
             throw new UsernameExistsException("There is user with the same username");
         }
 
@@ -101,8 +100,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         UserInfoEntity userInfoEntity = new UserInfoEntity(
                 userRepository.findByUsername(username).get(0),
-                firstname,
-                lastname,
+                new FullName(firstname, lastname, ""),
                 modified_date);
         userInfoCrudRepository.save(userInfoEntity);
     }
@@ -110,11 +108,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public UserEntity changeUserName(String username, String newUsername) throws UsernameExistsException {
-        if(userRepository.exists(newUsername)){
+        if(userRepository.existsById(newUsername)){
             throw new UsernameExistsException("There is user with the same username");
         }
 
-        UserEntity userEntity = userRepository.findOne(username);
+        UserEntity userEntity = userRepository.findById(username).get();
         UserEntity renamedUserEntity = userRepository.save(
                 new UserEntity(
                         newUsername,
@@ -129,10 +127,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userInfoEntity.setUser(renamedUserEntity);
         tokenEntities.forEach((e) -> e.setUser(renamedUserEntity));
         analyseInfoEntities.forEach((e) -> e.setUser(renamedUserEntity));
-        authorityCrudRepository.save(authorityEntities);
+        authorityCrudRepository.saveAll(authorityEntities);
         userInfoCrudRepository.save(userInfoEntity);
-        tokenCrudRepository.save(tokenEntities);
-        analyseInfoCrudRepository.save(analyseInfoEntities);
+        tokenCrudRepository.saveAll(tokenEntities);
+        analyseInfoCrudRepository.saveAll(analyseInfoEntities);
         userRepository.delete(userEntity);
 
         return renamedUserEntity;
@@ -141,7 +139,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public UserEntity changePassword(String username, String password, String newPassword)
             throws IncorrectPasswordException, UsernameExistsException {
-        UserEntity userEntity = userRepository.findOne(username);
+        UserEntity userEntity = userRepository.findById(username).get();
 
         if (userEntity == null){
             throw new UsernameExistsException("User does not exists");
@@ -179,7 +177,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional
     public UserEntity setUserEnabled(String username, boolean b) throws UsernameExistsException {
-        UserEntity user = userRepository.findOne(username);
+        UserEntity user = userRepository.findById(username).get();
 
         if (user == null) {
             throw new UsernameExistsException("Username does not exists");

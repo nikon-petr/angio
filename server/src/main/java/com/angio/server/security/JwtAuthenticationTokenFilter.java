@@ -3,7 +3,7 @@ package com.angio.server.security;
 import com.angio.server.AngioAppProperties;
 import com.angio.server.security.entities.TokenEntity;
 import com.angio.server.security.exception.TokenException;
-import com.angio.server.util.jwt.JwtTokenUtil;
+import com.angio.server.util.JwtTokenUtil;
 import com.angio.server.security.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,8 +1,12 @@
-package com.angio.server.util.url;
+package com.angio.server.util;
+
+import lombok.experimental.UtilityClass;
 
 import javax.servlet.http.HttpServletRequest;
 
+@UtilityClass
 public class UrlUtil {
+
     public static final String ANALYSE_IMAGE_CONTEXT_PATH = "images/analyses/";
 
     public static String getBaseUrl(HttpServletRequest request){

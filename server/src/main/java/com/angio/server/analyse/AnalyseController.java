@@ -5,6 +5,7 @@ import com.angio.server.analyse.entities.AnalyseGeometricEntity;
 import com.angio.server.analyse.entities.AnalyseInfoEntity;
 import com.angio.server.analyse.entities.PatientEntity;
 import com.angio.server.analyse.entities.VesselEntity;
+import com.angio.server.analyse.exception.PatientExistsException;
 import com.angio.server.analyse.requests.IdRequest;
 import com.angio.server.analyse.requests.NewAnalyseRequest;
 import com.angio.server.analyse.requests.UpdateAnalyseInfoConclusionRequest;
@@ -17,12 +18,12 @@ import com.angio.server.analyse.responses.IdResponse;
 import com.angio.server.analyse.responses.PatientResponse;
 import com.angio.server.analyse.services.AnalyseGeometricService;
 import com.angio.server.analyse.services.AnalyseInfoService;
-import com.angio.server.analyse.exception.PatientExistsException;
 import com.angio.server.analyse.services.PatientService;
 import com.angio.server.user.services.UserInfoService;
-import com.angio.server.util.url.UrlUtil;
+import com.angio.server.util.UrlUtil;
+import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,23 +44,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
+@Api(description = "Angio Analyses (version 1)")
 public class AnalyseController {
 
     private final AnalyseInfoService analyseInfoService;
     private final UserInfoService userInfoService;
     private final PatientService patientService;
     private final AnalyseGeometricService analyseGeometricService;
-
-    @Autowired
-    public AnalyseController(AnalyseInfoService analyseInfoService, UserInfoService userInfoService,
-                             PatientService patientService,
-                             AnalyseGeometricService analyseGeometricService) {
-        this.analyseInfoService = analyseInfoService;
-        this.userInfoService = userInfoService;
-        this.patientService = patientService;
-        this.analyseGeometricService = analyseGeometricService;
-    }
 
     @RequestMapping(path = "/api/v1/analyse", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAnalyses(@RequestParam(value = "search", required = false) String search,
@@ -71,8 +64,7 @@ public class AnalyseController {
             List<AnalyseResponse> analyseResponses = new ArrayList<>();
             for (AnalyseInfoEntity analyse : analyses.getContent()) {
                 analyseResponses.add(new AnalyseResponse(analyse,
-                        userInfoService.findByUser(analyse.getUser()).getLastname() + " " +
-                                userInfoService.findByUser(analyse.getUser()).getFirstname()));
+                        userInfoService.findByUser(analyse.getUser()).getFullName().getFullNameString()));
             }
 
             AnalyseResponseFull analyseResponseFull = new AnalyseResponseFull(analyseResponses, countOfAll);

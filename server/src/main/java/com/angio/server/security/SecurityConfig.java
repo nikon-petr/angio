@@ -57,8 +57,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
 
-                .antMatchers("/api/v1/test-matlab").permitAll()
-                .antMatchers("/api/v1/greeting").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/configuration/ui").permitAll()
+                .antMatchers("/swagger-resources").permitAll()
+                .antMatchers("/configuration/security").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/swagger-resources/configuration/ui").permitAll()
+                .antMatchers("/swagge‌​r-ui.html").permitAll()
+                .antMatchers("/swagger-resources/configuration/security").permitAll()
 
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/token").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
@@ -70,6 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/analyse/detail/conclusion").permitAll()
                 .antMatchers("/api/v1/analyse/vessel").permitAll()
                 .antMatchers("/api/v1/image").permitAll()
+
+                .antMatchers("/api/v2/analyse").permitAll()
 
                 .and()
                 .authorizeRequests()

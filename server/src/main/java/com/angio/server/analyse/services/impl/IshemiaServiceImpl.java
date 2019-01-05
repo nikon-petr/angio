@@ -26,7 +26,7 @@ public class IshemiaServiceImpl implements IshemiaService {
     @Override
     public Set<IshemiaEntity> addNewIshemias(Set<IshemiaEntity> ischemias) {
         return StreamSupport
-                .stream(ishemiaCrudRepository.save(ischemias).spliterator(), false)
+                .stream(ishemiaCrudRepository.saveAll(ischemias).spliterator(), false)
                 .collect(Collectors.toSet());
     }
 }

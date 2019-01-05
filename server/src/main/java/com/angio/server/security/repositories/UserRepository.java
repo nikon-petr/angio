@@ -17,7 +17,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, S
     @Query("SELECT u from UserEntity u " +
             "  JOIN u.userInfo ui " +
             "WHERE (LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) " +
-            "      OR LOWER(CONCAT(ui.firstname, ' ', ui.lastname)) LIKE LOWER(CONCAT('%', :query, '%')) " +
-            "      OR LOWER(CONCAT(ui.lastname, ' ', ui.firstname)) LIKE LOWER(CONCAT('%', :query, '%')))")
+            "      OR LOWER(CONCAT(ui.fullName.firstname, ' ', ui.fullName.lastname)) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "      OR LOWER(CONCAT(ui.fullName.lastname, ' ', ui.fullName.firstname)) LIKE LOWER(CONCAT('%', :query, '%')))")
     Page<UserEntity> findByQuery(@Param("query") String query, Pageable pageable);
 }

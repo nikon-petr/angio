@@ -8,3 +8,6 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/003_insert_users_data.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/004_add_patronymic_to_user_info.yml

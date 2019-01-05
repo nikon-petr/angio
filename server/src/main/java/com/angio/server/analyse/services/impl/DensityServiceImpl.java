@@ -26,7 +26,7 @@ public class DensityServiceImpl implements DensityService {
     @Override
     public Set<DensityEntity> addNewDensities(Set<DensityEntity> densities) {
         return StreamSupport
-                .stream(densityCrudRepository.save(densities).spliterator(), false)
+                .stream(densityCrudRepository.saveAll(densities).spliterator(), false)
                 .collect(Collectors.toSet());
     }
 }
