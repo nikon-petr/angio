@@ -1,7 +1,8 @@
 package com.angio.server.analyse;
 
+import com.angio.server.analyse.dto.AnalyseInfoDto;
 import com.angio.server.analyse.dto.AnalyseShortItemDto;
-import com.angio.server.analyse.services.AnalyseInfoService;
+import com.angio.server.analyse.services.AnalyseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +32,7 @@ import java.util.Date;
 @RequestMapping(path = "/api/v2/analyse")
 public class AnalyseControllerV2 {
 
-    private final AnalyseInfoService analyseInfoService;
+    private final AnalyseService analyseService;
 
     @ApiOperation(value = "Resource to filter analyses by query string", httpMethod = "GET")
     @ApiResponses(value = {
@@ -45,6 +48,15 @@ public class AnalyseControllerV2 {
             @RequestParam(value = "queryString", required = false) String queryString,
             @RequestParam(value = "date", required = false) @DateTimeFormat(pattern="dd-MM-yyyy") Date date,
             @ApiIgnore @PageableDefault Pageable pageable) {
-        return analyseInfoService.filterAnalysesByQueryString(queryString, date, pageable);
+        return analyseService.filterAnalysesByQueryString(queryString, date, pageable);
+    }
+
+    @ApiOperation(value = "Resource to create new analyse", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Client error"),
+            @ApiResponse(code = 500, message = "Server error")})
+    @PostMapping
+    public AnalyseInfoDto createAnalyse(@RequestBody AnalyseInfoDto analyseDto) {
+        return analyseService.createAnalyse(analyseDto);
     }
 }

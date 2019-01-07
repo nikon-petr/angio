@@ -1,7 +1,6 @@
 package com.angio.server.analyse.services.impl;
 
 import com.angio.server.AngioAppProperties;
-import com.angio.server.analyse.dto.AnalyseShortItemDto;
 import com.angio.server.analyse.entities.AnalyseBloodFlowEntity;
 import com.angio.server.analyse.entities.AnalyseGeometricEntity;
 import com.angio.server.analyse.entities.AnalyseInfoEntity;
@@ -16,7 +15,6 @@ import com.angio.server.analyse.repositories.VesselCrudRepository;
 import com.angio.server.analyse.requests.NewAnalyseRequest;
 import com.angio.server.analyse.services.AnalyseBloodFlowService;
 import com.angio.server.analyse.services.AnalyseInfoService;
-import com.angio.server.analyse.specifications.AnalyseInfoSpecification;
 import com.angio.server.security.entities.UserEntity;
 import com.angio.server.util.image.ImageOperation;
 import com.angio.server.util.matlab.bloodflow.BloodFlowAnalyseAdapter;
@@ -31,19 +29,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -51,7 +42,6 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Transactional
 public class AnalyseInfoServiceImpl implements AnalyseInfoService {
 
-    private final AnalyseInfoSpecification analyseInfoSpecification;
     private final AnalyseInfoMapper analyseInfoMapper;
     private final PatientMapper patientMapper;
     private final AnalyseInfoCrudRepository analyseInfoCrudRepository;
@@ -60,51 +50,6 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     private final VesselCrudRepository vesselCrudRepository;
     private final AnalyseBloodFlowService analyseBloodFlowService;
     private final AngioAppProperties angioAppProperties;
-
-    @Override
-    public Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Pageable pageable) {
-
-        log.info("filterAnalysesByQueryString() - build analyse info specification");
-        Specification<AnalyseInfoEntity> specs = analyseInfoSpecification.getAnalyseInfoFilter(queryString)
-                .and(analyseInfoSpecification.analyseDate(date));
-
-        log.info("filterAnalysesByQueryString() - map sorting fields");
-        Pageable mappedPageRequest = mapSortingFields(pageable);
-
-        log.info("filterAnalysesByQueryString() - filter analyse info");
-        Page<AnalyseInfoEntity> analyseInfoEntityPage = analyseInfoCrudRepository.findAll(specs, mappedPageRequest);
-
-        log.info("filterAnalysesByQueryString() - map and return analyse page");
-        return analyseInfoEntityPage.map(e -> analyseInfoMapper.map(e, AnalyseShortItemDto.class));
-    }
-
-    private Pageable mapSortingFields(Pageable pageable) {
-        log.info("mapSortingFields() - start mapping for: {}", pageable);
-        Map<String, String> dtoSortingFields = new HashMap<>();
-        dtoSortingFields.put("patient", "patient.lastname");
-        dtoSortingFields.put("policy", "patient.policy");
-        dtoSortingFields.put("user", "user.userInfo.lastname");
-
-        List<Sort.Order> orders = new ArrayList<>();
-
-        for (Sort.Order order : pageable.getSort()) {
-            if (order.getDirection() != null && !isEmpty(order.getProperty())) {
-
-                String field = dtoSortingFields.getOrDefault(order.getProperty(), null);
-
-                if (field == null) {
-                    field = order.getProperty();
-                }
-
-                Sort.Order copyOrder = new Sort.Order(order.getDirection(), field);
-                orders.add(copyOrder);
-            }
-        }
-
-        PageRequest result = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(orders));
-        log.info("mapSortingFields() - mapping result: {}", result);
-        return result;
-    }
 
     @Override
     public Page<AnalyseInfoEntity> listAllByPageAndSortAndFilter(Pageable pageable, String search, String date) throws Exception {

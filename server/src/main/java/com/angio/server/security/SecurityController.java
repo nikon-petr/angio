@@ -11,6 +11,7 @@ import com.angio.server.security.services.UserService;
 import com.angio.server.security.exception.UsernameExistsException;
 import com.angio.server.util.JwtTokenUtil;
 import eu.bitwalker.useragentutils.UserAgent;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +28,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping
+@Api(description = "Angio security resource (version 1)")
 public class SecurityController {
 
     private final AngioAppProperties angioAppProperties;

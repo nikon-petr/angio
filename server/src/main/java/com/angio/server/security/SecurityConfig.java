@@ -23,6 +23,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import javax.annotation.Resource;
 import java.util.Arrays;
 
+import static com.angio.server.SwaggerConfig.SWAGGER_SERVICE_PATHS;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -57,15 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
 
-                .antMatchers("/v2/api-docs").permitAll()
-                .antMatchers("/configuration/ui").permitAll()
-                .antMatchers("/swagger-resources").permitAll()
-                .antMatchers("/configuration/security").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/swagger-resources/configuration/ui").permitAll()
-                .antMatchers("/swagge‌​r-ui.html").permitAll()
-                .antMatchers("/swagger-resources/configuration/security").permitAll()
+                .antMatchers(SWAGGER_SERVICE_PATHS).permitAll()
 
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/token").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/user").permitAll()

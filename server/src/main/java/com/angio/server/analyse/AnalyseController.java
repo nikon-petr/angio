@@ -1,6 +1,6 @@
 package com.angio.server.analyse;
 
-import com.angio.server.analyse.entities.AnalyseBloodFlowEntity;
+ import com.angio.server.analyse.entities.AnalyseBloodFlowEntity;
 import com.angio.server.analyse.entities.AnalyseGeometricEntity;
 import com.angio.server.analyse.entities.AnalyseInfoEntity;
 import com.angio.server.analyse.entities.PatientEntity;
@@ -46,7 +46,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Api(description = "Angio Analyses (version 1)")
+@Api(description = "Angio Analyses resource (version 1)")
 public class AnalyseController {
 
     private final AnalyseInfoService analyseInfoService;

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,7 +37,7 @@ public class AnalyseInfoEntity {
     private UserEntity user;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "patient_id", nullable = false)
     private PatientEntity patient;
 
@@ -68,10 +69,10 @@ public class AnalyseInfoEntity {
     private String conclusion;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "analyseInfo")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "analyseInfo", cascade = CascadeType.ALL)
     private AnalyseGeometricEntity analyseGeometric;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "analyseInfo")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "analyseInfo", cascade = CascadeType.ALL)
     private AnalyseBloodFlowEntity analyseBloodFlow;
 }
