@@ -99,10 +99,5 @@ typings/
 # next.js build output
 .next
 
-# ANGIO
-server/src/main/resources/static/images/analyses/*.png
-server/src/main/resources/static/images/analyses/*.bmp
-server/src/main/resources/static/images/analyses/*.jpg
-
-!server/lib/*.jar
+!angio-backend/lib/*.jar
 

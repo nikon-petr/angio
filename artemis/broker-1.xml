@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<configuration xmlns="urn:activemq" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
+    <core xmlns="urn:activemq:core" xsi:schemaLocation="urn:activemq:core ">
+        <addresses>
+            <address name="analyseToExecute">
+                <anycast>
+                    <queue name="analyseToExecute"/>
+                </anycast>
+            </address>
+            <address name="analyseResults">
+                <anycast>
+                    <queue name="analyseResults"/>
+                </anycast>
+            </address>
+        </addresses>
+    </core>
+</configuration>

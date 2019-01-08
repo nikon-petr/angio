@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>angio-backend</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<name>angio-backend</name>
+	<description>Angio backend</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.3.RELEASE</version>
+		<relativePath/>
+	</parent>
+
+	<properties>
+		<!-- compiler properties -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+
+		<!-- angio matlab libs -->
+		<blood-flow-analyse.version>1.0</blood-flow-analyse.version>
+		<geometric-analyse.version>1.0</geometric-analyse.version>
+		<javabuilder.version>1.0</javabuilder.version>
+
+		<!-- libs -->
+		<model-mapper.version>0.7.4</model-mapper.version>
+		<liquibase.version>3.5.5</liquibase.version>
+		<user-agent.version>1.19</user-agent.version>
+		<jsonwebtoken.version>0.7.0</jsonwebtoken.version>
+		<commons-io.version>2.5</commons-io.version>
+		<lombok.version>1.18.4</lombok.version>
+		<orika.version>1.4.6</orika.version>
+		<swagger.version>2.9.2</swagger.version>
+
+		<!-- datasource -->
+		<liquibase.plugin-url>jdbc:postgresql://localhost:5432/angio_app_db</liquibase.plugin-url>
+		<liquibase.user>angio_app</liquibase.user>
+		<liquibase.password>q1w2e3</liquibase.password>
+		<liquibase.changelog-master>src/main/resources/db/liquibase/master.yml</liquibase.changelog-master>
+	</properties>
+
+	<dependencies>
+
+		<!-- Web -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- JPA -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- datasource -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+        <!-- Model mapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>${model-mapper.version}</version>
+		</dependency>
+
+		<!-- Tomcat -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Configuration processor -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- JWT -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>${jsonwebtoken.version}</version>
+		</dependency>
+
+		<!-- Device  -->
+		<dependency>
+			<groupId>eu.bitwalker</groupId>
+			<artifactId>UserAgentUtils</artifactId>
+			<version>${user-agent.version}</version>
+		</dependency>
+
+		<!-- Blood flow analyse -->
+		<dependency>
+			<groupId>bloodFlowAnalyses</groupId>
+			<artifactId>bloodFlowAnalyses</artifactId>
+			<scope>system</scope>
+			<version>${blood-flow-analyse.version}</version>
+			<systemPath>${basedir}/lib/bloodFlowAnalyse.jar</systemPath>
+		</dependency>
+
+		<!-- Geometric analyse -->
+        <dependency>
+            <groupId>GeometricAnalyse</groupId>
+            <artifactId>GeometricAnalyse</artifactId>
+            <scope>system</scope>
+            <version>${geometric-analyse.version}</version>
+            <systemPath>${basedir}/lib/GeometricAnalyse.jar</systemPath>
+        </dependency>
+
+		<!-- Java builder from matlab runtime -->
+        <dependency>
+            <groupId>javabuilder</groupId>
+            <artifactId>javabuilder</artifactId>
+            <scope>system</scope>
+            <version>${javabuilder.version}</version>
+            <systemPath>/matlabruntime/v92/toolbox/javabuilder/jar/javabuilder.jar</systemPath>
+        </dependency>
+
+		<!-- Security -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+
+        <!-- Email -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
+		<!-- logging -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-liquibase</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!-- lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- orika -->
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+			<version>${orika.version}</version>
+		</dependency>
+
+		<!-- swagger -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+    </dependencies>
+
+	<build>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+
+				<!-- Configuration for remote debug -->
+				<configuration>
+                    <addResources>true</addResources>
+					<jvmArguments>
+						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+					</jvmArguments>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>${liquibase.version}</version>
+				<configuration>
+					<changeLogFile>${liquibase.changelog-master}</changeLogFile>
+					<driver>org.postgresql.Driver</driver>
+					<url>${liquibase.plugin-url}</url>
+					<username>${liquibase.user}</username>
+					<password>${liquibase.password}</password>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
