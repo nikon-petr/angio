@@ -2,12 +2,6 @@ spring:
     main:
         web-application-type: none
 
-    datasource:
-        url: jdbc:postgresql://db:5432/angio_app_db
-        username: angio_app
-        password: q1w2e3
-        driver-class-name: org.postgresql.Driver
-
     artemis:
         mode: native
         host: artemis
@@ -15,10 +9,11 @@ spring:
         user: angio_app
         password: q1w2e3
 
-analyse:
-    executor:
+analyseexecutor:
         app:
-            analyse-images-directory: ./static/images/analyses
+            upload-directory: src/main/resources/static/uploads/
+            result-image-format: png
+
             jms:
                 analyse-to-execute-queue: analyseToExecute
                 analyse-results-queue: analyseResults

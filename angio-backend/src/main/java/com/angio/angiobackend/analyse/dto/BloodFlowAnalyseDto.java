@@ -1,6 +1,6 @@
 package com.angio.angiobackend.analyse.dto;
 
-import com.angio.angiobackend.common.dto.ImageDto;
+import com.angio.angiobackend.uploads.dto.UploadDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +26,7 @@ public class BloodFlowAnalyseDto implements Serializable {
      * Ishemia image.
      */
     @ApiModelProperty("Ishemia image")
-    private ImageDto ishemiaImage;
+    private UploadDto ishemiaImage;
 
     /**
      * Ishemias data.
@@ -44,7 +44,7 @@ public class BloodFlowAnalyseDto implements Serializable {
      * Density image.
      */
     @ApiModelProperty("Density image")
-    private ImageDto densityImage;
+    private UploadDto densityImage;
 
     /**
      * Density data.

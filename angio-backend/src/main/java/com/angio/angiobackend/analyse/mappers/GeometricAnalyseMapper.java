@@ -12,8 +12,8 @@ public class GeometricAnalyseMapper extends ConfigurableMapper {
     @Override
     protected void configure(MapperFactory factory) {
         factory.classMap(AnalyseGeometricEntity.class, GeometricAnalyseDto.class)
-                .field("binarizedImage", "binarizedImage.url")
-                .field("skelImage", "skelImage.url")
+                .field("binarizedImage", "binarizedImage.uri")
+                .field("skelImage", "skelImage.uri")
                 .byDefault()
                 .register();
     }

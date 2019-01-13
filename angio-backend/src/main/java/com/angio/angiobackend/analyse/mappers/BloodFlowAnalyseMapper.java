@@ -12,8 +12,8 @@ public class BloodFlowAnalyseMapper extends ConfigurableMapper {
     @Override
     protected void configure(MapperFactory factory) {
         factory.classMap(AnalyseBloodFlowEntity.class, BloodFlowAnalyseDto.class)
-                .field("ishemiaImageFileName", "ishemiaImage.url")
-                .field("densityImageFileName", "densityImage.url")
+                .field("ishemiaImageFileName", "ishemiaImage.uri")
+                .field("densityImageFileName", "densityImage.uri")
                 .byDefault()
                 .register();
     }

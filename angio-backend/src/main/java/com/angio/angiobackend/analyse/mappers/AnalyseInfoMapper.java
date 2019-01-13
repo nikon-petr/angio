@@ -38,7 +38,7 @@ public class AnalyseInfoMapper extends ConfigurableMapper {
                 .field("user.username", "diagnostician.username")
 
                 // TODO create converter
-                .field("img", "originalImage.url")
+                .field("img", "originalImage.uri")
 
                 .fieldMap("finished")
                 .direction(MappingDirection.A_TO_B)

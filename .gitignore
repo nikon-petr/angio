@@ -99,5 +99,9 @@ typings/
 # next.js build output
 .next
 
-!angio-backend/lib/*.jar
+!analyse-executor/lib/*.jar
+angio-backend/src/main/resources/static/images/*.*
+!angio-backend/src/main/resources/static/images/.gitkeep
+analyse-executor/src/main/resources/static/images/*.*
+!analyse-executor/src/main/resources/static/images/.gitkeep
 

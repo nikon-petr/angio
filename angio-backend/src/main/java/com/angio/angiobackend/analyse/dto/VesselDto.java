@@ -1,6 +1,6 @@
 package com.angio.angiobackend.analyse.dto;
 
-import com.angio.angiobackend.common.dto.ImageDto;
+import com.angio.angiobackend.uploads.dto.UploadDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,13 +25,13 @@ public class VesselDto implements Serializable {
      * Vessel image.
      */
     @ApiModelProperty("Vessel image")
-    private ImageDto vesselImage;
+    private UploadDto vesselImage;
 
     /**
      * Main vessel image.
      */
     @ApiModelProperty("Main vessel image")
-    private ImageDto mainVesselImage;
+    private UploadDto mainVesselImage;
 
     /**
      * Tortuosity degree.

@@ -1,6 +1,6 @@
 package com.angio.angiobackend.analyse.services.impl;
 
-import com.angio.angiobackend.AngioAppProperties;
+import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.analyse.entities.AnalyseBloodFlowEntity;
 import com.angio.angiobackend.analyse.entities.AnalyseGeometricEntity;
 import com.angio.angiobackend.analyse.entities.AnalyseInfoEntity;
@@ -17,14 +17,8 @@ import com.angio.angiobackend.analyse.services.AnalyseBloodFlowService;
 import com.angio.angiobackend.analyse.services.AnalyseInfoService;
 import com.angio.angiobackend.security.entities.UserEntity;
 import com.angio.angiobackend.util.image.ImageOperation;
-import com.angio.angiobackend.util.matlab.bloodflow.BloodFlowAnalyseAdapter;
-import com.angio.angiobackend.util.matlab.bloodflow.BloodFlowAnalyseResult;
-import com.angio.angiobackend.util.matlab.geometric.GeometricAnalyseAdapter;
-import com.angio.angiobackend.util.matlab.geometric.model.GeometricAnalyseModel;
-import com.angio.angiobackend.util.matlab.geometric.model.VesselModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -49,8 +43,9 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
     private final AnalyseGeometricCrudRepository analyseGeometricCrudRepository;
     private final VesselCrudRepository vesselCrudRepository;
     private final AnalyseBloodFlowService analyseBloodFlowService;
-    private final AngioAppProperties angioAppProperties;
+    private final AngioBackendProperties props;
 
+    @Deprecated
     @Override
     public Page<AnalyseInfoEntity> listAllByPageAndSortAndFilter(Pageable pageable, String search, String date) throws Exception {
         if (search == null) search = "";
@@ -158,50 +153,10 @@ public class AnalyseInfoServiceImpl implements AnalyseInfoService {
         return analyseInfoEntity;
     }
 
+    @Deprecated
     @Override
     public AnalyseInfoEntity startNewAnalyse(long id) throws Exception {
-        log.info("startNewAnalyse() - start");
-
-        log.info("startNewAnalyse() - find analyse info with id: {}", id);
-        AnalyseInfoEntity analyseInfoEntity = analyseInfoCrudRepository.findById(id).get();
-
-        log.info("startNewAnalyse() - geometric analyse");
-        GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(analyseInfoEntity.getImg());
-
-        log.info("startNewAnalyse() - save images of geometric analyse");
-        ImageOperation imageOperation = new ImageOperation();
-        String binarizedImage = imageOperation.save(geometricAnalyseModel.getBinarized());
-        String skelImage = imageOperation.save(geometricAnalyseModel.getSkel());
-        AnalyseGeometricEntity analyseGeometricEntity = analyseGeometricCrudRepository.save(new AnalyseGeometricEntity(
-                analyseInfoEntity, binarizedImage, skelImage));
-        for (VesselModel vesselModel: geometricAnalyseModel.getAnalyseResult()) {
-            String vesselImage = imageOperation.save(vesselModel.getVesselImage());
-            String mainVessel = imageOperation.save(vesselModel.getMainVessel());
-            vesselCrudRepository.save(new VesselEntity(analyseGeometricEntity, vesselImage, mainVessel,
-                    (float) vesselModel.getTortuosity(), vesselModel.getCountOfBranchesOf1Orders(),
-                    (float) vesselModel.getBranching(), (float) vesselModel.getArea(), (float) vesselModel.getAreaPercent()));
-        }
-
-        log.info("startNewAnalyse() - blood flow analyse");
-        String originalImage = new ClassPathResource(
-                angioAppProperties.getAnalyseImagesDirectory() + "/" + analyseInfoEntity.getImg())
-                .getFile()
-                .getAbsolutePath();
-        BloodFlowAnalyseResult bloodFlowAnalyseResult = new BloodFlowAnalyseAdapter().runAnalyse(originalImage);
-
-        log.info("startNewAnalyse() - save images of blood flow analyse");
-        String ishemiaImagePath = imageOperation.save(bloodFlowAnalyseResult.getIshemiaImage());
-        String densityImagePath = imageOperation.save(bloodFlowAnalyseResult.getCapillarDensityImage());
-
-        log.info("startNewAnalyse() - save blood flow analyse result");
-        analyseBloodFlowService.addNewAnalyse(analyseInfoEntity, ishemiaImagePath, densityImagePath, bloodFlowAnalyseResult);
-
-        log.info("startNewAnalyse() - save completed analyse info");
-        analyseInfoEntity.setFinished(true);
-        analyseInfoCrudRepository.save(analyseInfoEntity);
-
-        log.info("startNewAnalyse() - end");
-        return analyseInfoEntity;
+        return null;
     }
 
     @Override

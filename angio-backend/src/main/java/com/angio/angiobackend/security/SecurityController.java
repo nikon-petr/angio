@@ -1,7 +1,7 @@
 package com.angio.angiobackend.security;
 
 
-import com.angio.angiobackend.AngioAppProperties;
+import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.security.entities.TokenEntity;
 import com.angio.angiobackend.security.entities.UserEntity;
 import com.angio.angiobackend.security.requests.TokenRequest;
@@ -31,7 +31,7 @@ import java.security.Principal;
 @Api(description = "Angio security resource (version 1)")
 public class SecurityController {
 
-    private final AngioAppProperties angioAppProperties;
+    private final AngioBackendProperties props;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsService userDetailsService;
@@ -40,12 +40,12 @@ public class SecurityController {
 
     @Autowired
     public SecurityController(
-            AngioAppProperties angioAppProperties,
+            AngioBackendProperties props,
             AuthenticationManager authenticationManager,
             JwtTokenUtil jwtTokenUtil,
             UserDetailsService userDetailsService,
             UserService userService, TokenService tokenService) {
-        this.angioAppProperties = angioAppProperties;
+        this.props = props;
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userDetailsService = userDetailsService;
@@ -82,7 +82,7 @@ public class SecurityController {
 
     @RequestMapping(path = "/api/v1/auth/token/refresh", method = RequestMethod.POST)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
-        String token = request.getHeader(angioAppProperties.jwt.getHeader());
+        String token = request.getHeader(props.jwt.getHeader());
         token = jwtTokenUtil.getTokenBody(token);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         UserEntity user = (UserEntity) userDetailsService.loadUserByUsername(username);

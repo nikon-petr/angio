@@ -2,6 +2,7 @@ package com.angio.angiobackend.analyse;
 
 import com.angio.angiobackend.analyse.dto.AnalyseInfoDto;
 import com.angio.angiobackend.analyse.dto.AnalyseShortItemDto;
+import com.angio.angiobackend.analyse.messaging.AnalyseToExecuteSender;
 import com.angio.angiobackend.analyse.services.AnalyseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

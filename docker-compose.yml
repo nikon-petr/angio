@@ -25,21 +25,21 @@ services:
             - ARTEMIS_USERNAME=angio_app
             - ARTEMIS_PASSWORD=q1w2e3
 
-    angio-backend:
-        image: angio-backend:latest
-        build:
-            context: ./angio-backend
-            dockerfile: ./src/main/docker/Dockerfile
-        volumes:
-            - ~/.m2:/root/.m2:rw # Maven repository files
-            - static-content:/angio-backend/src/main/resources/static
-        ports:
-            - 8000:8000 # Port for remote debug
-            - 80:80
-        tty: true
-        depends_on:
-            - db
-            - artemis
+#    angio-backend:
+#        image: angio-backend:latest
+#        build:
+#            context: ./angio-backend
+#            dockerfile: ./src/main/docker/Dockerfile
+#        volumes:
+#            - ~/.m2:/root/.m2:rw # Maven repository files
+#            - static-content:/angio-backend/src/main/resources/static
+#        ports:
+#            - 8000:8000 # Port for remote debug
+#            - 80:80
+#        tty: true
+#        depends_on:
+#            - db
+#            - artemis
   
     analyse-executor:
         image: analyse-executor:latest
@@ -56,3 +56,7 @@ services:
 
 volumes:
     static-content:
+        driver_opts:
+            type: none
+            device: ${PWD}/angio-backend/src/main/resources/static
+            o: bind

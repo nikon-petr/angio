@@ -54,6 +54,7 @@ public class AnalyseController {
     private final PatientService patientService;
     private final AnalyseGeometricService analyseGeometricService;
 
+    @Deprecated
     @RequestMapping(path = "/api/v1/analyse", method = RequestMethod.GET)
     public ResponseEntity<?> getAllAnalyses(@RequestParam(value = "search", required = false) String search,
                                             @RequestParam(value = "date", required = false) String date,

@@ -1,6 +1,6 @@
 package com.angio.angiobackend.analyse.dto;
 
-import com.angio.angiobackend.common.dto.ImageDto;
+import com.angio.angiobackend.uploads.dto.UploadDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,13 +26,13 @@ public class GeometricAnalyseDto implements Serializable {
      * Geometric analyse binarized image.
      */
     @ApiModelProperty("Geometric analyse binarized image")
-    private ImageDto binarizedImage;
+    private UploadDto binarizedImage;
 
     /**
      * Geometric analyse skel image.
      */
     @ApiModelProperty("Geometric analyse skel image")
-    private ImageDto skelImage;
+    private UploadDto skelImage;
 
     /**
      * Vessels.

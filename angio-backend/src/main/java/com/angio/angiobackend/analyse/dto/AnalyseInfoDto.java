@@ -1,6 +1,6 @@
 package com.angio.angiobackend.analyse.dto;
 
-import com.angio.angiobackend.common.dto.ImageDto;
+import com.angio.angiobackend.uploads.dto.UploadDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -75,7 +75,7 @@ public class AnalyseInfoDto implements Serializable {
      * Analyse original image
      */
     @ApiModelProperty("Analyse original image")
-    private ImageDto originalImage;
+    private UploadDto originalImage;
 
     /**
      * Patient data.

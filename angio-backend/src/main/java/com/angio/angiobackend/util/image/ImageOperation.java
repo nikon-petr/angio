@@ -36,13 +36,13 @@ public class ImageOperation {
 
             String generatedMD5Filename = generateMD5Filename();
             String imageName = generatedMD5Filename + "." + base64FormatType;
-            File mFile = new File("src/main/resources/static/images/analyses/" + imageName);
+            File mFile = new File("src/main/resources/static/uploads/" + imageName);
             BufferedOutputStream stream_original = new BufferedOutputStream(new FileOutputStream(mFile));
             stream_original.write(imageByte);
             stream_original.close();
 
             String formattedImageName = generatedMD5Filename + ".png";
-            File outputFile = new File("src/main/resources/static/images/analyses/" + formattedImageName);
+            File outputFile = new File("src/main/resources/static/uploads/" + formattedImageName);
             try (InputStream is = new FileInputStream(mFile)) {
                 BufferedImage image = ImageIO.read(is);
                 try (OutputStream os = new FileOutputStream(outputFile)) {
@@ -62,20 +62,20 @@ public class ImageOperation {
         String imageName = generateMD5Filename();
         imageName += ".png";
 
-        File outputfile = new File("src/main/resources/static/images/analyses/" + imageName);
+        File outputfile = new File("src/main/resources/static/uploads/" + imageName);
         ImageIO.write(bi, "png", outputfile);
 
         return imageName;
     }
 
     public void deleteImage(String filename) throws IOException {
-        Path deletedPath = Paths.get("src/main/resources/static/images/analyses/" + filename);
-        File file = new File("src/main/resources/static/images/analyses/" + filename);
+        Path deletedPath = Paths.get("src/main/resources/static/uploads/" + filename);
+        File file = new File("src/main/resources/static/uploads/" + filename);
         if (file.exists()) Files.delete(deletedPath);
     }
 
     public static String getFullFilename(String filename){
-        return "src/main/resources/static/images/analyses/" + filename;
+        return "src/main/resources/static/uploads/" + filename;
     }
 
     private String generateMD5Filename(){

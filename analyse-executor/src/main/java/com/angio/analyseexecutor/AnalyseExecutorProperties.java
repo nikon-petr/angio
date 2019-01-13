@@ -7,10 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "analyse.executor.app")
+@ConfigurationProperties(prefix = "analyseexecutor.app")
 public class AnalyseExecutorProperties {
 
-    private String analyseImagesDirectory;
+    private String imageUploadDirectory;
+    private String resultImageFormat;
 
     public Jms jms;
 

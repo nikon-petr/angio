@@ -1,6 +1,6 @@
 package com.angio.angiobackend.security;
 
-import com.angio.angiobackend.AngioAppProperties;
+import com.angio.angiobackend.AngioBackendProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,13 +24,14 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 
 import static com.angio.angiobackend.SwaggerConfig.SWAGGER_SERVICE_PATHS;
+import static java.lang.String.format;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final AngioAppProperties angioAppProperties;
+    private final AngioBackendProperties props;
 
     @Resource(name="userService")
     private UserDetailsService userDetailsService;
@@ -38,9 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Autowired
-    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, AngioAppProperties angioAppProperties) {
+    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, AngioBackendProperties props) {
         this.unauthorizedHandler = unauthorizedHandler;
-        this.angioAppProperties = angioAppProperties;
+        this.props = props;
     }
 
     @Override
@@ -60,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 .antMatchers(SWAGGER_SERVICE_PATHS).permitAll()
+                .antMatchers(format("/%s*", props.getUploadPath())).permitAll()
 
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/token").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
@@ -82,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/v1/user/change-password").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/refresh").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/logout").hasRole("USER")
-                .antMatchers("images/analyses/*").hasRole("USER")
+//                .antMatchers("images/analyses/*").hasRole("USER")
 
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/revoke/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/v1/user/*/sessions").hasRole("ADMIN")
@@ -99,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8081"));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));

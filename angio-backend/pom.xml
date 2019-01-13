@@ -59,6 +59,12 @@
 			</exclusions>
 		</dependency>
 
+		<!-- artemis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-artemis</artifactId>
+		</dependency>
+
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -124,33 +130,6 @@
 			<artifactId>UserAgentUtils</artifactId>
 			<version>${user-agent.version}</version>
 		</dependency>
-
-		<!-- Blood flow analyse -->
-		<dependency>
-			<groupId>bloodFlowAnalyses</groupId>
-			<artifactId>bloodFlowAnalyses</artifactId>
-			<scope>system</scope>
-			<version>${blood-flow-analyse.version}</version>
-			<systemPath>${basedir}/lib/bloodFlowAnalyse.jar</systemPath>
-		</dependency>
-
-		<!-- Geometric analyse -->
-        <dependency>
-            <groupId>GeometricAnalyse</groupId>
-            <artifactId>GeometricAnalyse</artifactId>
-            <scope>system</scope>
-            <version>${geometric-analyse.version}</version>
-            <systemPath>${basedir}/lib/GeometricAnalyse.jar</systemPath>
-        </dependency>
-
-		<!-- Java builder from matlab runtime -->
-        <dependency>
-            <groupId>javabuilder</groupId>
-            <artifactId>javabuilder</artifactId>
-            <scope>system</scope>
-            <version>${javabuilder.version}</version>
-            <systemPath>/matlabruntime/v92/toolbox/javabuilder/jar/javabuilder.jar</systemPath>
-        </dependency>
 
 		<!-- Security -->
         <dependency>

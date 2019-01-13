@@ -1,6 +1,6 @@
 package com.angio.angiobackend.util;
 
-import com.angio.angiobackend.AngioAppProperties;
+import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.security.entities.UserEntity;
 import eu.bitwalker.useragentutils.DeviceType;
 import io.jsonwebtoken.Claims;
@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
 public class JwtTokenUtil implements Serializable {
 
     @Autowired
-    private AngioAppProperties angioAppProperties;
+    private AngioBackendProperties props;
 
     private static final String CLAIM_KEY_USERNAME = "usr";
     private static final String CLAIM_KEY_AUTHORITIES = "aut";
 
     public String getTokenBody(String token){
         if (token != null) {
-            return token.replaceFirst(angioAppProperties.jwt.getTokenType() + " ", "");
+            return token.replaceFirst(props.jwt.getTokenType() + " ", "");
         }
         return null;
     }
@@ -106,7 +106,7 @@ public class JwtTokenUtil implements Serializable {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(angioAppProperties.jwt.getSecret())
+                    .setSigningKey(props.jwt.getSecret())
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
@@ -142,8 +142,8 @@ public class JwtTokenUtil implements Serializable {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setId(String.valueOf(id))
                 .setAudience(deviceType)
-                .setExpiration(new Date(System.currentTimeMillis() + angioAppProperties.jwt.getExpiration() * 1000))
-                .signWith(SignatureAlgorithm.HS512, angioAppProperties.jwt.getSecret())
+                .setExpiration(new Date(System.currentTimeMillis() + props.jwt.getExpiration() * 1000))
+                .signWith(SignatureAlgorithm.HS512, props.jwt.getSecret())
                 .compact();
     }
 
@@ -153,8 +153,8 @@ public class JwtTokenUtil implements Serializable {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setId(String.valueOf(id))
                 .setAudience(deviceType)
-                .setExpiration(new Date(System.currentTimeMillis() + angioAppProperties.jwt.getExpiration() * 1000))
-                .signWith(SignatureAlgorithm.HS512, angioAppProperties.jwt.getSecret())
+                .setExpiration(new Date(System.currentTimeMillis() + props.jwt.getExpiration() * 1000))
+                .signWith(SignatureAlgorithm.HS512, props.jwt.getSecret())
                 .compact();
     }
 

@@ -12,8 +12,8 @@ public class VesselMapper extends ConfigurableMapper {
     @Override
     protected void configure(MapperFactory factory) {
         factory.classMap(VesselEntity.class, VesselDto.class)
-                .field("vesselImage", "vesselImage.url")
-                .field("mainVesselImage", "mainVesselImage.url")
+                .field("vesselImage", "vesselImage.uri")
+                .field("mainVesselImage", "mainVesselImage.uri")
                 .byDefault()
                 .register();
     }

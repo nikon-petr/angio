@@ -25,7 +25,7 @@ import static springfox.documentation.builders.RequestHandlerSelectors.basePacka
 @AllArgsConstructor
 public class SwaggerConfig {
 
-    private final AngioAppProperties properties;
+    private final AngioBackendProperties props;
 
     public static final String[] SWAGGER_SERVICE_PATHS = {
             "/webjars/**",
@@ -40,7 +40,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("analyse")
                 .select()
-                .apis(basePackage("com.angio.server.analyse"))
+                .apis(basePackage("com.angio.angiobackend.analyse"))
                 .build()
                 .apiInfo(apiInfo())
                 .securityContexts(securityContexts())
@@ -52,8 +52,21 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("security")
                 .select()
-                .apis(basePackage("com.angio.server.security"))
-                .build();
+                .apis(basePackage("com.angio.angiobackend.security"))
+                .build()
+                .securityContexts(securityContexts())
+                .securitySchemes(apiKey());
+    }
+
+    @Bean
+    public Docket uploadsApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("uploads")
+                .select()
+                .apis(basePackage("com.angio.angiobackend.uploads"))
+                .build()
+                .securityContexts(securityContexts())
+                .securitySchemes(apiKey());
     }
 
     private ApiInfo apiInfo() {
@@ -69,7 +82,7 @@ public class SwaggerConfig {
     }
 
     private List<ApiKey> apiKey() {
-        return Collections.singletonList(new ApiKey("JWT", properties.getJwt().getHeader(), "header"));
+        return Collections.singletonList(new ApiKey("JWT", props.getJwt().getHeader(), "header"));
     }
 
     private List<SecurityContext> securityContexts() {

@@ -1,17 +1,29 @@
 server:
-    port: 80
+    port: 8080
 
 spring:
     jpa:
         hibernate:
             ddl-auto: validate
 
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+
     jackson:
         serialization:
             INDENT_OUTPUT: true
 
+    artemis:
+        mode: native
+        host: localhost
+        port: 61616
+        user: angio_app
+        password: q1w2e3
+
     datasource:
-        url: jdbc:postgresql://db:5432/angio_app_db
+        url: jdbc:postgresql://localhost:5432/angio_app_db
         username: angio_app
         password: q1w2e3
         driver-class-name: org.postgresql.Driver
@@ -33,9 +45,20 @@ spring:
 
 angio:
     app:
+        upload-directory: src/main/resources/static/uploads/
+        upload-path: static/uploads/
+        image-upload-extensions:
+            - bmp
+            - png
+        document-upload-extensions:
+            - pdf
+
         jwt:
             header: Authorization
             token-type: Bearer
             secret: \\xd7H\\xb2\\xa6\\xf0y\\xb9\\xdd\\x1c\\xd6q\\xd6\\xd0\\x1ck\\xe0}\\x02\\x85\\x04\\xe7\\xd4\\xed=
             expiration: 2592000
-        analyse-images-directory: ./static/images/analyses
+
+        jms:
+            analyse-to-execute-queue: analyseToExecute
+            analyse-results-queue: analyseResults

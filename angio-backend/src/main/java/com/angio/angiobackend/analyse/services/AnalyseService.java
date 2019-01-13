@@ -6,6 +6,7 @@ import com.angio.angiobackend.analyse.entities.AnalyseInfoEntity;
 import com.angio.angiobackend.analyse.entities.PatientEntity;
 import com.angio.angiobackend.analyse.mappers.AnalyseInfoMapper;
 import com.angio.angiobackend.analyse.mappers.PatientMapper;
+import com.angio.angiobackend.analyse.messaging.AnalyseToExecuteSender;
 import com.angio.angiobackend.analyse.repositories.AnalyseInfoCrudRepository;
 import com.angio.angiobackend.analyse.repositories.PatientCrudRepository;
 import com.angio.angiobackend.analyse.specifications.AnalyseInfoSpecification;
@@ -40,6 +41,7 @@ public class AnalyseService {
     private final PatientMapper patientMapper;
     private final AnalyseInfoCrudRepository analyseInfoCrudRepository;
     private final PatientCrudRepository patientCrudRepository;
+    private final AnalyseToExecuteSender analyseToExecuteSender;
 
     /**
      * Filter analysis by query string matching any one or more fields.
@@ -89,8 +91,12 @@ public class AnalyseService {
         entity = analyseInfoCrudRepository.save(entity);
 
         AnalyseInfoDto saved = analyseInfoMapper.map(entity, AnalyseInfoDto.class);
-        log.info("createAnalyse() - map saved analyse to dto and return: {}", saved);
+        log.info("createAnalyse() - map saved analyse to dto");
 
+        log.info("createAnalyse() - send analyse to execute: {}", saved);
+        analyseToExecuteSender.sendAnalyseToExecute(saved);
+
+        log.info("createAnalyse() - end");
         return saved;
     }
 

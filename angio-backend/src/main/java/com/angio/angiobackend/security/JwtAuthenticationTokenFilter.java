@@ -1,6 +1,6 @@
 package com.angio.angiobackend.security;
 
-import com.angio.angiobackend.AngioAppProperties;
+import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.security.entities.TokenEntity;
 import com.angio.angiobackend.security.exception.TokenException;
 import com.angio.angiobackend.util.JwtTokenUtil;
@@ -24,7 +24,7 @@ import java.io.IOException;
 public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter {
 
     @Autowired
-    private AngioAppProperties angioAppProperties;
+    private AngioBackendProperties props;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -39,7 +39,7 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String authToken = httpRequest.getHeader(angioAppProperties.jwt.getHeader());
+        String authToken = httpRequest.getHeader(props.jwt.getHeader());
         authToken = jwtTokenUtil.getTokenBody(authToken);
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
 
