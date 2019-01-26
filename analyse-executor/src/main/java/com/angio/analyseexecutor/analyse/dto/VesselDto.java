@@ -1,6 +1,6 @@
 package com.angio.analyseexecutor.analyse.dto;
 
-import com.angio.analyseexecutor.common.dto.UploadDto;
+import com.angio.analyseexecutor.uploads.dto.StaticFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class VesselDto implements Serializable {
 
+    private static final long serialVersionUID = -5207633708574755434L;
+
     /**
      * Vessel id.
      */
@@ -22,12 +24,12 @@ public class VesselDto implements Serializable {
     /**
      * Vessel image.
      */
-    private UploadDto vesselImage;
+    private StaticFileDto vesselImage;
 
     /**
      * Main vessel image.
      */
-    private UploadDto mainVesselImage;
+    private StaticFileDto mainVesselImage;
 
     /**
      * Tortuosity degree.

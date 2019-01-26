@@ -1,7 +1,7 @@
 package com.angio.analyseexecutor.analyse.messaging;
 
 import com.angio.analyseexecutor.AnalyseExecutorProperties;
-import com.angio.analyseexecutor.analyse.dto.AnalyseInfoDto;
+import com.angio.analyseexecutor.analyse.dto.AnalyseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.core.JmsTemplate;
@@ -12,14 +12,15 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AnalyseSender {
 
-    private final AnalyseExecutorProperties properties;
+    private final AnalyseExecutorProperties props;
     private final JmsTemplate jmsTemplate;
 
-    public void sendAnalyseResult(AnalyseInfoDto analyse) {
+    public void sendAnalyseResult(AnalyseDto analyse) {
 
-        log.info("sendAnalyseResult() - start");
-        jmsTemplate.convertAndSend(properties.getJms().getAnalyseToExecuteQueue(), analyse);
+        log.trace("sendAnalyseResult() - start");
+        log.trace("sendAnalyseResult() - payload: {}", analyse);
+        jmsTemplate.convertAndSend(props.getJms().getAnalyseResultsQueue(), analyse);
 
-        log.info("sendAnalyseResult() - end");
+        log.trace("sendAnalyseResult() - end");
     }
 }

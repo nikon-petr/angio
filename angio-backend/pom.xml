@@ -29,6 +29,7 @@
 		<javabuilder.version>1.0</javabuilder.version>
 
 		<!-- libs -->
+		<mapstruct.version>1.2.0.Final</mapstruct.version>
 		<model-mapper.version>0.7.4</model-mapper.version>
 		<liquibase.version>3.5.5</liquibase.version>
 		<user-agent.version>1.19</user-agent.version>
@@ -71,6 +72,13 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-jpamodelgen</artifactId>
+			<version>${hibernate.version}</version>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- datasource -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -94,6 +102,12 @@
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>${model-mapper.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-jdk8</artifactId>
+			<version>${mapstruct.version}</version>
 		</dependency>
 
 		<!-- Tomcat -->
@@ -237,6 +251,38 @@
 					<url>${liquibase.plugin-url}</url>
 					<username>${liquibase.user}</username>
 					<password>${liquibase.password}</password>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerArgs>
+						<arg>-Amapstruct.defaultComponentModel=spring</arg>
+						<arg>-Amapstruct.unmappedTargetPolicy=WARN</arg>
+						<arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>
+					</compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>org.hibernate</groupId>
+							<artifactId>hibernate-jpamodelgen</artifactId>
+							<version>${hibernate.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 

@@ -100,8 +100,8 @@ typings/
 .next
 
 !analyse-executor/lib/*.jar
-angio-backend/src/main/resources/static/images/*.*
-!angio-backend/src/main/resources/static/images/.gitkeep
-analyse-executor/src/main/resources/static/images/*.*
-!analyse-executor/src/main/resources/static/images/.gitkeep
+angio-backend/src/main/resources/static/uploads
+!angio-backend/src/main/resources/static/uploads/.gitkeep
+analyse-executor/src/main/resources/static/uploads
+!analyse-executor/src/main/resources/static/uploads/.gitkeep
 

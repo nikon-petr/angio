@@ -1,6 +1,6 @@
 package com.angio.analyseexecutor.analyse.messaging;
 
-import com.angio.analyseexecutor.analyse.dto.AnalyseInfoDto;
+import com.angio.analyseexecutor.analyse.dto.AnalyseDto;
 import com.angio.analyseexecutor.analyse.service.AnalyseExecutorService;
 import com.mathworks.toolbox.javabuilder.MWException;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @Slf4j
 @AllArgsConstructor
@@ -19,15 +20,16 @@ public class AnalyseListener {
     private final AnalyseSender analyseSender;
 
     @JmsListener(destination = "${analyseexecutor.app.jms.analyse-to-execute-queue}")
-    public void receiveAnalyseToExecute(AnalyseInfoDto analyse) throws IOException, MWException {
-        log.info("receiveAnalyseToExecute() - start, analyse received to execute: " + analyse);
+    public void receiveAnalyseToExecute(AnalyseDto analyse) throws IOException, MWException, SQLException {
 
-        log.info("receiveAnalyseToExecute() - execute analyse");
+        log.trace("receiveAnalyseToExecute() - start, analyse received to execute: " + analyse);
+
+        log.trace("receiveAnalyseToExecute() - execute analyse");
         analyseExecutorService.executeAnalyse(analyse);
 
-        log.info("receiveAnalyseToExecute() - send result: ", analyse);
+        log.trace("receiveAnalyseToExecute() - send result: ", analyse);
         analyseSender.sendAnalyseResult(analyse);
 
-        log.info("receiveAnalyseToExecute() - end");
+        log.trace("receiveAnalyseToExecute() - end");
     }
 }

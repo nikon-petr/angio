@@ -17,10 +17,9 @@ import static com.mathworks.toolbox.javabuilder.Images.renderArrayData;
 @Slf4j
 public class GeometricAnalyseAdapter {
 
-    public GeometricAnalyseModel runAnalyse(URI imageUri) throws MWException, IOException {
+    public GeometricAnalyseModel runAnalyse(String absoluteImagePath) throws MWException, IOException {
 
-        log.info("runAnalyse() - start for image: {}", imageUri);
-        String absoluteImagePath = imageUri.normalize().getPath();
+        log.info("runAnalyse() - start for image: {}", absoluteImagePath);
 
         Object[] result = new GeometricAnalyser().test_analyse(1, absoluteImagePath.toCharArray());
 

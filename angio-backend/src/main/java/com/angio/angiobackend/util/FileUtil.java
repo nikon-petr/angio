@@ -21,20 +21,20 @@ public class FileUtil {
 
     public static String saveImage(@NonNull BufferedImage image, @NonNull String format, @NonNull String uploadFolder) throws IOException {
 
-        log.info("saveImage() - start");
+        log.trace("saveImage() - start");
 
         String imageName = generateHashedNameForFile(format);
         File file = new File(uploadFolder, imageName);
 
-        log.info("saveImage() - save file with path: {}", file.getAbsolutePath());
+        log.trace("saveImage() - save file with path: {}", file.getAbsolutePath());
         ImageIO.write(image, format, file);
 
-        log.info("saveImage() - end");
+        log.trace("saveImage() - end");
         return file.getName();
     }
 
     public static String saveFile(@NonNull MultipartFile file, @NonNull String[] allowedExtensions, @NonNull String uploadFolder) throws IOException {
-        log.info("saveFile() - start");
+        log.trace("saveFile() - start");
 
         if(!FilenameUtils.isExtension(file.getOriginalFilename(), allowedExtensions)) {
             throw new IllegalArgumentException("The file extension is not allowed");
@@ -49,34 +49,34 @@ public class FileUtil {
 
         File localFile = new File(uploadFolder, filename);
         FileUtils.writeByteArrayToFile(localFile, file.getBytes());
-        log.info("saveFile() - save file with path: {}", localFile.getAbsolutePath());
+        log.trace("saveFile() - save file with path: {}", localFile.getAbsolutePath());
 
-        log.info("saveFile() - end");
+        log.trace("saveFile() - end");
         return localFile.getName();
     }
 
     public static String generateHashedNameForFile(String format) {
 
-        log.info("generateHashedNameForFile() - start");
+        log.trace("generateHashedNameForFile() - start");
         String filename = generateFileNameWithTimeAndRandom();
 
-        log.info("generateHashedNameForFile() - hash file name");
+        log.trace("generateHashedNameForFile() - hash file name");
         String fileExtension = String.format(".%s", format);
         filename = HashUtil.hash(filename) + fileExtension;
 
-        log.info("generateHashedNameForFile() - generated name: {}", filename);
-        log.info("generateHashedNameForFile() - end", filename);
+        log.trace("generateHashedNameForFile() - generated name: {}", filename);
+        log.trace("generateHashedNameForFile() - end", filename);
         return filename;
     }
 
     public static String generateFileNameWithTimeAndRandom() {
-        log.info("generateFileNameWithTimeAndRandom() - start");
+        log.trace("generateFileNameWithTimeAndRandom() - start");
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyyHH:mm:ss.SSS");
 
         String result = formatter.format(new Date()) + new Random().nextInt();
 
-        log.info("generateFileNameWithTimeAndRandom() - result: {}", result);
-        log.info("generateFileNameWithTimeAndRandom() - end");
+        log.trace("generateFileNameWithTimeAndRandom() - result: {}", result);
+        log.trace("generateFileNameWithTimeAndRandom() - end");
         return result;
     }
 }

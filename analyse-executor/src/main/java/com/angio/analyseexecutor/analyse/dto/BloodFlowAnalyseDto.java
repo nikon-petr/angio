@@ -1,6 +1,6 @@
 package com.angio.analyseexecutor.analyse.dto;
 
-import com.angio.analyseexecutor.common.dto.UploadDto;
+import com.angio.analyseexecutor.uploads.dto.StaticFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,30 +13,27 @@ import java.util.List;
 @AllArgsConstructor
 public class BloodFlowAnalyseDto implements Serializable {
 
-    /**
-     * Blood flow analyse id.
-     */
-    private Long id;
+    private static final long serialVersionUID = 733306430668481345L;
 
     /**
      * Ishemia image.
      */
-    private UploadDto ishemiaImage;
+    private StaticFileDto ischemiaImage;
 
     /**
      * Ishemias data.
      */
-    private List<IshemiaDto> ischemias;
+    private List<IschemiaDto> ischemias;
 
     /**
      * Makula data.
      */
-    private MakulaDto makula;
+    private MaculaDto macula;
 
     /**
      * Density image.
      */
-    private UploadDto densityImage;
+    private StaticFileDto densityImage;
 
     /**
      * Density data.

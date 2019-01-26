@@ -1,6 +1,6 @@
 package com.angio.analyseexecutor.analyse.dto;
 
-import com.angio.analyseexecutor.common.dto.UploadDto;
+import com.angio.analyseexecutor.uploads.dto.StaticFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,20 +13,17 @@ import java.util.List;
 @AllArgsConstructor
 public class GeometricAnalyseDto implements Serializable {
 
-    /**
-     * Geometric analyse id.
-     */
-    private Long id;
+    private static final long serialVersionUID = 7024774675263032596L;
 
     /**
      * Geometric analyse binarized image.
      */
-    private UploadDto binarizedImage;
+    private StaticFileDto binarizedImage;
 
     /**
      * Geometric analyse skel image.
      */
-    private UploadDto skelImage;
+    private StaticFileDto skeletonizedImage;
 
     /**
      * Vessels.

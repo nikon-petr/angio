@@ -14,3 +14,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/005_add_uploads_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/006_add_upload_ref_to_analyse_tables.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/007_refactor_analyse_table.yml

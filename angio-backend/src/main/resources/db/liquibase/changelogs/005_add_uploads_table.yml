@@ -17,6 +17,7 @@ databaseChangeLog:
                       nullable: false
                   name: type
                   type: INT
+                  defaultValueNumeric: 1
             - column:
                   constraints:
                       nullable: false

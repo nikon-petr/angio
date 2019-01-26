@@ -1,7 +1,7 @@
 package com.angio.angiobackend.util;
 
 import com.angio.angiobackend.AngioBackendProperties;
-import com.angio.angiobackend.security.entities.UserEntity;
+import com.angio.angiobackend.api.security.entities.UserEntity;
 import eu.bitwalker.useragentutils.DeviceType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

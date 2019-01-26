@@ -15,7 +15,7 @@ services:
     artemis:
         image: vromero/activemq-artemis:2.6.3-alpine
         volumes:
-            - ./artemis/broker-1.xml:/var/lib/artemis/etc-override/broker-1.xml
+            - ./artemis/:/var/lib/artemis/etc-override/
         expose:
             - "61616"
         ports:

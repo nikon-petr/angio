@@ -13,13 +13,11 @@ import java.net.URI;
 @Slf4j
 public class BloodFlowAnalyseAdapter {
 
-    public BloodFlowAnalyseResult runAnalyse(URI imageUri) throws IOException, MWException {
-
-        String absoluteImagePath = imageUri.normalize().getPath();
+    public BloodFlowAnalyseResult runAnalyse(String absoluteImagePath) throws IOException, MWException {
 
         BloodFlowAnalyser bloodFlowAnalyser = new BloodFlowAnalyser();
 
-        log.info("runAnalyse() - start for image: {}", imageUri);
+        log.info("runAnalyse() - start for image: {}", absoluteImagePath);
         Object[] result = bloodFlowAnalyser.runAnalyse(8, absoluteImagePath.toCharArray());
 
         log.info("runAnalyse() - parse matlab result");

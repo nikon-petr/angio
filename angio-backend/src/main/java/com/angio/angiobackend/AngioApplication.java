@@ -1,19 +1,17 @@
 package com.angio.angiobackend;
 
+import com.angio.angiobackend.api.analyse.dto.AnalyseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
+import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.jms.support.converter.MessageType;
 
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.UnknownHostException;
+import java.util.Collections;
 
 @Slf4j
 @AllArgsConstructor
@@ -26,8 +24,17 @@ public class AngioApplication {
 
 	@Bean
 	public ModelMapper modelMapper() {
-		log.info("It's started");
+		log.info("It's alive!!!");
 		return new ModelMapper();
+	}
+
+	@Bean
+	public MessageConverter jacksonJmsMessageConverter() {
+		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+		converter.setTargetType(MessageType.TEXT);
+		converter.setTypeIdPropertyName("_type");
+		converter.setTypeIdMappings(Collections.singletonMap("_type", AnalyseDto.class));
+		return converter;
 	}
 
 //	@Bean

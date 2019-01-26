@@ -9,11 +9,17 @@ spring:
         user: angio_app
         password: q1w2e3
 
-analyseexecutor:
-        app:
-            upload-directory: src/main/resources/static/uploads/
-            result-image-format: png
+    datasource:
+        url: jdbc:postgresql://db:5432/angio_app_db
+        username: angio_app
+        password: q1w2e3
+        driver-class-name: org.postgresql.Driver
 
-            jms:
-                analyse-to-execute-queue: analyseToExecute
-                analyse-results-queue: analyseResults
+analyseexecutor:
+    app:
+        upload-directory: src/main/resources/static/uploads/
+        result-image-format: png
+
+        jms:
+            analyse-to-execute-queue: queue.analyse.toExecute
+            analyse-results-queue: queue.analyse.results

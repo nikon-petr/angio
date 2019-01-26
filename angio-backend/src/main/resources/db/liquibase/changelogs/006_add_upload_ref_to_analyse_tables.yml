@@ -1,0 +1,144 @@
+databaseChangeLog:
+- changeSet:
+      id: 006_1
+      author: nikon-petr
+      changes:
+      - delete:
+            tableName: analyses_info
+            where: 1=1
+
+      - renameColumn:
+            tableName: analyses_info
+            oldColumnName: img
+            newColumnName: original_image_id
+      - modifyDataType:
+            tableName: analyses_info
+            columnName: original_image_id
+            newDataType: BIGINT
+      - modifyDataType:
+            tableName: analyses_info
+            columnName: analyse_type
+            newDataType: INT
+
+      - renameColumn:
+            tableName: analyses_info
+            oldColumnName: finished
+            newColumnName: status
+      - modifyDataType:
+            tableName: analyses_info
+            columnName: status
+            newDataType: VARCHAR(15)
+
+      - addColumn:
+            tableName: analyses_info
+            columns:
+            - column:
+                  name: status_extension
+                  type: varchar(50)
+
+      - renameColumn:
+            tableName: analyses_bloodflow
+            oldColumnName: ishemia_image
+            newColumnName: ishemia_image_id
+      - modifyDataType:
+            tableName: analyses_bloodflow
+            columnName: ishemia_image_id
+            newDataType: BIGINT
+
+      - renameColumn:
+            tableName: analyses_bloodflow
+            oldColumnName: density_image
+            newColumnName: density_image_id
+      - modifyDataType:
+            tableName: analyses_bloodflow
+            columnName: density_image_id
+            newDataType: BIGINT
+
+      - renameColumn:
+            tableName: analyses_geometric
+            oldColumnName: binarized_image
+            newColumnName: binarized_image_id
+      - modifyDataType:
+            tableName: analyses_geometric
+            columnName: binarized_image_id
+            newDataType: BIGINT
+
+      - renameColumn:
+            tableName: analyses_geometric
+            oldColumnName: skel_image
+            newColumnName: skel_image_id
+      - modifyDataType:
+            tableName: analyses_geometric
+            columnName: skel_image_id
+            newDataType: BIGINT
+
+      - renameColumn:
+            tableName: vessels
+            oldColumnName: vessel_image
+            newColumnName: vessel_image_id
+      - modifyDataType:
+            tableName: vessels
+            columnName: vessel_image_id
+            newDataType: BIGINT
+
+      - renameColumn:
+            tableName: vessels
+            oldColumnName: main_vessel_image
+            newColumnName: main_vessel_image_id
+      - modifyDataType:
+            tableName: vessels
+            columnName: main_vessel_image_id
+            newDataType: BIGINT
+
+- changeSet:
+      id: 006_2
+      author: nikon-petr
+      changes:
+      - addForeignKeyConstraint:
+            constraintName: fk_analyses_info_upload_original_image_id
+            baseTableName: analyses_info
+            baseColumnNames: original_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+
+      - addForeignKeyConstraint:
+            constraintName: fk_analyses_bloodflow_upload_ishemia_image_id
+            baseTableName: analyses_bloodflow
+            baseColumnNames: ishemia_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+
+      - addForeignKeyConstraint:
+            constraintName: fk_analyses_bloodflow_upload_density_image_id
+            baseTableName: analyses_bloodflow
+            baseColumnNames: density_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+
+      - addForeignKeyConstraint:
+            constraintName: fk_analyses_geometric_upload_binarized_image_id
+            baseTableName: analyses_geometric
+            baseColumnNames: binarized_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+
+      - addForeignKeyConstraint:
+            constraintName: fk_analyses_geometric_upload_skel_image_id
+            baseTableName: analyses_geometric
+            baseColumnNames: skel_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+
+      - addForeignKeyConstraint:
+            constraintName: fk_vessels_upload_skel_vessel_image_id
+            baseTableName: vessels
+            baseColumnNames: vessel_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+
+      - addForeignKeyConstraint:
+            constraintName: fk_vessels_upload_skel_main_vessel_image_id
+            baseTableName: vessels
+            baseColumnNames: main_vessel_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id

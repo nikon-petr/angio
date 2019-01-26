@@ -59,12 +59,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
         <!-- Configuration processor -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -114,6 +108,19 @@
             <version>${javabuilder.version}</version>
             <systemPath>/matlabruntime/v92/toolbox/javabuilder/jar/javabuilder.jar</systemPath>
         </dependency>
+
+        <!-- JDBC -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
 
     </dependencies>
 

@@ -11,6 +11,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class DensityDto implements Serializable {
 
+    private static final long serialVersionUID = -8967051532216347300L;
+
     /**
      * Density id.
      */
