@@ -9,7 +9,7 @@ import com.angio.angiobackend.api.security.exception.TokenException;
 import com.angio.angiobackend.api.security.services.TokenService;
 import com.angio.angiobackend.api.security.services.UserService;
 import com.angio.angiobackend.api.security.exception.UsernameExistsException;
-import com.angio.angiobackend.util.JwtTokenUtil;
+import com.angio.angiobackend.util.JwtTokenUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class SecurityController {
 
     private final AngioBackendProperties props;
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtils jwtTokenUtils;
     private final UserDetailsService userDetailsService;
     private final UserService userService;
     private final TokenService tokenService;
@@ -42,12 +42,12 @@ public class SecurityController {
     public SecurityController(
             AngioBackendProperties props,
             AuthenticationManager authenticationManager,
-            JwtTokenUtil jwtTokenUtil,
+            JwtTokenUtils jwtTokenUtils,
             UserDetailsService userDetailsService,
             UserService userService, TokenService tokenService) {
         this.props = props;
         this.authenticationManager = authenticationManager;
-        this.jwtTokenUtil = jwtTokenUtil;
+        this.jwtTokenUtils = jwtTokenUtils;
         this.userDetailsService = userDetailsService;
         this.userService = userService;
         this.tokenService = tokenService;
@@ -72,8 +72,8 @@ public class SecurityController {
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(tokenRequest.getUsername());
         TokenEntity tokenEntity = tokenService.putToken((UserEntity) userDetails, os, browser, device);
-        final String token = jwtTokenUtil.generateToken(userDetails, tokenEntity.getId(), device);
-        tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token), jwtTokenUtil.getIssuedAtDateFromToken(token));
+        final String token = jwtTokenUtils.generateToken(userDetails, tokenEntity.getId(), device);
+        tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtils.getExpirationDateFromToken(token), jwtTokenUtils.getIssuedAtDateFromToken(token));
 
         return ResponseEntity.noContent()
                 .header("Authorization", "Bearer " + token)
@@ -83,8 +83,8 @@ public class SecurityController {
     @RequestMapping(path = "/api/v1/auth/token/refresh", method = RequestMethod.POST)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String token = request.getHeader(props.jwt.getHeader());
-        token = jwtTokenUtil.getTokenBody(token);
-        String username = jwtTokenUtil.getUsernameFromToken(token);
+        token = jwtTokenUtils.getTokenBody(token);
+        String username = jwtTokenUtils.getUsernameFromToken(token);
         UserEntity user = (UserEntity) userDetailsService.loadUserByUsername(username);
 
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
@@ -93,11 +93,11 @@ public class SecurityController {
         String browserVersionString = userAgent.getBrowserVersion() != null ? " " + userAgent.getBrowserVersion().getMajorVersion() : "";
         String browser = userAgent.getBrowser().getName() + browserVersionString;
 
-        if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
+        if (jwtTokenUtils.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             TokenEntity tokenEntity = tokenService.putToken(user, os, browser, device);
-            String refreshedToken = jwtTokenUtil.refreshToken(token, tokenEntity.getId());
-            tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token), jwtTokenUtil.getIssuedAtDateFromToken(token));
-            tokenService.revokeTokenAsAdmin(jwtTokenUtil.getIdFromToken(token));
+            String refreshedToken = jwtTokenUtils.refreshToken(token, tokenEntity.getId());
+            tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtils.getExpirationDateFromToken(token), jwtTokenUtils.getIssuedAtDateFromToken(token));
+            tokenService.revokeTokenAsAdmin(jwtTokenUtils.getIdFromToken(token));
             return ResponseEntity.noContent()
                     .header("Authorization", "Bearer "+ refreshedToken)
                     .build();
@@ -109,8 +109,8 @@ public class SecurityController {
     @RequestMapping(path = "/api/v1/auth/logout", method = RequestMethod.POST)
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader) {
         try {
-            String token = jwtTokenUtil.getTokenBody(authorizationHeader);
-            TokenEntity tokenEntity = tokenService.findById(jwtTokenUtil.getIdFromToken(token));
+            String token = jwtTokenUtils.getTokenBody(authorizationHeader);
+            TokenEntity tokenEntity = tokenService.findById(jwtTokenUtils.getIdFromToken(token));
             tokenService.revokeTokenAsAdmin(tokenEntity.getId());
             return ResponseEntity.noContent().build();
         } catch (TokenException e) {

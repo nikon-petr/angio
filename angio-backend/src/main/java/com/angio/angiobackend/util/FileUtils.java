@@ -3,7 +3,6 @@ package com.angio.angiobackend.util;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,8 +16,17 @@ import java.util.Random;
 
 @Slf4j
 @UtilityClass
-public class FileUtil {
+public class FileUtils {
 
+    /**
+     * Save image to disk.
+     *
+     * @param image image data
+     * @param format format (e.g. jpg)
+     * @param uploadFolder upload folder relative to project base dir
+     * @return saved file name
+     * @throws IOException throwing when io exception occurred
+     */
     public static String saveImage(@NonNull BufferedImage image, @NonNull String format, @NonNull String uploadFolder) throws IOException {
 
         log.trace("saveImage() - start");
@@ -33,6 +41,15 @@ public class FileUtil {
         return file.getName();
     }
 
+    /**
+     * Save file to disk.
+     *
+     * @param file file multipart data
+     * @param allowedExtensions file extensions allowed to save
+     * @param uploadFolder upload folder relative to project base dir
+     * @return saved file name
+     * @throws IOException throwing when io exception occurred
+     */
     public static String saveFile(@NonNull MultipartFile file, @NonNull String[] allowedExtensions, @NonNull String uploadFolder) throws IOException {
         log.trace("saveFile() - start");
 
@@ -48,13 +65,19 @@ public class FileUtil {
         String filename = generateHashedNameForFile(extension);
 
         File localFile = new File(uploadFolder, filename);
-        FileUtils.writeByteArrayToFile(localFile, file.getBytes());
+        org.apache.commons.io.FileUtils.writeByteArrayToFile(localFile, file.getBytes());
         log.trace("saveFile() - save file with path: {}", localFile.getAbsolutePath());
 
         log.trace("saveFile() - end");
         return localFile.getName();
     }
 
+    /**
+     * Generate file name based on date and random int and apply hash function to it.
+     *
+     * @param format file extension
+     * @return result
+     */
     public static String generateHashedNameForFile(String format) {
 
         log.trace("generateHashedNameForFile() - start");
@@ -62,13 +85,18 @@ public class FileUtil {
 
         log.trace("generateHashedNameForFile() - hash file name");
         String fileExtension = String.format(".%s", format);
-        filename = HashUtil.hash(filename) + fileExtension;
+        filename = HashUtils.hash(filename) + fileExtension;
 
         log.trace("generateHashedNameForFile() - generated name: {}", filename);
         log.trace("generateHashedNameForFile() - end", filename);
         return filename;
     }
 
+    /**
+     * Generate file name based on date and random int.
+     *
+     * @return result
+     */
     public static String generateFileNameWithTimeAndRandom() {
         log.trace("generateFileNameWithTimeAndRandom() - start");
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyyHH:mm:ss.SSS");

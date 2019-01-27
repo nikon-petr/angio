@@ -9,15 +9,15 @@ import com.angio.angiobackend.api.common.embeddable.FullName_;
 import com.angio.angiobackend.api.patient.entity.PatientEntity_;
 import com.angio.angiobackend.api.security.entities.UserEntity_;
 import com.angio.angiobackend.api.user.entities.UserInfoEntity_;
-import com.angio.angiobackend.util.EnumUtil;
+import com.angio.angiobackend.util.EnumUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-import static com.angio.angiobackend.util.DateUtil.atEndOfDay;
-import static com.angio.angiobackend.util.DateUtil.atStartOfDay;
-import static com.angio.angiobackend.util.SpecificationUtil.substringPattern;
+import static com.angio.angiobackend.util.DateUtils.atEndOfDay;
+import static com.angio.angiobackend.util.DateUtils.atStartOfDay;
+import static com.angio.angiobackend.util.SpecificationUtils.substringPattern;
 
 @Component
 public class AnalyseSpecification {
@@ -60,7 +60,7 @@ public class AnalyseSpecification {
 
     public Specification<AnalyseEntity> analyseType(String analyseType) {
         return (root, query, cb) -> {
-            AnalyseType castedAnalyseType = EnumUtil.getIfPresent(analyseType, AnalyseType.class);
+            AnalyseType castedAnalyseType = EnumUtils.getIfPresent(analyseType, AnalyseType.class);
             if (castedAnalyseType != null) {
                 return cb.equal(root.get(AnalyseEntity_.type), castedAnalyseType);
             }

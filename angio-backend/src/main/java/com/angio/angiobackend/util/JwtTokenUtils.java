@@ -18,8 +18,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Deprecated
 @Component
-public class JwtTokenUtil implements Serializable {
+public class JwtTokenUtils implements Serializable {
 
     @Autowired
     private AngioBackendProperties props;

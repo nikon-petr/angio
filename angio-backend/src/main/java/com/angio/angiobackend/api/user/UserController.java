@@ -13,7 +13,7 @@ import com.angio.angiobackend.api.user.requests.ChangeUsernameRequest;
 import com.angio.angiobackend.api.user.requests.CreateUserRequest;
 import com.angio.angiobackend.api.user.responses.SelfUserResponse;
 import com.angio.angiobackend.api.user.responses.UserExistsResponse;
-import com.angio.angiobackend.util.JwtTokenUtil;
+import com.angio.angiobackend.util.JwtTokenUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class UserController {
     private final UserService userService;
     private final UserDetailsService userDetailsService;
     private final TokenService tokenService;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtils jwtTokenUtils;
     private final ModelMapper modelMapper;
 
     @Autowired
@@ -46,12 +46,12 @@ public class UserController {
             UserService userService,
             UserDetailsService userDetailsService,
             TokenService tokenService,
-            JwtTokenUtil jwtTokenUtil,
+            JwtTokenUtils jwtTokenUtils,
             ModelMapper modelMapper) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
         this.tokenService = tokenService;
-        this.jwtTokenUtil = jwtTokenUtil;
+        this.jwtTokenUtils = jwtTokenUtils;
         this.modelMapper = modelMapper;
     }
 
@@ -86,7 +86,7 @@ public class UserController {
         UserEntity updatedUser = userService.changeUserName(userEntity.getUsername(), changeUsernameRequest.getNewEmail());
 
         String token = request.getHeader("Authorization");
-        token = jwtTokenUtil.getTokenBody(token);
+        token = jwtTokenUtils.getTokenBody(token);
         UserEntity user = (UserEntity) userDetailsService.loadUserByUsername(updatedUser.getUsername());
 
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
@@ -95,11 +95,11 @@ public class UserController {
         String browserVersionString = userAgent.getBrowserVersion() != null ? " " + userAgent.getBrowserVersion().getMajorVersion() : "";
         String browser = userAgent.getBrowser().getName() + browserVersionString;
 
-        if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
+        if (jwtTokenUtils.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             TokenEntity tokenEntity = tokenService.putToken(user, os, browser, device);
-            String refreshedToken = jwtTokenUtil.refreshToken(token, tokenEntity.getId(), user.getUsername());
-            tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token), jwtTokenUtil.getIssuedAtDateFromToken(token));
-            tokenService.revokeTokenAsAdmin(jwtTokenUtil.getIdFromToken(token));
+            String refreshedToken = jwtTokenUtils.refreshToken(token, tokenEntity.getId(), user.getUsername());
+            tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtils.getExpirationDateFromToken(token), jwtTokenUtils.getIssuedAtDateFromToken(token));
+            tokenService.revokeTokenAsAdmin(jwtTokenUtils.getIdFromToken(token));
             return ResponseEntity.noContent()
                     .header("Authorization", "Bearer "+ refreshedToken)
                     .build();
@@ -127,8 +127,8 @@ public class UserController {
         String browser = userAgent.getBrowser().getName() + browserVersionString;
 
         TokenEntity tokenEntity = tokenService.putToken((UserEntity) userEntity, os, browser, device);
-        final String token = jwtTokenUtil.generateToken(userEntity, tokenEntity.getId(), device);
-        tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtil.getExpirationDateFromToken(token), jwtTokenUtil.getIssuedAtDateFromToken(token));
+        final String token = jwtTokenUtils.generateToken(userEntity, tokenEntity.getId(), device);
+        tokenService.putTokenExpirationAndIssuedAt(tokenEntity, jwtTokenUtils.getExpirationDateFromToken(token), jwtTokenUtils.getIssuedAtDateFromToken(token));
 
         return ResponseEntity.noContent()
                 .header("Authorization", "Bearer " + token)
@@ -140,7 +140,7 @@ public class UserController {
         final UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
-        String token = jwtTokenUtil.getTokenBody(authorizationHeader);
+        String token = jwtTokenUtils.getTokenBody(authorizationHeader);
         final UserEntity userEntity = (UserEntity) userDetails;
         return ResponseEntity.ok()
                 .body(new SelfUserResponse(
@@ -148,7 +148,7 @@ public class UserController {
                         userEntity.getUserInfo().getFullName().getFirstname(),
                         userEntity.getUserInfo().getFullName().getLastname(),
                         userEntity.getAuthorities(),
-                        jwtTokenUtil.getIdFromToken(token)
+                        jwtTokenUtils.getIdFromToken(token)
                 ));
     }
 

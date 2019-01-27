@@ -8,14 +8,25 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @UtilityClass
-public class DateUtil {
+public class DateUtils {
 
+    /**
+     * Return date at start of day 00:00.
+     *
+     * @param date date to process
+     * @return result
+     */
     public static Date atStartOfDay(Date date) {
         LocalDateTime localDateTime = dateToLocalDateTime(date);
         LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
         return localDateTimeToDate(startOfDay);
     }
 
+    /**
+     * Return date at end of day 23:59.999999999.
+     * @param date date to process
+     * @return result
+     */
     public static Date atEndOfDay(Date date) {
         LocalDateTime localDateTime = dateToLocalDateTime(date);
         LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);

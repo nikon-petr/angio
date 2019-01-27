@@ -3,7 +3,7 @@ package com.angio.angiobackend.util;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class SpecificationUtil {
+public class SpecificationUtils {
 
     /**
      * Convert string to sql like pattern for substring matching.

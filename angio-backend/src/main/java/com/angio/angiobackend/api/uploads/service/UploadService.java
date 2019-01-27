@@ -6,12 +6,11 @@ import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
 import com.angio.angiobackend.api.uploads.mapper.UploadMapper;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
 import com.angio.angiobackend.api.uploads.type.FileType;
-import com.angio.angiobackend.util.FileUtil;
+import com.angio.angiobackend.util.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponents;
 
 import java.io.IOException;
 
@@ -28,7 +27,7 @@ public class UploadService {
 
         log.info("uploadImage() - start");
         log.info("uploadImage() - save image to file system");
-        String savedFilename = FileUtil.saveFile(file, props.getImageUploadExtensions(),
+        String savedFilename = FileUtils.saveFile(file, props.getImageUploadExtensions(),
                 props.getUploadDirectory());
 
         log.info("uploadImage() - save image data to database");
@@ -46,7 +45,7 @@ public class UploadService {
 
         log.info("uploadDocument() - start");
         log.info("uploadDocument() - save document to file system");
-        String savedFilename = FileUtil.saveFile(file, props.getDocumentUploadExtensions(),
+        String savedFilename = FileUtils.saveFile(file, props.getDocumentUploadExtensions(),
                 props.getUploadDirectory());
 
         log.info("uploadDocument() - save document data to database");

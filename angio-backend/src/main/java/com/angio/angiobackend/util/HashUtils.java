@@ -12,8 +12,14 @@ import static java.security.MessageDigest.getInstance;
 
 @Slf4j
 @UtilityClass
-public class HashUtil {
+public class HashUtils {
 
+    /**
+     * Applies hash function to given string.
+     *
+     * @param source source string
+     * @return hashed result string
+     */
     public static String hash(@NonNull String source) {
 
         log.trace("hash() - start");

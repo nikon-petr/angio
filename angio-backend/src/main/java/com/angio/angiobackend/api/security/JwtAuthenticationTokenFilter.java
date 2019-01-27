@@ -3,7 +3,7 @@ package com.angio.angiobackend.api.security;
 import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.security.entities.TokenEntity;
 import com.angio.angiobackend.api.security.exception.TokenException;
-import com.angio.angiobackend.util.JwtTokenUtil;
+import com.angio.angiobackend.util.JwtTokenUtils;
 import com.angio.angiobackend.api.security.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,15 +33,15 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
     private TokenService tokenService;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtTokenUtils jwtTokenUtils;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String authToken = httpRequest.getHeader(props.jwt.getHeader());
-        authToken = jwtTokenUtil.getTokenBody(authToken);
-        String username = jwtTokenUtil.getUsernameFromToken(authToken);
+        authToken = jwtTokenUtils.getTokenBody(authToken);
+        String username = jwtTokenUtils.getUsernameFromToken(authToken);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails;
@@ -52,10 +52,10 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
                 userDetails = null;
             }
             
-            if (userDetails != null && userDetails.isEnabled() && jwtTokenUtil.validateToken(authToken, userDetails)) {
+            if (userDetails != null && userDetails.isEnabled() && jwtTokenUtils.validateToken(authToken, userDetails)) {
                 TokenEntity tokenEntity;
                 try {
-                    tokenEntity = tokenService.findById(jwtTokenUtil.getIdFromToken(authToken));
+                    tokenEntity = tokenService.findById(jwtTokenUtils.getIdFromToken(authToken));
                 } catch (TokenException e) {
                     tokenEntity = null;
                 }
