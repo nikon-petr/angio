@@ -21,18 +21,17 @@ public class StaticFileDto implements Serializable {
     /**
      * Upload id.
      */
-    @ApiModelProperty("Upload id")
+    @ApiModelProperty("Static file id")
     private Long id;
 
     /**
-     * Upload local or external uri.
+     * URL of the static file.
      */
-    @ApiModelProperty(value = "Upload uri", accessMode = READ_ONLY)
-    private String uri;
+    @ApiModelProperty(value = "URL of the static file", accessMode = READ_ONLY)
+    private String url;
 
     /**
      * Upload filename.
      */
-    @ApiModelProperty(value = "Upload file name", accessMode = READ_ONLY)
     private String filename;
 }

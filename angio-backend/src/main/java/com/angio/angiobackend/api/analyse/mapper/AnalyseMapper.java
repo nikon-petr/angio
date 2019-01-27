@@ -4,6 +4,7 @@ import com.angio.angiobackend.api.analyse.dto.AnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.ExtendedAnalyseDto;
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
+import com.angio.angiobackend.api.uploads.mapper.UploadMapper;
 import com.angio.angiobackend.api.user.mapstruct.UserInfoMapper;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
@@ -17,6 +18,7 @@ import org.mapstruct.ReportingPolicy;
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
         uses = {
                 PatientMapper.class,
+                UploadMapper.class,
                 UserInfoMapper.class,
                 AnalyseStatusMapper.class,
                 GeometricAnalyseMapper.class,

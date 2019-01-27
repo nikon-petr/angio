@@ -23,7 +23,6 @@ public class UploadService {
     private final AngioBackendProperties props;
     private final UploadRepository uploadRepository;
     private final UploadMapper uploadMapper;
-    private final UriComponents uploadsUriBuilder;
 
     public StaticFileDto uploadImage(MultipartFile file) throws IOException {
 
@@ -32,14 +31,11 @@ public class UploadService {
         String savedFilename = FileUtil.saveFile(file, props.getImageUploadExtensions(),
                 props.getUploadDirectory());
 
-        String savedFileUri = uploadsUriBuilder.expand(savedFilename).toString();
-
         log.info("uploadImage() - save image data to database");
         StaticFileEntity savedImage = uploadRepository.save(new StaticFileEntity(null, FileType.IMAGE, savedFilename));
 
         log.info("uploadImage() - map image data");
-        StaticFileDto savedStaticFileDto = uploadMapper.toDto(savedImage);
-        savedStaticFileDto.setUri(savedFileUri);
+        StaticFileDto savedStaticFileDto = uploadMapper.toExternalDto(savedImage);
 
         log.info("uploadImage() - result: {}", savedStaticFileDto);
         log.info("uploadImage() - end");
@@ -53,14 +49,11 @@ public class UploadService {
         String savedFilename = FileUtil.saveFile(file, props.getDocumentUploadExtensions(),
                 props.getUploadDirectory());
 
-        String savedFileUri = uploadsUriBuilder.expand(savedFilename).toString();
-
         log.info("uploadDocument() - save document data to database");
         StaticFileEntity savedImage = uploadRepository.save(new StaticFileEntity(null, FileType.DOCUMENT, savedFilename));
 
         log.info("uploadDocument() - map document data");
-        StaticFileDto savedStaticFileDto = uploadMapper.toDto(savedImage);
-        savedStaticFileDto.setUri(savedFileUri);
+        StaticFileDto savedStaticFileDto = uploadMapper.toExternalDto(savedImage);
 
         log.info("uploadDocument() - result: {}", savedStaticFileDto);
         log.info("uploadDocument() - end");

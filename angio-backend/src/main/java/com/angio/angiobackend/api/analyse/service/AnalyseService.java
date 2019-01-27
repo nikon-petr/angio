@@ -95,8 +95,12 @@ public class AnalyseService {
                     .setExtension(e.getMessage()));
         }
 
+        log.trace("createAnalyse() - map saved analyse without result");
+        ExtendedAnalyseDto savedResult = analyseMapper.toExtendedDto(entity);
+        savedResult.setGeometricAnalyse(null);
+        savedResult.setBloodFlowAnalyse(null);
         log.trace("createAnalyse() - end");
-        return analyseMapper.toExtendedDto(entity);
+        return savedResult;
     }
 
     /**
