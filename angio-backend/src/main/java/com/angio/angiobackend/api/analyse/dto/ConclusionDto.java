@@ -1,6 +1,5 @@
 package com.angio.angiobackend.api.analyse.dto;
 
-import com.angio.angiobackend.api.common.dto.FullNameDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PatientShortItemDto {
+public class ConclusionDto {
 
-    private FullNameDto fullName;
-    private String policy;
+    private String conclusion;
 }

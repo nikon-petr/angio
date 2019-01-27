@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface AnalyseRepository extends JpaRepository<AnalyseEntity, Long> {
 
     Optional<AnalyseEntity> findById(Long id);
+    Optional<AnalyseEntity> findOne(Specification<AnalyseEntity> specification);
     Page<AnalyseEntity> findAll(Specification<AnalyseEntity> spec, Pageable pegeable);
 
 //    @Query("SELECT a from AnalyseInfoEntity a " +

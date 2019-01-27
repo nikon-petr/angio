@@ -4,6 +4,7 @@ import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
 import com.angio.angiobackend.api.analyse.embeddable.BloodFlowAnalyse;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse;
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
+import com.angio.angiobackend.api.patient.entity.PatientEntity;
 import com.angio.angiobackend.api.security.entities.UserEntity;
 import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
 import lombok.AllArgsConstructor;

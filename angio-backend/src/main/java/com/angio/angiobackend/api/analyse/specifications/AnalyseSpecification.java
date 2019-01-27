@@ -1,10 +1,12 @@
 package com.angio.angiobackend.api.analyse.specifications;
 
+import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus_;
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity_;
-import com.angio.angiobackend.api.analyse.entity.PatientEntity_;
+import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
 import com.angio.angiobackend.api.common.embeddable.FullName_;
+import com.angio.angiobackend.api.patient.entity.PatientEntity_;
 import com.angio.angiobackend.api.security.entities.UserEntity_;
 import com.angio.angiobackend.api.user.entities.UserInfoEntity_;
 import com.angio.angiobackend.util.EnumUtil;
@@ -18,7 +20,16 @@ import static com.angio.angiobackend.util.DateUtil.atStartOfDay;
 import static com.angio.angiobackend.util.SpecificationUtil.substringPattern;
 
 @Component
-public class AnalyseInfoSpecification {
+public class AnalyseSpecification {
+
+    public Specification<AnalyseEntity> analyseId(Long id) {
+        return (root, query, cb) -> {
+            if (id != null) {
+                return cb.equal(root.get(AnalyseEntity_.id), id);
+            }
+            return null;
+        };
+    }
 
     public Specification<AnalyseEntity> analyseDate(Date date) {
         return (root, query, cb) -> {
@@ -133,6 +144,29 @@ public class AnalyseInfoSpecification {
             }
             return null;
         };
+    }
+
+    public Specification<AnalyseEntity> inStatus(AnalyseStatusType... statuses) {
+        return (root, query, cb) -> {
+            if (statuses != null && statuses.length > 0) {
+                return root.get(AnalyseEntity_.status).get(AnalyseStatus_.type).in((Object[]) statuses);
+            }
+            return null;
+        };
+    }
+
+    public Specification<AnalyseEntity> notInStatus(AnalyseStatusType... statuses) {
+        return (root, query, cb) -> {
+            if (statuses != null && statuses.length > 0) {
+                return cb.not(root.get(AnalyseEntity_.status).get(AnalyseStatus_.type).in((Object[]) statuses));
+            }
+            return null;
+        };
+    }
+
+    public Specification<AnalyseEntity> notDeleted() {
+        return (root, query, cb) -> cb.notEqual(root.get(AnalyseEntity_.status)
+                .get(AnalyseStatus_.type), AnalyseStatusType.DELETED);
     }
 
     public Specification<AnalyseEntity> getAnalyseInfoFilter(String queryString) {

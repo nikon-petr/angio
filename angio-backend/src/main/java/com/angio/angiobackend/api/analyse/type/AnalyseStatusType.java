@@ -6,7 +6,8 @@ public enum AnalyseStatusType implements Serializable {
     CREATED,
     IN_PROGRESS,
     SUCCESS,
-    FAILED;
+    FAILED,
+    DELETED;
 
     private static final long serialVersionUID = -8097058374511448671L;
 }

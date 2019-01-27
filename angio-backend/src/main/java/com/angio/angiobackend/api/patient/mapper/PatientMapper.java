@@ -1,7 +1,7 @@
-package com.angio.angiobackend.api.analyse.mapper;
+package com.angio.angiobackend.api.patient.mapper;
 
-import com.angio.angiobackend.api.analyse.dto.PatientDto;
-import com.angio.angiobackend.api.analyse.entity.PatientEntity;
+import com.angio.angiobackend.api.patient.dto.PatientDto;
+import com.angio.angiobackend.api.patient.entity.PatientEntity;
 import com.angio.angiobackend.api.common.mapper.AbstractMapper;
 import com.angio.angiobackend.api.common.mapper.FullNameMapper;
 import org.mapstruct.Mapper;

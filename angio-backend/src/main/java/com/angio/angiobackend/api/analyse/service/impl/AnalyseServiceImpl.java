@@ -1,0 +1,318 @@
+package com.angio.angiobackend.api.analyse.service.impl;
+
+import com.angio.angiobackend.api.analyse.dto.AnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
+import com.angio.angiobackend.api.analyse.dto.ConclusionDto;
+import com.angio.angiobackend.api.analyse.dto.ExtendedAnalyseDto;
+import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
+import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
+import com.angio.angiobackend.api.analyse.mapper.AnalyseMapper;
+import com.angio.angiobackend.api.analyse.messaging.AnalyseToExecuteSender;
+import com.angio.angiobackend.api.analyse.repository.AnalyseRepository;
+import com.angio.angiobackend.api.analyse.service.AnalyseService;
+import com.angio.angiobackend.api.analyse.specifications.AnalyseSpecification;
+import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
+import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
+import com.angio.angiobackend.api.patient.service.PatientService;
+import com.angio.angiobackend.api.uploads.repository.UploadRepository;
+import com.angio.angiobackend.api.user.services.UserInfoService;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.lang.String.format;
+import static org.springframework.util.StringUtils.isEmpty;
+
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class AnalyseServiceImpl implements AnalyseService {
+
+    private final AnalyseSpecification analyseSpecification;
+    private final AnalyseMapper analyseMapper;
+    private final AnalyseRepository analyseRepository;
+    private final UploadRepository uploadRepository;
+    private final PatientService patientService;
+    private final UserInfoService userInfoService;
+    private final AnalyseToExecuteSender analyseToExecuteSender;
+
+    /**
+     * Create new analyse and save additional info to database. Set analyse status CREATED.
+     *
+     * @param dto - analyse additional info
+     * @return saved analyse data such as id and etc.
+     */
+    @Override
+    @Transactional
+    public ExtendedAnalyseDto createAnalyse(@NonNull ExtendedAnalyseDto dto) {
+        log.trace("createAnalyse() - start - analyse to create: {}", dto);
+
+        log.trace("createAnalyse() - map analyse info dto to entity");
+        AnalyseEntity entity = analyseMapper.toNewEntity(dto);
+
+        entity.setOriginalImage(uploadRepository.getOne(dto.getOriginalImage().getId()));
+
+        log.trace("createAnalyse() - save patient data");
+        entity.setPatient(patientService.saveOrUpdatePatient(dto.getPatient()));
+
+        log.trace("createAnalyse() - save user data");
+        entity.setUser(userInfoService.getUserFromContext());
+
+        log.trace("createAnalyse() - set analyse date");
+        entity.setAnalyseDate(new Date());
+
+        log.trace("createAnalyse() - set analyse status to CREATED");
+        entity.setStatus(AnalyseStatus.of(AnalyseStatusType.CREATED));
+
+        log.trace("createAnalyse() - save analyse info entity");
+        entity = analyseRepository.save(entity);
+
+        AnalyseDto saved = analyseMapper.toAnalyseDto(entity);
+        log.trace("createAnalyse() - map saved analyse to dto");
+
+        log.info("createAnalyse() - send analyse to execute: {}", saved);
+        try {
+            log.info("createAnalyse() - analyse execution result status: IN_PROGRESS");
+            entity.setStatus(new AnalyseStatus().setType(AnalyseStatusType.IN_PROGRESS));
+            analyseToExecuteSender.sendAnalyseToExecute(saved);
+        } catch (Exception e) {
+            log.info("createAnalyse() - analyse execution result status: FAILED cause: {}", e);
+            entity.setStatus(new AnalyseStatus()
+                    .setType(AnalyseStatusType.FAILED)
+                    .setExtension(e.getMessage()));
+        }
+
+        log.trace("createAnalyse() - map saved analyse without result");
+        ExtendedAnalyseDto savedResult = analyseMapper.toExtendedDto(entity);
+        savedResult.setGeometricAnalyse(null);
+        savedResult.setBloodFlowAnalyse(null);
+        log.trace("createAnalyse() - end");
+        return savedResult;
+    }
+
+    /**
+     * Save analyse execution result to database.
+     *
+     * @param dto - analyse results
+     */
+    @Override
+    @Transactional
+    public void saveExecutedAnalyse(@NonNull AnalyseDto dto) {
+        log.trace("saveExecutedAnalyse() - start - analyse to save: {}", dto);
+
+        log.trace("saveExecutedAnalyse() - map analyse info dto to entity");
+        AnalyseEntity entity = analyseRepository.getOne(dto.getId());
+        analyseMapper.updateEntity(dto, entity);
+        entity.getStatus().setType(AnalyseStatusType.SUCCESS);
+
+        log.trace("saveExecutedAnalyse() - save analyse info entity");
+        entity = analyseRepository.save(entity);
+
+        log.trace("saveExecutedAnalyse() - map saved analyse info entity to dto");
+        ExtendedAnalyseDto savedDto = analyseMapper.toExtendedDto(entity);
+
+        log.info("saveExecutedAnalyse() - received analyse saving result: {}", savedDto);
+        log.trace("saveExecutedAnalyse() - end");
+    }
+
+    /**
+     * Filter analysis by query string matching any one or more fields.
+     *
+     * @param queryString query string
+     * @param date analyse date
+     * @param pageable page request
+     * @return page of filtered analyses
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Pageable pageable) {
+
+        log.trace("filterAnalysesByQueryString() - start");
+
+        log.trace("filterAnalysesByQueryString() - build analyse info specification");
+        Specification<AnalyseEntity> specs = analyseSpecification.getAnalyseInfoFilter(queryString)
+                .and(analyseSpecification.analyseDate(date))
+                .and(analyseSpecification.notDeleted());
+
+        log.trace("filterAnalysesByQueryString() - map sorting fields");
+        Pageable mappedPageRequest = mapSortingFields(pageable);
+
+        log.trace("filterAnalysesByQueryString() - filter analyse info");
+        Page<AnalyseEntity> analyseInfoEntityPage = analyseRepository.findAll(specs, mappedPageRequest);
+
+        log.trace("filterAnalysesByQueryString() - map and return analyse page");
+        return analyseInfoEntityPage.map(analyseMapper::toShortItemDto);
+    }
+
+    /**
+     * Get analyse by id or throw {@link ResourceNotFoundException} if not found.
+     *
+     * @param id analyse id
+     * @return analyse data
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public ExtendedAnalyseDto getAnalyseById(@NonNull Long id) {
+        log.trace("getAnalyseById() - start");
+        log.info("getAnalyseById() - analyse to get: id={}", id);
+        return analyseMapper.toExtendedDto(analyseRepository.findOne(analyseSpecification.analyseId(id)
+                .and(analyseSpecification.notDeleted()))
+                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id))));
+    }
+
+    /**
+     * Set analyse status to DELETED.
+     *
+     * @param id analyse id
+     * @return deleted analyse data
+     */
+    @Override
+    @Transactional
+    public ExtendedAnalyseDto deleteAnalyse(@NonNull Long id) {
+        log.trace("deleteAnalyse() - start");
+        AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
+                .and(analyseSpecification.notDeleted()))
+                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id)));
+
+        log.info("deleteAnalyse() - set analyse status DELETED for id={}", id);
+        analyse.getStatus().setType(AnalyseStatusType.DELETED);
+        analyse.getStatus().setExtension("Анализ удален пользоавтелем вручную");
+
+        log.trace("deleteAnalyse() - save updated analyse status");
+        analyse = analyseRepository.save(analyse);
+
+        log.trace("deleteAnalyse() - end");
+        return analyseMapper.toExtendedDto(analyse);
+    }
+
+    /**
+     * Send analysis to execution again after fail.
+     *
+     * @param id analyse id
+     * @return sent analyse data
+     */
+    @Override
+    @Transactional
+    public ExtendedAnalyseDto sendAnalyseToExecution(@NonNull Long id) {
+
+        log.trace("sendAnalyseToExecution() - start");
+        AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
+                .and(analyseSpecification.notDeleted()))
+                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id)));
+
+        log.trace("sendAnalyseToExecution() - check analyse status");
+        if (analyse.getStatus().getType() != AnalyseStatusType.FAILED) {
+            throw new IllegalArgumentException("Execution of analyse already successfully completed");
+        }
+
+        AnalyseDto dto = analyseMapper.toAnalyseDto(analyse);
+        log.trace("sendAnalyseToExecution() - map saved analyse to dto");
+
+        log.info("sendAnalyseToExecution() - send analyse to execute: {}", dto);
+        try {
+            log.info("sendAnalyseToExecution() - analyse execution result status: IN_PROGRESS");
+            analyse.setStatus(new AnalyseStatus().setType(AnalyseStatusType.IN_PROGRESS));
+            analyseToExecuteSender.sendAnalyseToExecute(dto);
+        } catch (Exception e) {
+            log.info("sendAnalyseToExecution() - analyse execution result status: FAILED cause: {}", e);
+            analyse.setStatus(new AnalyseStatus()
+                    .setType(AnalyseStatusType.FAILED)
+                    .setExtension(e.getMessage()));
+        }
+
+        log.trace("sendAnalyseToExecution() - map saved analyse without result");
+        ExtendedAnalyseDto savedResult = analyseMapper.toExtendedDto(analyse);
+        savedResult.setGeometricAnalyse(null);
+        savedResult.setBloodFlowAnalyse(null);
+        log.trace("sendAnalyseToExecution() - end");
+        return savedResult;
+    }
+
+    /**
+     * Update or create conclusion for analyse with given id or throw {@link ResourceNotFoundException} if not found.
+     *
+     * @param id analyse id
+     * @param dto conclusion
+     * @return updated analyse data
+     */
+    @Override
+    @Transactional
+    public ExtendedAnalyseDto patchAnalyse(@NonNull Long id, @NonNull ConclusionDto dto) {
+        log.trace("patchAnalyse() - start");
+
+        log.trace("patchAnalyse() - search analyse info entity with id:", id);
+        AnalyseEntity analyseEntity = analyseRepository.findOne(analyseSpecification.analyseId(id)
+                .and(analyseSpecification.notDeleted()))
+                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id)));
+
+        log.info("patchAnalyse() - update conclusion field with: {}", dto);
+        analyseEntity.setConclusion(dto.getConclusion());
+
+        log.trace("patchAnalyse() - end - save updated analyse info entity");
+        return analyseMapper.toExtendedDto(analyseRepository.save(analyseEntity));
+    }
+
+    @Override
+    @Transactional
+    public ExtendedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId) {
+        log.trace("deleteAnalyse() - start");
+
+        log.trace("deleteAnalyse() - find analyse: id={}", analyseId);
+        AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(analyseId)
+                .and(analyseSpecification.notDeleted()))
+                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", analyseId)));
+
+        log.trace("deleteAnalyse() - delete vessel", analyseId);
+        boolean result = analyse.getGeometricAnalyse().getVessels().removeIf(e -> e.getId().equals(vesselId));
+
+        if (!result) {
+            throw new ResourceNotFoundException(format("Vessel with id=%s not found", analyseId));
+        }
+
+        analyse = analyseRepository.save(analyse);
+
+        log.trace("deleteAnalyse() - end");
+        return analyseMapper.toExtendedDto(analyse);
+    }
+
+    private Pageable mapSortingFields(Pageable pageable) {
+        log.trace("mapSortingFields() - start mapping for: {}", pageable);
+        Map<String, String> dtoSortingFields = new HashMap<>();
+        dtoSortingFields.put("patient", "patient.lastname");
+        dtoSortingFields.put("policy", "patient.policy");
+        dtoSortingFields.put("user", "user.userInfo.lastname");
+
+        List<Sort.Order> orders = new ArrayList<>();
+
+        for (Sort.Order order : pageable.getSort()) {
+            if (order.getDirection() != null && !isEmpty(order.getProperty())) {
+
+                String field = dtoSortingFields.getOrDefault(order.getProperty(), null);
+
+                if (field == null) {
+                    field = order.getProperty();
+                }
+
+                Sort.Order copyOrder = new Sort.Order(order.getDirection(), field);
+                orders.add(copyOrder);
+            }
+        }
+
+        PageRequest result = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(orders));
+        log.trace("mapSortingFields() - mapping result: {}", result);
+        return result;
+    }
+}

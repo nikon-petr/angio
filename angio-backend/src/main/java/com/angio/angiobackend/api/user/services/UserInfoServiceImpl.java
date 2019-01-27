@@ -5,13 +5,16 @@ import com.angio.angiobackend.api.security.entities.UserEntity;
 import com.angio.angiobackend.api.security.repositories.UserRepository;
 import com.angio.angiobackend.api.user.entities.UserInfoEntity;
 import com.angio.angiobackend.api.user.repositories.UserInfoCrudRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+@Slf4j
 @Service("userInfoService")
 @Transactional
 public class UserInfoServiceImpl implements UserInfoService {
@@ -46,5 +49,15 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setModifiedDate(modified_date);
         userInfo.setUser(userRepository.findById(username).get());
         userInfoCrudRepository.save(userInfo);
+    }
+
+    @Override
+    public UserEntity getUserFromContext() {
+        log.trace("getUserFromContext() - start");
+        log.trace("getUserFromContext() - get user principal");
+        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        log.trace("getUserFromContext() - end");
+        return user;
     }
 }

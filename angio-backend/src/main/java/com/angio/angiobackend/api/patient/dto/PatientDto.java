@@ -1,4 +1,4 @@
-package com.angio.angiobackend.api.analyse.dto;
+package com.angio.angiobackend.api.patient.dto;
 
 import com.angio.angiobackend.api.common.dto.FullNameDto;
 import io.swagger.annotations.ApiModelProperty;

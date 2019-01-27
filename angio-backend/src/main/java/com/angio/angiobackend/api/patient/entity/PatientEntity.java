@@ -1,5 +1,6 @@
-package com.angio.angiobackend.api.analyse.entity;
+package com.angio.angiobackend.api.patient.entity;
 
+import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
 import com.angio.angiobackend.api.common.embeddable.FullName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
