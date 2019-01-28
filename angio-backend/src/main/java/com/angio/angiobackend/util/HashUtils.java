@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -31,7 +32,7 @@ public class HashUtils {
         }
 
         log.trace("hash() - update digest");
-        digest.update(source.getBytes(), 0, source.length());
+        digest.update(source.getBytes(Charset.forName("UTF-8")), 0, source.length());
 
         String result = new BigInteger(1, digest.digest()).toString(16);
 

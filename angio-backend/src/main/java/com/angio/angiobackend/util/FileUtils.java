@@ -18,6 +18,8 @@ import java.util.Random;
 @UtilityClass
 public class FileUtils {
 
+    private final static Random random = new Random();
+
     /**
      * Save image to disk.
      *
@@ -101,7 +103,7 @@ public class FileUtils {
         log.trace("generateFileNameWithTimeAndRandom() - start");
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyyHH:mm:ss.SSS");
 
-        String result = formatter.format(new Date()) + new Random().nextInt();
+        String result = formatter.format(new Date()) + random.nextInt();
 
         log.trace("generateFileNameWithTimeAndRandom() - result: {}", result);
         log.trace("generateFileNameWithTimeAndRandom() - end");
