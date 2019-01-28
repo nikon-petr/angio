@@ -10,7 +10,7 @@ import com.angio.angiobackend.api.analyse.mapper.AnalyseMapper;
 import com.angio.angiobackend.api.analyse.messaging.AnalyseToExecuteSender;
 import com.angio.angiobackend.api.analyse.repository.AnalyseRepository;
 import com.angio.angiobackend.api.analyse.service.AnalyseService;
-import com.angio.angiobackend.api.analyse.specifications.AnalyseSpecification;
+import com.angio.angiobackend.api.analyse.specification.AnalyseSpecification;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.patient.service.PatientService;

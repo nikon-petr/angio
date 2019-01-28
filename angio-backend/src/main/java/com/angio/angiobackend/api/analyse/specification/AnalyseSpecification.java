@@ -1,4 +1,4 @@
-package com.angio.angiobackend.api.analyse.specifications;
+package com.angio.angiobackend.api.analyse.specification;
 
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus_;
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
