@@ -33,7 +33,7 @@ import java.util.Date;
 @RestController
 @Api(description = "Angio analyse resources")
 @RequestMapping(path = "/api/v2/analyse")
-public class AnalyseController {
+public class AnalyseResource {
 
     private final AnalyseService analyseService;
 

@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-public class UserController {
+public class UserResource {
 
     private final UserService userService;
     private final UserDetailsService userDetailsService;
@@ -42,7 +42,7 @@ public class UserController {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserController(
+    public UserResource(
             UserService userService,
             UserDetailsService userDetailsService,
             TokenService tokenService,

@@ -29,7 +29,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping
 @Api(description = "Angio security resource (version 1)")
-public class SecurityController {
+public class SecurityResource {
 
     private final AngioBackendProperties props;
     private final AuthenticationManager authenticationManager;
@@ -39,7 +39,7 @@ public class SecurityController {
     private final TokenService tokenService;
 
     @Autowired
-    public SecurityController(
+    public SecurityResource(
             AngioBackendProperties props,
             AuthenticationManager authenticationManager,
             JwtTokenUtils jwtTokenUtils,

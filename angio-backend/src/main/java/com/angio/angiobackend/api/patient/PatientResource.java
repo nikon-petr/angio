@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(description = "Patient resources")
 @RequestMapping(path = "/api/v2/patient")
-public class PatientController {
+public class PatientResource {
 
     private final PatientService patientService;
 

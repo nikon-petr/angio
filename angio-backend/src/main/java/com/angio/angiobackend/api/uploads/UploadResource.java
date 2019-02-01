@@ -20,7 +20,7 @@ import java.io.IOException;
 @RestController
 @Api(description = "Upload controller")
 @RequestMapping(path = "/api/v2/upload")
-public class UploadController {
+public class UploadResource {
 
     private final UploadService uploadService;
 
