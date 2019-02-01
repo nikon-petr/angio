@@ -62,6 +62,6 @@ public class PatientEntity {
     private String policy;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "additionalInfo.patient")
     private Set<AnalyseEntity> analysesInfo;
 }

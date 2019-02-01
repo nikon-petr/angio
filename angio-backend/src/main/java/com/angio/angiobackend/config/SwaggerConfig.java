@@ -60,6 +60,17 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public Docket patientApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("patient")
+                .select()
+                .apis(basePackage("com.angio.angiobackend.api.patient"))
+                .build()
+                .securityContexts(securityContexts())
+                .securitySchemes(apiKey());
+    }
+
+    @Bean
     public Docket securityApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("security")

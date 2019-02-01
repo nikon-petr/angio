@@ -22,7 +22,25 @@ public class PatientServiceImpl implements PatientService {
     private final PatientMapper patientMapper;
 
     /**
-     * Find patient by policy number or return {@link ResourceNotFoundException}.
+     * Create new patient.
+     *
+     * @param dto patient data
+     * @return saved patient data
+     */
+    @Override
+    public PatientDto createPatient(@NonNull PatientDto dto) {
+        log.trace("getPatientByPolicy() - start: patient={}", dto);
+        PatientEntity entity = patientMapper.toEntity(dto);
+
+        log.trace("getPatientByPolicy() - save patient to db");
+        entity = patientRepository.save(entity);
+
+        log.trace("getPatientByPolicy() - end");
+        return patientMapper.toDto(entity);
+    }
+
+    /**
+     * Find patient by policy number or throw {@link ResourceNotFoundException}.
      *
      * @param policy policy number
      * @return patient data
@@ -32,6 +50,30 @@ public class PatientServiceImpl implements PatientService {
         log.trace("getPatientByPolicy() - start: policy={}", policy);
         return patientMapper.toDto(patientRepository.findByPolicy(policy)
                 .orElseThrow(() -> new ResourceNotFoundException(format("Patient with policy=%s not found", policy))));
+    }
+
+    /**
+     * Find patient by id and return entity object or throw {@link ResourceNotFoundException}.
+     *
+     * @param id patient id
+     * @return patient entity
+     */
+    @Override
+    public PatientEntity getPatientEntityById(@NonNull Long id) {
+        log.trace("getPatientByPolicy() - start: id={}", id);
+        return patientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(format("Patient with id=%s not found", id)));
+    }
+
+    /**
+     * Find patient by id and return dto or throw {@link ResourceNotFoundException}.
+     *
+     * @param id patient id
+     * @return patient dto
+     */
+    @Override
+    public PatientDto getPatientById(@NonNull Long id) {
+        return patientMapper.toDto(getPatientEntityById(id));
     }
 
     /**
@@ -69,5 +111,27 @@ public class PatientServiceImpl implements PatientService {
 
         log.trace("saveOrUpdatePatient() - end");
         return patientEntity;
+    }
+
+    /**
+     * Update one or more patient fields and return result.
+     *
+     * @param dto patient data
+     * @param id patient id
+     * @return updated patient data
+     */
+    @Override
+    public PatientDto updatePatient(@NonNull PatientDto dto, @NonNull Long id) {
+        log.trace("updatePatient() - start: patient={}", dto);
+        PatientEntity entity = getPatientEntityById(id);
+
+        log.trace("updatePatient() - map patient dto to entity");
+        patientMapper.toEntity(dto, entity);
+
+        log.trace("updatePatient() - save patient to db");
+        entity = patientRepository.save(entity);
+
+        log.trace("updatePatient() - end");
+        return patientMapper.toDto(entity);
     }
 }

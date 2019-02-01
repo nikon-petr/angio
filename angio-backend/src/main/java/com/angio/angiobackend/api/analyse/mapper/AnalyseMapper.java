@@ -1,8 +1,8 @@
 package com.angio.angiobackend.api.analyse.mapper;
 
-import com.angio.angiobackend.api.analyse.dto.AnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
-import com.angio.angiobackend.api.analyse.dto.ExtendedAnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
 import com.angio.angiobackend.api.patient.mapper.PatientMapper;
 import com.angio.angiobackend.api.uploads.mapper.UploadMapper;
@@ -22,6 +22,7 @@ import org.mapstruct.ReportingPolicy;
                 UploadMapper.class,
                 UserInfoMapper.class,
                 AnalyseStatusMapper.class,
+                AdditionalInfoMapper.class,
                 GeometricAnalyseMapper.class,
                 BloodFlowAnalyseMapper.class
         })
@@ -31,23 +32,20 @@ public interface AnalyseMapper {
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "geometricAnalyse", ignore = true)
     @Mapping(target = "bloodFlowAnalyse", ignore = true)
-    @Mapping(target = "user.userInfo", ignore = true)
-    @Mapping(target = "user.username", ignore = true)
-    AnalyseEntity toNewEntity(ExtendedAnalyseDto dto);
+    @Mapping(target = "additionalInfo", qualifiedByName = "toNewAdditionalInfoEntity")
+    AnalyseEntity toNewEntity(DetailedAnalyseDto dto);
 
     @Named("toAnalyseEntity")
-    @Mapping(target = "user.userInfo", ignore = true)
-    @Mapping(target = "user.username", ignore = true)
-    AnalyseEntity toEntity(ExtendedAnalyseDto dto);
+    AnalyseEntity toEntity(DetailedAnalyseDto dto);
 
-    @Mapping(source = "geometricAnalyse", target = "geometricAnalyse", qualifiedByName = "updateGeometricAnalyseEntity")
-    @Mapping(source = "bloodFlowAnalyse", target = "bloodFlowAnalyse", qualifiedByName = "updateBloodFlowAnalyseEntity")
-    void updateEntity(AnalyseDto dto, @MappingTarget AnalyseEntity entity);
+    @Mapping(target = "geometricAnalyse", qualifiedByName = "updateGeometricAnalyseEntity")
+    @Mapping(target = "bloodFlowAnalyse", qualifiedByName = "updateBloodFlowAnalyseEntity")
+    void updateAnalyseResult(AnalyseJmsDto dto, @MappingTarget AnalyseEntity entity);
 
-    ExtendedAnalyseDto toExtendedDto(AnalyseEntity entity);
+    DetailedAnalyseDto toExtendedDto(AnalyseEntity entity);
 
-    AnalyseDto toAnalyseDto(AnalyseEntity entity);
+    AnalyseJmsDto toAnalyseDto(AnalyseEntity entity);
 
-    @Mapping(source = "user.userInfo.fullName", target = "diagnostician")
+    @Mapping(source = "additionalInfo.diagnostician.userInfo.fullName", target = "diagnostician")
     AnalyseShortItemDto toShortItemDto(AnalyseEntity entity);
 }

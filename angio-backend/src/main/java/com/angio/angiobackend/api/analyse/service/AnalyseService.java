@@ -1,9 +1,10 @@
 package com.angio.angiobackend.api.analyse.service;
 
-import com.angio.angiobackend.api.analyse.dto.AnalyseDto;
+import com.angio.angiobackend.api.analyse.AnalyseActions;
+import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
+import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
-import com.angio.angiobackend.api.analyse.dto.ConclusionDto;
-import com.angio.angiobackend.api.analyse.dto.ExtendedAnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,19 +13,19 @@ import java.util.Date;
 
 public interface AnalyseService {
 
-    ExtendedAnalyseDto createAnalyse(@NonNull ExtendedAnalyseDto dto);
+    DetailedAnalyseDto createAnalyse(@NonNull DetailedAnalyseDto dto);
 
-    void saveExecutedAnalyse(@NonNull AnalyseDto dto);
+    void saveExecutedAnalyse(@NonNull AnalyseJmsDto dto);
 
     Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Pageable pageable);
 
-    ExtendedAnalyseDto getAnalyseById(@NonNull Long id);
+    DetailedAnalyseDto getAnalyseById(@NonNull Long id);
 
-    ExtendedAnalyseDto deleteAnalyse(@NonNull Long id);
+    DetailedAnalyseDto deleteAnalyse(@NonNull Long id);
 
-    ExtendedAnalyseDto sendAnalyseToExecution(@NonNull Long id);
+    DetailedAnalyseDto executeAction(@NonNull Long id, @NonNull AnalyseActions action);
 
-    ExtendedAnalyseDto patchAnalyse(@NonNull Long id, @NonNull ConclusionDto dto);
+    DetailedAnalyseDto updateAnalyseAdditionalInfo(@NonNull Long id, @NonNull AdditionalInfoDto dto);
 
-    ExtendedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId);
+    DetailedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId);
 }

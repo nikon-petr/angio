@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         authorityEntities.forEach((e) -> e.setUsername(renamedUserEntity));
         userInfoEntity.setUser(renamedUserEntity);
         tokenEntities.forEach((e) -> e.setUser(renamedUserEntity));
-        analyseInfoEntities.forEach((e) -> e.setUser(renamedUserEntity));
+        analyseInfoEntities.forEach((e) -> e.getAdditionalInfo().setDiagnostician(renamedUserEntity));
         authorityCrudRepository.saveAll(authorityEntities);
         userInfoCrudRepository.save(userInfoEntity);
         tokenCrudRepository.saveAll(tokenEntities);

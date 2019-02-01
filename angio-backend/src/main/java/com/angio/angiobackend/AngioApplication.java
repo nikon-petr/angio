@@ -1,6 +1,6 @@
 package com.angio.angiobackend;
 
-import com.angio.angiobackend.api.analyse.dto.AnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -35,7 +35,7 @@ public class AngioApplication {
 		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
 		converter.setTargetType(MessageType.TEXT);
 		converter.setTypeIdPropertyName("_type");
-		converter.setTypeIdMappings(Collections.singletonMap("_type", AnalyseDto.class));
+		converter.setTypeIdMappings(Collections.singletonMap("_type", AnalyseJmsDto.class));
 		return converter;
 	}
 

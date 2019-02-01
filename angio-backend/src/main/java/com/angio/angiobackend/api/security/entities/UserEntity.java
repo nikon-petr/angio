@@ -104,7 +104,7 @@ public class UserEntity implements UserDetails, Serializable {
     }
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "additionalInfo.diagnostician")
     public Set<AnalyseEntity> getAnalyses() {
         return analyses;
     }

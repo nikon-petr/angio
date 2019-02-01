@@ -1,10 +1,9 @@
 package com.angio.angiobackend.api.analyse;
 
-import com.angio.angiobackend.api.analyse.dto.ConclusionDto;
-import com.angio.angiobackend.api.analyse.dto.ExtendedAnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
+import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.service.AnalyseService;
-import com.angio.angiobackend.api.analyse.service.impl.AnalyseServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -40,13 +39,13 @@ public class AnalyseController {
 
     @ApiOperation(value = "Create new analyse")
     @PostMapping
-    public ExtendedAnalyseDto createAnalyse(@RequestBody ExtendedAnalyseDto analyseDto) {
+    public DetailedAnalyseDto createAnalyse(@RequestBody DetailedAnalyseDto analyseDto) {
         return analyseService.createAnalyse(analyseDto);
     }
 
     @ApiOperation("Get analyse by id")
     @GetMapping("/{id}")
-    public ExtendedAnalyseDto getAnalyseById(@PathVariable Long id) {
+    public DetailedAnalyseDto getAnalyseById(@PathVariable Long id) {
         return analyseService.getAnalyseById(id);
     }
 
@@ -66,28 +65,27 @@ public class AnalyseController {
 
     @ApiOperation("Delete analyse by id")
     @DeleteMapping("/{id}")
-    public ExtendedAnalyseDto deleteAnalyse(@PathVariable Long id) {
+    public DetailedAnalyseDto deleteAnalyse(@PathVariable Long id) {
         return analyseService.deleteAnalyse(id);
     }
 
-    @ApiOperation("Send analyse to execution by id")
+    @ApiOperation("Execute action for analyse")
     @PostMapping("/{id}")
-    public ExtendedAnalyseDto sendAnalyseToExecution(
+    public DetailedAnalyseDto executeAction(
             @PathVariable Long id,
-            @ApiParam(allowEmptyValue = true) @RequestParam Boolean sendToExecution) {
-        return analyseService.sendAnalyseToExecution(id);
+            @ApiParam(allowEmptyValue = true) @RequestParam AnalyseActions action) {
+        return analyseService.executeAction(id, action);
     }
 
-    //TODO: implement patch for all analyse fields
-    @ApiOperation("Update one or more analyse fields")
-    @PatchMapping("/{id}")
-    public ExtendedAnalyseDto patchAnalyse(@PathVariable Long id, @RequestBody ConclusionDto conclusion) {
-        return analyseService.patchAnalyse(id, conclusion);
+    @ApiOperation("Update one or more analyse additional info fields")
+    @PatchMapping("/{id}/additional-info")
+    public DetailedAnalyseDto updateAnalyseAdditionalInfo(@PathVariable Long id, @RequestBody AdditionalInfoDto additionalInfo) {
+        return analyseService.updateAnalyseAdditionalInfo(id, additionalInfo);
     }
 
     @ApiOperation("Delete vessel from geometric analyse by id")
     @DeleteMapping("/{analyseId}/geometric/vessel/{vesselId}")
-    public ExtendedAnalyseDto deleteAnalyse(@PathVariable Long analyseId, @PathVariable Long vesselId) {
+    public DetailedAnalyseDto deleteAnalyse(@PathVariable Long analyseId, @PathVariable Long vesselId) {
         return analyseService.deleteGeometricAnalyseVessel(analyseId, vesselId);
     }
 }

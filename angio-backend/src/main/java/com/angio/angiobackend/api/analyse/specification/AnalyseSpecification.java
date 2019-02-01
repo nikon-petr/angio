@@ -1,5 +1,7 @@
 package com.angio.angiobackend.api.analyse.specification;
 
+import com.angio.angiobackend.api.analyse.embeddable.AdditionalInfo;
+import com.angio.angiobackend.api.analyse.embeddable.AdditionalInfo_;
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus_;
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity_;
@@ -43,7 +45,8 @@ public class AnalyseSpecification {
     public Specification<AnalyseEntity> name(String name) {
         return (root, query, cb) -> {
             if (name != null) {
-                return cb.like(root.get(AnalyseEntity_.name), substringPattern(name));
+                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.name), substringPattern(name));
             }
             return null;
         };
@@ -52,7 +55,8 @@ public class AnalyseSpecification {
     public Specification<AnalyseEntity> shortDescription(String shortDescription) {
         return (root, query, cb) -> {
             if (shortDescription != null) {
-                return cb.like(root.get(AnalyseEntity_.shortDescription), substringPattern(shortDescription));
+                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.shortDescription), substringPattern(shortDescription));
             }
             return null;
         };
@@ -62,7 +66,8 @@ public class AnalyseSpecification {
         return (root, query, cb) -> {
             AnalyseType castedAnalyseType = EnumUtils.getIfPresent(analyseType, AnalyseType.class);
             if (castedAnalyseType != null) {
-                return cb.equal(root.get(AnalyseEntity_.type), castedAnalyseType);
+                return cb.equal(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.type), castedAnalyseType);
             }
             return null;
         };
@@ -71,7 +76,8 @@ public class AnalyseSpecification {
     public Specification<AnalyseEntity> userInfoFirstname(String firstname) {
         return (root, query, cb) -> {
             if (firstname != null) {
-                return cb.like(root.get(AnalyseEntity_.user)
+                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.diagnostician)
                         .get(UserEntity_.userInfo)
                         .get(UserInfoEntity_.fullName)
                         .get(FullName_.firstname), substringPattern(firstname));
@@ -83,7 +89,8 @@ public class AnalyseSpecification {
     public Specification<AnalyseEntity> userInfoLastname(String lastname) {
         return (root, query, cb) -> {
             if (lastname != null) {
-                return cb.like(root.get(AnalyseEntity_.user)
+                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.diagnostician)
                         .get(UserEntity_.userInfo)
                         .get(UserInfoEntity_.fullName)
                         .get(FullName_.lastname), substringPattern(lastname));
@@ -95,7 +102,8 @@ public class AnalyseSpecification {
     public Specification<AnalyseEntity> userInfoPatronymic(String patronymic) {
         return (root, query, cb) -> {
             if (patronymic != null) {
-                return cb.like(root.get(AnalyseEntity_.user)
+                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.diagnostician)
                         .get(UserEntity_.userInfo)
                         .get(UserInfoEntity_.fullName)
                         .get(FullName_.patronymic), substringPattern(patronymic));
@@ -107,7 +115,8 @@ public class AnalyseSpecification {
     public Specification<AnalyseEntity> patientFirstname(String firstname) {
         return (root, query, cb) -> {
             if (firstname != null) {
-                return cb.like(root.get(AnalyseEntity_.patient)
+                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.patient)
                         .get(PatientEntity_.fullName)
                         .get(FullName_.firstname), substringPattern(firstname));
             }
@@ -118,7 +127,8 @@ public class AnalyseSpecification {
     public Specification<AnalyseEntity> patientLastname(String lastname) {
         return (root, query, cb) -> {
             if (lastname != null) {
-                return cb.like(root.get(AnalyseEntity_.patient)
+                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.patient)
                         .get(PatientEntity_.fullName)
                         .get(FullName_.lastname), substringPattern(lastname));
             }
@@ -129,7 +139,8 @@ public class AnalyseSpecification {
     public Specification<AnalyseEntity> patientPatronymic(String patronymic) {
         return (root, query, cb) -> {
             if (patronymic != null) {
-                return cb.like(root.get(AnalyseEntity_.patient)
+                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.patient)
                         .get(PatientEntity_.fullName)
                         .get(FullName_.patronymic), substringPattern(patronymic));
             }
@@ -140,7 +151,9 @@ public class AnalyseSpecification {
     public Specification<AnalyseEntity> patientPolicy(String policy) {
         return (root, query, cb) -> {
             if (policy != null) {
-                return cb.like(root.get(AnalyseEntity_.patient).get(PatientEntity_.policy), substringPattern(policy));
+                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                        .get(AdditionalInfo_.patient)
+                        .get(PatientEntity_.policy), substringPattern(policy));
             }
             return null;
         };

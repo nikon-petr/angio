@@ -13,7 +13,7 @@ import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AnalyseDto implements Serializable {
+public class AnalyseJmsDto implements Serializable {
 
     private static final long serialVersionUID = 326024071820898660L;
 

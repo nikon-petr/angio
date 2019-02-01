@@ -1,11 +1,13 @@
 package com.angio.angiobackend.api.analyse.service.impl;
 
-import com.angio.angiobackend.api.analyse.dto.AnalyseDto;
+import com.angio.angiobackend.api.analyse.AnalyseActions;
+import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
+import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
-import com.angio.angiobackend.api.analyse.dto.ConclusionDto;
-import com.angio.angiobackend.api.analyse.dto.ExtendedAnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
+import com.angio.angiobackend.api.analyse.mapper.AdditionalInfoMapper;
 import com.angio.angiobackend.api.analyse.mapper.AnalyseMapper;
 import com.angio.angiobackend.api.analyse.messaging.AnalyseToExecuteSender;
 import com.angio.angiobackend.api.analyse.repository.AnalyseRepository;
@@ -43,6 +45,7 @@ public class AnalyseServiceImpl implements AnalyseService {
 
     private final AnalyseSpecification analyseSpecification;
     private final AnalyseMapper analyseMapper;
+    private final AdditionalInfoMapper additionalInfoMapper;
     private final AnalyseRepository analyseRepository;
     private final UploadRepository uploadRepository;
     private final PatientService patientService;
@@ -57,7 +60,7 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional
-    public ExtendedAnalyseDto createAnalyse(@NonNull ExtendedAnalyseDto dto) {
+    public DetailedAnalyseDto createAnalyse(@NonNull DetailedAnalyseDto dto) {
         log.trace("createAnalyse() - start - analyse to create: {}", dto);
 
         log.trace("createAnalyse() - map analyse info dto to entity");
@@ -66,10 +69,10 @@ public class AnalyseServiceImpl implements AnalyseService {
         entity.setOriginalImage(uploadRepository.getOne(dto.getOriginalImage().getId()));
 
         log.trace("createAnalyse() - save patient data");
-        entity.setPatient(patientService.saveOrUpdatePatient(dto.getPatient()));
+        entity.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getAdditionalInfo().getPatientId()));
 
-        log.trace("createAnalyse() - save user data");
-        entity.setUser(userInfoService.getUserFromContext());
+        log.trace("createAnalyse() - save diagnostician data");
+        entity.getAdditionalInfo().setDiagnostician(userInfoService.getUserFromContext());
 
         log.trace("createAnalyse() - set analyse date");
         entity.setAnalyseDate(new Date());
@@ -80,7 +83,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("createAnalyse() - save analyse info entity");
         entity = analyseRepository.save(entity);
 
-        AnalyseDto saved = analyseMapper.toAnalyseDto(entity);
+        AnalyseJmsDto saved = analyseMapper.toAnalyseDto(entity);
         log.trace("createAnalyse() - map saved analyse to dto");
 
         log.info("createAnalyse() - send analyse to execute: {}", saved);
@@ -96,7 +99,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         }
 
         log.trace("createAnalyse() - map saved analyse without result");
-        ExtendedAnalyseDto savedResult = analyseMapper.toExtendedDto(entity);
+        DetailedAnalyseDto savedResult = analyseMapper.toExtendedDto(entity);
         savedResult.setGeometricAnalyse(null);
         savedResult.setBloodFlowAnalyse(null);
         log.trace("createAnalyse() - end");
@@ -110,19 +113,19 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional
-    public void saveExecutedAnalyse(@NonNull AnalyseDto dto) {
+    public void saveExecutedAnalyse(@NonNull AnalyseJmsDto dto) {
         log.trace("saveExecutedAnalyse() - start - analyse to save: {}", dto);
 
         log.trace("saveExecutedAnalyse() - map analyse info dto to entity");
         AnalyseEntity entity = analyseRepository.getOne(dto.getId());
-        analyseMapper.updateEntity(dto, entity);
+        analyseMapper.updateAnalyseResult(dto, entity);
         entity.getStatus().setType(AnalyseStatusType.SUCCESS);
 
         log.trace("saveExecutedAnalyse() - save analyse info entity");
         entity = analyseRepository.save(entity);
 
         log.trace("saveExecutedAnalyse() - map saved analyse info entity to dto");
-        ExtendedAnalyseDto savedDto = analyseMapper.toExtendedDto(entity);
+        DetailedAnalyseDto savedDto = analyseMapper.toExtendedDto(entity);
 
         log.info("saveExecutedAnalyse() - received analyse saving result: {}", savedDto);
         log.trace("saveExecutedAnalyse() - end");
@@ -165,7 +168,7 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional(readOnly = true)
-    public ExtendedAnalyseDto getAnalyseById(@NonNull Long id) {
+    public DetailedAnalyseDto getAnalyseById(@NonNull Long id) {
         log.trace("getAnalyseById() - start");
         log.info("getAnalyseById() - analyse to get: id={}", id);
         return analyseMapper.toExtendedDto(analyseRepository.findOne(analyseSpecification.analyseId(id)
@@ -181,7 +184,7 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional
-    public ExtendedAnalyseDto deleteAnalyse(@NonNull Long id) {
+    public DetailedAnalyseDto deleteAnalyse(@NonNull Long id) {
         log.trace("deleteAnalyse() - start");
         AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted()))
@@ -199,46 +202,20 @@ public class AnalyseServiceImpl implements AnalyseService {
     }
 
     /**
-     * Send analysis to execution again after fail.
+     * Execute action on analyse with given id.
      *
      * @param id analyse id
-     * @return sent analyse data
+     * @param action action
+     * @return analyse data after applying action
      */
     @Override
     @Transactional
-    public ExtendedAnalyseDto sendAnalyseToExecution(@NonNull Long id) {
-
-        log.trace("sendAnalyseToExecution() - start");
-        AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted()))
-                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id)));
-
-        log.trace("sendAnalyseToExecution() - check analyse status");
-        if (analyse.getStatus().getType() != AnalyseStatusType.FAILED) {
-            throw new IllegalArgumentException("Execution of analyse already successfully completed");
+    public DetailedAnalyseDto executeAction(@NonNull Long id, @NonNull AnalyseActions action) {
+        log.info("executeAction() - action to execute {} for analyse id={}", action, id);
+        switch (action) {
+            case SEND_TO_EXECUTION: return sendAnalyseToExecution(id);
+            default: throw new IllegalArgumentException("Action does not exists");
         }
-
-        AnalyseDto dto = analyseMapper.toAnalyseDto(analyse);
-        log.trace("sendAnalyseToExecution() - map saved analyse to dto");
-
-        log.info("sendAnalyseToExecution() - send analyse to execute: {}", dto);
-        try {
-            log.info("sendAnalyseToExecution() - analyse execution result status: IN_PROGRESS");
-            analyse.setStatus(new AnalyseStatus().setType(AnalyseStatusType.IN_PROGRESS));
-            analyseToExecuteSender.sendAnalyseToExecute(dto);
-        } catch (Exception e) {
-            log.info("sendAnalyseToExecution() - analyse execution result status: FAILED cause: {}", e);
-            analyse.setStatus(new AnalyseStatus()
-                    .setType(AnalyseStatusType.FAILED)
-                    .setExtension(e.getMessage()));
-        }
-
-        log.trace("sendAnalyseToExecution() - map saved analyse without result");
-        ExtendedAnalyseDto savedResult = analyseMapper.toExtendedDto(analyse);
-        savedResult.setGeometricAnalyse(null);
-        savedResult.setBloodFlowAnalyse(null);
-        log.trace("sendAnalyseToExecution() - end");
-        return savedResult;
     }
 
     /**
@@ -250,24 +227,29 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional
-    public ExtendedAnalyseDto patchAnalyse(@NonNull Long id, @NonNull ConclusionDto dto) {
-        log.trace("patchAnalyse() - start");
+    public DetailedAnalyseDto updateAnalyseAdditionalInfo(@NonNull Long id, @NonNull AdditionalInfoDto dto) {
+        log.trace("updateAnalyseAdditionalInfo() - start");
 
-        log.trace("patchAnalyse() - search analyse info entity with id:", id);
+        log.trace("updateAnalyseAdditionalInfo() - search analyse info entity with id:", id);
         AnalyseEntity analyseEntity = analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted()))
                 .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id)));
 
-        log.info("patchAnalyse() - update conclusion field with: {}", dto);
-        analyseEntity.setConclusion(dto.getConclusion());
+        log.info("updateAnalyseAdditionalInfo() - update conclusion field with: {}", dto);
+        additionalInfoMapper.updateEntity(dto, analyseEntity.getAdditionalInfo());
 
-        log.trace("patchAnalyse() - end - save updated analyse info entity");
+        if (dto.getPatientId() != null) {
+            log.trace("updateAnalyseAdditionalInfo() - update patient id");
+            analyseEntity.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getPatientId()));
+        }
+
+        log.trace("updateAnalyseAdditionalInfo() - end - save updated analyse info entity");
         return analyseMapper.toExtendedDto(analyseRepository.save(analyseEntity));
     }
 
     @Override
     @Transactional
-    public ExtendedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId) {
+    public DetailedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId) {
         log.trace("deleteAnalyse() - start");
 
         log.trace("deleteAnalyse() - find analyse: id={}", analyseId);
@@ -293,7 +275,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         Map<String, String> dtoSortingFields = new HashMap<>();
         dtoSortingFields.put("patient", "patient.lastname");
         dtoSortingFields.put("policy", "patient.policy");
-        dtoSortingFields.put("user", "user.userInfo.lastname");
+        dtoSortingFields.put("user", "diagnostician.userInfo.lastname");
 
         List<Sort.Order> orders = new ArrayList<>();
 
@@ -314,5 +296,46 @@ public class AnalyseServiceImpl implements AnalyseService {
         PageRequest result = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(orders));
         log.trace("mapSortingFields() - mapping result: {}", result);
         return result;
+    }
+
+    /**
+     * Send analysis to execution again after fail.
+     *
+     * @param id analyse id
+     * @return sent analyse data
+     */
+    private DetailedAnalyseDto sendAnalyseToExecution(Long id) {
+
+        log.trace("sendAnalyseToExecution() - start");
+        AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
+                .and(analyseSpecification.notDeleted()))
+                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id)));
+
+        log.trace("sendAnalyseToExecution() - check analyse status");
+        if (analyse.getStatus().getType() != AnalyseStatusType.FAILED) {
+            throw new IllegalArgumentException("Execution of analyse already successfully completed");
+        }
+
+        AnalyseJmsDto dto = analyseMapper.toAnalyseDto(analyse);
+        log.trace("sendAnalyseToExecution() - map saved analyse to dto");
+
+        log.info("sendAnalyseToExecution() - send analyse to execute: {}", dto);
+        try {
+            log.info("sendAnalyseToExecution() - analyse execution result status: IN_PROGRESS");
+            analyse.setStatus(new AnalyseStatus().setType(AnalyseStatusType.IN_PROGRESS));
+            analyseToExecuteSender.sendAnalyseToExecute(dto);
+        } catch (Exception e) {
+            log.info("sendAnalyseToExecution() - analyse execution result status: FAILED cause: {}", e);
+            analyse.setStatus(new AnalyseStatus()
+                    .setType(AnalyseStatusType.FAILED)
+                    .setExtension(e.getMessage()));
+        }
+
+        log.trace("sendAnalyseToExecution() - map saved analyse without result");
+        DetailedAnalyseDto savedResult = analyseMapper.toExtendedDto(analyse);
+        savedResult.setGeometricAnalyse(null);
+        savedResult.setBloodFlowAnalyse(null);
+        log.trace("sendAnalyseToExecution() - end");
+        return savedResult;
     }
 }
