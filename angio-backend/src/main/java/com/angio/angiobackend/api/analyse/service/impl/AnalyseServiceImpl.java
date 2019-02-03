@@ -17,6 +17,7 @@ import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.patient.service.PatientService;
+import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
 import com.angio.angiobackend.api.user.services.UserInfoService;
 import lombok.NonNull;
@@ -35,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -67,7 +69,10 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("createAnalyse() - map analyse info dto to entity");
         AnalyseEntity entity = analyseMapper.toNewEntity(dto);
 
-        entity.setOriginalImage(uploadRepository.getOne(dto.getOriginalImage().getId()));
+        entity.setOriginalImage(uploadRepository.findById(dto.getOriginalImage().getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.analyse.originalImage.notFound",
+                                new Object[] {dto.getOriginalImage().getId()}))));
 
         log.trace("createAnalyse() - save patient data");
         entity.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getAdditionalInfo().getPatientId()));
@@ -88,16 +93,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("createAnalyse() - map saved analyse to dto");
 
         log.info("createAnalyse() - send analyse to execute: {}", saved);
-        try {
-            log.info("createAnalyse() - analyse execution result status: IN_PROGRESS");
-            entity.setStatus(new AnalyseStatus().setType(AnalyseStatusType.IN_PROGRESS));
-            analyseToExecuteSender.sendAnalyseToExecute(saved);
-        } catch (Exception e) {
-            log.info("createAnalyse() - analyse execution result status: FAILED cause: {}", e);
-            entity.setStatus(new AnalyseStatus()
-                    .setType(AnalyseStatusType.FAILED)
-                    .setExtension(e.getMessage()));
-        }
+        sendAnalyseToExecution(saved, entity);
 
         log.trace("createAnalyse() - map saved analyse without result");
         DetailedAnalyseDto savedResult = analyseMapper.toExtendedDto(entity);
@@ -326,6 +322,17 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("sendAnalyseToExecution() - map saved analyse to dto");
 
         log.info("sendAnalyseToExecution() - send analyse to execute: {}", dto);
+        sendAnalyseToExecution(dto, analyse);
+
+        log.trace("sendAnalyseToExecution() - map saved analyse without result");
+        DetailedAnalyseDto savedResult = analyseMapper.toExtendedDto(analyse);
+        savedResult.setGeometricAnalyse(null);
+        savedResult.setBloodFlowAnalyse(null);
+        log.trace("sendAnalyseToExecution() - end");
+        return savedResult;
+    }
+
+    private void sendAnalyseToExecution(AnalyseJmsDto dto, AnalyseEntity analyse) {
         try {
             log.info("sendAnalyseToExecution() - analyse execution result status: IN_PROGRESS");
             analyse.setStatus(new AnalyseStatus().setType(AnalyseStatusType.IN_PROGRESS));
@@ -336,12 +343,5 @@ public class AnalyseServiceImpl implements AnalyseService {
                     .setType(AnalyseStatusType.FAILED)
                     .setExtension(e.getMessage()));
         }
-
-        log.trace("sendAnalyseToExecution() - map saved analyse without result");
-        DetailedAnalyseDto savedResult = analyseMapper.toExtendedDto(analyse);
-        savedResult.setGeometricAnalyse(null);
-        savedResult.setBloodFlowAnalyse(null);
-        log.trace("sendAnalyseToExecution() - end");
-        return savedResult;
     }
 }
