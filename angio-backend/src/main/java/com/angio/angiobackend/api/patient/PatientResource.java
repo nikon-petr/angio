@@ -31,7 +31,7 @@ public class PatientResource {
         return patientService.createPatient(dto);
     }
 
-    @ApiOperation("Get patient by policy")
+    @ApiOperation("Get patient by id")
     @GetMapping("/{id}")
     public PatientDto getPatientById(@PathVariable Long id) {
         return patientService.getPatientById(id);

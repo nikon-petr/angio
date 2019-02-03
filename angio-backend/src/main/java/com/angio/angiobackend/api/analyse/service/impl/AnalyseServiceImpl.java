@@ -14,6 +14,7 @@ import com.angio.angiobackend.api.analyse.repository.AnalyseRepository;
 import com.angio.angiobackend.api.analyse.service.AnalyseService;
 import com.angio.angiobackend.api.analyse.specification.AnalyseSpecification;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
+import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.patient.service.PatientService;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
@@ -35,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.String.format;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
@@ -51,6 +51,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     private final PatientService patientService;
     private final UserInfoService userInfoService;
     private final AnalyseToExecuteSender analyseToExecuteSender;
+    private final DynamicLocaleMessageSourceAccessor msa;
 
     /**
      * Create new analyse and save additional info to database. Set analyse status CREATED.
@@ -173,7 +174,8 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.info("getAnalyseById() - analyse to get: id={}", id);
         return analyseMapper.toExtendedDto(analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted()))
-                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id))));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.analyse.notFound", new Object[] {id}))));
     }
 
     /**
@@ -188,11 +190,12 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("deleteAnalyse() - start");
         AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted()))
-                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
         log.info("deleteAnalyse() - set analyse status DELETED for id={}", id);
         analyse.getStatus().setType(AnalyseStatusType.DELETED);
-        analyse.getStatus().setExtension("Анализ удален пользоавтелем вручную");
+        analyse.getStatus().setExtension(msa.getMessage("analyse.status.extension.deletedByUser", new Object[] {id}));
 
         log.trace("deleteAnalyse() - save updated analyse status");
         analyse = analyseRepository.save(analyse);
@@ -214,7 +217,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.info("executeAction() - action to execute {} for analyse id={}", action, id);
         switch (action) {
             case SEND_TO_EXECUTION: return sendAnalyseToExecution(id);
-            default: throw new IllegalArgumentException("Action does not exists");
+            default: throw new IllegalArgumentException(msa.getMessage("errors.api.analyse.actionDoesNotExists", new Object[] {action}));
         }
     }
 
@@ -233,7 +236,8 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("updateAnalyseAdditionalInfo() - search analyse info entity with id:", id);
         AnalyseEntity analyseEntity = analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted()))
-                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
         log.info("updateAnalyseAdditionalInfo() - update conclusion field with: {}", dto);
         additionalInfoMapper.updateEntity(dto, analyseEntity.getAdditionalInfo());
@@ -255,13 +259,14 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("deleteAnalyse() - find analyse: id={}", analyseId);
         AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(analyseId)
                 .and(analyseSpecification.notDeleted()))
-                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", analyseId)));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.analyse.notFound", new Object[] {analyseId})));
 
         log.trace("deleteAnalyse() - delete vessel", analyseId);
         boolean result = analyse.getGeometricAnalyse().getVessels().removeIf(e -> e.getId().equals(vesselId));
 
         if (!result) {
-            throw new ResourceNotFoundException(format("Vessel with id=%s not found", analyseId));
+            throw new ResourceNotFoundException(msa.getMessage("errors.api.vessel.notFound", new Object[] {vesselId}));
         }
 
         analyse = analyseRepository.save(analyse);
@@ -309,11 +314,12 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("sendAnalyseToExecution() - start");
         AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted()))
-                .orElseThrow(() -> new ResourceNotFoundException(format("Analyse with id=%s not found", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
         log.trace("sendAnalyseToExecution() - check analyse status");
         if (analyse.getStatus().getType() != AnalyseStatusType.FAILED) {
-            throw new IllegalArgumentException("Execution of analyse already successfully completed");
+            throw new IllegalArgumentException(msa.getMessage("errors.api.analyse.alreadyExecuted", new Object[] {id}));
         }
 
         AnalyseJmsDto dto = analyseMapper.toAnalyseDto(analyse);

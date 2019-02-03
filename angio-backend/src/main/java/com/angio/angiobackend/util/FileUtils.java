@@ -47,21 +47,12 @@ public class FileUtils {
      * Save file to disk.
      *
      * @param file file multipart data
-     * @param allowedExtensions file extensions allowed to save
      * @param uploadFolder upload folder relative to project base dir
      * @return saved file name
      * @throws IOException throwing when io exception occurred
      */
-    public static String saveFile(@NonNull MultipartFile file, @NonNull String[] allowedExtensions, @NonNull String uploadFolder) throws IOException {
+    public static String saveFile(@NonNull MultipartFile file, @NonNull String uploadFolder) throws IOException {
         log.trace("saveFile() - start");
-
-        if(!FilenameUtils.isExtension(file.getOriginalFilename(), allowedExtensions)) {
-            throw new IllegalArgumentException("The file extension is not allowed");
-        }
-
-        if (file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty");
-        }
 
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String filename = generateHashedNameForFile(extension);

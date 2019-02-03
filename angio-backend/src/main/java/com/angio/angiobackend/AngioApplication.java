@@ -1,6 +1,5 @@
 package com.angio.angiobackend;
 
-import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -8,11 +7,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
-import org.springframework.jms.support.converter.MessageConverter;
-import org.springframework.jms.support.converter.MessageType;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -20,34 +17,17 @@ import java.util.Collections;
 @EnableConfigurationProperties
 public class AngioApplication {
 
+	public static final List<String> SUPPORTED_LOCALES = Arrays.asList("en-US", "ru-RU");
+
 	public static void main(String[] args) {
 		SpringApplication.run(AngioApplication.class, args);
+		log.info("It's alive!!!");
 	}
 
 	@Bean
 	public ModelMapper modelMapper() {
-		log.info("It's alive!!!");
 		return new ModelMapper();
 	}
 
-	@Bean
-	public MessageConverter jacksonJmsMessageConverter() {
-		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-		converter.setTargetType(MessageType.TEXT);
-		converter.setTypeIdPropertyName("_type");
-		converter.setTypeIdMappings(Collections.singletonMap("_type", AnalyseJmsDto.class));
-		return converter;
-	}
 
-//	@Bean
-//	public WebMvcConfigurer corsConfigurer() {
-//		return new WebMvcConfigurerAdapter() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/**")
-//						.allowedOrigins("*")
-//				.allowedMethods();
-//			}
-//		};
-//	}
 }

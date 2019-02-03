@@ -7,13 +7,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.AllowableListValues;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
@@ -26,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.angio.angiobackend.AngioApplication.SUPPORTED_LOCALES;
 import static springfox.documentation.builders.RequestHandlerSelectors.basePackage;
 
 @Configuration
@@ -54,6 +58,7 @@ public class SwaggerConfig {
                 .globalResponseMessage(RequestMethod.POST, getPostResponses())
                 .globalResponseMessage(RequestMethod.PUT, getPutResponses())
                 .globalResponseMessage(RequestMethod.DELETE, getDeleteResponses())
+                .globalOperationParameters(operationParameters())
                 .apiInfo(apiInfo())
                 .securityContexts(securityContexts())
                 .securitySchemes(apiKey());
@@ -66,6 +71,11 @@ public class SwaggerConfig {
                 .select()
                 .apis(basePackage("com.angio.angiobackend.api.patient"))
                 .build()
+                .globalResponseMessage(RequestMethod.GET, getGetResponses())
+                .globalResponseMessage(RequestMethod.POST, getPostResponses())
+                .globalResponseMessage(RequestMethod.PUT, getPutResponses())
+                .globalResponseMessage(RequestMethod.DELETE, getDeleteResponses())
+                .globalOperationParameters(operationParameters())
                 .securityContexts(securityContexts())
                 .securitySchemes(apiKey());
     }
@@ -77,6 +87,11 @@ public class SwaggerConfig {
                 .select()
                 .apis(basePackage("com.angio.angiobackend.api.security"))
                 .build()
+                .globalResponseMessage(RequestMethod.GET, getGetResponses())
+                .globalResponseMessage(RequestMethod.POST, getPostResponses())
+                .globalResponseMessage(RequestMethod.PUT, getPutResponses())
+                .globalResponseMessage(RequestMethod.DELETE, getDeleteResponses())
+                .globalOperationParameters(operationParameters())
                 .securityContexts(securityContexts())
                 .securitySchemes(apiKey());
     }
@@ -88,6 +103,11 @@ public class SwaggerConfig {
                 .select()
                 .apis(basePackage("com.angio.angiobackend.api.uploads"))
                 .build()
+                .globalResponseMessage(RequestMethod.GET, getGetResponses())
+                .globalResponseMessage(RequestMethod.POST, getPostResponses())
+                .globalResponseMessage(RequestMethod.PUT, getPutResponses())
+                .globalResponseMessage(RequestMethod.DELETE, getDeleteResponses())
+                .globalOperationParameters(operationParameters())
                 .securityContexts(securityContexts())
                 .securitySchemes(apiKey());
     }
@@ -142,6 +162,18 @@ public class SwaggerConfig {
         deleteResponses.add(new ResponseMessageBuilder().code(200).message("Successful deleted").build());
         deleteResponses.addAll(getCommonResponses());
         return deleteResponses;
+    }
+
+    private List<Parameter> operationParameters() {
+        List<Parameter> headers = new ArrayList<>();
+        headers.add(new ParameterBuilder().name("Accept-Language")
+                .description("Locale")
+                .modelRef(new ModelRef("string"))
+                .allowableValues(new AllowableListValues(SUPPORTED_LOCALES, "string"))
+                .defaultValue(SUPPORTED_LOCALES.get(0))
+                .parameterType("header")
+                .required(false).build());
+        return headers;
     }
 
     private List<ApiKey> apiKey() {

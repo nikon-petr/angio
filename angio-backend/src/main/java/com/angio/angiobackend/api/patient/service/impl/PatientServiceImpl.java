@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.patient.service.impl;
 
+import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.patient.dto.PatientDto;
 import com.angio.angiobackend.api.patient.entity.PatientEntity;
@@ -10,8 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import static java.lang.String.format;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -20,6 +20,7 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
+    private final DynamicLocaleMessageSourceAccessor msa;
 
     /**
      * Create new patient.
@@ -28,6 +29,7 @@ public class PatientServiceImpl implements PatientService {
      * @return saved patient data
      */
     @Override
+    @Transactional
     public PatientDto createPatient(@NonNull PatientDto dto) {
         log.trace("getPatientByPolicy() - start: patient={}", dto);
         PatientEntity entity = patientMapper.toEntity(dto);
@@ -46,10 +48,12 @@ public class PatientServiceImpl implements PatientService {
      * @return patient data
      */
     @Override
+    @Transactional(readOnly = true)
     public PatientDto getPatientByPolicy(@NonNull String policy) {
         log.trace("getPatientByPolicy() - start: policy={}", policy);
         return patientMapper.toDto(patientRepository.findByPolicy(policy)
-                .orElseThrow(() -> new ResourceNotFoundException(format("Patient with policy=%s not found", policy))));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.patient.policy.notFound", new String[] {policy}))));
     }
 
     /**
@@ -62,7 +66,8 @@ public class PatientServiceImpl implements PatientService {
     public PatientEntity getPatientEntityById(@NonNull Long id) {
         log.trace("getPatientByPolicy() - start: id={}", id);
         return patientRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(format("Patient with id=%s not found", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.patient.notFound", new Object[] {id})));
     }
 
     /**
@@ -72,6 +77,7 @@ public class PatientServiceImpl implements PatientService {
      * @return patient dto
      */
     @Override
+    @Transactional(readOnly = true)
     public PatientDto getPatientById(@NonNull Long id) {
         return patientMapper.toDto(getPatientEntityById(id));
     }
@@ -83,6 +89,7 @@ public class PatientServiceImpl implements PatientService {
      * @return saved patient entity
      */
     @Override
+    @Transactional
     public PatientEntity saveOrUpdatePatient(@NonNull PatientDto patient) {
         log.trace("saveOrUpdatePatient() - start");
         PatientEntity patientEntityFromDB = null;
@@ -121,6 +128,7 @@ public class PatientServiceImpl implements PatientService {
      * @return updated patient data
      */
     @Override
+    @Transactional
     public PatientDto updatePatient(@NonNull PatientDto dto, @NonNull Long id) {
         log.trace("updatePatient() - start: patient={}", dto);
         PatientEntity entity = getPatientEntityById(id);
