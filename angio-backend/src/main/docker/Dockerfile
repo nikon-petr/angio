@@ -6,4 +6,4 @@ WORKDIR /angio-backend
 
 COPY . .
 
-ENTRYPOINT ["mvn", "clean", "spring-boot:run"]
+ENTRYPOINT ["mvn", "clean", "spring-boot:run", "-Dspring-boot.run.profiles=prod"]
