@@ -145,7 +145,8 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("filterAnalysesByQueryString() - build analyse info specification");
         Specification<AnalyseEntity> specs = analyseSpecification.getAnalyseInfoFilter(queryString)
                 .and(analyseSpecification.analyseDate(date))
-                .and(analyseSpecification.notDeleted());
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll());
 
         log.trace("filterAnalysesByQueryString() - map sorting fields");
         Pageable mappedPageRequest = mapSortingFields(pageable);
@@ -169,7 +170,8 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("getAnalyseById() - start");
         log.info("getAnalyseById() - analyse to get: id={}", id);
         return analyseMapper.toExtendedDto(analyseRepository.findOne(analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted()))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id}))));
     }
@@ -185,7 +187,8 @@ public class AnalyseServiceImpl implements AnalyseService {
     public DetailedAnalyseDto deleteAnalyse(@NonNull Long id) {
         log.trace("deleteAnalyse() - start");
         AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted()))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
@@ -231,7 +234,8 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.trace("updateAnalyseAdditionalInfo() - search analyse info entity with id:", id);
         AnalyseEntity analyseEntity = analyseRepository.findOne(analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted()))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
@@ -254,7 +258,8 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.trace("deleteAnalyse() - find analyse: id={}", analyseId);
         AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(analyseId)
-                .and(analyseSpecification.notDeleted()))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {analyseId})));
 
@@ -309,7 +314,8 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.trace("sendAnalyseToExecution() - start");
         AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted()))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 

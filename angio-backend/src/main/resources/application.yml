@@ -8,7 +8,10 @@ spring:
     jpa:
         hibernate:
             ddl-auto: validate
+            format-sql: true
         open-in-view: false
+        show-sql: true
+
 
     servlet:
         multipart:
