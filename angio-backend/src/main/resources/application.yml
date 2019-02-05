@@ -79,3 +79,7 @@ angio:
         jms:
             analyse-to-execute-queue: queue.analyse.toExecute
             analyse-results-queue: queue.analyse.results
+
+        scheduling:
+            # every day at 3:00
+            purge-analyses-period: 0 0 3 * * *

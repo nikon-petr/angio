@@ -15,6 +15,7 @@ public class AngioBackendProperties {
     private String[] documentUploadExtensions;
     public Jwt jwt;
     public Jms jms;
+    public Scheduling scheduling;
 
     @Data
     public static class Jwt {
@@ -28,5 +29,10 @@ public class AngioBackendProperties {
     public static class Jms {
         private String analyseToExecuteQueue;
         private String analyseResultsQueue;
+    }
+
+    @Data
+    public static class Scheduling {
+        private String purgeAnalysesPeriod;
     }
 }

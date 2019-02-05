@@ -70,6 +70,7 @@ databaseChangeLog:
           baseColumnNames: analyse_id
           referencedTableName: analyses_info
           referencedColumnNames: id
+          onDelete: CASCADE
 
     # move ischemias to analyse_info
     - renameColumn:
@@ -85,6 +86,7 @@ databaseChangeLog:
           baseColumnNames: analyse_id
           referencedTableName: analyses_info
           referencedColumnNames: id
+          onDelete: CASCADE
 
     # move geometric images to analyse_info
     - addColumn:
@@ -126,6 +128,7 @@ databaseChangeLog:
           baseColumnNames: analyse_id
           referencedTableName: analyses_info
           referencedColumnNames: id
+          onDelete: CASCADE
 
     - dropTable:
           cascadeConstraints: true

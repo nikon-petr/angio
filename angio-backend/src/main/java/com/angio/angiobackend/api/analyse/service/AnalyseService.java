@@ -37,4 +37,7 @@ public interface AnalyseService {
 
     @Transactional
     DetailedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId);
+
+    @Transactional
+    void purgeAnalyses();
 }

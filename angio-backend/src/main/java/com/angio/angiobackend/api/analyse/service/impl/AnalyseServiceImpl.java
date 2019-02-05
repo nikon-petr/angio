@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -274,6 +275,16 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.trace("deleteAnalyse() - end");
         return analyseMapper.toExtendedDto(analyse);
+    }
+
+    @Override
+    @Transactional
+    public void purgeAnalyses() {
+        log.trace("purgeAnalyses() - start");
+        List<AnalyseEntity> inStatusDeleted = analyseRepository.findAll(analyseSpecification.inStatus(AnalyseStatusType.DELETED));
+        log.trace("purgeAnalyses() - ids to delete: {}", inStatusDeleted.stream().mapToLong(AnalyseEntity::getId).toArray());
+        analyseRepository.deleteInBatch(inStatusDeleted);
+        log.trace("purgeAnalyses() - end");
     }
 
     private Pageable mapSortingFields(Pageable pageable) {
