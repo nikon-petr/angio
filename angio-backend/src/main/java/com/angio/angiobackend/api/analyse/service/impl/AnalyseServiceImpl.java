@@ -121,11 +121,9 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.trace("saveExecutedAnalyse() - save analyse info entity");
         entity = analyseRepository.save(entity);
+        log.info("saveExecutedAnalyse() - saved analyse execution result {}", entity.getId());
 
         log.trace("saveExecutedAnalyse() - map saved analyse info entity to dto");
-        DetailedAnalyseDto savedDto = analyseMapper.toExtendedDto(entity);
-
-        log.info("saveExecutedAnalyse() - received analyse saving result: {}", savedDto);
         log.trace("saveExecutedAnalyse() - end");
     }
 
