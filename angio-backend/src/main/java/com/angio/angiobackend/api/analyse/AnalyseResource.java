@@ -31,7 +31,7 @@ import java.util.Date;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Api(description = "Angio analyse resources")
+@Api(tags = "Analyse", description = "Angio analyse REST API")
 @RequestMapping(path = "/api/v2/analyse")
 public class AnalyseResource {
 

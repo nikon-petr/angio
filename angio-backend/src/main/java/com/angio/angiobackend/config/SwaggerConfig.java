@@ -59,14 +59,8 @@ public class SwaggerConfig {
     @Bean
     public Docket analyseApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("analyse")
                 .select()
                 .apis(basePackage("com.angio.angiobackend.api"))
-                .paths(not(ant("/admin/**")))
-                .paths(not(ant("/admin.json")))
-                .paths(not(ant("/error/**")))
-                .paths(not(ant("/exception/**")))
-                .paths(not(ant("/ping/**")))
                 .build()
                 .globalResponseMessage(RequestMethod.GET, getGetResponses())
                 .globalResponseMessage(RequestMethod.POST, getPostResponses())

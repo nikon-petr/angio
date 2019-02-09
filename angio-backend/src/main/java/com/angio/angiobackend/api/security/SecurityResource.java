@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(description = "Angio security resource ")
+@Api(tags = "Security", description = "Angio security REST API")
 @AllArgsConstructor
 @RestController
 public class SecurityResource {

@@ -18,7 +18,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Api(description = "Upload controller")
+@Api(tags = "Uploads", description = "Angio uploads REST API")
 @RequestMapping(path = "/api/v2/upload")
 public class UploadResource {
 

@@ -65,7 +65,7 @@ logging:
     level:
         root: WARN
         com.angio.angiobackend: INFO
-        org.springframework.web: DEBUG
+        org.springframework.web: INFO
         org.springframework.security: INFO
 
 angio:

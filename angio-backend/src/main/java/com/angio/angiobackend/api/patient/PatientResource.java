@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Api(description = "Patient resources")
+@Api(tags = "Patient", description = "Patient REST API")
 @RequestMapping(path = "/api/v2/patient")
 public class PatientResource {
 
