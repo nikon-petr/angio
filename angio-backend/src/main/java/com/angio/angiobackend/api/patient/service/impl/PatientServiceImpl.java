@@ -10,6 +10,7 @@ import com.angio.angiobackend.api.patient.service.PatientService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('PATIENT_CREATE')")
     public PatientDto createPatient(@NonNull PatientDto dto) {
         log.trace("getPatientByPolicy() - start: patient={}", dto);
         PatientEntity entity = patientMapper.toEntity(dto);
@@ -49,6 +51,7 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('PATIENT_VIEW')")
     public PatientDto getPatientByPolicy(@NonNull String policy) {
         log.trace("getPatientByPolicy() - start: policy={}", policy);
         return patientMapper.toDto(patientRepository.findByPolicy(policy)
@@ -63,6 +66,8 @@ public class PatientServiceImpl implements PatientService {
      * @return patient entity
      */
     @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('PATIENT_VIEW')")
     public PatientEntity getPatientEntityById(@NonNull Long id) {
         log.trace("getPatientByPolicy() - start: id={}", id);
         return patientRepository.findById(id)
@@ -78,6 +83,7 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('PATIENT_VIEW')")
     public PatientDto getPatientById(@NonNull Long id) {
         return patientMapper.toDto(getPatientEntityById(id));
     }
@@ -90,6 +96,7 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('PATIENT_EDIT')")
     public PatientEntity saveOrUpdatePatient(@NonNull PatientDto patient) {
         log.trace("saveOrUpdatePatient() - start");
         PatientEntity patientEntityFromDB = null;
@@ -129,6 +136,7 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('PATIENT_EDIT')")
     public PatientDto updatePatient(@NonNull PatientDto dto, @NonNull Long id) {
         log.trace("updatePatient() - start: patient={}", dto);
         PatientEntity entity = getPatientEntityById(id);

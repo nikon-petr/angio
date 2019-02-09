@@ -7,16 +7,23 @@ databaseChangeLog:
     file: ./changelogs/002_generate_schema.yml
 - include:
     relativeToChangelogFile: true
-    file: ./changelogs/003_insert_users_data.yml
+    file: ./changelogs/003_add_patronymic_to_user_info.yml
 - include:
     relativeToChangelogFile: true
-    file: ./changelogs/004_add_patronymic_to_user_info.yml
+    file: ./changelogs/004_add_uploads_table.yml
 - include:
     relativeToChangelogFile: true
-    file: ./changelogs/005_add_uploads_table.yml
+    file: ./changelogs/005_add_upload_ref_to_analyse_tables.yml
 - include:
     relativeToChangelogFile: true
-    file: ./changelogs/006_add_upload_ref_to_analyse_tables.yml
+    file: ./changelogs/006_refactor_analyse_table.yml
 - include:
     relativeToChangelogFile: true
-    file: ./changelogs/007_refactor_analyse_table.yml
+    file: ./changelogs/007_refactor_security.yml
+
+
+# always in the end of file
+- includeAll:
+    relativeToChangelogFile: true
+    path: ./changelogs/run-on-change
+

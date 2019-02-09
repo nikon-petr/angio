@@ -60,6 +60,14 @@ spring:
     autoconfigure:
         exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 
+
+logging:
+    level:
+        root: WARN
+        com.angio.angiobackend: INFO
+        org.springframework.web: DEBUG
+        org.springframework.security: INFO
+
 angio:
     app:
         upload-directory: src/main/resources/static/uploads/
@@ -69,12 +77,6 @@ angio:
             - png
         document-upload-extensions:
             - pdf
-
-        jwt:
-            header: Authorization
-            token-type: Bearer
-            secret: \\xd7H\\xb2\\xa6\\xf0y\\xb9\\xdd\\x1c\\xd6q\\xd6\\xd0\\x1ck\\xe0}\\x02\\x85\\x04\\xe7\\xd4\\xed=
-            expiration: 2592000
 
         jms:
             analyse-to-execute-queue: queue.analyse.toExecute

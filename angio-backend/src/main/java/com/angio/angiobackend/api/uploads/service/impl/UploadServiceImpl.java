@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,7 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('IMAGE_UPLOAD')")
     public StaticFileDto uploadImage(@NonNull MultipartFile file) throws IOException {
 
         log.info("uploadImage() - start");
@@ -52,6 +54,7 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('DOCUMENT_UPLOAD')")
     public StaticFileDto uploadDocument(@NonNull MultipartFile file) throws IOException {
 
         log.info("uploadDocument() - start");

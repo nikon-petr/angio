@@ -1,7 +1,0 @@
-username,authority
-super.admin@angio.ru,ROLE_USER
-super.admin@angio.ru,ROLE_ADMIN
-super.admin@angio.ru,ROLE_SUPER_ADMIN
-admin@angio.ru,ROLE_USER
-admin@angio.ru,ROLE_ADMIN
-user@angio.ru,ROLE_USER

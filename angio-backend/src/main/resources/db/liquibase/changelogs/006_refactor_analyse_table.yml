@@ -1,0 +1,145 @@
+databaseChangeLog:
+- changeSet:
+    id: 006_1
+    author: nikon-petr
+    changes:
+
+    # move bloodflow images to analyse_info
+    - addColumn:
+          tableName: analyses_info
+          columns:
+          - column:
+                name: ischemia_image_id
+                type: BIGINT
+    - addForeignKeyConstraint:
+            constraintName: fk_analyses_uploads_ischemia_image_id
+            baseTableName: analyses_info
+            baseColumnNames: ischemia_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+    - addColumn:
+          tableName: analyses_info
+          columns:
+          - column:
+                name: density_image_id
+                type: BIGINT
+    - addForeignKeyConstraint:
+            constraintName: fk_analyses_uploads_density_image_id
+            baseTableName: analyses_info
+            baseColumnNames: density_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+
+    # move macula attributes to analyse_info
+    - addColumn:
+          tableName: analyses_info
+          columns:
+          - column:
+                name: macula_area
+                type: DOUBLE
+    - addColumn:
+          tableName: analyses_info
+          columns:
+          - column:
+                name: macula_radius
+                type: DOUBLE
+    - addColumn:
+          tableName: analyses_info
+          columns:
+          - column:
+                name: macula_center_x
+                type: DOUBLE
+    - addColumn:
+          tableName: analyses_info
+          columns:
+          - column:
+                name: macula_center_y
+                type: DOUBLE
+
+    # move densities to analyse_info
+    - renameColumn:
+          tableName: densities
+          oldColumnName: analyse_bloodflow_id
+          newColumnName: analyse_id
+    - dropForeignKeyConstraint:
+          baseTableName: densities
+          constraintName: fk_densities_analyses_bloodflow
+    - addForeignKeyConstraint:
+          constraintName: fk_densities_analyses
+          baseTableName: densities
+          baseColumnNames: analyse_id
+          referencedTableName: analyses_info
+          referencedColumnNames: id
+          onDelete: CASCADE
+
+    # move ischemias to analyse_info
+    - renameColumn:
+          tableName: ischemias
+          oldColumnName: analyse_bloodflow_id
+          newColumnName: analyse_id
+    - dropForeignKeyConstraint:
+          baseTableName: ischemias
+          constraintName: fk_ishemia_centers_analyses_bloodflow
+    - addForeignKeyConstraint:
+          constraintName: fk_ischemias_analyses
+          baseTableName: ischemias
+          baseColumnNames: analyse_id
+          referencedTableName: analyses_info
+          referencedColumnNames: id
+          onDelete: CASCADE
+
+    # move geometric images to analyse_info
+    - addColumn:
+          tableName: analyses_info
+          columns:
+          - column:
+                name: binarized_image_id
+                type: BIGINT
+    - addForeignKeyConstraint:
+            constraintName: fk_analyses_uploads_binarized_image_id
+            baseTableName: analyses_info
+            baseColumnNames: binarized_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+    - addColumn:
+          tableName: analyses_info
+          columns:
+          - column:
+                name: skeletonized_image_id
+                type: BIGINT
+    - addForeignKeyConstraint:
+            constraintName: fk_analyses_uploads_skeletonized_image_id
+            baseTableName: analyses_info
+            baseColumnNames: skeletonized_image_id
+            referencedTableName: uploads
+            referencedColumnNames: id
+
+    # move vessels to analyse_info
+    - renameColumn:
+          tableName: vessels
+          oldColumnName: analyse_geometric_id
+          newColumnName: analyse_id
+    - dropForeignKeyConstraint:
+          baseTableName: vessels
+          constraintName: fk_vessels_analyses_geometric
+    - addForeignKeyConstraint:
+          constraintName: fk_vessels_analyses
+          baseTableName: ischemias
+          baseColumnNames: analyse_id
+          referencedTableName: analyses_info
+          referencedColumnNames: id
+          onDelete: CASCADE
+
+    - dropTable:
+          cascadeConstraints: true
+          tableName: analyses_bloodflow
+    - dropTable:
+          cascadeConstraints: true
+          tableName: analyses_geometric
+    - dropTable:
+          cascadeConstraints: true
+          tableName: makulas
+
+    - renameTable:
+          oldTableName: analyses_info
+          newTableName: analyses

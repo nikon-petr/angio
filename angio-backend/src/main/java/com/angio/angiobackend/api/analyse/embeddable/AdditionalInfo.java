@@ -2,7 +2,7 @@ package com.angio.angiobackend.api.analyse.embeddable;
 
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
 import com.angio.angiobackend.api.patient.entity.PatientEntity;
-import com.angio.angiobackend.api.security.entities.UserEntity;
+import com.angio.angiobackend.api.security.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,8 +26,8 @@ import javax.persistence.ManyToOne;
 public class AdditionalInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "username", nullable = false)
-    private UserEntity diagnostician;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User diagnostician;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)

@@ -1,8 +1,8 @@
 package com.angio.angiobackend.api.user.entities;
 
 import com.angio.angiobackend.api.common.embeddable.FullName;
-import com.angio.angiobackend.api.security.entities.UserEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.angio.angiobackend.api.security.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,10 +16,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users_info", schema = "public")
 public class UserInfoEntity {
@@ -29,20 +29,10 @@ public class UserInfoEntity {
     @Column(name = "info_id", nullable = false)
     private long infoId;
 
-    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "username", nullable = false)
-    private UserEntity user;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Embedded
     private FullName fullName;
-
-    @Column(name = "modified_date", nullable = false)
-    private Date modifiedDate;
-
-    public UserInfoEntity(UserEntity user, FullName fullName, Date modifiedDate) {
-        this.user = user;
-        this.fullName = fullName;
-        this.modifiedDate = modifiedDate;
-    }
 }

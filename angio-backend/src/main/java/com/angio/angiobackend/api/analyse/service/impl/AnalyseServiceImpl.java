@@ -17,9 +17,8 @@ import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.patient.service.PatientService;
-import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
+import com.angio.angiobackend.api.security.service.impl.UserDetailsServiceImpl;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
-import com.angio.angiobackend.api.user.services.UserInfoService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +36,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -52,7 +50,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     private final AnalyseRepository analyseRepository;
     private final UploadRepository uploadRepository;
     private final PatientService patientService;
-    private final UserInfoService userInfoService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final AnalyseToExecuteSender analyseToExecuteSender;
     private final DynamicLocaleMessageSourceAccessor msa;
 
@@ -64,6 +62,7 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ANALYSE_CREATE')")
     public DetailedAnalyseDto createAnalyse(@NonNull DetailedAnalyseDto dto) {
         log.trace("createAnalyse() - start - analyse to create: {}", dto);
 
@@ -79,7 +78,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         entity.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getAdditionalInfo().getPatientId()));
 
         log.trace("createAnalyse() - save diagnostician data");
-        entity.getAdditionalInfo().setDiagnostician(userInfoService.getUserFromContext());
+        entity.getAdditionalInfo().setDiagnostician(userDetailsServiceImpl.getUserFromContext());
 
         log.trace("createAnalyse() - set analyse date");
         entity.setAnalyseDate(new Date());
@@ -137,6 +136,7 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
     public Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Pageable pageable) {
 
         log.trace("filterAnalysesByQueryString() - start");
@@ -165,6 +165,7 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
     public DetailedAnalyseDto getAnalyseById(@NonNull Long id) {
         log.trace("getAnalyseById() - start");
         log.info("getAnalyseById() - analyse to get: id={}", id);
@@ -183,6 +184,7 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ANALYSE_REMOVE')")
     public DetailedAnalyseDto deleteAnalyse(@NonNull Long id) {
         log.trace("deleteAnalyse() - start");
         AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
@@ -211,6 +213,7 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ANALYSE_EXECUTE_ACTION')")
     public DetailedAnalyseDto executeAction(@NonNull Long id, @NonNull AnalyseActions action) {
         log.info("executeAction() - action to execute {} for analyse id={}", action, id);
         switch (action) {
@@ -228,6 +231,7 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ANALYSE_EDIT')")
     public DetailedAnalyseDto updateAnalyseAdditionalInfo(@NonNull Long id, @NonNull AdditionalInfoDto dto) {
         log.trace("updateAnalyseAdditionalInfo() - start");
 
@@ -252,6 +256,7 @@ public class AnalyseServiceImpl implements AnalyseService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ANALYSE_EDIT')")
     public DetailedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId) {
         log.trace("deleteAnalyse() - start");
 

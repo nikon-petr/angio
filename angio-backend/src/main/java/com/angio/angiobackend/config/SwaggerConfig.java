@@ -9,27 +9,36 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.AllowableListValues;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.GrantType;
+import springfox.documentation.service.OAuth;
 import springfox.documentation.service.Parameter;
+import springfox.documentation.service.ResourceOwnerPasswordCredentialsGrant;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.ApiKeyVehicle;
+import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static com.angio.angiobackend.AngioApplication.SUPPORTED_LOCALES;
+import static com.angio.angiobackend.config.AuthorizationServerConfig.CLIENT_ID;
+import static com.angio.angiobackend.config.AuthorizationServerConfig.CLIENT_SECRET;
+import static com.angio.angiobackend.config.AuthorizationServerConfig.SCOPE_TRUST;
+import static com.google.common.base.Predicates.not;
+import static springfox.documentation.builders.PathSelectors.ant;
 import static springfox.documentation.builders.RequestHandlerSelectors.basePackage;
 
 @Configuration
@@ -52,7 +61,12 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("analyse")
                 .select()
-                .apis(basePackage("com.angio.angiobackend.api.analyse"))
+                .apis(basePackage("com.angio.angiobackend.api"))
+                .paths(not(ant("/admin/**")))
+                .paths(not(ant("/admin.json")))
+                .paths(not(ant("/error/**")))
+                .paths(not(ant("/exception/**")))
+                .paths(not(ant("/ping/**")))
                 .build()
                 .globalResponseMessage(RequestMethod.GET, getGetResponses())
                 .globalResponseMessage(RequestMethod.POST, getPostResponses())
@@ -60,56 +74,7 @@ public class SwaggerConfig {
                 .globalResponseMessage(RequestMethod.DELETE, getDeleteResponses())
                 .globalOperationParameters(operationParameters())
                 .apiInfo(apiInfo())
-                .securityContexts(securityContexts())
-                .securitySchemes(apiKey());
-    }
-
-    @Bean
-    public Docket patientApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("patient")
-                .select()
-                .apis(basePackage("com.angio.angiobackend.api.patient"))
-                .build()
-                .globalResponseMessage(RequestMethod.GET, getGetResponses())
-                .globalResponseMessage(RequestMethod.POST, getPostResponses())
-                .globalResponseMessage(RequestMethod.PUT, getPutResponses())
-                .globalResponseMessage(RequestMethod.DELETE, getDeleteResponses())
-                .globalOperationParameters(operationParameters())
-                .securityContexts(securityContexts())
-                .securitySchemes(apiKey());
-    }
-
-    @Bean
-    public Docket securityApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("security")
-                .select()
-                .apis(basePackage("com.angio.angiobackend.api.security"))
-                .build()
-                .globalResponseMessage(RequestMethod.GET, getGetResponses())
-                .globalResponseMessage(RequestMethod.POST, getPostResponses())
-                .globalResponseMessage(RequestMethod.PUT, getPutResponses())
-                .globalResponseMessage(RequestMethod.DELETE, getDeleteResponses())
-                .globalOperationParameters(operationParameters())
-                .securityContexts(securityContexts())
-                .securitySchemes(apiKey());
-    }
-
-    @Bean
-    public Docket uploadsApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("uploads")
-                .select()
-                .apis(basePackage("com.angio.angiobackend.api.uploads"))
-                .build()
-                .globalResponseMessage(RequestMethod.GET, getGetResponses())
-                .globalResponseMessage(RequestMethod.POST, getPostResponses())
-                .globalResponseMessage(RequestMethod.PUT, getPutResponses())
-                .globalResponseMessage(RequestMethod.DELETE, getDeleteResponses())
-                .globalOperationParameters(operationParameters())
-                .securityContexts(securityContexts())
-                .securitySchemes(apiKey());
+                .securitySchemes(Arrays.asList(userOAuthScheme())).securityContexts(Arrays.asList(securityContext()));
     }
 
     private ApiInfo apiInfo() {
@@ -176,22 +141,26 @@ public class SwaggerConfig {
         return headers;
     }
 
-    private List<ApiKey> apiKey() {
-        return Collections.singletonList(new ApiKey("JWT", props.getJwt().getHeader(), "header"));
+    private OAuth userOAuthScheme() {
+        List<AuthorizationScope> authorizationScopeList = new ArrayList<>();
+        GrantType grantType = new ResourceOwnerPasswordCredentialsGrant("http://localhost:8080/oauth/token");
+        return new OAuth("oauth2", authorizationScopeList, Arrays.asList(grantType));
     }
 
-    private List<SecurityContext> securityContexts() {
-        return Collections.singletonList(SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("/api/.*"))
-                .build());
+    private SecurityContext securityContext() {
+        return SecurityContext.builder().securityReferences(defaultAuth()).forPaths(PathSelectors.any()).build();
+    }
+
+    @Bean
+    public SecurityConfiguration securityInfo() {
+        return new SecurityConfiguration(CLIENT_ID, CLIENT_SECRET, "", "Angio", "", ApiKeyVehicle.HEADER, "Bearer",
+                " ");
     }
 
     private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope
-                = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Collections.singletonList(new SecurityReference("JWT", authorizationScopes));
+        final AuthorizationScope[] authorizationScopes =  {
+                new AuthorizationScope(SCOPE_TRUST, "Trust client")
+        };
+        return Arrays.asList(new SecurityReference("oauth2", authorizationScopes));
     }
 }

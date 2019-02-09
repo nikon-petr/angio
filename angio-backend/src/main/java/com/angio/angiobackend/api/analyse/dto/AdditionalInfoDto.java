@@ -1,8 +1,6 @@
 package com.angio.angiobackend.api.analyse.dto;
 
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
-import com.angio.angiobackend.api.patient.dto.PatientDto;
-import com.angio.angiobackend.api.security.entities.UserEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
