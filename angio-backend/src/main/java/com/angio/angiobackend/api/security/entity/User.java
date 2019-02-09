@@ -31,7 +31,7 @@ import java.util.Set;
 @Data
 @Accessors(chain = true)
 @ToString(exclude = {"roles", "tokens", "analyses", "userInfo"})
-@EqualsAndHashCode(exclude = {"roles", "tokens", "analyses", "userInfo"})
+@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "userInfo"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

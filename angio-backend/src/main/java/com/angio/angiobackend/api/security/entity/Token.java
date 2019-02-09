@@ -21,8 +21,8 @@ import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-@ToString(exclude = "user")
-@EqualsAndHashCode(exclude = "user")
+@ToString(exclude = {"user"})
+@EqualsAndHashCode(exclude = {"id", "user"})
 @AllArgsConstructor
 @NoArgsConstructor
 @NamedEntityGraph(

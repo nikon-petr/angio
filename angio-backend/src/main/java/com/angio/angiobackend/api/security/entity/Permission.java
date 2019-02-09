@@ -1,7 +1,9 @@
 package com.angio.angiobackend.api.security.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
@@ -16,6 +18,8 @@ import java.util.Collection;
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
+@ToString(exclude = {"roles"})
+@EqualsAndHashCode(exclude = {"id", "roles"})
 @Entity
 @Table(name = "permissions")
 public class Permission {
