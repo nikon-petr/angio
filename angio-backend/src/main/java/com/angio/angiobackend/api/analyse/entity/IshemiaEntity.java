@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,6 +24,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @ToString(exclude = {"analyse"})
 @EqualsAndHashCode(exclude = {"id", "analyse"})
+@Cacheable
 @Entity
 @Table(name = "ischemias", schema = "public")
 public class IshemiaEntity {

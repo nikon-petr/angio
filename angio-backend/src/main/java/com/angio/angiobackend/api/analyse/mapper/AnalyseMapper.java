@@ -6,7 +6,7 @@ import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
 import com.angio.angiobackend.api.patient.mapper.PatientMapper;
 import com.angio.angiobackend.api.uploads.mapper.UploadMapper;
-import com.angio.angiobackend.api.user.mapstruct.UserInfoMapper;
+import com.angio.angiobackend.api.user.mapper.UserMapper;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,7 +20,7 @@ import org.mapstruct.ReportingPolicy;
         uses = {
                 PatientMapper.class,
                 UploadMapper.class,
-                UserInfoMapper.class,
+                UserMapper.class,
                 AnalyseStatusMapper.class,
                 AdditionalInfoMapper.class,
                 GeometricAnalyseMapper.class,
@@ -46,6 +46,6 @@ public interface AnalyseMapper {
 
     AnalyseJmsDto toAnalyseDto(AnalyseEntity entity);
 
-    @Mapping(source = "additionalInfo.diagnostician.userInfo.fullName", target = "diagnostician")
+    @Mapping(source = "additionalInfo.diagnostician.fullName", target = "diagnostician")
     AnalyseShortItemDto toShortItemDto(AnalyseEntity entity);
 }

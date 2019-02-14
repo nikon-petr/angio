@@ -4,7 +4,7 @@ import com.angio.angiobackend.api.security.AngioTokenEnhancer;
 import com.angio.angiobackend.api.security.JwtJdbcTokenStore;
 import com.angio.angiobackend.api.security.RefreshTokenFilter;
 import com.angio.angiobackend.api.security.repository.TokenRepository;
-import com.angio.angiobackend.api.security.service.UserService;
+import com.angio.angiobackend.api.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -34,7 +34,7 @@ public class RefreshTokenFilter implements Filter {
 
         if (refreshToken != null && !tokenStore.inWhiteList(refreshToken)) {
             log.debug("doFilter() - token: {} is not in white list", refreshToken);
-            throw new UnauthorizedUserException("Unauthorized");
+            throw new UnauthorizedUserException("Refreshing rejected");
         }
 
         log.debug("doFilter() - end");

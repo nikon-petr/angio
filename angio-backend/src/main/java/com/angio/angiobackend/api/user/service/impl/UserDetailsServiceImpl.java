@@ -1,13 +1,12 @@
-package com.angio.angiobackend.api.security.service.impl;
+package com.angio.angiobackend.api.user.service.impl;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.security.entity.Permission;
 import com.angio.angiobackend.api.security.entity.Role;
-import com.angio.angiobackend.api.security.entity.User;
-import com.angio.angiobackend.api.security.repository.UserRepository;
-import com.angio.angiobackend.api.security.service.UserService;
+import com.angio.angiobackend.api.user.entities.User;
+import com.angio.angiobackend.api.user.repositories.UserRepository;
+import com.angio.angiobackend.api.user.service.UserService;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,13 +25,20 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService, UserService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final DynamicLocaleMessageSourceAccessor msa;
 
+    /**
+     * Load user from database by username.
+     *
+     * @param email user email
+     * @return user details for spring security
+     * @throws UsernameNotFoundException throws when user id not found
+     */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
@@ -45,14 +51,6 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(), user.isEnabled(), true, true,
                 true, getAuthorities(user.getRoles()));
-    }
-
-    @Override
-    @Transactional
-    public User findUserEntityByEmail(@NonNull String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        msa.getMessage("errors.api.user.userNotFound", new Object[] {email})));
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
@@ -81,14 +79,5 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
             authorities.add(new SimpleGrantedAuthority(privilege));
         }
         return authorities;
-    }
-
-    @Transactional
-    public User getUserFromContext() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.debug("getUserFromContext() - start username: {}", email);
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UnauthorizedUserException(
-                        msa.getMessage("errors.api.user.userNotFound", new Object[] {email})));
     }
 }

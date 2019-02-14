@@ -17,7 +17,7 @@ import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.patient.service.PatientService;
-import com.angio.angiobackend.api.security.service.impl.UserDetailsServiceImpl;
+import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     private final AnalyseRepository analyseRepository;
     private final UploadRepository uploadRepository;
     private final PatientService patientService;
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserService userService;
     private final AnalyseToExecuteSender analyseToExecuteSender;
     private final DynamicLocaleMessageSourceAccessor msa;
 
@@ -78,7 +78,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         entity.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getAdditionalInfo().getPatientId()));
 
         log.trace("createAnalyse() - save diagnostician data");
-        entity.getAdditionalInfo().setDiagnostician(userDetailsServiceImpl.getUserFromContext());
+        entity.getAdditionalInfo().setDiagnostician(userService.getUserFromContext());
 
         log.trace("createAnalyse() - set analyse date");
         entity.setAnalyseDate(new Date());

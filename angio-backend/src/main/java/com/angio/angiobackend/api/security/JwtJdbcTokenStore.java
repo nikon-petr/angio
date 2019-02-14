@@ -1,9 +1,9 @@
 package com.angio.angiobackend.api.security;
 
 import com.angio.angiobackend.api.security.entity.Token;
-import com.angio.angiobackend.api.security.entity.User;
+import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.security.repository.TokenRepository;
-import com.angio.angiobackend.api.security.service.UserService;
+import com.angio.angiobackend.api.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;

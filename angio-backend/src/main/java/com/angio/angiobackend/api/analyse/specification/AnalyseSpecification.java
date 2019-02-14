@@ -14,8 +14,7 @@ import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
 import com.angio.angiobackend.api.common.embeddable.FullName_;
 import com.angio.angiobackend.api.patient.entity.PatientEntity_;
-import com.angio.angiobackend.api.security.entity.User_;
-import com.angio.angiobackend.api.user.entities.UserInfoEntity_;
+import com.angio.angiobackend.api.user.entities.User_;
 import com.angio.angiobackend.util.EnumUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -124,8 +123,7 @@ public class AnalyseSpecification {
             if (firstname != null) {
                 return cb.like(root.get(AnalyseEntity_.additionalInfo)
                         .get(AdditionalInfo_.diagnostician)
-                        .get(User_.userInfo)
-                        .get(UserInfoEntity_.fullName)
+                        .get(User_.fullName)
                         .get(FullName_.firstname), substringPattern(firstname));
             }
             return null;
@@ -143,8 +141,7 @@ public class AnalyseSpecification {
             if (lastname != null) {
                 return cb.like(root.get(AnalyseEntity_.additionalInfo)
                         .get(AdditionalInfo_.diagnostician)
-                        .get(User_.userInfo)
-                        .get(UserInfoEntity_.fullName)
+                        .get(User_.fullName)
                         .get(FullName_.lastname), substringPattern(lastname));
             }
             return null;
@@ -162,8 +159,7 @@ public class AnalyseSpecification {
             if (patronymic != null) {
                 return cb.like(root.get(AnalyseEntity_.additionalInfo)
                         .get(AdditionalInfo_.diagnostician)
-                        .get(User_.userInfo)
-                        .get(UserInfoEntity_.fullName)
+                        .get(User_.fullName)
                         .get(FullName_.patronymic), substringPattern(patronymic));
             }
             return null;
@@ -294,20 +290,6 @@ public class AnalyseSpecification {
     }
 
     /**
-     * Fetch additional info.
-     *
-     * @return specification
-     */
-    public Specification<AnalyseEntity> fetchAdditionalInfo() {
-        return (root, query, cb) -> {
-            Fetch<AnalyseEntity, AdditionalInfo> entityFetch = root.fetch(AnalyseEntity_.additionalInfo, LEFT);
-            entityFetch.fetch(AdditionalInfo_.patient, LEFT);
-            entityFetch.fetch(AdditionalInfo_.diagnostician, LEFT).fetch(User_.userInfo, LEFT);
-            return cb.conjunction();
-        };
-    }
-
-    /**
      * Fetch blood flow analyse.
      *
      * @return specification
@@ -346,7 +328,6 @@ public class AnalyseSpecification {
      */
     public Specification<AnalyseEntity> fetchAll() {
         return fetchOriginalImage()
-                .and(fetchAdditionalInfo())
                 .and(fetchGeometricAnalyse())
                 .and(fetchBloodFlowAnalyse());
     }

@@ -2,10 +2,10 @@ package com.angio.angiobackend.config.init;
 
 import com.angio.angiobackend.api.security.entity.Permission;
 import com.angio.angiobackend.api.security.entity.Role;
-import com.angio.angiobackend.api.security.entity.User;
+import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.security.repository.PermissionRepository;
 import com.angio.angiobackend.api.security.repository.RoleRepository;
-import com.angio.angiobackend.api.security.repository.UserRepository;
+import com.angio.angiobackend.api.user.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

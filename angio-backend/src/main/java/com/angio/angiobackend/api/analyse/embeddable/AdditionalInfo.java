@@ -2,7 +2,7 @@ package com.angio.angiobackend.api.analyse.embeddable;
 
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
 import com.angio.angiobackend.api.patient.entity.PatientEntity;
-import com.angio.angiobackend.api.security.entity.User;
+import com.angio.angiobackend.api.user.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

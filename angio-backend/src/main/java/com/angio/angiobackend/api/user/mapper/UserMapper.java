@@ -1,8 +1,8 @@
-package com.angio.angiobackend.api.user.mapstruct;
+package com.angio.angiobackend.api.user.mapper;
 
 import com.angio.angiobackend.api.analyse.dto.DiagnosticianDto;
 import com.angio.angiobackend.api.common.mapper.FullNameMapper;
-import com.angio.angiobackend.api.security.entity.User;
+import com.angio.angiobackend.api.user.entities.User;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,9 +13,8 @@ import org.mapstruct.ReportingPolicy;
         uses = {
                 FullNameMapper.class
         })
-public interface UserInfoMapper {
+public interface UserMapper {
 
-    @Mapping(source = "userInfo.fullName", target = "fullName")
     DiagnosticianDto toDiagnostician(User entity);
 
     @InheritInverseConfiguration(name = "toDiagnostician")

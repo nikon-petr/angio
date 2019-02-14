@@ -4,7 +4,7 @@ import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
 import com.angio.angiobackend.api.analyse.embeddable.AdditionalInfo;
 import com.angio.angiobackend.api.common.mapper.AbstractMapper;
 import com.angio.angiobackend.api.patient.mapper.PatientMapper;
-import com.angio.angiobackend.api.user.mapstruct.UserInfoMapper;
+import com.angio.angiobackend.api.user.mapper.UserMapper;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,7 +15,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(
         uses = {
                 PatientMapper.class,
-                UserInfoMapper.class
+                UserMapper.class
         })
 public interface AdditionalInfoMapper extends AbstractMapper<AdditionalInfo, AdditionalInfoDto> {
 

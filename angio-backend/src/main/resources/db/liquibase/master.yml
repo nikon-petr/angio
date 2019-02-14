@@ -20,7 +20,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/007_refactor_security.yml
-
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/008_move_user_info_to_user.yml
 
 # always in the end of file
 - includeAll:

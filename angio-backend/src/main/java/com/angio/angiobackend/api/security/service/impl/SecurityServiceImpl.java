@@ -3,15 +3,15 @@ package com.angio.angiobackend.api.security.service.impl;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.security.JwtJdbcTokenStore;
 import com.angio.angiobackend.api.security.entity.Token;
-import com.angio.angiobackend.api.security.entity.User;
 import com.angio.angiobackend.api.security.service.SecurityService;
+import com.angio.angiobackend.api.user.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('TOKEN_REVOKE')")
+    @PreAuthorize("hasAuthority('TOKEN_REVOKE')")
     public String revoke(@NonNull String tokenId) {
 
         log.debug("revoke() - start jti: {}", tokenId);
@@ -45,12 +45,12 @@ public class SecurityServiceImpl implements SecurityService {
             return tokenId;
         }
 
-        throw new UnauthorizedUserException(msa.getMessage("errors.api.token.revocationDenied", new Object[] {tokenId}));
+        throw new AccessDeniedException(msa.getMessage("errors.api.token.revocationDenied", new Object[] {tokenId}));
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('TOKEN_REMOVE')")
+    @PreAuthorize("hasAuthority('TOKEN_REMOVE')")
     public String removeToken(@NonNull String tokenId) {
 
         log.debug("remove() - start jti: {}", tokenId);

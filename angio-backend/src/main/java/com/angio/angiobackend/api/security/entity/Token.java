@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.security.entity;
 
+import com.angio.angiobackend.api.user.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

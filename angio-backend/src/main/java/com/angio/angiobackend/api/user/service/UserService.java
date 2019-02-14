@@ -1,6 +1,6 @@
-package com.angio.angiobackend.api.security.service;
+package com.angio.angiobackend.api.user.service;
 
-import com.angio.angiobackend.api.security.entity.User;
+import com.angio.angiobackend.api.user.entities.User;
 import lombok.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,4 +10,7 @@ public interface UserService {
 
     @Transactional
     User findUserEntityByEmail(@NonNull String email);
+
+    @Transactional
+    User getUserFromContext();
 }

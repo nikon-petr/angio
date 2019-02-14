@@ -1,17 +1,18 @@
-package com.angio.angiobackend.api.security.entity;
+package com.angio.angiobackend.api.user.entities;
 
 import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
-import com.angio.angiobackend.api.user.entities.UserInfoEntity;
+import com.angio.angiobackend.api.common.embeddable.FullName;
+import com.angio.angiobackend.api.security.entity.Role;
+import com.angio.angiobackend.api.security.entity.Token;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,15 +24,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Accessors(chain = true)
-@ToString(exclude = {"roles", "tokens", "analyses", "userInfo"})
-@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "userInfo"})
+@ToString(exclude = {"roles", "tokens", "analyses"})
+@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -44,6 +43,9 @@ public class User {
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
+
+    @Embedded
+    private FullName fullName;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -72,8 +74,5 @@ public class User {
             mappedBy = "additionalInfo.diagnostician",
             orphanRemoval = true
     )
-    private Set<AnalyseEntity> analyses = new HashSet<>(0);
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-    private UserInfoEntity userInfo;
+    private Set<AnalyseEntity> analyses = new HashSet<>();
 }

@@ -9,8 +9,6 @@ databaseChangeLog:
     - delete:
         tableName: tokens
     - delete:
-        tableName: users_info
-    - delete:
         tableName: users
 
     # load user data
@@ -18,9 +16,4 @@ databaseChangeLog:
         tableName: users
         encoding: UTF-8
         file: db/csv/users.csv
-        quotchar: "'"
-    - loadData:
-        tableName: users_info
-        encoding: UTF-8
-        file: db/csv/users_info.csv
         quotchar: "'"
