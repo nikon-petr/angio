@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ public class PatientResource {
 
     @ApiOperation("Create patient")
     @PostMapping
-    public PatientDto createPatient(@RequestBody PatientDto dto) {
+    public PatientDto createPatient(@RequestBody @Validated PatientDto dto) {
         return patientService.createPatient(dto);
     }
 

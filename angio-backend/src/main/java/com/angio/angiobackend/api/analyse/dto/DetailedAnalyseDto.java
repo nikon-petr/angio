@@ -1,14 +1,12 @@
 package com.angio.angiobackend.api.analyse.dto;
 
-import com.angio.angiobackend.api.analyse.embeddable.AdditionalInfo;
-import com.angio.angiobackend.api.analyse.type.AnalyseType;
-import com.angio.angiobackend.api.patient.dto.PatientDto;
 import com.angio.angiobackend.api.uploads.dto.StaticFileDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -48,6 +46,7 @@ public class DetailedAnalyseDto implements Serializable {
     /**
      * Additional analyse info.
      */
+    @Valid
     @ApiModelProperty("Additional analyse info")
     private AdditionalInfoDto additionalInfo;
 

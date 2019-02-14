@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,7 +40,7 @@ public class AnalyseResource {
 
     @ApiOperation(value = "Create new analyse")
     @PostMapping
-    public DetailedAnalyseDto createAnalyse(@RequestBody DetailedAnalyseDto analyseDto) {
+    public DetailedAnalyseDto createAnalyse(@RequestBody @Validated DetailedAnalyseDto analyseDto) {
         return analyseService.createAnalyse(analyseDto);
     }
 

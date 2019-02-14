@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
@@ -33,12 +34,14 @@ public class AdditionalInfoDto implements Serializable {
     /**
      * Analyse name.
      */
+    @NotNull(message = "{validation.analyse.additionalInfo.name.NotNull}")
     @ApiModelProperty(value = "Analyse name", example = "Оценка сосудистой системы глазного дна")
     private String name;
 
     /**
      * Short description.
      */
+    @NotNull(message = "{validation.analyse.additionalInfo.shortDescription.NotNull}")
     @ApiModelProperty(value = "Short description", example = "Анализ глазного дна")
     private String shortDescription;
 
