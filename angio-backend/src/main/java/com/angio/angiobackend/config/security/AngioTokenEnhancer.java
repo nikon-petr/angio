@@ -1,4 +1,4 @@
-package com.angio.angiobackend.api.security;
+package com.angio.angiobackend.config.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;

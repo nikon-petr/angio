@@ -1,7 +1,7 @@
 package com.angio.angiobackend.api.security.service.impl;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
-import com.angio.angiobackend.api.security.JwtJdbcTokenStore;
+import com.angio.angiobackend.config.security.JwtJdbcTokenStore;
 import com.angio.angiobackend.api.security.entity.Token;
 import com.angio.angiobackend.api.security.service.SecurityService;
 import com.angio.angiobackend.api.user.entities.User;

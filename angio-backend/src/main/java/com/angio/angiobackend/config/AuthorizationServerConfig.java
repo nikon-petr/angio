@@ -1,8 +1,8 @@
 package com.angio.angiobackend.config;
 
-import com.angio.angiobackend.api.security.AngioTokenEnhancer;
-import com.angio.angiobackend.api.security.JwtJdbcTokenStore;
-import com.angio.angiobackend.api.security.RefreshTokenFilter;
+import com.angio.angiobackend.config.security.AngioTokenEnhancer;
+import com.angio.angiobackend.config.security.JwtJdbcTokenStore;
+import com.angio.angiobackend.config.security.RefreshTokenFilter;
 import com.angio.angiobackend.api.security.repository.TokenRepository;
 import com.angio.angiobackend.api.user.service.UserService;
 import lombok.AllArgsConstructor;

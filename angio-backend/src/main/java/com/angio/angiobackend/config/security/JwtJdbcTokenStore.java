@@ -1,4 +1,4 @@
-package com.angio.angiobackend.api.security;
+package com.angio.angiobackend.config.security;
 
 import com.angio.angiobackend.api.security.entity.Token;
 import com.angio.angiobackend.api.user.entities.User;

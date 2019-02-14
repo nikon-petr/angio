@@ -1,4 +1,4 @@
-package com.angio.angiobackend.api.security;
+package com.angio.angiobackend.config.security;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
