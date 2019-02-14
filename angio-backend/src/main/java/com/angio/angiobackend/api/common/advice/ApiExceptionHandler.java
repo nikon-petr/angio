@@ -4,21 +4,20 @@ import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAcce
 import com.angio.angiobackend.api.common.dto.Error;
 import com.angio.angiobackend.api.common.dto.ValidationError;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonParseException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toMap;
@@ -51,6 +50,31 @@ public class ApiExceptionHandler {
         Map<String, String> validationResult = fieldsErrors;
         validationResult.putAll(globalErrors);
 
-        return ValidationError.of(msa.getMessage("errors.validation"), validationResult);
+        return ValidationError.of(msa.getMessage("errors.api.common.validation"), validationResult);
+    }
+
+    @ExceptionHandler(JsonParseException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public Error handleJsonMappingException(JsonParseException e) {
+        return Error.of(msa.getMessage("errors.api.common.json.invalid"));
+    }
+
+    @ExceptionHandler(MissingPathVariableException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public Error missingPathVariableException(MissingPathVariableException e) {
+        return Error.of(msa.getMessage("errors.api.common.pathVariable.notFound", new Object[] {e.getVariableName()}));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public Error handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        String parameterTypeName = e.getParameter().getParameterType().toString().toLowerCase();
+        return Error.of(msa.getMessage("errors.api.common.pathVariable.invalidType", new Object[] {e.getName(), parameterTypeName}));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public Error missingServletRequestParameter(MissingServletRequestParameterException e) {
+        return Error.of(msa.getMessage("errors.api.common.request.param.required", new Object[] {e.getParameterName()}));
     }
 }
