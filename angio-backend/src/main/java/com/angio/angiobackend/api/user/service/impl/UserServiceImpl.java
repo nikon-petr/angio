@@ -46,10 +46,10 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public User getUserFromContext() {
-        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.debug("getUserFromContext() - start id: {}", id);
-        return userRepository.findById(Long.valueOf(id))
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.debug("getUserFromContext() - start id: {}", email);
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UnauthorizedUserException(
-                        msa.getMessage("errors.api.user.userNotFound", new Object[] {id})));
+                        msa.getMessage("errors.api.user.userNotFound", new Object[] {email})));
     }
 }

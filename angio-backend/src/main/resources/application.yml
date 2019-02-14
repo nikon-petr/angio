@@ -75,8 +75,8 @@ logging:
         root: WARN
         com.angio.angiobackend: INFO
         org.springframework.web: INFO
-        org.springframework.security: DEBUG
-        org.hibernate.stat: DEBUG
+        org.springframework.security: INFO
+        org.hibernate.stat: INFO
 
 angio:
     app:
