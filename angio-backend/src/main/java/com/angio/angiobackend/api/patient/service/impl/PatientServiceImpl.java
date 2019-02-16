@@ -3,7 +3,7 @@ package com.angio.angiobackend.api.patient.service.impl;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.patient.dto.PatientDto;
-import com.angio.angiobackend.api.patient.entity.PatientEntity;
+import com.angio.angiobackend.api.patient.entity.Patient;
 import com.angio.angiobackend.api.patient.mapper.PatientMapper;
 import com.angio.angiobackend.api.patient.repository.PatientRepository;
 import com.angio.angiobackend.api.patient.service.PatientService;
@@ -34,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
     @PreAuthorize("hasAuthority('PATIENT_CREATE')")
     public PatientDto createPatient(@NonNull PatientDto dto) {
         log.trace("getPatientByPolicy() - start: patient={}", dto);
-        PatientEntity entity = patientMapper.toEntity(dto);
+        Patient entity = patientMapper.toEntity(dto);
 
         log.trace("getPatientByPolicy() - save patient to db");
         entity = patientRepository.save(entity);
@@ -68,7 +68,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('PATIENT_VIEW')")
-    public PatientEntity getPatientEntityById(@NonNull Long id) {
+    public Patient getPatientEntityById(@NonNull Long id) {
         log.trace("getPatientByPolicy() - start: id={}", id);
         return patientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -91,40 +91,40 @@ public class PatientServiceImpl implements PatientService {
     /**
      * Save or update patient entity if found by id.
      *
-     * @param patient dto to save
+     * @param dto dto to save
      * @return saved patient entity
      */
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('PATIENT_EDIT')")
-    public PatientEntity saveOrUpdatePatient(@NonNull PatientDto patient) {
+    public Patient saveOrUpdatePatient(@NonNull PatientDto dto) {
         log.trace("saveOrUpdatePatient() - start");
-        PatientEntity patientEntityFromDB = null;
+        Patient patientFromDb = null;
 
         log.trace("saveOrUpdatePatient() - find patient by id");
-        if (patient.getId() != null) {
-            patientEntityFromDB = patientRepository.findById(patient.getId()).orElse(null);
+        if (dto.getId() != null) {
+            patientFromDb = patientRepository.findById(dto.getId()).orElse(null);
         }
 
-        PatientEntity patientEntity;
-        if (patientEntityFromDB == null) {
+        Patient patient;
+        if (patientFromDb == null) {
 
             log.trace("saveOrUpdatePatient() - map patient request to new entity");
-            patientEntity = patientMapper.toEntity(patient);
+            patient = patientMapper.toEntity(dto);
 
-            log.trace("saveOrUpdatePatient() - create new patient entity: {}", patientEntity);
-            patientEntity = patientRepository.save(patientEntity);
+            log.trace("saveOrUpdatePatient() - create new patient entity: {}", patient);
+            patient = patientRepository.save(patient);
         } else {
 
             log.trace("saveOrUpdatePatient() - map patient request for update entity");
-            patientMapper.toEntity(patient, patientEntityFromDB);
+            patientMapper.toEntity(dto, patientFromDb);
 
-            log.trace("saveOrUpdatePatient() - save updated patient entity: {}", patientEntityFromDB);
-            patientEntity = patientRepository.save(patientEntityFromDB);
+            log.trace("saveOrUpdatePatient() - save updated patient entity: {}", patientFromDb);
+            patient = patientRepository.save(patientFromDb);
         }
 
         log.trace("saveOrUpdatePatient() - end");
-        return patientEntity;
+        return patient;
     }
 
     /**
@@ -139,7 +139,7 @@ public class PatientServiceImpl implements PatientService {
     @PreAuthorize("hasAuthority('PATIENT_EDIT')")
     public PatientDto updatePatient(@NonNull PatientDto dto, @NonNull Long id) {
         log.trace("updatePatient() - start: patient={}", dto);
-        PatientEntity entity = getPatientEntityById(id);
+        Patient entity = getPatientEntityById(id);
 
         log.trace("updatePatient() - map patient dto to entity");
         patientMapper.toEntity(dto, entity);

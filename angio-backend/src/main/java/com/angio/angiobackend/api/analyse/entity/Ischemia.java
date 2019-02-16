@@ -27,7 +27,7 @@ import javax.persistence.Table;
 @Cacheable
 @Entity
 @Table(name = "ischemias", schema = "public")
-public class IshemiaEntity {
+public class Ischemia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,5 +48,5 @@ public class IshemiaEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analyse_id")
-    private AnalyseEntity analyse;
+    private Analyse analyse;
 }

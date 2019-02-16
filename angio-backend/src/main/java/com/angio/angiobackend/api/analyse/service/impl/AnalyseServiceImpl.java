@@ -6,7 +6,7 @@ import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
-import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
+import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.analyse.mapper.AdditionalInfoMapper;
 import com.angio.angiobackend.api.analyse.mapper.AnalyseMapper;
 import com.angio.angiobackend.api.analyse.messaging.AnalyseToExecuteSender;
@@ -67,7 +67,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("createAnalyse() - start - analyse to create: {}", dto);
 
         log.trace("createAnalyse() - map analyse info dto to entity");
-        AnalyseEntity entity = analyseMapper.toNewEntity(dto);
+        Analyse entity = analyseMapper.toNewEntity(dto);
 
         entity.setOriginalImage(uploadRepository.findById(dto.getOriginalImage().getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -114,7 +114,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("saveExecutedAnalyse() - start - analyse to save: {}", dto);
 
         log.trace("saveExecutedAnalyse() - map analyse info dto to entity");
-        AnalyseEntity entity = analyseRepository.getOne(dto.getId());
+        Analyse entity = analyseRepository.getOne(dto.getId());
         analyseMapper.updateAnalyseResult(dto, entity);
         entity.getStatus().setType(AnalyseStatusType.SUCCESS);
 
@@ -142,7 +142,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("filterAnalysesByQueryString() - start");
 
         log.trace("filterAnalysesByQueryString() - build analyse info specification");
-        Specification<AnalyseEntity> specs = analyseSpecification.getAnalyseInfoFilter(queryString)
+        Specification<Analyse> specs = analyseSpecification.getAnalyseInfoFilter(queryString)
                 .and(analyseSpecification.analyseDate(date))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
@@ -151,7 +151,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         Pageable mappedPageRequest = mapSortingFields(pageable);
 
         log.trace("filterAnalysesByQueryString() - filter analyse info");
-        Page<AnalyseEntity> analyseInfoEntityPage = analyseRepository.findAll(specs, mappedPageRequest);
+        Page<Analyse> analyseInfoEntityPage = analyseRepository.findAll(specs, mappedPageRequest);
 
         log.trace("filterAnalysesByQueryString() - map and return analyse page");
         return analyseInfoEntityPage.map(analyseMapper::toShortItemDto);
@@ -187,7 +187,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     @PreAuthorize("hasAuthority('ANALYSE_REMOVE')")
     public DetailedAnalyseDto deleteAnalyse(@NonNull Long id) {
         log.trace("deleteAnalyse() - start");
-        AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
+        Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -236,22 +236,22 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("updateAnalyseAdditionalInfo() - start");
 
         log.trace("updateAnalyseAdditionalInfo() - search analyse info entity with id:", id);
-        AnalyseEntity analyseEntity = analyseRepository.findOne(analyseSpecification.analyseId(id)
+        Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
         log.info("updateAnalyseAdditionalInfo() - update conclusion field with: {}", dto);
-        additionalInfoMapper.updateEntity(dto, analyseEntity.getAdditionalInfo());
+        additionalInfoMapper.updateEntity(dto, analyse.getAdditionalInfo());
 
         if (dto.getPatientId() != null) {
             log.trace("updateAnalyseAdditionalInfo() - update patient id");
-            analyseEntity.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getPatientId()));
+            analyse.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getPatientId()));
         }
 
         log.trace("updateAnalyseAdditionalInfo() - end - save updated analyse info entity");
-        return analyseMapper.toExtendedDto(analyseRepository.save(analyseEntity));
+        return analyseMapper.toExtendedDto(analyseRepository.save(analyse));
     }
 
     @Override
@@ -261,7 +261,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("deleteAnalyse() - start");
 
         log.trace("deleteAnalyse() - find analyse: id={}", analyseId);
-        AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(analyseId)
+        Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(analyseId)
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -284,8 +284,8 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Transactional
     public void purgeAnalyses() {
         log.trace("purgeAnalyses() - start");
-        List<AnalyseEntity> inStatusDeleted = analyseRepository.findAll(analyseSpecification.inStatus(AnalyseStatusType.DELETED));
-        log.trace("purgeAnalyses() - ids to delete: {}", inStatusDeleted.stream().mapToLong(AnalyseEntity::getId).toArray());
+        List<Analyse> inStatusDeleted = analyseRepository.findAll(analyseSpecification.inStatus(AnalyseStatusType.DELETED));
+        log.trace("purgeAnalyses() - ids to delete: {}", inStatusDeleted.stream().mapToLong(Analyse::getId).toArray());
         analyseRepository.deleteInBatch(inStatusDeleted);
         log.trace("purgeAnalyses() - end");
     }
@@ -327,7 +327,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     private DetailedAnalyseDto sendAnalyseToExecution(Long id) {
 
         log.trace("sendAnalyseToExecution() - start");
-        AnalyseEntity analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
+        Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -352,7 +352,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         return savedResult;
     }
 
-    private void sendAnalyseToExecution(AnalyseJmsDto dto, AnalyseEntity analyse) {
+    private void sendAnalyseToExecution(AnalyseJmsDto dto, Analyse analyse) {
         try {
             log.info("sendAnalyseToExecution() - analyse execution result status: IN_PROGRESS");
             analyse.setStatus(new AnalyseStatus().setType(AnalyseStatusType.IN_PROGRESS));

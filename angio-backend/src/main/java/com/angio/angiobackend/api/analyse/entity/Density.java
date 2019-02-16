@@ -27,7 +27,7 @@ import javax.persistence.Table;
 @Cacheable
 @Entity
 @Table(name = "densities", schema = "public")
-public class DensityEntity {
+public class Density {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +42,5 @@ public class DensityEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analyse_id")
-    private AnalyseEntity analyse;
+    private Analyse analyse;
 }

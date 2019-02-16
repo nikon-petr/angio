@@ -1,7 +1,7 @@
 package com.angio.angiobackend.api.patient.mapper;
 
 import com.angio.angiobackend.api.patient.dto.PatientDto;
-import com.angio.angiobackend.api.patient.entity.PatientEntity;
+import com.angio.angiobackend.api.patient.entity.Patient;
 import com.angio.angiobackend.api.common.mapper.AbstractMapper;
 import com.angio.angiobackend.api.common.mapper.FullNameMapper;
 import org.mapstruct.BeanMapping;
@@ -12,12 +12,12 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(uses = {FullNameMapper.class})
-public interface PatientMapper extends AbstractMapper<PatientEntity, PatientDto> {
+public interface PatientMapper extends AbstractMapper<Patient, PatientDto> {
 
     @BeanMapping(
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
     )
     @Mapping(target = "id", ignore = true)
-    void toEntity(PatientDto dto, @MappingTarget PatientEntity entity);
+    void toEntity(PatientDto dto, @MappingTarget Patient entity);
 }

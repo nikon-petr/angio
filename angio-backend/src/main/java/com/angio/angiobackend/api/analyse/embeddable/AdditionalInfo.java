@@ -1,7 +1,7 @@
 package com.angio.angiobackend.api.analyse.embeddable;
 
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
-import com.angio.angiobackend.api.patient.entity.PatientEntity;
+import com.angio.angiobackend.api.patient.entity.Patient;
 import com.angio.angiobackend.api.user.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +31,7 @@ public class AdditionalInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
-    private PatientEntity patient;
+    private Patient patient;
 
     @Column(name = "name", nullable = false, length = 200)
     private String name;

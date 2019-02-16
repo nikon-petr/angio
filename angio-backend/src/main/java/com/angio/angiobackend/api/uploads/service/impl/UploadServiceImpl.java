@@ -3,7 +3,7 @@ package com.angio.angiobackend.api.uploads.service.impl;
 import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.uploads.dto.StaticFileDto;
-import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
+import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import com.angio.angiobackend.api.uploads.mapper.UploadMapper;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
 import com.angio.angiobackend.api.uploads.service.UploadService;
@@ -42,7 +42,7 @@ public class UploadServiceImpl implements UploadService {
         String savedFilename = FileUtils.saveFile(file, props.getUploadDirectory());
 
         log.info("uploadImage() - save image data to database");
-        StaticFileEntity savedImage = uploadRepository.save(new StaticFileEntity(null, FileType.IMAGE, savedFilename));
+        StaticFile savedImage = uploadRepository.save(new StaticFile(null, FileType.IMAGE, savedFilename));
 
         log.info("uploadImage() - map image data");
         StaticFileDto savedStaticFileDto = uploadMapper.toExternalDto(savedImage);
@@ -63,7 +63,7 @@ public class UploadServiceImpl implements UploadService {
         String savedFilename = FileUtils.saveFile(file, props.getUploadDirectory());
 
         log.info("uploadDocument() - save document data to database");
-        StaticFileEntity savedImage = uploadRepository.save(new StaticFileEntity(null, FileType.DOCUMENT, savedFilename));
+        StaticFile savedImage = uploadRepository.save(new StaticFile(null, FileType.DOCUMENT, savedFilename));
 
         log.info("uploadDocument() - map document data");
         StaticFileDto savedStaticFileDto = uploadMapper.toExternalDto(savedImage);

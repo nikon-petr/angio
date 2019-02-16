@@ -1,6 +1,6 @@
 package com.angio.angiobackend.api.user.entities;
 
-import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
+import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.common.embeddable.FullName;
 import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.entity.Token;
@@ -22,7 +22,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
@@ -74,5 +73,5 @@ public class User {
             mappedBy = "additionalInfo.diagnostician",
             orphanRemoval = true
     )
-    private Set<AnalyseEntity> analyses = new HashSet<>();
+    private Set<Analyse> analyses = new HashSet<>();
 }

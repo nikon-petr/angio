@@ -1,7 +1,7 @@
 package com.angio.angiobackend.api.uploads.mapper;
 
 import com.angio.angiobackend.api.uploads.dto.StaticFileDto;
-import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
+import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,9 @@ public abstract class UploadMapper {
     private UriComponents uploadsUriBuilder;
 
     @Mapping(target = "type", defaultValue = "1")
-    public abstract StaticFileEntity toEntity(StaticFileDto dto);
+    public abstract StaticFile toEntity(StaticFileDto dto);
 
-    public StaticFileDto toExternalDto(StaticFileEntity entity) {
+    public StaticFileDto toExternalDto(StaticFile entity) {
         if (entity == null) {
             return null;
         }

@@ -1,6 +1,6 @@
 package com.angio.angiobackend.api.patient.entity;
 
-import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
+import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.common.embeddable.FullName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -30,7 +30,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"id", "analysesInfo"})
 @Entity
 @Table(name = "patients", schema = "public")
-public class PatientEntity {
+public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,5 +63,5 @@ public class PatientEntity {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "additionalInfo.patient")
-    private Set<AnalyseEntity> analysesInfo;
+    private Set<Analyse> analysesInfo;
 }

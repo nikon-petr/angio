@@ -1,8 +1,8 @@
 package com.angio.angiobackend.api.analyse.embeddable;
 
-import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
-import com.angio.angiobackend.api.analyse.entity.VesselEntity;
-import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
+import com.angio.angiobackend.api.analyse.entity.Analyse;
+import com.angio.angiobackend.api.analyse.entity.Vessel;
+import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,23 +36,23 @@ public class GeometricAnalyse {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "binarized_image_id")
-    private StaticFileEntity binarizedImage;
+    private StaticFile binarizedImage;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skeletonized_image_id")
-    private StaticFileEntity skeletonizedImage;
+    private StaticFile skeletonizedImage;
 
     @OneToMany(
             mappedBy = "analyse",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<VesselEntity> vessels = new HashSet<>();
+    private Set<Vessel> vessels = new HashSet<>();
 
     @Transient
-    private AnalyseEntity analyse;
+    private Analyse analyse;
 
-    public void addVessel(VesselEntity vessel) {
+    public void addVessel(Vessel vessel) {
         vessels.add(vessel);
         vessel.setAnalyse(analyse);
     }

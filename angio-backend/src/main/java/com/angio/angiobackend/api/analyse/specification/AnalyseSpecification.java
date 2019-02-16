@@ -1,19 +1,18 @@
 package com.angio.angiobackend.api.analyse.specification;
 
-import com.angio.angiobackend.api.analyse.embeddable.AdditionalInfo;
 import com.angio.angiobackend.api.analyse.embeddable.AdditionalInfo_;
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus_;
 import com.angio.angiobackend.api.analyse.embeddable.BloodFlowAnalyse;
 import com.angio.angiobackend.api.analyse.embeddable.BloodFlowAnalyse_;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse_;
-import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
-import com.angio.angiobackend.api.analyse.entity.AnalyseEntity_;
-import com.angio.angiobackend.api.analyse.entity.VesselEntity_;
+import com.angio.angiobackend.api.analyse.entity.Analyse;
+import com.angio.angiobackend.api.analyse.entity.Analyse_;
+import com.angio.angiobackend.api.analyse.entity.Vessel_;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
 import com.angio.angiobackend.api.common.embeddable.FullName_;
-import com.angio.angiobackend.api.patient.entity.PatientEntity_;
+import com.angio.angiobackend.api.patient.entity.Patient_;
 import com.angio.angiobackend.api.user.entities.User_;
 import com.angio.angiobackend.util.EnumUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,10 +38,10 @@ public class AnalyseSpecification {
      * @param id id
      * @return specification
      */
-    public Specification<AnalyseEntity> analyseId(Long id) {
+    public Specification<Analyse> analyseId(Long id) {
         return (root, query, cb) -> {
             if (id != null) {
-                return cb.equal(root.get(AnalyseEntity_.id), id);
+                return cb.equal(root.get(Analyse_.id), id);
             }
             return null;
         };
@@ -54,10 +53,10 @@ public class AnalyseSpecification {
      * @param date analyse date
      * @return specification
      */
-    public Specification<AnalyseEntity> analyseDate(Date date) {
+    public Specification<Analyse> analyseDate(Date date) {
         return (root, query, cb) -> {
             if (date != null) {
-                return cb.between(root.get(AnalyseEntity_.analyseDate), atStartOfDay(date), atEndOfDay(date));
+                return cb.between(root.get(Analyse_.analyseDate), atStartOfDay(date), atEndOfDay(date));
             }
             return null;
         };
@@ -69,10 +68,10 @@ public class AnalyseSpecification {
      * @param name name
      * @return specification
      */
-    public Specification<AnalyseEntity> name(String name) {
+    public Specification<Analyse> name(String name) {
         return (root, query, cb) -> {
             if (name != null) {
-                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                return cb.like(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.name), substringPattern(name));
             }
             return null;
@@ -85,10 +84,10 @@ public class AnalyseSpecification {
      * @param shortDescription description
      * @return specification
      */
-    public Specification<AnalyseEntity> shortDescription(String shortDescription) {
+    public Specification<Analyse> shortDescription(String shortDescription) {
         return (root, query, cb) -> {
             if (shortDescription != null) {
-                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                return cb.like(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.shortDescription), substringPattern(shortDescription));
             }
             return null;
@@ -101,11 +100,11 @@ public class AnalyseSpecification {
      * @param analyseType analyse type string
      * @return specification
      */
-    public Specification<AnalyseEntity> analyseType(String analyseType) {
+    public Specification<Analyse> analyseType(String analyseType) {
         return (root, query, cb) -> {
             AnalyseType castedAnalyseType = EnumUtils.getIfPresent(analyseType, AnalyseType.class);
             if (castedAnalyseType != null) {
-                return cb.equal(root.get(AnalyseEntity_.additionalInfo)
+                return cb.equal(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.type), castedAnalyseType);
             }
             return null;
@@ -118,10 +117,10 @@ public class AnalyseSpecification {
      * @param firstname firstname
      * @return specification
      */
-    public Specification<AnalyseEntity> userInfoFirstname(String firstname) {
+    public Specification<Analyse> userInfoFirstname(String firstname) {
         return (root, query, cb) -> {
             if (firstname != null) {
-                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                return cb.like(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.diagnostician)
                         .get(User_.fullName)
                         .get(FullName_.firstname), substringPattern(firstname));
@@ -136,10 +135,10 @@ public class AnalyseSpecification {
      * @param lastname lastname
      * @return specification
      */
-    public Specification<AnalyseEntity> userInfoLastname(String lastname) {
+    public Specification<Analyse> userInfoLastname(String lastname) {
         return (root, query, cb) -> {
             if (lastname != null) {
-                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                return cb.like(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.diagnostician)
                         .get(User_.fullName)
                         .get(FullName_.lastname), substringPattern(lastname));
@@ -154,10 +153,10 @@ public class AnalyseSpecification {
      * @param patronymic patronymic
      * @return specification
      */
-    public Specification<AnalyseEntity> userInfoPatronymic(String patronymic) {
+    public Specification<Analyse> userInfoPatronymic(String patronymic) {
         return (root, query, cb) -> {
             if (patronymic != null) {
-                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                return cb.like(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.diagnostician)
                         .get(User_.fullName)
                         .get(FullName_.patronymic), substringPattern(patronymic));
@@ -172,12 +171,12 @@ public class AnalyseSpecification {
      * @param firstname firstname
      * @return specification
      */
-    public Specification<AnalyseEntity> patientFirstname(String firstname) {
+    public Specification<Analyse> patientFirstname(String firstname) {
         return (root, query, cb) -> {
             if (firstname != null) {
-                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                return cb.like(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.patient)
-                        .get(PatientEntity_.fullName)
+                        .get(Patient_.fullName)
                         .get(FullName_.firstname), substringPattern(firstname));
             }
             return null;
@@ -190,12 +189,12 @@ public class AnalyseSpecification {
      * @param lastname lastname
      * @return specification
      */
-    public Specification<AnalyseEntity> patientLastname(String lastname) {
+    public Specification<Analyse> patientLastname(String lastname) {
         return (root, query, cb) -> {
             if (lastname != null) {
-                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                return cb.like(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.patient)
-                        .get(PatientEntity_.fullName)
+                        .get(Patient_.fullName)
                         .get(FullName_.lastname), substringPattern(lastname));
             }
             return null;
@@ -208,12 +207,12 @@ public class AnalyseSpecification {
      * @param patronymic patronymic
      * @return specification
      */
-    public Specification<AnalyseEntity> patientPatronymic(String patronymic) {
+    public Specification<Analyse> patientPatronymic(String patronymic) {
         return (root, query, cb) -> {
             if (patronymic != null) {
-                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                return cb.like(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.patient)
-                        .get(PatientEntity_.fullName)
+                        .get(Patient_.fullName)
                         .get(FullName_.patronymic), substringPattern(patronymic));
             }
             return null;
@@ -226,12 +225,12 @@ public class AnalyseSpecification {
      * @param policy policy number
      * @return specification
      */
-    public Specification<AnalyseEntity> patientPolicy(String policy) {
+    public Specification<Analyse> patientPolicy(String policy) {
         return (root, query, cb) -> {
             if (policy != null) {
-                return cb.like(root.get(AnalyseEntity_.additionalInfo)
+                return cb.like(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.patient)
-                        .get(PatientEntity_.policy), substringPattern(policy));
+                        .get(Patient_.policy), substringPattern(policy));
             }
             return null;
         };
@@ -243,10 +242,10 @@ public class AnalyseSpecification {
      * @param statuses statuses
      * @return specification
      */
-    public Specification<AnalyseEntity> inStatus(AnalyseStatusType... statuses) {
+    public Specification<Analyse> inStatus(AnalyseStatusType... statuses) {
         return (root, query, cb) -> {
             if (statuses != null && statuses.length > 0) {
-                return root.get(AnalyseEntity_.status).get(AnalyseStatus_.type).in((Object[]) statuses);
+                return root.get(Analyse_.status).get(AnalyseStatus_.type).in((Object[]) statuses);
             }
             return null;
         };
@@ -258,10 +257,10 @@ public class AnalyseSpecification {
      * @param statuses statuses
      * @return specification
      */
-    public Specification<AnalyseEntity> notInStatus(AnalyseStatusType... statuses) {
+    public Specification<Analyse> notInStatus(AnalyseStatusType... statuses) {
         return (root, query, cb) -> {
             if (statuses != null && statuses.length > 0) {
-                return cb.not(root.get(AnalyseEntity_.status).get(AnalyseStatus_.type).in((Object[]) statuses));
+                return cb.not(root.get(Analyse_.status).get(AnalyseStatus_.type).in((Object[]) statuses));
             }
             return null;
         };
@@ -272,8 +271,8 @@ public class AnalyseSpecification {
      *
      * @return specification
      */
-    public Specification<AnalyseEntity> notDeleted() {
-        return (root, query, cb) -> cb.notEqual(root.get(AnalyseEntity_.status)
+    public Specification<Analyse> notDeleted() {
+        return (root, query, cb) -> cb.notEqual(root.get(Analyse_.status)
                 .get(AnalyseStatus_.type), AnalyseStatusType.DELETED);
     }
 
@@ -282,9 +281,9 @@ public class AnalyseSpecification {
      *
      * @return specification
      */
-    public Specification<AnalyseEntity> fetchOriginalImage() {
+    public Specification<Analyse> fetchOriginalImage() {
         return (root, query, cb) -> {
-            root.fetch(AnalyseEntity_.originalImage, LEFT);
+            root.fetch(Analyse_.originalImage, LEFT);
             return cb.conjunction();
         };
     }
@@ -294,9 +293,9 @@ public class AnalyseSpecification {
      *
      * @return specification
      */
-    public Specification<AnalyseEntity> fetchBloodFlowAnalyse() {
+    public Specification<Analyse> fetchBloodFlowAnalyse() {
         return (root, query, cb) -> {
-            Fetch<AnalyseEntity, BloodFlowAnalyse> analyseFetch = root.fetch(AnalyseEntity_.bloodFlowAnalyse, LEFT);
+            Fetch<Analyse, BloodFlowAnalyse> analyseFetch = root.fetch(Analyse_.bloodFlowAnalyse, LEFT);
             analyseFetch.fetch(BloodFlowAnalyse_.ischemiaImage, LEFT);
             analyseFetch.fetch(BloodFlowAnalyse_.densityImage, LEFT);
             analyseFetch.fetch(BloodFlowAnalyse_.ischemias, LEFT);
@@ -310,13 +309,13 @@ public class AnalyseSpecification {
      *
      * @return specification
      */
-    public Specification<AnalyseEntity> fetchGeometricAnalyse() {
+    public Specification<Analyse> fetchGeometricAnalyse() {
         return (root, query, cb) -> {
-            Fetch<AnalyseEntity, GeometricAnalyse> analyseFetch = root.fetch(AnalyseEntity_.geometricAnalyse, LEFT);
+            Fetch<Analyse, GeometricAnalyse> analyseFetch = root.fetch(Analyse_.geometricAnalyse, LEFT);
             analyseFetch.fetch(GeometricAnalyse_.binarizedImage, LEFT);
             analyseFetch.fetch(GeometricAnalyse_.skeletonizedImage, LEFT);
-            analyseFetch.fetch(GeometricAnalyse_.vessels, LEFT).fetch(VesselEntity_.mainVesselImage);
-            analyseFetch.fetch(GeometricAnalyse_.vessels, LEFT).fetch(VesselEntity_.vesselImage);
+            analyseFetch.fetch(GeometricAnalyse_.vessels, LEFT).fetch(Vessel_.mainVesselImage);
+            analyseFetch.fetch(GeometricAnalyse_.vessels, LEFT).fetch(Vessel_.vesselImage);
             return cb.conjunction();
         };
     }
@@ -326,7 +325,7 @@ public class AnalyseSpecification {
      *
      * @return specification
      */
-    public Specification<AnalyseEntity> fetchAll() {
+    public Specification<Analyse> fetchAll() {
         return fetchOriginalImage()
                 .and(fetchGeometricAnalyse())
                 .and(fetchBloodFlowAnalyse());
@@ -338,7 +337,7 @@ public class AnalyseSpecification {
      * @param queryString query string
      * @return specification
      */
-    public Specification<AnalyseEntity> getAnalyseInfoFilter(String queryString) {
+    public Specification<Analyse> getAnalyseInfoFilter(String queryString) {
         return name(queryString)
                 .or(shortDescription(queryString))
                 .or(analyseType(queryString))

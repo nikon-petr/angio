@@ -3,7 +3,7 @@ package com.angio.angiobackend.api.analyse.mapper;
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
-import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
+import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.patient.mapper.PatientMapper;
 import com.angio.angiobackend.api.uploads.mapper.UploadMapper;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
@@ -33,19 +33,23 @@ public interface AnalyseMapper {
     @Mapping(target = "geometricAnalyse", ignore = true)
     @Mapping(target = "bloodFlowAnalyse", ignore = true)
     @Mapping(target = "additionalInfo", qualifiedByName = "toNewAdditionalInfoEntity")
-    AnalyseEntity toNewEntity(DetailedAnalyseDto dto);
+    Analyse toNewEntity(DetailedAnalyseDto dto);
 
     @Named("toAnalyseEntity")
-    AnalyseEntity toEntity(DetailedAnalyseDto dto);
+    Analyse toEntity(DetailedAnalyseDto dto);
 
     @Mapping(target = "geometricAnalyse", qualifiedByName = "updateGeometricAnalyseEntity")
     @Mapping(target = "bloodFlowAnalyse", qualifiedByName = "updateBloodFlowAnalyseEntity")
-    void updateAnalyseResult(AnalyseJmsDto dto, @MappingTarget AnalyseEntity entity);
+    void updateAnalyseResult(AnalyseJmsDto dto, @MappingTarget Analyse entity);
 
-    DetailedAnalyseDto toExtendedDto(AnalyseEntity entity);
+    DetailedAnalyseDto toExtendedDto(Analyse entity);
 
-    AnalyseJmsDto toAnalyseDto(AnalyseEntity entity);
+    AnalyseJmsDto toAnalyseDto(Analyse entity);
 
     @Mapping(source = "additionalInfo.diagnostician.fullName", target = "diagnostician")
-    AnalyseShortItemDto toShortItemDto(AnalyseEntity entity);
+    @Mapping(source = "additionalInfo.name", target = "name")
+    @Mapping(source = "additionalInfo.shortDescription", target = "shortDescription")
+    @Mapping(source = "additionalInfo.type", target = "analyseType")
+    @Mapping(source = "additionalInfo.patient", target = "patient")
+    AnalyseShortItemDto toShortItemDto(Analyse entity);
 }

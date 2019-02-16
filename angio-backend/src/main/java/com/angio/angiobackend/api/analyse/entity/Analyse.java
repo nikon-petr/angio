@@ -4,7 +4,7 @@ import com.angio.angiobackend.api.analyse.embeddable.AdditionalInfo;
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
 import com.angio.angiobackend.api.analyse.embeddable.BloodFlowAnalyse;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse;
-import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
+import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,7 +36,7 @@ import java.util.Date;
 @EqualsAndHashCode(exclude = {"id", "originalImage"})
 @Entity
 @Table(name = "analyses")
-public class AnalyseEntity {
+public class Analyse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +54,7 @@ public class AnalyseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "original_image_id")
-    private StaticFileEntity originalImage;
+    private StaticFile originalImage;
 
     @Access(AccessType.PROPERTY)
     @Embedded

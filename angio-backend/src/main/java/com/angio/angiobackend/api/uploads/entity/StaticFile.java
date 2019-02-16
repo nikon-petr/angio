@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Cacheable
 @Entity
 @Table(name = "uploads", schema = "public")
-public class StaticFileEntity {
+public class StaticFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

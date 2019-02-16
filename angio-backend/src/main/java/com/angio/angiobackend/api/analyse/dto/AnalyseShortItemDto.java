@@ -18,7 +18,7 @@ public class AnalyseShortItemDto {
     private String shortDescription;
     private String analyseType;
     private Date analyseDate;
-    private Boolean finished;
+    private AnalyseStatusDto status;
     private PatientShortItemDto patient;
     private FullNameDto diagnostician;
 

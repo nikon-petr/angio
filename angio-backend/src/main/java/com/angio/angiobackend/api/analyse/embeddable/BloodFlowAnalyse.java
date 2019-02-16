@@ -1,9 +1,9 @@
 package com.angio.angiobackend.api.analyse.embeddable;
 
-import com.angio.angiobackend.api.analyse.entity.AnalyseEntity;
-import com.angio.angiobackend.api.analyse.entity.DensityEntity;
-import com.angio.angiobackend.api.analyse.entity.IshemiaEntity;
-import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
+import com.angio.angiobackend.api.analyse.entity.Analyse;
+import com.angio.angiobackend.api.analyse.entity.Density;
+import com.angio.angiobackend.api.analyse.entity.Ischemia;
+import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,7 +37,7 @@ public class BloodFlowAnalyse {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ischemia_image_id")
-    private StaticFileEntity ischemiaImage;
+    private StaticFile ischemiaImage;
 
     @OrderBy("zone_number ASC")
     @OneToMany(
@@ -45,14 +45,14 @@ public class BloodFlowAnalyse {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<IshemiaEntity> ischemias = new HashSet<>();
+    private Set<Ischemia> ischemias = new HashSet<>();
 
     @Embedded
     private Macula macula;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "density_image_id")
-    private StaticFileEntity densityImage;
+    private StaticFile densityImage;
 
     @OrderBy("sector_number ASC")
     @OneToMany(
@@ -60,17 +60,17 @@ public class BloodFlowAnalyse {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<DensityEntity> densities = new HashSet<>();
+    private Set<Density> densities = new HashSet<>();
 
     @Transient
-    private AnalyseEntity analyse;
+    private Analyse analyse;
 
-    public void addIschemia(IshemiaEntity ischemia) {
+    public void addIschemia(Ischemia ischemia) {
         ischemias.add(ischemia);
         ischemia.setAnalyse(analyse);
     }
 
-    public void addDensity(DensityEntity density) {
+    public void addDensity(Density density) {
         densities.add(density);
         density.setAnalyse(analyse);
     }

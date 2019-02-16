@@ -1,6 +1,6 @@
 package com.angio.angiobackend.api.analyse.entity;
 
-import com.angio.angiobackend.api.uploads.entity.StaticFileEntity;
+import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +29,7 @@ import javax.persistence.Table;
 @Cacheable
 @Entity
 @Table(name = "vessels")
-public class VesselEntity {
+public class Vessel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,11 +38,11 @@ public class VesselEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vessel_image_id")
-    private StaticFileEntity vesselImage;
+    private StaticFile vesselImage;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "main_vessel_image_id")
-    private StaticFileEntity mainVesselImage;
+    private StaticFile mainVesselImage;
 
     @Column(name = "tortuosity_degree", nullable = false)
     private Float tortuosityDegree;
@@ -61,5 +61,5 @@ public class VesselEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analyse_id")
-    private AnalyseEntity analyse;
+    private Analyse analyse;
 }
