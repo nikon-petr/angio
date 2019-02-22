@@ -25,5 +25,6 @@ public class AngioBackendProperties {
     @Data
     public static class Scheduling {
         private String purgeAnalysesPeriod;
+        private String purgeImagesPeriod;
     }
 }

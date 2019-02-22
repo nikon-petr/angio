@@ -14,4 +14,7 @@ public interface UploadService {
 
     @Transactional
     StaticFileDto uploadDocument(@NonNull MultipartFile file) throws IOException;
+
+    @Transactional
+    int purgeUnusedImages();
 }

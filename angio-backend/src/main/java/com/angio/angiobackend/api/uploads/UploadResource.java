@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,5 +41,15 @@ public class UploadResource {
     @PostMapping(path = "/document")
     public StaticFileDto uploadDocument(MultipartFile multipartFile) throws IOException {
         return uploadService.uploadDocument(multipartFile);
+    }
+
+    @ApiOperation(value = "Resource to purge unused images", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Client error"),
+            @ApiResponse(code = 500, message = "Server error")})
+    @PostMapping("/image/purge")
+    @PreAuthorize("hasAuthority('IMAGE_UPLOAD_PURGE_UNUSED')")
+    public Integer purgeUnusedImages() {
+        return uploadService.purgeUnusedImages();
     }
 }

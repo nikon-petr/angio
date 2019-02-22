@@ -7,6 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum  Roles {
     ADMIN(new Permissions[]{
+            Permissions.ANALYSE_PURGE_DELETED,
+
             Permissions.USER_CREATE,
             Permissions.USER_VIEW,
             Permissions.USER_EDIT,
@@ -14,7 +16,9 @@ public enum  Roles {
 
             Permissions.TOKEN_VIEW,
             Permissions.TOKEN_REVOKE,
-            Permissions.TOKEN_REMOVE
+            Permissions.TOKEN_REMOVE,
+
+            Permissions.IMAGE_UPLOAD_PURGE_UNUSED
     }),
 
     DOCTOR(new Permissions[]{

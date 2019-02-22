@@ -95,3 +95,5 @@ angio:
         scheduling:
             # every day at 3:00
             purge-analyses-period: 0 0 3 * * *
+            # every day at 3:00
+            purge-images-period: 0 0 3 * * *

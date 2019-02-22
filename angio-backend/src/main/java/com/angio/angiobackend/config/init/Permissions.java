@@ -12,6 +12,7 @@ public enum  Permissions {
     ANALYSE_EDIT("Изменение анализа"),
     ANALYSE_EXECUTE_ACTION("Изменение анализа"),
     ANALYSE_REMOVE("Удаление анализа"),
+    ANALYSE_PURGE_DELETED("Очистка БД от анализов в статусе DELETED"),
 
     PATIENT_VIEW("Просмотр данных пациентов"),
     PATIENT_CREATE("Создание пациентов"),
@@ -20,6 +21,7 @@ public enum  Permissions {
 
     DOCUMENT_UPLOAD("Загрузка документов в систему"),
     IMAGE_UPLOAD("Загрузка изображений в систему"),
+    IMAGE_UPLOAD_PURGE_UNUSED("Очистка БД от неиспользуемых изображений"),
 
     USER_VIEW("Просмотр данных пользователей системы"),
     USER_CREATE("Создание пользователей системы"),

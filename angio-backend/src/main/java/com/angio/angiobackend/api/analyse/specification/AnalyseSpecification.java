@@ -15,9 +15,12 @@ import com.angio.angiobackend.api.common.embeddable.FullName_;
 import com.angio.angiobackend.api.patient.entity.Patient_;
 import com.angio.angiobackend.api.user.entities.User_;
 import com.angio.angiobackend.util.EnumUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.Fetch;
 import java.util.Date;
 

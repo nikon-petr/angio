@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -22,6 +23,7 @@ import java.util.Map;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @AllArgsConstructor
@@ -35,6 +37,12 @@ public class ApiExceptionHandler {
     @ResponseStatus(NOT_FOUND)
     public Error handleNotFoundException(Exception e) {
         return Error.of(e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(FORBIDDEN)
+    public Error handleAccessDeniedException(Exception e) {
+        return Error.of(msa.getMessage("errors.api.common.security.accessDenied"));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

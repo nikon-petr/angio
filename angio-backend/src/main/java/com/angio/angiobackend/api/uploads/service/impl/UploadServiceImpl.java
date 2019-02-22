@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -31,46 +32,86 @@ public class UploadServiceImpl implements UploadService {
     private final UploadMapper uploadMapper;
     private final DynamicLocaleMessageSourceAccessor msa;
 
+    /**
+     * Upload image if it matches extension defined in angio.app.image-upload-extensions property
+     * else throw {@link IllegalArgumentException}.
+     *
+     * @param file image file
+     * @return saved file
+     * @throws IOException
+     */
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('IMAGE_UPLOAD')")
     public StaticFileDto uploadImage(@NonNull MultipartFile file) throws IOException {
 
-        log.info("uploadImage() - start");
-        log.info("uploadImage() - save image to file system");
+        log.trace("uploadImage() - start");
+        log.trace("uploadImage() - save image to file system");
         validateFile(file);
         String savedFilename = FileUtils.saveFile(file, props.getUploadDirectory());
 
-        log.info("uploadImage() - save image data to database");
+        log.trace("uploadImage() - save image data to database");
         StaticFile savedImage = uploadRepository.save(new StaticFile(null, FileType.IMAGE, savedFilename));
 
-        log.info("uploadImage() - map image data");
+        log.trace("uploadImage() - map image data");
         StaticFileDto savedStaticFileDto = uploadMapper.toExternalDto(savedImage);
 
-        log.info("uploadImage() - result: {}", savedStaticFileDto);
-        log.info("uploadImage() - end");
+        log.trace("uploadImage() - result: {}", savedStaticFileDto);
+        log.trace("uploadImage() - end");
         return savedStaticFileDto;
     }
 
+    /**
+     * Upload document if it matches extension defined in angio.app.document-upload-extensions property
+     * else throw {@link IllegalArgumentException}.
+     *
+     * @param file file
+     * @return saved file
+     * @throws IOException
+     */
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('DOCUMENT_UPLOAD')")
     public StaticFileDto uploadDocument(@NonNull MultipartFile file) throws IOException {
 
-        log.info("uploadDocument() - start");
-        log.info("uploadDocument() - save document to file system");
+        log.trace("uploadDocument() - start");
+        log.trace("uploadDocument() - save document to file system");
         validateFile(file);
         String savedFilename = FileUtils.saveFile(file, props.getUploadDirectory());
 
-        log.info("uploadDocument() - save document data to database");
+        log.trace("uploadDocument() - save document data to database");
         StaticFile savedImage = uploadRepository.save(new StaticFile(null, FileType.DOCUMENT, savedFilename));
 
-        log.info("uploadDocument() - map document data");
+        log.trace("uploadDocument() - map document data");
         StaticFileDto savedStaticFileDto = uploadMapper.toExternalDto(savedImage);
 
-        log.info("uploadDocument() - result: {}", savedStaticFileDto);
-        log.info("uploadDocument() - end");
+        log.trace("uploadDocument() - result: {}", savedStaticFileDto);
+        log.trace("uploadDocument() - end");
         return savedStaticFileDto;
+    }
+
+    /**
+     * Purge unused images.
+     *
+     * @return count of deleted images
+     */
+    @Override
+    @Transactional
+    public int purgeUnusedImages() {
+        log.trace("purgeUnusedImages() - start");
+        List<StaticFile> unlinkedImages = uploadRepository.getUnlinkedImages();
+
+        log.trace("purgeUnusedImages() - ids to delete: {}", unlinkedImages.stream().mapToLong(StaticFile::getId).toArray());
+        if (unlinkedImages.size() > 0) {
+            for (StaticFile image : unlinkedImages) {
+                FileUtils.deleteFile(image.getFilename(), props.getUploadDirectory());
+            }
+
+            uploadRepository.deleteInBatch(unlinkedImages);
+        }
+
+        log.trace("purgeUnusedImages() - end");
+        return unlinkedImages.size();
     }
 
     private void validateFile(MultipartFile file) {

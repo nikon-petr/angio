@@ -282,12 +282,17 @@ public class AnalyseServiceImpl implements AnalyseService {
 
     @Override
     @Transactional
-    public void purgeAnalyses() {
-        log.trace("purgeAnalyses() - start");
+    public int purgeAnalysesInStatusDeleted() {
+        log.trace("purgeAnalysesInStatusDeleted() - start");
         List<Analyse> inStatusDeleted = analyseRepository.findAll(analyseSpecification.inStatus(AnalyseStatusType.DELETED));
-        log.trace("purgeAnalyses() - ids to delete: {}", inStatusDeleted.stream().mapToLong(Analyse::getId).toArray());
-        analyseRepository.deleteInBatch(inStatusDeleted);
-        log.trace("purgeAnalyses() - end");
+
+        log.trace("purgeAnalysesInStatusDeleted() - ids to delete: {}", inStatusDeleted.stream().mapToLong(Analyse::getId).toArray());
+        if (inStatusDeleted.size() > 0) {
+            analyseRepository.deleteInBatch(inStatusDeleted);
+        }
+
+        log.trace("purgeAnalysesInStatusDeleted() - end");
+        return inStatusDeleted.size();
     }
 
     private Pageable mapSortingFields(Pageable pageable) {

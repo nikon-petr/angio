@@ -65,6 +65,14 @@ public class FileUtils {
         return localFile.getName();
     }
 
+    public static boolean deleteFile(@NonNull String filename, @NonNull String uploadFolder) {
+        log.trace("deleteFile() - start");
+
+        File file = new File(uploadFolder, filename);
+
+        return file.delete();
+    }
+
     /**
      * Generate file name based on date and random int and apply hash function to it.
      *
