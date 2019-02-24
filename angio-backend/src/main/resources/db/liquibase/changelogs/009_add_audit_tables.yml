@@ -1,0 +1,271 @@
+databaseChangeLog:
+- changeSet:
+    id: 009_refactor_analyse_types
+    author: nikon-petr
+    changes:
+
+    # refactor patient
+    - dropColumn:
+        tableName: patients
+        columnName: comment
+
+    # refactor analyse
+    - modifyDataType:
+        tableName: analyses
+        columnName: name
+        newDataType: VARCHAR(75)
+    - modifyDataType:
+        tableName: analyses
+        columnName: short_description
+        newDataType: VARCHAR(100)
+    - modifyDataType:
+        tableName: analyses
+        columnName: analyse_type
+        newDataType: VARCHAR(20)
+    - modifyDataType:
+        tableName: analyses
+        columnName: comment
+        newDataType: VARCHAR(125)
+
+- changeSet:
+    id: 009_create_aud_tables
+    author: nikon-petr
+    changes:
+
+    - createTable:
+        tableName: revinfo
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+            name: rev
+            type: INT
+        - column:
+            name: revtstmp
+            type: BIGINT
+        - column:
+            name: auditor_id
+            type: UUID
+
+    - createSequence:
+        sequenceName: hibernate_sequence
+        startValue: 1
+        minValue: 1
+        incrementBy: 1
+
+    - createTable:
+        tableName: analyses_aud
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+                foreignKeyName: analyses_aud_revinfo_fk
+                references: revinfo(rev)
+            name: rev
+            type: INT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: analyse_date
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: status
+            type: VARCHAR(15)
+        - column:
+            name: status_extension
+            type: VARCHAR(50)
+        - column:
+            name: user_id
+            type: UUID
+        - column:
+            name: patient_id
+            type: BIGINT
+        - column:
+            name: name
+            type: VARCHAR(75)
+        - column:
+            name: short_description
+            type: VARCHAR(100)
+        - column:
+            name: full_description
+            type: VARCHAR(1000)
+        - column:
+            name: analyse_type
+            type: VARCHAR(20)
+        - column:
+            name: comment
+            type: VARCHAR(125)
+        - column:
+            name: conclusion
+            type: VARCHAR(1000)
+        - column:
+            name: original_image_id
+            type: BIGINT
+        - column:
+            name: binarized_image_id
+            type: BIGINT
+        - column:
+            name: skeletonized_image_id
+            type: BIGINT
+        - column:
+            name: ischemia_image_id
+            type: BIGINT
+        - column:
+            name: density_image_id
+            type: BIGINT
+        - column:
+            name: macula_area
+            type: DOUBLE
+        - column:
+            name: macula_radius
+            type: DOUBLE
+        - column:
+            name: macula_center_x
+            type: DOUBLE
+        - column:
+            name: macula_center_y
+            type: DOUBLE
+
+    - createTable:
+        tableName: vessels_aud
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+                foreignKeyName: analyses_aud_revinfo_fk
+                references: revinfo(rev)
+            name: rev
+            type: INT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: analyse_id
+            type: BIGINT
+        - column:
+            name: vessel_image_id
+            type: BIGINT
+        - column:
+            name: main_vessel_image_id
+            type: BIGINT
+        - column:
+            name: tortuosity_degree
+            type: FLOAT4
+        - column:
+            name: count_of_branches
+            type: INT
+        - column:
+            name: branching_degree
+            type: FLOAT4
+        - column:
+            name: area
+            type: FLOAT4
+        - column:
+            name: area_percent
+            type: FLOAT4
+
+    - createTable:
+        tableName: users_aud
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+            name: id
+            type: UUID
+            defaultValueComputed: uuid_generate_v1()
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+                foreignKeyName: analyses_aud_revinfo_fk
+                references: revinfo(rev)
+            name: rev
+            type: INT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: email
+            type: VARCHAR(30)
+        - column:
+            name: password
+            type: VARCHAR(120)
+        - column:
+            name: enabled
+            type: BOOLEAN
+        - column:
+            name: locked
+            type: BOOLEAN
+        - column:
+            name: firstname
+            type: VARCHAR(30)
+        - column:
+            name: lastname
+            type: VARCHAR(30)
+        - column:
+            name: patronymic
+            type: VARCHAR(30)
+
+    - createTable:
+        tableName: patients_aud
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+                foreignKeyName: analyses_aud_revinfo_fk
+                references: revinfo(rev)
+            name: rev
+            type: INT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: email
+            type: VARCHAR(100)
+        - column:
+            name: phone
+            type: VARCHAR(11)
+        - column:
+            name: bday
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: location_address
+            type: VARCHAR(100)
+        - column:
+            name: work_address
+            type: VARCHAR(100)
+        - column:
+            name: policy
+            type: VARCHAR(16)
+        - column:
+            name: firstname
+            type: VARCHAR(30)
+        - column:
+            name: lastname
+            type: VARCHAR(30)
+        - column:
+            name: patronymic
+            type: VARCHAR(30)

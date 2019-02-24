@@ -12,3 +12,14 @@ spring:
         username: angio_app
         password: q1w2e3
         driver-class-name: org.postgresql.Driver
+
+logging:
+    level:
+        root: WARN
+        com.angio.angiobackend: INFO
+        org.springframework.web: INFO
+        org.springframework.security: INFO
+        org.hibernate.stat: OFF
+        org.hibernate.SQL: OFF
+        org.hibernate.type: OFF
+        org.hibernate.cache: OFF

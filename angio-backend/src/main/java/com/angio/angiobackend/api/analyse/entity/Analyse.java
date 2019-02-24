@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -34,6 +37,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString(exclude = {"originalImage"})
 @EqualsAndHashCode(exclude = {"id", "originalImage"})
+@Audited
 @Entity
 @Table(name = "analyses")
 public class Analyse {
@@ -52,6 +56,7 @@ public class Analyse {
     @Embedded
     private AdditionalInfo additionalInfo;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "original_image_id")
     private StaticFile originalImage;

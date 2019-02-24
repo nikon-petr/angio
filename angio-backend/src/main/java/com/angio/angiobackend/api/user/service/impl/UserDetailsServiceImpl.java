@@ -24,19 +24,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * Load user from database by username.
      *
-     * @param userUuid user email
+     * @param uuid user email
      * @return user details for spring security
      * @throws UsernameNotFoundException throws when user id not found
      */
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String userUuid)
+    public UserDetails loadUserByUsername(String uuid)
             throws UsernameNotFoundException {
 
-        log.debug("loadUserByUsername() - start email: {}", userUuid);
-        User user = userRepository.findById(UUID.fromString(userUuid))
+        log.debug("loadUserByUsername() - start email: {}", uuid);
+        User user = userRepository.findById(UUID.fromString(uuid))
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        msa.getMessage("errors.api.user.userNotFound", new Object[] {userUuid})));
+                        msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {uuid})));
 
         log.debug("loadUserByUsername() - end");
         return user;

@@ -7,15 +7,15 @@ spring:
     jpa:
         hibernate:
             ddl-auto: validate
-            format-sql: true
-            generate_statistics: true
             cache:
                 use-second-level-cache: true
                 region:
                     factory-class: org.hibernate.cache.ehcache.EhCacheRegionFactory
         open-in-view: false
-        show-sql: true
         properties:
+            hibernate:
+                generate_statistics: true
+                format_sql: false
             javax:
                 persistence:
                     sharedcache:
@@ -76,7 +76,10 @@ logging:
         com.angio.angiobackend: INFO
         org.springframework.web: INFO
         org.springframework.security: INFO
-        org.hibernate.stat: INFO
+        org.hibernate.stat: DEBUG
+        org.hibernate.SQL: DEBUG
+        org.hibernate.type: INFO
+        org.hibernate.cache: DEBUG
 
 angio:
     app:

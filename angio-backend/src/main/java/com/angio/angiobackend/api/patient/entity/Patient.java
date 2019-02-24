@@ -9,6 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -26,8 +28,9 @@ import java.util.Set;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"analysesInfo"})
-@EqualsAndHashCode(exclude = {"id", "analysesInfo"})
+@ToString(exclude = {"analyses"})
+@EqualsAndHashCode(exclude = {"id", "analyses"})
+@Audited
 @Entity
 @Table(name = "patients", schema = "public")
 public class Patient {
@@ -55,13 +58,10 @@ public class Patient {
     @Column(name = "work_address", nullable = false, length = 100)
     private String workAddress;
 
-    @Column(name = "comment", length = 1000)
-    private String comment;
-
     @Column(name = "policy", length = 16)
     private String policy;
 
-    @JsonIgnore
+    @NotAudited
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "additionalInfo.patient")
-    private Set<Analyse> analysesInfo;
+    private Set<Analyse> analyses;
 }

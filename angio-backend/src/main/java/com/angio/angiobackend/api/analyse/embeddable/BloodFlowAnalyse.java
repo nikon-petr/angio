@@ -10,6 +10,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -35,10 +38,12 @@ import java.util.Set;
 @Access(AccessType.FIELD)
 public class BloodFlowAnalyse {
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ischemia_image_id")
     private StaticFile ischemiaImage;
 
+    @NotAudited
     @OrderBy("zone_number ASC")
     @OneToMany(
             mappedBy = "analyse",
@@ -50,10 +55,12 @@ public class BloodFlowAnalyse {
     @Embedded
     private Macula macula;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "density_image_id")
     private StaticFile densityImage;
 
+    @NotAudited
     @OrderBy("sector_number ASC")
     @OneToMany(
             mappedBy = "analyse",

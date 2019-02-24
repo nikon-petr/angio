@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +22,6 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -41,6 +41,7 @@ import java.util.UUID;
 @EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses"})
 @AllArgsConstructor
 @NoArgsConstructor
+@Audited
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -64,6 +65,7 @@ public class User implements UserDetails {
     @Column(name = "locked", nullable = false)
     private boolean locked;
 
+    @NotAudited
     @ManyToMany
     @JoinTable(
             name = "users_roles",
@@ -73,6 +75,7 @@ public class User implements UserDetails {
                     name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
 
+    @NotAudited
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "user",
@@ -80,6 +83,7 @@ public class User implements UserDetails {
     )
     private Set<Token> tokens = new HashSet<>();
 
+    @NotAudited
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "additionalInfo.diagnostician",

@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         log.debug("findUserEntityByUuid() - start id: {}", uuid);
         return userRepository.findById(UUID.fromString(uuid))
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        msa.getMessage("errors.api.user.userNotFound", new Object[] {uuid})));
+                        msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {uuid})));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         log.debug("findUserEntityByEmail() - start id: {}", email);
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        msa.getMessage("errors.api.user.userNotFound", new Object[] {email})));
+                        msa.getMessage("errors.api.user.userWithEmailNotFound", new Object[] {email})));
     }
 
     /**
@@ -57,10 +57,10 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public User getUserFromContext() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.debug("getUserFromContext() - start id: {}", email);
-        return userRepository.findByEmail(email)
+        String uuid = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.debug("getUserFromContext() - start id: {}", uuid);
+        return userRepository.findById(UUID.fromString(uuid))
                 .orElseThrow(() -> new UnauthorizedUserException(
-                        msa.getMessage("errors.api.user.userNotFound", new Object[] {email})));
+                        msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {uuid})));
     }
 }

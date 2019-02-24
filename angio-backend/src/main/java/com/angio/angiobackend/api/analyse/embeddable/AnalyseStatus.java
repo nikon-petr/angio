@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -24,6 +25,7 @@ public class AnalyseStatus implements Serializable {
     /**
      * Analyse status.
      */
+    @Audited
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 10)
     private AnalyseStatusType type;
@@ -31,6 +33,7 @@ public class AnalyseStatus implements Serializable {
     /**
      * AnalyseStatus extension.
      */
+    @Audited
     @Column(name = "status_extension", length = 50)
     private String extension;
 

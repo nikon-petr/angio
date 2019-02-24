@@ -72,10 +72,4 @@ public class PatientDto implements Serializable {
     @NotNull(message = "{validation.patient.policy.NotNull}")
     @ApiModelProperty(value = "Patient insurance policy number", example = "1276215467890790")
     private String policy;
-
-    /**
-     * Comment about patient.
-     */
-    @ApiModelProperty(value = "Comment about patient", example = "null")
-    private String comment;
 }

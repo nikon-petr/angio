@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -27,6 +29,7 @@ import javax.persistence.Table;
 @ToString(exclude = {"vesselImage", "mainVesselImage", "analyse"})
 @EqualsAndHashCode(exclude = {"id", "vesselImage", "mainVesselImage", "analyse"})
 @Cacheable
+@Audited
 @Entity
 @Table(name = "vessels")
 public class Vessel {
@@ -36,10 +39,12 @@ public class Vessel {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vessel_image_id")
     private StaticFile vesselImage;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "main_vessel_image_id")
     private StaticFile mainVesselImage;
@@ -59,6 +64,7 @@ public class Vessel {
     @Column(name = "area_percent", nullable = false)
     private Float areaPercent;
 
+    @Audited
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analyse_id")
     private Analyse analyse;

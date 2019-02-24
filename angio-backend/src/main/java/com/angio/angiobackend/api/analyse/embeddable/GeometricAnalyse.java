@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -34,10 +37,12 @@ import java.util.Set;
 @Access(AccessType.FIELD)
 public class GeometricAnalyse {
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "binarized_image_id")
     private StaticFile binarizedImage;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skeletonized_image_id")
     private StaticFile skeletonizedImage;
