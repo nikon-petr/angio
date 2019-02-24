@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserExc
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -25,9 +27,18 @@ public class UserServiceImpl implements UserService {
     /**
      * Find user by id and return entity object.
      *
-     * @param email user id
+     * @param uuid user id
      * @return user entity
      */
+    @Override
+    @Transactional(readOnly = true)
+    public User findUserEntityByUuid(@NonNull String uuid) {
+        log.debug("findUserEntityByUuid() - start id: {}", uuid);
+        return userRepository.findById(UUID.fromString(uuid))
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        msa.getMessage("errors.api.user.userNotFound", new Object[] {uuid})));
+    }
+
     @Override
     @Transactional(readOnly = true)
     public User findUserEntityByEmail(@NonNull String email) {

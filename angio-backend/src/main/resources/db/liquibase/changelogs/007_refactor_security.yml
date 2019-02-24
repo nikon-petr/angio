@@ -29,7 +29,7 @@ databaseChangeLog:
         columns:
         - column:
             name: user_id
-            type: BIGINT
+            type: UUID
 
     - dropForeignKeyConstraint:
         baseTableName: users_info
@@ -42,7 +42,7 @@ databaseChangeLog:
         columns:
         - column:
             name: user_id
-            type: BIGINT
+            type: UUID
 
     # authority -> roles
     - renameTable:
@@ -71,8 +71,8 @@ databaseChangeLog:
         columns:
         - column:
             name: id
-            type: BIGINT
-            autoIncrement: true
+            type: UUID
+            defaultValueComputed: uuid_generate_v1()
             constraints:
                 primaryKey: true
                 primaryKeyName: token_pkey
@@ -98,7 +98,7 @@ databaseChangeLog:
                 primaryKey: true
                 primaryKeyName: token_pkey
             name: id
-            type: VARCHAR(36)
+            type: UUID
         - column:
             name: issued_at
             type: TIMESTAMP
@@ -111,7 +111,7 @@ databaseChangeLog:
                 nullable: false
         - column:
             name: user_id
-            type: BIGINT
+            type: UUID
             constraints:
                 nullable: false
                 foreignKeyName: token_user_fk
@@ -148,7 +148,7 @@ databaseChangeLog:
                 foreignKeyName: users_roles_fk
                 references: users(id)
             name: user_id
-            type: BIGINT
+            type: UUID
         - column:
             constraints:
                 primaryKey: true

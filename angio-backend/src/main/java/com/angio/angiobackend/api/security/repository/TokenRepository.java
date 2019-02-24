@@ -6,10 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.Optional;
+import java.util.UUID;
 
-public interface TokenRepository extends JpaRepository<Token, String>, JpaSpecificationExecutor<Token> {
-
-    @Override
-    @EntityGraph(value = "graph.Order.user", type = EntityGraph.EntityGraphType.LOAD)
-    Optional<Token> findById(String s);
+public interface TokenRepository extends JpaRepository<Token, UUID>, JpaSpecificationExecutor<Token> {
 }

@@ -2,7 +2,7 @@ version: "2"
 
 services:
     db:
-        image: postgres:10-alpine
+        image: amd64/postgres:10-alpine
         volumes:
             - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
         expose:
@@ -25,22 +25,6 @@ services:
             - ARTEMIS_USERNAME=angio_app
             - ARTEMIS_PASSWORD=q1w2e3
 
-#    angio-backend:
-#        image: angio-backend:latest
-#        build:
-#            context: ./angio-backend
-#            dockerfile: ./src/main/docker/Dockerfile
-#        volumes:
-#            - ~/.m2:/root/.m2:rw # Maven repository files
-#            - static-content:/angio-backend/src/main/resources/static
-#        ports:
-#            - 8000:8000 # Port for remote debug
-#            - 80:80
-#        tty: true
-#        depends_on:
-#            - db
-#            - artemis
-  
     analyse-executor:
         image: analyse-executor:latest
         build:

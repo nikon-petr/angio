@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserService {
 
     @Transactional
+    User findUserEntityByUuid(@NonNull String uuid);
+
+    @Transactional
     User findUserEntityByEmail(@NonNull String email);
 
     @Transactional

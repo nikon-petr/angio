@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
@@ -37,8 +39,8 @@ import java.util.Date;
 public class Token implements Serializable {
 
     @Id
-    @Column(name = "id")
-    private String id;
+    @Type(type="pg-uuid")
+    private UUID id;
 
     @Column(name = "issued_at")
     private Date issuedAt;

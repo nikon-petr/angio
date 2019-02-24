@@ -1,3 +1,3 @@
-email,password,enabled,firstname,lastname,patronymic
-admin@example.com,{noop}q1w2e3,true,Admin,Admin,Admin
-doctor@example.com,{noop}q1w2e3,true,Геннадий,Врачебный,Aдреевич
+email,password,firstname,lastname,patronymic,enabled,locked
+admin@example.com,{noop}q1w2e3,Admin,Admin,Admin,true,false
+doctor@example.com,{noop}q1w2e3,Геннадий,Врачебный,Aдреевич,true,false

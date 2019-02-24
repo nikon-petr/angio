@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 public class JwtJdbcTokenStore extends JwtTokenStore {
@@ -37,11 +38,11 @@ public class JwtJdbcTokenStore extends JwtTokenStore {
         Map<String, ?> tokenData = getJwtClaims(refreshToken.getValue());
 
         log.debug("storeRefreshToken() - find user email={} in db", authentication.getName());
-        User user = userService.findUserEntityByEmail(authentication.getName());
+        User user = userService.findUserEntityByUuid(authentication.getName());
 
         Token token = new Token()
                 .setUser(user)
-                .setId((String) tokenData.get("jti"))
+                .setId(UUID.fromString((String) tokenData.get("jti")))
                 .setIssuedAt(new Date())
                 .setExpiresIn(new Date(((Integer) tokenData.get("exp")) * 1000L));
         log.debug("storeRefreshToken() - save token: {}", token);
@@ -54,7 +55,7 @@ public class JwtJdbcTokenStore extends JwtTokenStore {
         log.debug("inWhiteList() - start token: {}", refreshToken);
         Map<String, ?> tokenData = getJwtClaims(refreshToken);
         log.debug("inWhiteList() - end");
-        return tokenRepository.existsById((String) tokenData.get("jti"));
+        return tokenRepository.existsById(UUID.fromString((String) tokenData.get("jti")));
     }
 
     private Map<String, ?> getJwtClaims(String tokenValue) {
@@ -64,12 +65,12 @@ public class JwtJdbcTokenStore extends JwtTokenStore {
     public void removeRefreshTokenById(String tokenId) {
         log.debug("removeRefreshTokenById() - start jti: {}", tokenId);
         log.debug("removeRefreshTokenById() - end");
-        tokenRepository.deleteById(tokenId);
+        tokenRepository.deleteById(UUID.fromString(tokenId));
     }
 
     public Optional<Token> findById(String tokenId) {
         log.debug("findById() - start jti: {}", tokenId);
         log.debug("findById() - end");
-        return tokenRepository.findById(tokenId);
+        return tokenRepository.findById(UUID.fromString(tokenId));
     }
 }

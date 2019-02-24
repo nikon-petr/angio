@@ -21,6 +21,11 @@ databaseChangeLog:
             type: VARCHAR(30)
             constraints:
                 nullable: false
+        - column:
+            name: locked
+            type: BOOLEAN
+            constraints:
+                nullable: false
     - dropTable:
         tableName: users_info
         cascadeConstraints: true
