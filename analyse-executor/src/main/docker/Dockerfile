@@ -1,4 +1,4 @@
-FROM maven:3.6 AS matlab-runtime
+FROM maven:3.5 AS matlab-runtime
 
 LABEL description="Docker image of angio analyse executor"
 
