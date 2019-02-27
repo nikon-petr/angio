@@ -2,6 +2,7 @@ package com.angio.angiobackend.api.user.service.impl;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
+import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
 import com.angio.angiobackend.api.user.dto.UserBaseDto;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final DynamicLocaleMessageSourceAccessor msa;
 
     /**
@@ -87,5 +91,33 @@ public class UserServiceImpl implements UserService {
 
         log.trace("updateUser() - save updated user and return");
         return userMapper.toBaseDto(userRepository.save(user));
+    }
+
+    /**
+     * Change user password.
+     *
+     * @param id user id
+     * @param dto dto
+     * @return changing result
+     */
+    @Override
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
+    public String changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto) {
+
+        log.trace("changePassword() - start, id: {}", id);
+        User user = findUserEntityByUuid(id);
+
+        log.trace("changePassword() - check old password");
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Password check failure");
+        }
+
+        log.trace("changePassword() - save new password");
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
+
+        log.trace("changePassword() - end");
+        return "Password successful changed";
     }
 }

@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.user.service;
 
+import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
 import com.angio.angiobackend.api.user.dto.UserBaseDto;
 import com.angio.angiobackend.api.user.entities.User;
 import lombok.NonNull;
@@ -22,4 +23,7 @@ public interface UserService {
 
     @Transactional
     UserBaseDto updateUser(@NonNull UUID id, @NonNull UserBaseDto dto);
+
+    @Transactional
+    String changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto);
 }
