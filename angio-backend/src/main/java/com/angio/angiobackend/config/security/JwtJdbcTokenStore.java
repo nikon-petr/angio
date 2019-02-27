@@ -38,7 +38,7 @@ public class JwtJdbcTokenStore extends JwtTokenStore {
         Map<String, ?> tokenData = getJwtClaims(refreshToken.getValue());
 
         log.debug("storeRefreshToken() - find user email={} in db", authentication.getName());
-        User user = userService.findUserEntityByUuid(authentication.getName());
+        User user = userService.findUserEntityByUuid(UUID.fromString(authentication.getName()));
 
         Token token = new Token()
                 .setUser(user)

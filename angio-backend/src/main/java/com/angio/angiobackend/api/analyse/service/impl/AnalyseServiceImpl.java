@@ -223,7 +223,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     }
 
     /**
-     * Update or create conclusion for analyse with given id or throw {@link ResourceNotFoundException} if not found.
+     * Update analyse with given id or throw {@link ResourceNotFoundException} if not found.
      *
      * @param id analyse id
      * @param dto conclusion
