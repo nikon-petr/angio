@@ -1,0 +1,22 @@
+databaseChangeLog:
+- changeSet:
+    id: 009_refactor_analyse_types
+    author: nikon-petr
+    changes:
+    - createTable:
+        tableName: owners_roles
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: users_roles_fk
+                references: roles(id)
+            name: owner_id
+            type: BIGINT
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: roles_users_fk
+                references: roles(id)
+            name: role_id
+            type: BIGINT

@@ -22,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -47,6 +48,7 @@ import java.util.UUID;
 public class User implements UserDetails {
 
     @Id
+    @GeneratedValue
     @Type(type="pg-uuid")
     private UUID id;
 
@@ -114,6 +116,15 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    public Set<Role> getRolesOwner() {
+        Set<Role> ownedRoles = new HashSet<>();
+        for (Role role : roles) {
+            ownedRoles.addAll(role.getRolesOwner());
+        }
+
+        return ownedRoles;
     }
 
     private List<String> getPermissions(Collection<Role> roles) {

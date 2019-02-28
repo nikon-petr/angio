@@ -1,6 +1,10 @@
 package com.angio.angiobackend.api.user.service.impl;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
+import com.angio.angiobackend.api.common.exception.OperationException;
+import com.angio.angiobackend.api.security.entity.Role;
+import com.angio.angiobackend.api.security.repository.RoleRepository;
+import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
 import com.angio.angiobackend.api.user.dto.UserBaseDto;
@@ -8,6 +12,7 @@ import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
 import com.angio.angiobackend.api.user.repositories.UserRepository;
 import com.angio.angiobackend.api.user.service.UserService;
+import com.angio.angiobackend.util.PasswordUtils;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +25,13 @@ import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserExc
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -28,6 +39,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final DynamicLocaleMessageSourceAccessor msa;
@@ -70,6 +82,53 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(UUID.fromString(uuid))
                 .orElseThrow(() -> new UnauthorizedUserException(
                         msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {uuid})));
+    }
+
+    /**
+     * Create new user accounts with property enabled=false.
+     *
+     * @param dtos user data to create
+     * @return created user data
+     */
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('USER_CREATE')")
+    public List<NewUserDto> createUsers(@NonNull List<NewUserDto> dtos) {
+
+        log.trace("createUsers() - start");
+        if (dtos.size() == 0) {
+            log.trace("createUsers() - empty user list");
+            return Collections.emptyList();
+        }
+
+        log.trace("createUsers() - checking all requested email is unique");
+        checkEmailUnique(dtos);
+
+        log.trace("createUsers() - fetch needed roles");
+        List<Role> newUserRoles = findRolesForUsers(dtos);
+
+        log.trace("createUsers() - checking that creator is owner of requested roles");
+        checkAllowedRoles(newUserRoles);
+
+        log.trace("createUsers() - generate passwords and save users");
+        Map<String, User> passwordsAndNewUsers = dtos.stream()
+                .map(dto -> new AbstractMap.SimpleEntry<>(PasswordUtils.generateNumberPassword(6), new User()
+                        .setEmail(dto.getEmail())
+                        .setEnabled(false)
+                        .setLocked(false)
+                        .setRoles(newUserRoles.stream()
+                                .filter(role -> dto.getRoleIds().contains(role.getId()))
+                                .collect(Collectors.toSet()))))
+                .peek(entry -> entry.getValue().setPassword(passwordEncoder.encode(entry.getKey())))
+                .peek(entry -> entry.setValue(userRepository.save(entry.getValue())))
+                .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+        log.info("createUsers() - result: {}", passwordsAndNewUsers);
+
+        log.trace("createUsers() - notify created users by email");
+        // TODO: add call of email service for sending message with password
+
+        log.trace("createUsers() - end");
+        return userMapper.toNewUserDtos(new ArrayList<>(passwordsAndNewUsers.values()));
     }
 
     /**
@@ -119,5 +178,45 @@ public class UserServiceImpl implements UserService {
 
         log.trace("changePassword() - end");
         return "Password successful changed";
+    }
+
+    private void checkEmailUnique(List<NewUserDto> dtos) {
+        List<User> existingUsers = userRepository.findByEmailIn(dtos.stream()
+                .map(NewUserDto::getEmail)
+                .collect(Collectors.toList()));
+        if (existingUsers.size() > 0) {
+            throw new OperationException(
+                    msa.getMessage("errors.api.user.emailNotUnique", new Object[]{existingUsers.stream()
+                            .map(User::getEmail)
+                            .collect(Collectors.toList())}));
+        }
+    }
+
+    private List<Role> findRolesForUsers(List<NewUserDto> dtos) {
+        List<Long> rolesIds = dtos.stream()
+                .flatMap(dto -> dto.getRoleIds().stream())
+                .distinct()
+                .collect(Collectors.toList());
+        List<Role> roles = roleRepository.findAllById(rolesIds);
+
+        if (rolesIds.size() != roles.size()) {
+            rolesIds.removeAll(roles.stream().map(Role::getId).collect(Collectors.toList()));
+            throw new OperationException(
+                    msa.getMessage("errors.api.user.rolesForUserNotFound", new Object[]{rolesIds}));
+        }
+
+        return roles;
+    }
+
+    private void checkAllowedRoles(List<Role> roles) {
+        User creator = getUserFromContext();
+
+        if (!creator.getRolesOwner().containsAll(roles)) {
+            List<Long> ownedRolesIds = creator.getRolesOwner().stream()
+                    .map(Role::getId)
+                    .collect(Collectors.toList());
+            throw new OperationException(
+                    msa.getMessage("errors.api.user.rolesNotOwnedUser", new Object[]{ownedRolesIds}));
+        }
     }
 }

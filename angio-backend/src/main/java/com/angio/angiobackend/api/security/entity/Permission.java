@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Data
 @Accessors(chain = true)
@@ -35,5 +36,5 @@ public class Permission {
     private String description;
 
     @ManyToMany(mappedBy = "permissions")
-    private Collection<Role> roles;
+    private Collection<Role> roles = new HashSet<>();
 }

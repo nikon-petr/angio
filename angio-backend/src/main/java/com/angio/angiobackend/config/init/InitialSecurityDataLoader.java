@@ -67,6 +67,17 @@ public class InitialSecurityDataLoader implements ApplicationListener<ContextRef
             log.debug("onApplicationEvent() - create if not found role {}", role.name());
             allRoles.put(role, createRoleIfNotFound(role.name(), permissions));
         }
+
+        for (Roles role : Roles.values()) {
+
+            Set<Role> ownedRoles = new HashSet<>();
+
+            for (Roles ownedRole : role.getRolesOwner()) {
+                ownedRoles.add(allRoles.get(ownedRole));
+            }
+
+            allRoles.get(role).setRolesOwner(ownedRoles);
+        }
         log.debug("onApplicationEvent() - loaded roles: {}", allRoles);
 
         log.debug("onApplicationEvent() - attach roles to users");

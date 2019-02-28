@@ -6,20 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum  Roles {
-    ADMIN(new Permissions[]{
-            Permissions.ANALYSE_PURGE_DELETED,
-
-            Permissions.USER_CREATE,
-            Permissions.USER_VIEW,
-            Permissions.USER_EDIT,
-            Permissions.USER_REMOVE,
-
-            Permissions.TOKEN_VIEW,
-            Permissions.TOKEN_REVOKE,
-            Permissions.TOKEN_REMOVE,
-
-            Permissions.IMAGE_UPLOAD_PURGE_UNUSED
-    }),
 
     DOCTOR(new Permissions[]{
             Permissions.ANALYSE_CREATE,
@@ -35,8 +21,26 @@ public enum  Roles {
 
             Permissions.IMAGE_UPLOAD,
 
+            Permissions.TOKEN_REVOKE
+    }, new Roles[]{}),
+
+    ADMIN(new Permissions[]{
+            Permissions.ANALYSE_PURGE_DELETED,
+
+            Permissions.USER_CREATE,
+            Permissions.USER_VIEW,
+            Permissions.USER_EDIT,
+            Permissions.USER_REMOVE,
+
+            Permissions.TOKEN_VIEW,
             Permissions.TOKEN_REVOKE,
-    });
+            Permissions.TOKEN_REMOVE,
+
+            Permissions.IMAGE_UPLOAD_PURGE_UNUSED
+    }, new Roles[]{Roles.DOCTOR}),
+
+    ROOT(Permissions.values(), new Roles[]{ADMIN, DOCTOR});
 
     private Permissions[] permissions;
+    private Roles[] rolesOwner;
 }

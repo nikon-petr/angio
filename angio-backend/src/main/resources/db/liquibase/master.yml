@@ -26,6 +26,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/009_add_audit_tables.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/010_add_owners_roles_table.yml
 
 # always in the end of file
 - includeAll:

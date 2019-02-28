@@ -1,3 +1,4 @@
 email,password,firstname,lastname,patronymic,enabled,locked
+root@example.com,{noop}q1w2e3,Root,Root,Root,true,false
 admin@example.com,{noop}q1w2e3,Admin,Admin,Admin,true,false
 doctor@example.com,{noop}q1w2e3,Геннадий,Врачебный,Aдреевич,true,false

@@ -3,6 +3,7 @@ package com.angio.angiobackend.api.user;
 import com.angio.angiobackend.api.common.dto.Response;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
 import com.angio.angiobackend.api.user.dto.UserBaseDto;
+import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +28,12 @@ import java.util.UUID;
 public class UserResource {
 
     private final UserService userService;
+
+    @ApiOperation("Create users")
+    @PostMapping
+    public List<NewUserDto> createPatient(@RequestBody @Validated List<NewUserDto> dtos) {
+        return userService.createUsers(dtos);
+    }
 
     @ApiOperation("Create patient")
     @PatchMapping("/{id}")
