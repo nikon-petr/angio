@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,13 +24,13 @@ import java.util.HashSet;
 @EqualsAndHashCode(exclude = {"id", "roles"})
 @Entity
 @Table(name = "permissions")
-public class Permission {
+public class Permission implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @Column(name = "description")
@@ -37,4 +38,9 @@ public class Permission {
 
     @ManyToMany(mappedBy = "permissions")
     private Collection<Role> roles = new HashSet<>();
+
+    @Override
+    public String getAuthority() {
+        return name;
+    }
 }

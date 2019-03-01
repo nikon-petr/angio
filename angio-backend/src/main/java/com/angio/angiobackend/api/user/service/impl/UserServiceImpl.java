@@ -2,12 +2,14 @@ package com.angio.angiobackend.api.user.service.impl;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.OperationException;
+import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.repository.RoleRepository;
-import com.angio.angiobackend.api.user.dto.NewUserDto;
-import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
+import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.user.dto.UserBaseDto;
+import com.angio.angiobackend.api.user.dto.UserDetailedDto;
+import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
 import com.angio.angiobackend.api.user.repositories.UserRepository;
@@ -35,7 +37,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
-@Service
+@Service("userService")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -82,6 +84,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(UUID.fromString(uuid))
                 .orElseThrow(() -> new UnauthorizedUserException(
                         msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {uuid})));
+    }
+
+    /**
+     * Get user id from context.
+     *
+     * @return user uuid
+     */
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public UUID getUserIdFromContext() {
+        return UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     /**
@@ -132,15 +145,28 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Update user data with given id or throw {@link ResourceNotFoundException} if not found
+     * Get user by id.
      *
-     * @param dto dto
-     * @return updating result
+     * @param id user id
+     * @return user data
      */
     @Override
     @Transactional
-    @PreAuthorize("isAuthenticated()")
-    public UserBaseDto updateUser(@NonNull UUID id, @NonNull UserBaseDto dto) {
+    @PreAuthorize("hasAuthority('USER_VIEW') or #id == @userService.userIdFromContext")
+    public UserDetailedDto getUserById(UUID id) {
+        return userMapper.toDetailedDto(findUserEntityByUuid(id));
+    }
+
+    /**
+     * Update user data with given id or throw {@link ResourceNotFoundException} if not found
+     *
+     * @param dto dto
+     * @return updated user
+     */
+    @Override
+    @Transactional
+    @PreAuthorize("isAuthenticated() and #id == @userService.userIdFromContext")
+    public UserDetailedDto updateUser(@NonNull UUID id, @NonNull UserBaseDto dto) {
 
         log.trace("updateUser() - start, id: {}", id);
         User user = findUserEntityByUuid(id);
@@ -149,7 +175,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateEntity(dto, user);
 
         log.trace("updateUser() - save updated user and return");
-        return userMapper.toBaseDto(userRepository.save(user));
+        return userMapper.toDetailedDto(userRepository.save(user));
     }
 
     /**
@@ -157,12 +183,12 @@ public class UserServiceImpl implements UserService {
      *
      * @param id user id
      * @param dto dto
-     * @return changing result
+     * @return updated user
      */
     @Override
     @Transactional
-    @PreAuthorize("isAuthenticated()")
-    public String changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto) {
+    @PreAuthorize("isAuthenticated() and #id == @userService.userIdFromContext")
+    public UserDetailedDto changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto) {
 
         log.trace("changePassword() - start, id: {}", id);
         User user = findUserEntityByUuid(id);
@@ -174,10 +200,33 @@ public class UserServiceImpl implements UserService {
 
         log.trace("changePassword() - save new password");
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         log.trace("changePassword() - end");
-        return "Password successful changed";
+        return userMapper.toDetailedDto(user);
+    }
+
+    /**
+     * Change user locked property.
+     *
+     * @param id user id
+     * @param dto dto containing new value
+     * @return updated user
+     */
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('USER_EDIT')")
+    public UserDetailedDto changeUserLocked(@NonNull UUID id, @NonNull UserLockedDto dto) {
+
+        log.trace("changeUserLocked() - start, id: {}", id);
+        User user = findUserEntityByUuid(id);
+
+        log.trace("changePassword() - change and save locked");
+        user.setLocked(dto.getLocked());
+        user = userRepository.save(user);
+
+        log.trace("changePassword() - end");
+        return userMapper.toDetailedDto(user);
     }
 
     private void checkEmailUnique(List<NewUserDto> dtos) {

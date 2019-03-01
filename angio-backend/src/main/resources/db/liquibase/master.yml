@@ -29,6 +29,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/010_add_owners_roles_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/011_add_unique_constraints.yml
 
 # always in the end of file
 - includeAll:

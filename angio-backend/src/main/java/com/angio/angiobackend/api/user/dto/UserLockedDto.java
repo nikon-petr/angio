@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,14 +12,9 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangePasswordDto {
+public class UserLockedDto {
 
     @NotNull
-    @ApiModelProperty(name = "Old password")
-    private String oldPassword;
-
-    @NotNull
-    @Length(min = 8)
-    @ApiModelProperty(name = "New password")
-    private String newPassword;
+    @ApiModelProperty(name = "User locked")
+    private Boolean locked;
 }

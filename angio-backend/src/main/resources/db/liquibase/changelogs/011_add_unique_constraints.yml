@@ -1,0 +1,17 @@
+databaseChangeLog:
+- changeSet:
+    id: 011
+    author: nikon-petr
+    changes:
+    - addUniqueConstraint:
+        tableName: users
+        columnNames: email
+        constraintName: user_email_uq
+    - addUniqueConstraint:
+        tableName: roles
+        columnNames: name
+        constraintName: roles_name_uq
+    - addUniqueConstraint:
+        tableName: permissions
+        columnNames: name
+        constraintName: permission_name_uq

@@ -15,7 +15,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
@@ -95,7 +94,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getGrantedAuthorities(getPermissions(roles));
+        return getPermissions(roles);
     }
 
     @Override
@@ -127,23 +126,11 @@ public class User implements UserDetails {
         return ownedRoles;
     }
 
-    private List<String> getPermissions(Collection<Role> roles) {
-        List<String> permissions = new ArrayList<>();
-        List<Permission> collection = new ArrayList<>();
+    private List<Permission> getPermissions(Collection<Role> roles) {
+        List<Permission> permissions = new ArrayList<>();
         for (Role role : roles) {
-            collection.addAll(role.getPermissions());
-        }
-        for (Permission item : collection) {
-            permissions.add(item.getName());
+            permissions.addAll(role.getPermissions());
         }
         return permissions;
-    }
-
-    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String privilege : privileges) {
-            authorities.add(new SimpleGrantedAuthority(privilege));
-        }
-        return authorities;
     }
 }

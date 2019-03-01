@@ -3,6 +3,8 @@ package com.angio.angiobackend.api.user.service;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
 import com.angio.angiobackend.api.user.dto.UserBaseDto;
+import com.angio.angiobackend.api.user.dto.UserDetailedDto;
+import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.entities.User;
 import lombok.NonNull;
 import org.springframework.stereotype.Repository;
@@ -23,12 +25,20 @@ public interface UserService {
     @Transactional
     User getUserFromContext();
 
+    UUID getUserIdFromContext();
+
     @Transactional
     List<NewUserDto> createUsers(List<NewUserDto> dtos);
 
     @Transactional
-    UserBaseDto updateUser(@NonNull UUID id, @NonNull UserBaseDto dto);
+    UserDetailedDto getUserById(UUID id);
 
     @Transactional
-    String changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto);
+    UserDetailedDto updateUser(@NonNull UUID id, @NonNull UserBaseDto dto);
+
+    @Transactional
+    UserDetailedDto changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto);
+
+    @Transactional
+    UserDetailedDto changeUserLocked(@NonNull UUID id, @NonNull UserLockedDto dto);
 }

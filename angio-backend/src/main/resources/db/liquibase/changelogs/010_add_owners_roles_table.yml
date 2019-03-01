@@ -1,6 +1,6 @@
 databaseChangeLog:
 - changeSet:
-    id: 009_refactor_analyse_types
+    id: 010
     author: nikon-petr
     changes:
     - createTable:
