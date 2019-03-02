@@ -1,0 +1,11 @@
+databaseChangeLog:
+- changeSet:
+    id: 012
+    author: nikon-petr
+    changes:
+    - addColumn:
+        tableName: roles
+        columns:
+        - column:
+            name: description
+            type: VARCHAR(100)

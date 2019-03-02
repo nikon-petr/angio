@@ -22,7 +22,7 @@ public enum  Roles {
             Permissions.IMAGE_UPLOAD,
 
             Permissions.TOKEN_REVOKE
-    }, new Roles[]{}),
+    }, "Врач диагност"),
 
     ADMIN(new Permissions[]{
             Permissions.ANALYSE_PURGE_DELETED,
@@ -37,10 +37,10 @@ public enum  Roles {
             Permissions.TOKEN_REMOVE,
 
             Permissions.IMAGE_UPLOAD_PURGE_UNUSED
-    }, new Roles[]{Roles.DOCTOR}),
+    }, "Администратор системы"),
 
-    ROOT(Permissions.values(), new Roles[]{ADMIN, DOCTOR});
+    ROOT(Permissions.values(), "Супер пользователь системы");
 
     private Permissions[] permissions;
-    private Roles[] rolesOwner;
+    private String description;
 }

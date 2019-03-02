@@ -2,8 +2,8 @@ package com.angio.angiobackend.api.user;
 
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
-import com.angio.angiobackend.api.user.dto.UserBaseDto;
-import com.angio.angiobackend.api.user.dto.UserDetailedDto;
+import com.angio.angiobackend.api.user.dto.UpdateUserDto;
+import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.service.UserService;
 import io.swagger.annotations.Api;
@@ -39,25 +39,25 @@ public class UserResource {
 
     @ApiOperation("Get user by id")
     @GetMapping("/{id}")
-    public UserDetailedDto getUserById(@PathVariable UUID id) {
+    public UserDetailsDto getUserById(@PathVariable UUID id) {
         return userService.getUserById(id);
     }
 
     @ApiOperation("Update user")
     @PatchMapping("/{id}")
-    public UserDetailedDto updateUser(@PathVariable UUID id, @RequestBody @Validated UserBaseDto dto) {
+    public UserDetailsDto updateUser(@PathVariable UUID id, @RequestBody @Validated UpdateUserDto dto) {
         return userService.updateUser(id, dto);
     }
 
     @ApiOperation("Change password")
     @PostMapping("/{id}/password")
-    public UserDetailedDto changePassword(@PathVariable UUID id, @RequestBody @Validated ChangePasswordDto dto) {
+    public UserDetailsDto changePassword(@PathVariable UUID id, @RequestBody @Validated ChangePasswordDto dto) {
         return userService.changePassword(id, dto);
     }
 
     @ApiOperation("Change locked property")
     @PostMapping("/{id}/locked")
-    public UserDetailedDto changeUserLocked(@PathVariable UUID id, @RequestBody @Validated UserLockedDto dto) {
+    public UserDetailsDto changeUserLocked(@PathVariable UUID id, @RequestBody @Validated UserLockedDto dto) {
         return userService.changeUserLocked(id, dto);
     }
 }

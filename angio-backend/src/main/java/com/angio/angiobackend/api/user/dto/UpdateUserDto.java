@@ -7,14 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDetailedDto {
+public class UpdateUserDto {
 
     @ApiModelProperty(name = "User id")
     private UUID id;
@@ -24,13 +23,4 @@ public class UserDetailedDto {
 
     @ApiModelProperty(name = "User dull name")
     private FullNameDto fullName;
-
-    @ApiModelProperty(name = "User locked")
-    private Boolean locked;
-
-    @ApiModelProperty(name = "User enabled")
-    private Boolean enabled;
-
-    @ApiModelProperty(name = "User permissions")
-    private List<String> permissions;
 }

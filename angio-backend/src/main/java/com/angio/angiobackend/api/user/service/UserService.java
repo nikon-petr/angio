@@ -2,8 +2,8 @@ package com.angio.angiobackend.api.user.service;
 
 import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
-import com.angio.angiobackend.api.user.dto.UserBaseDto;
-import com.angio.angiobackend.api.user.dto.UserDetailedDto;
+import com.angio.angiobackend.api.user.dto.UpdateUserDto;
+import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.entities.User;
 import lombok.NonNull;
@@ -31,14 +31,14 @@ public interface UserService {
     List<NewUserDto> createUsers(List<NewUserDto> dtos);
 
     @Transactional
-    UserDetailedDto getUserById(UUID id);
+    UserDetailsDto getUserById(UUID id);
 
     @Transactional
-    UserDetailedDto updateUser(@NonNull UUID id, @NonNull UserBaseDto dto);
+    UserDetailsDto updateUser(@NonNull UUID id, @NonNull UpdateUserDto dto);
 
     @Transactional
-    UserDetailedDto changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto);
+    UserDetailsDto changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto);
 
     @Transactional
-    UserDetailedDto changeUserLocked(@NonNull UUID id, @NonNull UserLockedDto dto);
+    UserDetailsDto changeUserLocked(@NonNull UUID id, @NonNull UserLockedDto dto);
 }

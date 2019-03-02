@@ -12,9 +12,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -61,29 +64,27 @@ public class InitialSecurityDataLoader implements ApplicationListener<ContextRef
             Set<Permission> permissions = new HashSet<>();
             for (Permissions permission : role.getPermissions()) {
                 log.debug("onApplicationEvent() - create if not found permission {}", permission.name());
-                permissions.add(createPermissionIfNotFound(permission.name(), permission.getDescription()));
+                permissions.add(createPermissionIfNotFound(permission));
             }
 
             log.debug("onApplicationEvent() - create if not found role {}", role.name());
-            allRoles.put(role, createRoleIfNotFound(role.name(), permissions));
-        }
-
-        for (Roles role : Roles.values()) {
-
-            Set<Role> ownedRoles = new HashSet<>();
-
-            for (Roles ownedRole : role.getRolesOwner()) {
-                ownedRoles.add(allRoles.get(ownedRole));
-            }
-
-            allRoles.get(role).setRolesOwner(ownedRoles);
+            allRoles.put(role, createRoleIfNotFound(role, permissions));
         }
         log.debug("onApplicationEvent() - loaded roles: {}", allRoles);
 
         log.debug("onApplicationEvent() - attach roles to users");
+        User rootUser = userRepository.findByEmail("root@example.com").get();
         User adminUser = userRepository.findByEmail("admin@example.com").get();
         User doctorUser = userRepository.findByEmail("doctor@example.com").get();
 
+        log.debug("onApplicationEvent() - attach manged roles to user");
+        rootUser.getOwnedRolesToManage().addAll(extractRoleEntitiesFor(allRoles, Roles.values()));
+        adminUser.getOwnedRolesToManage().addAll(extractRoleEntitiesFor(allRoles, Roles.DOCTOR));
+        adminUser.getOwnedRolesToManage().addAll(extractRoleEntitiesFor(allRoles));
+
+        log.debug("onApplicationEvent() - attach roles to users");
+        rootUser.getRoles()
+                .add(allRoles.get(Roles.ROOT));
         adminUser.getRoles()
                 .add(allRoles.get(Roles.ADMIN));
         doctorUser.getRoles()
@@ -96,24 +97,24 @@ public class InitialSecurityDataLoader implements ApplicationListener<ContextRef
         log.debug("onApplicationEvent() - end");
     }
 
-    private Permission createPermissionIfNotFound(String name, String description) {
+    private Permission createPermissionIfNotFound(Permissions permission) {
 
-        Optional<Permission> nullablePermission = permissionRepository.findByName(name);
+        Optional<Permission> nullablePermission = permissionRepository.findByName(permission.name());
 
         if (!nullablePermission.isPresent()) {
-            Permission permission = new Permission()
-                    .setName(name)
-                    .setDescription(description);
-            permission = permissionRepository.save(permission);
-            nullablePermission = Optional.of(permission);
+            Permission newPermission = new Permission()
+                    .setName(permission.name())
+                    .setDescription(permission.getDescription());
+            newPermission = permissionRepository.save(newPermission);
+            nullablePermission = Optional.of(newPermission);
         }
 
         return nullablePermission.get();
     }
 
-    private Role createRoleIfNotFound(String name, Collection<Permission> permissions) {
+    private Role createRoleIfNotFound(Roles role, Collection<Permission> permissions) {
 
-        Optional<Role> nullableRole = roleRepository.findByName(name);
+        Optional<Role> nullableRole = roleRepository.findByName(role.name());
 
         if (nullableRole.isPresent()) {
             nullableRole.get().getPermissions().removeIf(e -> !permissions.contains(e));
@@ -121,13 +122,24 @@ public class InitialSecurityDataLoader implements ApplicationListener<ContextRef
         }
 
         if (!nullableRole.isPresent()) {
-            Role role = new Role()
-                    .setName(name)
+            Role newRole = new Role()
+                    .setName(role.name())
+                    .setDescription(role.getDescription())
                     .setPermissions(new HashSet<>(permissions));
-            role = roleRepository.save(role);
-            nullableRole = Optional.of(role);
+            newRole = roleRepository.save(newRole);
+            nullableRole = Optional.of(newRole);
         }
 
         return nullableRole.get();
+    }
+
+    private List<Role> extractRoleEntitiesFor(Map<Roles, Role> roleStorage, Roles... roles) {
+        List<Role> result = new ArrayList<>();
+
+        for (Roles role : roles) {
+            result.add(roleStorage.get(role));
+        }
+
+        return result;
     }
 }

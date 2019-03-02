@@ -10,9 +10,9 @@ databaseChangeLog:
             constraints:
                 primaryKey: true
                 foreignKeyName: users_roles_fk
-                references: roles(id)
+                references: users(id)
             name: owner_id
-            type: BIGINT
+            type: UUID
         - column:
             constraints:
                 primaryKey: true

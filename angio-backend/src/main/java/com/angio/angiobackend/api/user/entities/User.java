@@ -37,8 +37,8 @@ import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
-@ToString(exclude = {"roles", "tokens", "analyses"})
-@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses"})
+@ToString(exclude = {"roles", "tokens", "analyses", "ownedRolesToManage"})
+@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "ownedRolesToManage"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Audited
@@ -92,6 +92,16 @@ public class User implements UserDetails {
     )
     private Set<Analyse> analyses = new HashSet<>();
 
+    @NotAudited
+    @ManyToMany
+    @JoinTable(
+            name = "owners_roles",
+            joinColumns = @JoinColumn(
+                    name = "owner_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Set<Role> ownedRolesToManage = new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getPermissions(roles);
@@ -115,15 +125,6 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
-
-    public Set<Role> getRolesOwner() {
-        Set<Role> ownedRoles = new HashSet<>();
-        for (Role role : roles) {
-            ownedRoles.addAll(role.getRolesOwner());
-        }
-
-        return ownedRoles;
     }
 
     private List<Permission> getPermissions(Collection<Role> roles) {

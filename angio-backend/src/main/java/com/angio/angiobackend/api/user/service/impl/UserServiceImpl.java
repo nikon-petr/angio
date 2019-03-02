@@ -7,8 +7,8 @@ import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.repository.RoleRepository;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
-import com.angio.angiobackend.api.user.dto.UserBaseDto;
-import com.angio.angiobackend.api.user.dto.UserDetailedDto;
+import com.angio.angiobackend.api.user.dto.UpdateUserDto;
+import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('USER_VIEW') or #id == @userService.userIdFromContext")
-    public UserDetailedDto getUserById(UUID id) {
+    public UserDetailsDto getUserById(UUID id) {
         return userMapper.toDetailedDto(findUserEntityByUuid(id));
     }
 
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("isAuthenticated() and #id == @userService.userIdFromContext")
-    public UserDetailedDto updateUser(@NonNull UUID id, @NonNull UserBaseDto dto) {
+    public UserDetailsDto updateUser(@NonNull UUID id, @NonNull UpdateUserDto dto) {
 
         log.trace("updateUser() - start, id: {}", id);
         User user = findUserEntityByUuid(id);
@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("isAuthenticated() and #id == @userService.userIdFromContext")
-    public UserDetailedDto changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto) {
+    public UserDetailsDto changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto) {
 
         log.trace("changePassword() - start, id: {}", id);
         User user = findUserEntityByUuid(id);
@@ -216,7 +216,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('USER_EDIT')")
-    public UserDetailedDto changeUserLocked(@NonNull UUID id, @NonNull UserLockedDto dto) {
+    public UserDetailsDto changeUserLocked(@NonNull UUID id, @NonNull UserLockedDto dto) {
 
         log.trace("changeUserLocked() - start, id: {}", id);
         User user = findUserEntityByUuid(id);
@@ -260,8 +260,8 @@ public class UserServiceImpl implements UserService {
     private void checkAllowedRoles(List<Role> roles) {
         User creator = getUserFromContext();
 
-        if (!creator.getRolesOwner().containsAll(roles)) {
-            List<Long> ownedRolesIds = creator.getRolesOwner().stream()
+        if (!creator.getOwnedRolesToManage().containsAll(roles)) {
+            List<Long> ownedRolesIds = creator.getOwnedRolesToManage().stream()
                     .map(Role::getId)
                     .collect(Collectors.toList());
             throw new OperationException(

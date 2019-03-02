@@ -24,8 +24,8 @@ import java.util.Set;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"users", "permissions", "rolesOwner"})
-@EqualsAndHashCode(exclude = {"id", "users", "permissions", "rolesOwner"})
+@ToString(exclude = {"users", "permissions"})
+@EqualsAndHashCode(exclude = {"id", "users", "permissions"})
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -37,8 +37,14 @@ public class Role {
     @Column(name = "name", unique = true)
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
+
+    @ManyToMany(mappedBy = "ownedRolesToManage")
+    private Set<User> owners = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -48,13 +54,4 @@ public class Role {
             inverseJoinColumns = @JoinColumn(
                     name = "permission_id", referencedColumnName = "id"))
     private Set<Permission> permissions = new HashSet<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "owners_roles",
-            joinColumns = @JoinColumn(
-                    name = "owner_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-    private Set<Role> rolesOwner = new HashSet<>();
 }
