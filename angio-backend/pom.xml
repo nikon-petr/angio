@@ -29,18 +29,14 @@
 		<javabuilder.version>1.0</javabuilder.version>
 
 		<!-- libs -->
-		<mapstruct.version>1.3.0.Beta2</mapstruct.version>
-		<model-mapper.version>0.7.4</model-mapper.version>
-		<liquibase.version>3.5.5</liquibase.version>
-		<user-agent.version>1.19</user-agent.version>
-		<jsonwebtoken.version>0.7.0</jsonwebtoken.version>
 		<commons-io.version>2.5</commons-io.version>
+		<liquibase.version>3.5.5</liquibase.version>
 		<lombok.version>1.18.4</lombok.version>
-		<orika.version>1.4.6</orika.version>
+		<mapstruct.version>1.3.0.Beta2</mapstruct.version>
+		<spring-jwt.version>1.0.9.RELEASE</spring-jwt.version>
+		<spring-oauth2-autoconfig.version>2.1.2.RELEASE</spring-oauth2-autoconfig.version>
+		<spring-oauth2.version>2.3.4.RELEASE</spring-oauth2.version>
 		<swagger.version>2.9.2</swagger.version>
-
-		<!-- plugins -->
-		<chekstyle-plugin.version>3.0.0</chekstyle-plugin.version>
 
 		<!-- datasource -->
 		<liquibase.plugin-url>jdbc:postgresql://localhost:5432/angio_app_db</liquibase.plugin-url>
@@ -63,7 +59,7 @@
 			</exclusions>
 		</dependency>
 
-		<!-- artemis -->
+		<!-- Artemis -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-artemis</artifactId>
@@ -73,11 +69,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-keyvalue</artifactId>
 		</dependency>
 
 		<dependency>
@@ -104,7 +95,7 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- datasource -->
+		<!-- Datasource -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -150,37 +141,23 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- JWT -->
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-			<version>${jsonwebtoken.version}</version>
-		</dependency>
-
-		<!-- Device  -->
-		<dependency>
-			<groupId>eu.bitwalker</groupId>
-			<artifactId>UserAgentUtils</artifactId>
-			<version>${user-agent.version}</version>
-		</dependency>
-
 		<!-- OAuth -->
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
-			<version>2.3.4.RELEASE</version>
+			<version>${spring-oauth2.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.security.oauth.boot</groupId>
 			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
-			<version>2.1.2.RELEASE</version>
+			<version>${spring-oauth2-autoconfig.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-jwt</artifactId>
-			<version>1.0.9.RELEASE</version>
+			<version>${spring-jwt.version}</version>
 		</dependency>
 
         <!-- Email -->
@@ -189,13 +166,14 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+		<!-- Apache utils -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
 
-		<!-- logging -->
+		<!-- Logging -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-liquibase</artifactId>
@@ -216,7 +194,7 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
-		<!-- lombok -->
+		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -224,21 +202,13 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- orika -->
-		<dependency>
-			<groupId>ma.glasnost.orika</groupId>
-			<artifactId>orika-core</artifactId>
-			<version>${orika.version}</version>
-		</dependency>
-
-		<!-- template engines -->
+		<!-- Template engines -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-freemarker</artifactId>
-			<version>1.5.6.RELEASE</version>
 		</dependency>
 
-		<!-- swagger -->
+		<!-- Swagger -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -335,32 +305,6 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${chekstyle-plugin.version}</version>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.14</version>
-                    </dependency>
-                </dependencies>
-				<configuration>
-					<configLocation>${basedir}/checkstyle.xml</configLocation>
-					<failsOnError>false</failsOnError>
-					<consoleOutput>true</consoleOutput>
-				</configuration>
 			</plugin>
 
 			<plugin>
