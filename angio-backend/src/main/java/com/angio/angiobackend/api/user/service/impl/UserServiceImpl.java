@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {id})));
+    }
+
+    @Override
+    public List<User> findUsersEntityWhereUuidIn(@NonNull Collection<UUID> ids) {
+        return userRepository.findAllById(ids);
     }
 
     @Override

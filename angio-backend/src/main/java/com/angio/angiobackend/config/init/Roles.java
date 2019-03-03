@@ -21,7 +21,9 @@ public enum  Roles {
 
             Permissions.IMAGE_UPLOAD,
 
-            Permissions.TOKEN_REVOKE
+            Permissions.TOKEN_REVOKE,
+
+            Permissions.PUSH_NOTIFICATION_RECEIVE
     }, "Врач диагност"),
 
     ADMIN(new Permissions[]{
@@ -36,7 +38,10 @@ public enum  Roles {
             Permissions.TOKEN_REVOKE,
             Permissions.TOKEN_REMOVE,
 
-            Permissions.IMAGE_UPLOAD_PURGE_UNUSED
+            Permissions.IMAGE_UPLOAD_PURGE_UNUSED,
+
+            Permissions.PUSH_NOTIFICATION_RECEIVE,
+            Permissions.PUSH_NOTIFICATION_SEND
     }, "Администратор системы"),
 
     ROOT(Permissions.values(), "Супер пользователь системы");

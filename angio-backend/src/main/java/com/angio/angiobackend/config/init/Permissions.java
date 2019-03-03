@@ -30,7 +30,10 @@ public enum  Permissions {
 
     TOKEN_VIEW("Просмотр токенов пользователей"),
     TOKEN_REVOKE("Отзыв собственных refresh токенов"),
-    TOKEN_REMOVE("Отзыв токенов любых пользователй");
+    TOKEN_REMOVE("Отзыв токенов любых пользователй"),
+
+    PUSH_NOTIFICATION_RECEIVE("Получение собственных push-уведомлений"),
+    PUSH_NOTIFICATION_SEND("Отправка push-уведомлений пользователям");
 
     private String description;
 }

@@ -65,6 +65,8 @@ spring:
 
     mvc:
         throw-exception-if-no-handler-found: true
+        async:
+            request-timeout: -1
 
     autoconfigure:
         exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
@@ -74,6 +76,7 @@ logging:
     level:
         root: WARN
         com.angio.angiobackend: INFO
+        com.angio.angiobackend.api.notification: INFO
         org.springframework.web: INFO
         org.springframework.security: INFO
         org.hibernate.stat: DEBUG

@@ -2,6 +2,7 @@ package com.angio.angiobackend.api.user.entities;
 
 import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.common.embeddable.FullName;
+import com.angio.angiobackend.api.notification.entity.Notification;
 import com.angio.angiobackend.api.security.entity.Permission;
 import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.entity.Token;
@@ -91,6 +92,14 @@ public class User implements UserDetails {
             orphanRemoval = true
     )
     private Set<Analyse> analyses = new HashSet<>();
+
+    @NotAudited
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "user",
+            orphanRemoval = true
+    )
+    private Set<Notification> notifications = new HashSet<>();
 
     @NotAudited
     @ManyToMany
