@@ -6,10 +6,12 @@ import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.entities.User;
+import freemarker.template.TemplateException;
 import lombok.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -21,9 +23,6 @@ public interface UserService {
     User findUserEntityByUuid(@NonNull UUID id);
 
     @Transactional
-    List<User> findUsersEntityWhereUuidIn(@NonNull Collection<UUID> ids);
-
-    @Transactional
     User findUserEntityByEmail(@NonNull String email);
 
     @Transactional
@@ -32,7 +31,7 @@ public interface UserService {
     UUID getUserIdFromContext();
 
     @Transactional
-    List<NewUserDto> createUsers(List<NewUserDto> dtos);
+    List<NewUserDto> createUsers(List<NewUserDto> dtos) throws IOException, TemplateException;
 
     @Transactional
     UserDetailsDto getUserById(UUID id);

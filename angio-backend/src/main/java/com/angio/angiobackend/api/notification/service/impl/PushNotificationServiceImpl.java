@@ -1,11 +1,13 @@
 package com.angio.angiobackend.api.notification.service.impl;
 
+import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.notification.entity.Notification;
 import com.angio.angiobackend.api.notification.repository.NotificationRepository;
 import com.angio.angiobackend.api.notification.dto.AbstractNotification;
 import com.angio.angiobackend.api.notification.service.PushNotificationService;
 import com.angio.angiobackend.api.notification.type.NotificationType;
 import com.angio.angiobackend.api.user.entities.User;
+import com.angio.angiobackend.api.user.repositories.UserRepository;
 import com.angio.angiobackend.api.user.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +16,7 @@ import lombok.NonNull;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.artemis.utils.collections.ConcurrentHashSet;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -34,8 +37,9 @@ public class PushNotificationServiceImpl implements PushNotificationService<UUID
 
     private final Map<UUID, Set<DeferredResult<AbstractNotification<UUID>>>> deferredResultPool = new ConcurrentHashMap<>();
 
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
+    private final DynamicLocaleMessageSourceAccessor msa;
 
     /**
      * Send push-notification to user with given id.
@@ -48,7 +52,9 @@ public class PushNotificationServiceImpl implements PushNotificationService<UUID
     @Transactional
     public void notifyUser(@NonNull UUID id, @NonNull String payload, @NonNull String tag) {
 
-        User user = userService.findUserEntityByUuid(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {id})));
 
         log.debug("notifyUser() - start: id={}, notification={}", id, payload);
         Notification notification = new Notification()
@@ -79,7 +85,7 @@ public class PushNotificationServiceImpl implements PushNotificationService<UUID
     @Transactional
     public void notifyUsers(@NonNull Collection<UUID> ids, @NonNull String payload, @NonNull String tag) {
 
-        List<User> users = userService.findUsersEntityWhereUuidIn(ids);
+        List<User> users = userRepository.findAllById(ids);
         List<Notification> notifications = new ArrayList<>();
 
         log.debug("notifyUsers() - start: ids={}, notification={}", ids, payload);

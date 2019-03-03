@@ -1,8 +1,11 @@
 package com.angio.angiobackend.api.user.service.impl;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
+import com.angio.angiobackend.api.common.dto.AbstractEmailDto;
 import com.angio.angiobackend.api.common.exception.OperationException;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
+import com.angio.angiobackend.api.common.service.TemplateService;
+import com.angio.angiobackend.api.notification.service.EmailNotificationService;
 import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.repository.RoleRepository;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
@@ -10,11 +13,13 @@ import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
+import com.angio.angiobackend.api.user.dto.email.RegistrationEmailDto;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
 import com.angio.angiobackend.api.user.repositories.UserRepository;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.util.PasswordUtils;
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +32,7 @@ import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserExc
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,6 +47,8 @@ import java.util.stream.Collectors;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
+    private final EmailNotificationService emailNotificationService;
+    private final TemplateService templateService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
@@ -60,11 +68,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {id})));
-    }
-
-    @Override
-    public List<User> findUsersEntityWhereUuidIn(@NonNull Collection<UUID> ids) {
-        return userRepository.findAllById(ids);
     }
 
     @Override
@@ -112,7 +115,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('USER_CREATE')")
-    public List<NewUserDto> createUsers(@NonNull List<NewUserDto> dtos) {
+    public List<NewUserDto> createUsers(@NonNull List<NewUserDto> dtos) throws IOException, TemplateException {
 
         log.trace("createUsers() - start");
         if (dtos.size() == 0) {
@@ -144,6 +147,10 @@ public class UserServiceImpl implements UserService {
         log.info("createUsers() - result: {}", passwordsAndNewUsers);
 
         log.trace("createUsers() - notify created users by email");
+        for (Map.Entry<String, User> entry : passwordsAndNewUsers.entrySet()) {
+            String email = templateService.processEmail(prepareRgistrationEmail(entry.getKey(), entry.getValue()), "registration");
+            emailNotificationService.notifyUser(entry.getValue().getId(), email, "Учетная запись Angio");
+        }
         // TODO: add call of email service for sending message with password
 
         log.trace("createUsers() - end");
@@ -273,5 +280,14 @@ public class UserServiceImpl implements UserService {
             throw new OperationException(
                     msa.getMessage("errors.api.user.rolesNotOwnedUser", new Object[]{ownedRolesIds}));
         }
+    }
+
+    private AbstractEmailDto prepareRgistrationEmail(String password, User user) {
+        return new RegistrationEmailDto()
+                .setEmail(user.getEmail())
+                .setPassword(password)
+                .setLoginLink("")
+                .setPreview("Учетная запись Angio")
+                .setTitle("Учетная запись Angio");
     }
 }
