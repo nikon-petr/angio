@@ -1,10 +1,11 @@
 package com.angio.angiobackend.api.notification;
 
 import com.angio.angiobackend.api.common.dto.Response;
-import com.angio.angiobackend.api.notification.dto.MessageDto;
-import com.angio.angiobackend.api.notification.dto.AbstractNotification;
-import com.angio.angiobackend.api.notification.service.PushNotificationService;
+import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
+import com.angio.angiobackend.api.notification.dto.PushNotificationDto;
+import com.angio.angiobackend.api.notification.service.impl.PushNotificationService;
 import com.angio.angiobackend.api.user.service.UserService;
+import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,16 +31,14 @@ import java.util.UUID;
 @RequestMapping(path = "/api/v2/notification")
 public class NotificationResource {
 
-    private final static String MESSAGE_TAG = "message";
-
     private final UserService userService;
-    private final PushNotificationService<UUID> pushNotificationService;
+    private final PushNotificationService pushNotificationService;
 
-    @ApiOperation("Get notifications")
+    @ApiOperation("Get waiting for notifications")
     @GetMapping("/push")
     @PreAuthorize("hasAuthority('PUSH_NOTIFICATION_RECEIVE')")
-    public DeferredResult<AbstractNotification<UUID>> getNotifications() {
-        DeferredResult<AbstractNotification<UUID>> response = new DeferredResult<>();
+    public DeferredResult<PushNotificationDto> getNotifications() {
+        DeferredResult<PushNotificationDto> response = new DeferredResult<>();
         pushNotificationService.addResponse(userService.getUserIdFromContext(), response);
         return response;
     }
@@ -48,14 +48,15 @@ public class NotificationResource {
     @PostMapping("/push")
     @PreAuthorize("hasAuthority('PUSH_NOTIFICATION_SEND')")
     public Response sendNotification(@RequestParam(required = false) List<UUID> userIds,
-                                     @RequestBody @Validated MessageDto message) {
+                                     @RequestBody @Validated NewNotificationDto newNotification)
+            throws IOException, TemplateException {
 
         if (userIds == null) {
-            pushNotificationService.notifyAllUsers(message.getText(), MESSAGE_TAG);
+            pushNotificationService.notifyAllUsers(newNotification);
         } else {
-            pushNotificationService.notifyUsers(userIds, message.getText(), MESSAGE_TAG);
+            pushNotificationService.notifyUsers(userIds, newNotification);
         }
 
-        return Response.success("");
+        return Response.success(null);
     }
 }

@@ -12,6 +12,4 @@ public abstract class AbstractEmailDto {
     private Date copyrightDate = new Date();
 
     private String preview = "";
-
-    private String title = "";
 }

@@ -1,39 +1,23 @@
 package com.angio.angiobackend.api.notification.service;
 
+import com.angio.angiobackend.api.notification.dto.AbstractNotification;
+import freemarker.template.TemplateException;
 import lombok.NonNull;
 
+import java.io.IOException;
 import java.util.Collection;
 
 /**
  * Abstract notification service.
  *
- * @param <ID> id type of user entity
+ * @param <ID> type of user entity id
  */
 public interface NotificationService<ID> {
 
-    /**
-     * Send notification to user with given id.
-     *
-     * @param id user id
-     * @param payload notification payload
-     * @param tag notification tag, e.g. name of updated domain entity
-     */
-    void notifyUser(@NonNull ID id, @NonNull String payload, @NonNull String tag);
+    void notifyUser(@NonNull ID id, @NonNull AbstractNotification notification) throws IOException, TemplateException;
 
-    /**
-     * Send notification to users with given ids.
-     *
-     * @param ids users ids
-     * @param payload notification payload
-     * @param tag notification tag, e.g. name of updated domain entity
-     */
-    void notifyUsers(@NonNull Collection<ID> ids, @NonNull String payload, @NonNull String tag);
+    void notifyUsers(@NonNull Collection<ID> notifications, @NonNull AbstractNotification notification) throws
+            IOException, TemplateException;
 
-    /**
-     * Send notification to all users.
-     *
-     * @param payload notification payload
-     * @param tag notification tag, e.g. name of updated domain entity
-     */
-    void notifyAllUsers(@NonNull String payload, @NonNull String tag);
+    void notifyAllUsers(@NonNull AbstractNotification notification) throws IOException, TemplateException;
 }

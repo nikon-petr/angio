@@ -3,14 +3,13 @@ package com.angio.angiobackend.api.notification.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageDto {
+public class SubjectDto implements AbstractSubject {
 
-    @NotNull
-    private String text;
+    private String name;
 }

@@ -4,7 +4,7 @@ databaseChangeLog:
     author: nikon-petr
     changes:
     - createTable:
-        tableName: notifications
+        tableName: push_notifications
         columns:
         - column:
             constraints:
@@ -19,9 +19,6 @@ databaseChangeLog:
                 foreignKeyName: notifications_users_fk
                 references: users(id)
         - column:
-            name: type
-            type: INT
-        - column:
             name: date
             type: TIMESTAMP(6) WITHOUT TIME ZONE
         - column:
@@ -31,5 +28,5 @@ databaseChangeLog:
             name: read
             type: BOOLEAN
         - column:
-            name: tag
+            name: subject
             type: VARCHAR(25)

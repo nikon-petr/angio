@@ -4,8 +4,10 @@ import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAcce
 import com.angio.angiobackend.api.common.dto.AbstractEmailDto;
 import com.angio.angiobackend.api.common.exception.OperationException;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
-import com.angio.angiobackend.api.common.service.TemplateService;
-import com.angio.angiobackend.api.notification.service.EmailNotificationService;
+import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
+import com.angio.angiobackend.api.notification.dto.SubjectDto;
+import com.angio.angiobackend.api.notification.service.NotificationService;
+import com.angio.angiobackend.api.notification.type.Subjects;
 import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.repository.RoleRepository;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
@@ -23,6 +25,7 @@ import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,8 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,8 +50,9 @@ import java.util.stream.Collectors;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
-    private final EmailNotificationService emailNotificationService;
-    private final TemplateService templateService;
+    @Qualifier("emailNotificationService")
+    private final NotificationService emailNotificationService;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
@@ -148,10 +152,13 @@ public class UserServiceImpl implements UserService {
 
         log.trace("createUsers() - notify created users by email");
         for (Map.Entry<String, User> entry : passwordsAndNewUsers.entrySet()) {
-            String email = templateService.processEmail(prepareRgistrationEmail(entry.getKey(), entry.getValue()), "registration");
-            emailNotificationService.notifyUser(entry.getValue().getId(), email, "Учетная запись Angio");
+            NewNotificationDto notification = new NewNotificationDto()
+                    .setDate(new Date())
+                    .setTemplateName("registration.ftl")
+                    .setSubject(new SubjectDto("Новая учетная запись Angio"))
+                    .setDataModel(prepareRegistrationEmail(entry.getKey(), entry.getValue()));
+            emailNotificationService.notifyUser(entry.getValue().getId(), notification);
         }
-        // TODO: add call of email service for sending message with password
 
         log.trace("createUsers() - end");
         return userMapper.toNewUserDtos(new ArrayList<>(passwordsAndNewUsers.values()));
@@ -282,12 +289,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private AbstractEmailDto prepareRgistrationEmail(String password, User user) {
+    private AbstractEmailDto prepareRegistrationEmail(String password, User user) {
         return new RegistrationEmailDto()
                 .setEmail(user.getEmail())
                 .setPassword(password)
                 .setLoginLink("")
-                .setPreview("Учетная запись Angio")
-                .setTitle("Учетная запись Angio");
+                .setPreview("Учетная запись Angio");
     }
 }

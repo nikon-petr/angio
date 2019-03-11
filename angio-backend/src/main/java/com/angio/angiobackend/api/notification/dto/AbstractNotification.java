@@ -2,15 +2,15 @@ package com.angio.angiobackend.api.notification.dto;
 
 import java.util.Date;
 
-public interface AbstractNotification<ID> {
-
-    ID getId();
+public interface AbstractNotification {
 
     Date getDate();
 
-    String getPayload();
+    String getTemplateName();
 
-    Boolean getRead();
+    String getTitle();
 
-    String getTag();
+    AbstractSubject getSubject();
+
+    Object getDataModel();
 }

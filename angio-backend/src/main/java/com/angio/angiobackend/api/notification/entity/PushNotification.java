@@ -1,7 +1,5 @@
 package com.angio.angiobackend.api.notification.entity;
 
-import com.angio.angiobackend.api.notification.dto.AbstractNotification;
-import com.angio.angiobackend.api.notification.type.NotificationType;
 import com.angio.angiobackend.api.user.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,16 +28,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "notifications")
-public class Notification implements AbstractNotification<UUID> {
+@Table(name = "push_notifications")
+public class PushNotification {
 
     @Id
     @GeneratedValue
     @Type(type="pg-uuid")
     private UUID id;
-
-    @Column(name = "type")
-    private NotificationType type;
 
     @Column(name = "date")
     private Date date;
@@ -52,8 +47,8 @@ public class Notification implements AbstractNotification<UUID> {
     @Column(name = "read")
     private Boolean read;
 
-    @Column(name = "tag")
-    private String tag;
+    @Column(name = "subject")
+    private String subject;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
