@@ -14,7 +14,7 @@ public class AnalyseResultListener {
 
     private final AnalyseServiceImpl analyseService;
 
-    @JmsListener(destination = "${angio.app.jms.analyse-results-queue}")
+    @JmsListener(destination = "${angiobackend.app.jms.analyse-results-queue}")
     public void receiveAnalyseResult(AnalyseJmsDto result) {
         log.info("receiveAnalyseResult() - start, received: {}", result);
 

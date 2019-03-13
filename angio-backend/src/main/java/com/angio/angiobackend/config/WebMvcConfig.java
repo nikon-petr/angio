@@ -38,6 +38,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(format("/%s*",props.getUploadPath()))
                 .addResourceLocations(format("file:%s", props.getUploadDirectory()));
+        registry.addResourceHandler(format("/%s*",props.getFrontendDistPath()))
+                .addResourceLocations(format("file:%s", props.getFrontendDistDirectory()));
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }

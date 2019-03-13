@@ -4,7 +4,7 @@ services:
     db:
         image: amd64/postgres:10-alpine
         volumes:
-            - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+            - ./postgres:/docker-entrypoint-initdb.d
         expose:
             - "5432"
         ports:
@@ -28,11 +28,10 @@ services:
     analyse-executor:
         image: analyse-executor:latest
         build:
-            context: ./analyse-executor
-            dockerfile: ./src/main/docker/Dockerfile
+            context: ./
+            dockerfile: ./analyse-executor/src/main/docker/Dockerfile
         volumes:
-            - ~/.m2:/root/.m2:rw
-            - static-content:/analyse-executor/src/main/resources/static
+            - static-content:/opt/analyse-executor/static
         tty: true
         depends_on:
             - db

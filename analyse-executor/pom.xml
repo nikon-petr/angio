@@ -3,19 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.3.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
-
-    <groupId>com.angio</groupId>
     <artifactId>analyse-executor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>analyse-executor</name>
+    <packaging>jar</packaging>
 
+    <name>analyse-executor</name>
     <description>Analyse executor service</description>
+
+    <parent>
+        <groupId>com.angio</groupId>
+        <artifactId>angio-app</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,7 +24,7 @@
         <!-- angio matlab libs -->
         <blood-flow-analyse.version>1.0</blood-flow-analyse.version>
         <geometric-analyse.version>1.0</geometric-analyse.version>
-        <javabuilder.version>1.0</javabuilder.version>
+        <javabuilder.version>R2017a</javabuilder.version>
     </properties>
 
     <dependencies>
@@ -84,7 +83,7 @@
 
         <!-- Blood flow analyse -->
         <dependency>
-            <groupId>bloodFlowAnalyses</groupId>
+            <groupId>com.angio</groupId>
             <artifactId>bloodFlowAnalyses</artifactId>
             <scope>system</scope>
             <version>${blood-flow-analyse.version}</version>
@@ -93,7 +92,7 @@
 
         <!-- Geometric analyse -->
         <dependency>
-            <groupId>GeometricAnalyse</groupId>
+            <groupId>com.angio</groupId>
             <artifactId>GeometricAnalyse</artifactId>
             <scope>system</scope>
             <version>${geometric-analyse.version}</version>
@@ -102,11 +101,11 @@
 
         <!-- Java builder from matlab runtime -->
         <dependency>
-            <groupId>javabuilder</groupId>
+            <groupId>com.mathworks</groupId>
             <artifactId>javabuilder</artifactId>
             <scope>system</scope>
             <version>${javabuilder.version}</version>
-            <systemPath>/matlabruntime/v92/toolbox/javabuilder/jar/javabuilder.jar</systemPath>
+            <systemPath>${basedir}/lib/javabuilder.jar</systemPath>
         </dependency>
 
         <!-- JDBC -->
@@ -121,7 +120,6 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
-
     </dependencies>
 
     <build>
@@ -129,6 +127,18 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                    <fork>true</fork>
+                    <skip>false</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

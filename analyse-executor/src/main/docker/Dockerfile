@@ -1,8 +1,6 @@
-FROM maven:3.5 AS matlab-runtime
+FROM java:openjdk-8-jdk AS matlab-runtime
 
 LABEL description="Docker image of angio analyse executor"
-
-WORKDIR /analyse-executor
 
 RUN curl http://ssd.mathworks.com/supportfiles/downloads/R2017a/deployment_files/R2017a/installers/glnxa64/MCR_R2017a_glnxa64_installer.zip -O --progress-bar && \
     unzip -q -d /mrc_installer MCR_R2017a_glnxa64_installer.zip && \
@@ -14,6 +12,12 @@ ENV LD_LIBRARY_PATH=/matlabruntime/v92/runtime/glnxa64:/matlabruntime/v92/bin/gl
 
 FROM matlab-runtime AS analyse-executor
 
-COPY . .
+VOLUME /root/.m2/ /root/.m2/
 
-ENTRYPOINT ["mvn", "clean", "spring-boot:run"]
+COPY . /angio
+
+WORKDIR /angio
+
+RUN ./mvnw clean package -pl analyse-executor -am spring-boot:repackage
+
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "analyse-executor/target/analyse-executor-0.0.1-SNAPSHOT.jar"]

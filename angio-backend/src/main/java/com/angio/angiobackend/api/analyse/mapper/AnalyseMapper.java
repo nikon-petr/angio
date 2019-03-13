@@ -7,6 +7,7 @@ import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.patient.mapper.PatientMapper;
 import com.angio.angiobackend.api.uploads.mapper.UploadMapper;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

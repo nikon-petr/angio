@@ -23,3 +23,8 @@ logging:
         org.hibernate.SQL: OFF
         org.hibernate.type: OFF
         org.hibernate.cache: OFF
+
+angiobackend:
+    app:
+        upload-directory: /opt/angio-backend/static/uploads
+        frontend-dist-directory: /opt/angio-backend/static/dist

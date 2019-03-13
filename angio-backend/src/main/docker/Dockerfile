@@ -1,9 +1,13 @@
-FROM maven:3.5
+FROM java:openjdk-8-jdk
 
 LABEL description="Docker image of angio backend"
 
-WORKDIR /angio-backend
+COPY . /angio
 
-COPY . .
+WORKDIR /angio
 
-ENTRYPOINT ["mvn", "clean", "spring-boot:run", "-Dspring-boot.run.profiles=prod"]
+RUN ./mvnw clean package -pl angio-backend -am spring-boot:repackage
+
+ENTRYPOINT ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000", "-jar", "-Dspring.profiles.active=docker", "angio-backend/target/angio-backend-0.0.1-SNAPSHOT.jar"]
+
+EXPOSE 8080 8000

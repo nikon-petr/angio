@@ -4,20 +4,20 @@ spring:
 
     artemis:
         mode: native
-        host: artemis
+        host: localhost
         port: 61616
         user: angio_app
         password: q1w2e3
 
     datasource:
-        url: jdbc:postgresql://db:5432/angio_app_db
+        url: jdbc:postgresql://localhost:5432/angio_app_db
         username: angio_app
         password: q1w2e3
         driver-class-name: org.postgresql.Driver
 
 analyseexecutor:
     app:
-        upload-directory: src/main/resources/static/uploads/
+        upload-directory: analyse-executor/src/main/resources/static/uploads/
         result-image-format: png
 
         jms:

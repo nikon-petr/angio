@@ -99,9 +99,13 @@ typings/
 # next.js build output
 .next
 
-!analyse-executor/lib/*.jar
-angio-backend/src/main/resources/static/uploads
-!angio-backend/src/main/resources/static/uploads/.gitkeep
-analyse-executor/src/main/resources/static/uploads
-!analyse-executor/src/main/resources/static/uploads/.gitkeep
+# ANGIO-BACKEND
+angio-backend/src/main/resources/static/dist/*
+angio-backend/src/main/resources/static/uploads/*
 
+# ANALYSE-EXECUTOR
+!analyse-executor/lib/*.jar
+analyse-executor/src/main/resources/static/uploads
+
+# ALWAYS KEEP ".gitkeep" FILE
+!.gitkeep

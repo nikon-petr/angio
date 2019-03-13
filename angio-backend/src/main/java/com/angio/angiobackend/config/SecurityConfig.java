@@ -54,8 +54,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(SWAGGER_SERVICE_PATHS);
-    }
+
+        web
+                .ignoring()
+                .antMatchers(SWAGGER_SERVICE_PATHS)
+                .antMatchers(format("/%s*", props.getUploadPath()))
+                .antMatchers(format("/%s*", props.getFrontendDistPath()));
+        }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -66,8 +71,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers(format("/%s*", props.getUploadPath())).permitAll()
-                .antMatchers(SWAGGER_SERVICE_PATHS).permitAll()
                 .antMatchers("/oauth/token").permitAll()
                 .anyRequest().authenticated()
 

@@ -115,12 +115,17 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.trace("saveExecutedAnalyse() - map analyse info dto to entity");
         Analyse entity = analyseRepository.getOne(dto.getId());
-        analyseMapper.updateAnalyseResult(dto, entity);
-        entity.getStatus().setType(AnalyseStatusType.SUCCESS);
+
+        if (dto.getBloodFlowAnalyse() == null && dto.getGeometricAnalyse() == null) {
+            entity.getStatus().setType(AnalyseStatusType.FAILED);
+        } else {
+            analyseMapper.updateAnalyseResult(dto, entity);
+            entity.getStatus().setType(AnalyseStatusType.SUCCESS);
+        }
 
         log.trace("saveExecutedAnalyse() - save analyse info entity");
         entity = analyseRepository.save(entity);
-        log.info("saveExecutedAnalyse() - saved analyse execution result {}", entity.getId());
+        log.info("saveExecutedAnalyse() - saved analyse execution result {}", entity);
 
         log.trace("saveExecutedAnalyse() - map saved analyse info entity to dto");
         log.trace("saveExecutedAnalyse() - end");

@@ -5,15 +5,10 @@ databaseChangeLog:
     runOnChange: true
     changes:
 
-    # clear tables
-    - delete:
-        tableName: tokens
-    - delete:
-        tableName: users
-
     # load user data
-    - loadData:
+    - loadUpdateData:
         tableName: users
+        primaryKey: id
         encoding: UTF-8
         file: db/csv/users.csv
         quotchar: "'"

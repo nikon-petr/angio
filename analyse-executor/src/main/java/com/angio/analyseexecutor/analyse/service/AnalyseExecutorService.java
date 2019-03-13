@@ -13,8 +13,8 @@ import com.angio.analyseexecutor.analyse.matlab.bloodflow.BloodFlowAnalyseResult
 import com.angio.analyseexecutor.analyse.matlab.geometric.GeometricAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.geometric.model.GeometricAnalyseModel;
 import com.angio.analyseexecutor.analyse.matlab.geometric.model.VesselModel;
-import com.angio.analyseexecutor.uploads.dto.StaticFileDto;
 import com.angio.analyseexecutor.uploads.UploadsDao;
+import com.angio.analyseexecutor.uploads.dto.StaticFileDto;
 import com.angio.analyseexecutor.util.FileUtil;
 import com.mathworks.toolbox.javabuilder.MWException;
 import lombok.AllArgsConstructor;
@@ -36,6 +36,7 @@ public class AnalyseExecutorService {
     private final UploadsDao dao;
 
     public AnalyseDto executeAnalyse(AnalyseDto analyse) throws IOException, MWException, SQLException {
+
         log.info("startNewAnalyse() - start");
 
         File originalImage = new File(props.getUploadDirectory(), analyse.getOriginalImage().getFilename());

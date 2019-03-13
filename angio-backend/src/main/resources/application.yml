@@ -3,6 +3,7 @@ server:
     error:
         whitelabel:
             enabled: false
+
 spring:
     jpa:
         hibernate:
@@ -83,10 +84,12 @@ logging:
         org.hibernate.type: INFO
         org.hibernate.cache: INFO
 
-angio:
+angiobackend:
     app:
-        upload-directory: src/main/resources/static/uploads/
+        upload-directory: angio-backend/src/main/resources/static/uploads/
         upload-path: static/uploads/
+        frontend-dist-directory: angio-backend/src/main/resources/static/dist/
+        frontend-dist-path: static/dist/
         image-upload-extensions:
             - bmp
             - png

@@ -6,11 +6,13 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "angio.app")
+@ConfigurationProperties(prefix = "angiobackend.app")
 public class AngioBackendProperties {
 
     private String uploadDirectory;
     private String uploadPath;
+    private String frontendDistDirectory;
+    private String frontendDistPath;
     private String[] imageUploadExtensions;
     private String[] documentUploadExtensions;
     public Jms jms;

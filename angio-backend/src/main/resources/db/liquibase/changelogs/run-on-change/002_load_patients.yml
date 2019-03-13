@@ -2,17 +2,13 @@ databaseChangeLog:
 - changeSet:
     id: load_patients_1
     author: nikon-petr
-    context: demo
     runOnChange: true
     changes:
 
-    # clear patients
-    -  delete:
-        tableName: patients
-
     # load patients
-    - loadData:
+    - loadUpdateData:
         tableName: patients
+        primaryKey: id
         encoding: UTF-8
         file: db/csv/patients.csv
         quotchar: "'"

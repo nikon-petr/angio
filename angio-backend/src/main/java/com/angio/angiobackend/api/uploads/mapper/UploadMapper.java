@@ -4,6 +4,7 @@ import com.angio.angiobackend.api.uploads.dto.StaticFileDto;
 import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriComponents;
 

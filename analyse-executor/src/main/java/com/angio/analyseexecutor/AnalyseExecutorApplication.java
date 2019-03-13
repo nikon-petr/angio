@@ -1,6 +1,8 @@
 package com.angio.analyseexecutor;
 
 import com.angio.analyseexecutor.analyse.dto.AnalyseDto;
+import com.mathworks.toolbox.javabuilder.MWApplication;
+import com.mathworks.toolbox.javabuilder.MWMCROption;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +21,10 @@ public class AnalyseExecutorApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AnalyseExecutorApplication.class, args);
+
+        log.info("Initialize MATLAB Runtime with options {-nojvm, -nodisplay}");
+        MWApplication.initialize(MWMCROption.NOJVM, MWMCROption.NODISPLAY);
+
         log.info("It's alive!!!");
     }
 

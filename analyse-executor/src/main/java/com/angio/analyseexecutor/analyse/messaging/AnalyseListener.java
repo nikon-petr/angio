@@ -24,11 +24,21 @@ public class AnalyseListener {
 
         log.trace("receiveAnalyseToExecute() - start, analyse received to execute: " + analyse);
 
-        log.trace("receiveAnalyseToExecute() - execute analyse");
-        analyseExecutorService.executeAnalyse(analyse);
+        try {
+            log.trace("receiveAnalyseToExecute() - execute analyse");
+            analyse = analyseExecutorService.executeAnalyse(analyse);
+            log.trace("receiveAnalyseToExecute() - execution success");
+        } catch (Exception e) {
+            log.trace("receiveAnalyseToExecute() - execution failed");
+            log.warn("Execution failed", e);
+            analyse
+                    .setBloodFlowAnalyse(null)
+                    .setGeometricAnalyse(null);
+        }
 
         log.trace("receiveAnalyseToExecute() - send result: ", analyse);
         analyseSender.sendAnalyseResult(analyse);
+
 
         log.trace("receiveAnalyseToExecute() - end");
     }

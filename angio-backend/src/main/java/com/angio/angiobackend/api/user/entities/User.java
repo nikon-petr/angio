@@ -38,8 +38,8 @@ import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
-@ToString(exclude = {"roles", "tokens", "analyses", "ownedRolesToManage"})
-@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "ownedRolesToManage"})
+@ToString(exclude = {"roles", "tokens", "analyses", "notifications", "ownedRolesToManage"})
+@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "notifications", "ownedRolesToManage"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Audited

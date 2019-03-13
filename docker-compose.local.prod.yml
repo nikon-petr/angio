@@ -1,0 +1,17 @@
+version: "2"
+
+services:
+    angio-backend:
+        image: angio-backend:latest
+        build:
+            context: ./
+            dockerfile: ./angio-backend/src/main/docker/Dockerfile
+        ports:
+            - 8000:8000
+            - 8080:8080
+        volumes:
+            - static-content:/opt/angio-backend/static
+        tty: true
+        depends_on:
+            - db
+            - artemis
