@@ -1,12 +1,15 @@
 package com.angio.angiobackend.api.user;
 
+import com.angio.angiobackend.api.common.dto.Response;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
+import com.angio.angiobackend.api.user.dto.EnableUserDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
+import com.angio.angiobackend.api.user.dto.ResetUserDto;
+import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.service.UserService;
-import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,16 +47,60 @@ public class UserResource {
         return userService.getUserById(id);
     }
 
-    @ApiOperation("Update user")
-    @PatchMapping("/{id}")
-    public UserDetailsDto updateUser(@PathVariable UUID id, @RequestBody @Validated UpdateUserDto dto) {
-        return userService.updateUser(id, dto);
+    @ApiOperation("Get current user")
+    @GetMapping("/me")
+    public UserDetailsDto getCurrentUser() {
+        return userService.getUserById(userService.getUserIdFromContext());
     }
 
-    @ApiOperation("Change password")
-    @PostMapping("/{id}/password")
-    public UserDetailsDto changePassword(@PathVariable UUID id, @RequestBody @Validated ChangePasswordDto dto) {
-        return userService.changePassword(id, dto);
+    @ApiOperation("Update current user")
+    @PatchMapping("/me")
+    public UserDetailsDto updateCurrentUser(@RequestBody @Validated UpdateUserDto dto) {
+        return userService.updateUser(dto);
+    }
+
+    @ApiOperation("Get current user settings")
+    @GetMapping("/me/settings")
+    public SettingsDto getCurrentUserSettings() {
+        return userService.getSettings();
+    }
+
+    @ApiOperation("Update current user settings")
+    @PatchMapping("/me/settings")
+    public SettingsDto changeCurrentUserSettings(@RequestBody SettingsDto dto) {
+        return userService.updateSettings(dto);
+    }
+
+    @ApiOperation("Reset current user settings to default")
+    @PostMapping("/me/settings/reset")
+    public SettingsDto resetCurrentUserSettingsToDefault() {
+        return userService.resetSettingsToDefault();
+    }
+
+    @ApiOperation("Change current user password")
+    @PostMapping("/me/password")
+    public UserDetailsDto changeCurrentUserPassword(@RequestBody @Validated ChangePasswordDto dto) {
+        return userService.changePassword(dto);
+    }
+
+    @ApiOperation("Reset current user password")
+    @PostMapping("/{email:.+}/password/reset")
+    public Response resetCurrentUserPassword(@PathVariable String email) {
+        userService.resetPassword(email);
+        return Response.success(null);
+    }
+
+    @ApiOperation("Reset user")
+    @PostMapping("/{id}/reset")
+    public Response resetUserPassword(@PathVariable UUID id, @RequestBody @Validated ResetUserDto resetUser) {
+        userService.resetUser(id, resetUser);
+        return Response.success(null);
+    }
+
+    @ApiOperation("Enable user")
+    @PostMapping("{id}/enable")
+    public UserDetailsDto enableUser(@PathVariable UUID id, @RequestBody @Validated EnableUserDto enableUser) {
+        return userService.enableUser(id, enableUser);
     }
 
     @ApiOperation("Change locked property")

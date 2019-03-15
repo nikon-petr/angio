@@ -1,0 +1,42 @@
+databaseChangeLog:
+- changeSet:
+    id: 015
+    author: nikon-petr
+    changes:
+    - createTable:
+        tableName: settings
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: user_settings_fk
+                references: users(id)
+            name: user_id
+            type: UUID
+        - column:
+            name: dark_theme_enabled
+            type: BOOLEAN
+
+    - createTable:
+        tableName: settings_aud
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+            name: user_id
+            type: UUID
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+                foreignKeyName: settings_aud_revinfo_fk
+                references: revinfo(rev)
+            name: rev
+            type: INT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: dark_theme_enabled
+            type: BOOLEAN

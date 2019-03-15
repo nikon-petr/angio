@@ -17,6 +17,8 @@ public class AngioBackendProperties {
     private String[] documentUploadExtensions;
     public Jms jms;
     public Scheduling scheduling;
+    public UserDefaultSettings userDefaultSettings;
+    public Ui ui;
 
     @Data
     public static class Jms {
@@ -28,5 +30,16 @@ public class AngioBackendProperties {
     public static class Scheduling {
         private String purgeAnalysesPeriod;
         private String purgeImagesPeriod;
+    }
+
+    @Data
+    public static class UserDefaultSettings {
+        private Boolean darkThemeEnabled;
+    }
+
+    @Data
+    public static class Ui {
+        private String userActivationFormLink;
+        private String userResettingFormLink;
     }
 }

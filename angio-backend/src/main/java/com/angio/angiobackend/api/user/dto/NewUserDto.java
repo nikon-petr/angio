@@ -21,6 +21,7 @@ public class NewUserDto {
     private UUID id;
 
     @NotNull
+    @Size(max = 30)
     @ApiModelProperty(name = "New user email", example = "newuser@example.com")
     private String email;
 

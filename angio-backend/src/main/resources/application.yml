@@ -105,3 +105,10 @@ angiobackend:
             purge-analyses-period: 0 0 3 * * *
             # every day at 3:00
             purge-images-period: 0 0 3 * * *
+
+        user-default-settings:
+            dark-theme-enabled: true
+
+        ui:
+            user-activation-form-link: http://localhost:8080/user/{id}/activation/
+            user-resetting-form-link: http://localhost:8080/user/{id}/password/reset

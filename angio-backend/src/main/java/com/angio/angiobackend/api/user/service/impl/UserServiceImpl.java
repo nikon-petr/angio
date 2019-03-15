@@ -1,42 +1,50 @@
 package com.angio.angiobackend.api.user.service.impl;
 
+import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.dto.AbstractEmailDto;
+import com.angio.angiobackend.api.common.embeddable.FullName;
 import com.angio.angiobackend.api.common.exception.OperationException;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
 import com.angio.angiobackend.api.notification.dto.SubjectDto;
 import com.angio.angiobackend.api.notification.service.NotificationService;
 import com.angio.angiobackend.api.notification.type.NotificationType;
-import com.angio.angiobackend.api.notification.type.Subjects;
 import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.repository.RoleRepository;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
+import com.angio.angiobackend.api.user.dto.EnableUserDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
+import com.angio.angiobackend.api.user.dto.ResetUserDto;
+import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.dto.email.RegistrationEmailDto;
+import com.angio.angiobackend.api.user.dto.email.ResetPasswordDto;
+import com.angio.angiobackend.api.user.dto.push.GreetingPushDto;
+import com.angio.angiobackend.api.user.entities.Settings;
 import com.angio.angiobackend.api.user.entities.User;
+import com.angio.angiobackend.api.user.mapper.SettingsMapper;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
+import com.angio.angiobackend.api.user.repositories.SettingsRepository;
 import com.angio.angiobackend.api.user.repositories.UserRepository;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.util.PasswordUtils;
-import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,10 +62,16 @@ public class UserServiceImpl implements UserService {
     @Qualifier("emailNotificationService")
     private final NotificationService<UUID> emailNotificationService;
 
+    @Qualifier("pushNotificationService")
+    private final NotificationService<UUID> pushNotificationService;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final SettingsRepository settingsRepository;
     private final UserMapper userMapper;
+    private final SettingsMapper settingsMapper;
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private final AngioBackendProperties props;
     private final DynamicLocaleMessageSourceAccessor msa;
 
     /**
@@ -71,7 +85,7 @@ public class UserServiceImpl implements UserService {
     public User findUserEntityByUuid(@NonNull UUID id) {
         log.debug("findUserEntityByUuid() - start id: {}", id);
         return userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {id})));
     }
 
@@ -80,7 +94,7 @@ public class UserServiceImpl implements UserService {
     public User findUserEntityByEmail(@NonNull String email) {
         log.debug("findUserEntityByEmail() - start id: {}", email);
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.user.userWithEmailNotFound", new Object[] {email})));
     }
 
@@ -148,6 +162,9 @@ public class UserServiceImpl implements UserService {
                                 .collect(Collectors.toSet()))))
                 .peek(entry -> entry.getValue().setPassword(passwordEncoder.encode(entry.getKey())))
                 .peek(entry -> entry.setValue(userRepository.save(entry.getValue())))
+                .peek(entry -> settingsRepository.save(new Settings()
+                        .setDarkThemeEnabled(props.getUserDefaultSettings().getDarkThemeEnabled())
+                        .setUser(entry.getValue())))
                 .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
         log.info("createUsers() - result: {}", passwordsAndNewUsers);
 
@@ -187,11 +204,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    @PreAuthorize("isAuthenticated() and #id == @userService.userIdFromContext")
-    public UserDetailsDto updateUser(@NonNull UUID id, @NonNull UpdateUserDto dto) {
+    @PreAuthorize("isAuthenticated()")
+    public UserDetailsDto updateUser(@NonNull UpdateUserDto dto) {
 
-        log.trace("updateUser() - start, id: {}", id);
-        User user = findUserEntityByUuid(id);
+        log.trace("updateUser() - start");
+        User user = getUserFromContext();
 
         log.trace("updateUser() - merge dto to entity");
         userMapper.updateEntity(dto, user);
@@ -201,19 +218,74 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * Get current user settings
+     *
+     * @return user settings
+     */
+    @Override
+    @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
+    public SettingsDto getSettings() {
+        log.debug("getSettings() - start");
+        return settingsMapper.toDto(getUserFromContext().getSettings());
+    }
+
+    /**
+     * Update one or more user settings.
+     *
+     * @param dto settings dto
+     * @return current updated settings
+     */
+    @Override
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
+    public SettingsDto updateSettings(@NonNull SettingsDto dto) {
+
+        log.debug("updateSettings() - start");
+        Settings settings = getUserFromContext().getSettings();
+
+        log.debug("updateSettings() - map updating settings to entity");
+        settingsMapper.toEntity(dto, settings);
+
+        log.debug("updateSettings() - save updated settings");
+        settings = settingsRepository.save(settings);
+
+        log.debug("updateSettings() - return changed settings");
+        return settingsMapper.toDto(settings);
+    }
+
+    /**
+     * Reset user settings to default
+     *
+     * @return current user settings
+     */
+    @Override
+    public SettingsDto resetSettingsToDefault() {
+
+        log.debug("resetSettingsToDefault() - start, set defaults");
+        Settings settings = getUserFromContext().getSettings()
+                .setDarkThemeEnabled(props.getUserDefaultSettings().getDarkThemeEnabled());
+
+        log.debug("resetSettingsToDefault() - save updated settings");
+        settings = settingsRepository.save(settings);
+
+        log.debug("resetSettingsToDefault() - return changed settings");
+        return settingsMapper.toDto(settings);
+    }
+
+    /**
      * Change user password.
      *
-     * @param id user id
      * @param dto dto
      * @return updated user
      */
     @Override
     @Transactional
-    @PreAuthorize("isAuthenticated() and #id == @userService.userIdFromContext")
-    public UserDetailsDto changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto) {
+    @PreAuthorize("isAuthenticated()")
+    public UserDetailsDto changePassword(@NonNull ChangePasswordDto dto) {
 
-        log.trace("changePassword() - start, id: {}", id);
-        User user = findUserEntityByUuid(id);
+        log.trace("changePassword() - start");
+        User user = getUserFromContext();
 
         log.trace("changePassword() - check old password");
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
@@ -226,6 +298,96 @@ public class UserServiceImpl implements UserService {
 
         log.trace("changePassword() - end");
         return userMapper.toDetailedDto(user);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(@NonNull String email) {
+
+        log.debug("resetPassword() - start");
+        User user = findUserEntityByEmail(email);
+        String resetCode = PasswordUtils.generateNumberPassword(6);
+
+        log.debug("resetPassword() - send email");
+        NewNotificationDto notification = new NewNotificationDto()
+                .setDate(new Date())
+                .setType(NotificationType.INFO)
+                .setTemplateName("reset-password.ftl")
+                .setSubject(new SubjectDto("Восстановление пароля учетной записи в Angio"))
+                .setDataModel(prepareResetPasswordEmail(resetCode, user));
+        emailNotificationService.notifyUser(user.getId(), notification);
+
+        log.debug("resetPassword() - disable user email={}", email);
+        user.setEnabled(false);
+        user.setPassword(passwordEncoder.encode(resetCode));
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void resetUser(@NonNull UUID id, @NonNull ResetUserDto resetUser) {
+
+        log.debug("resetUser() - start");
+        User user = findUserEntityByUuid(id);
+
+        log.debug("resetUser() - check the user needs resetting");
+        if (user.isEnabled()
+                || user.getFullName().getFirstname() == null
+                || user.getFullName().getLastname() == null
+                || user.getFullName().getPatronymic() == null) {
+            throw new OperationException("User does not needs resetting now");
+        }
+
+        log.debug("resetUser() - match password");
+        if (!passwordEncoder.matches(resetUser.getResetCode(), user.getPassword())) {
+            throw new BadCredentialsException("Wrong resetting code");
+        }
+
+        log.debug("resetUser() - reset user and save");
+        user.setPassword(passwordEncoder.encode(resetUser.getNewPassword()));
+        user.setEnabled(true);
+
+        userRepository.save(user);
+        log.debug("resetUser() - end");
+    }
+
+    @Override
+    @Transactional
+    public UserDetailsDto enableUser(@NonNull UUID id, @NonNull EnableUserDto enableUser) {
+
+        log.debug("enableUser() - start");
+        User user = findUserEntityByUuid(id);
+
+        log.debug("enableUser() - check the user needs resetting");
+        if (user.isEnabled() || user.getFullName() != null) {
+            throw new OperationException("User does not needs enabling now");
+        }
+
+        log.debug("resetUser() - match password");
+        if (!passwordEncoder.matches(enableUser.getEnablingCode(), user.getPassword())) {
+            throw new BadCredentialsException("Wrong enabling code");
+        }
+
+        log.debug("resetUser() - reset user and save");
+        user.setFullName(new FullName()
+                .setFirstname(enableUser.getFirstname())
+                .setLastname(enableUser.getLastname())
+                .setPatronymic(enableUser.getPatronymic()));
+        user.setPassword(passwordEncoder.encode(enableUser.getNewPassword()));
+        user.setEnabled(true);
+
+        NewNotificationDto notification = new NewNotificationDto()
+                .setDate(new Date())
+                .setType(NotificationType.INFO)
+                .setTemplateName("greeting.ftl")
+                .setSubject(new SubjectDto("Добро пожаловать!"))
+                .setDataModel(new GreetingPushDto()
+                        .setFirstname(enableUser.getFirstname())
+                        .setLastname(enableUser.getLastname()));
+        pushNotificationService.notifyUser(user.getId(), notification);
+
+        log.debug("resetUser() - end");
+        return userMapper.toDetailedDto(userRepository.save(user));
     }
 
     /**
@@ -292,10 +454,22 @@ public class UserServiceImpl implements UserService {
     }
 
     private AbstractEmailDto prepareRegistrationEmail(String password, User user) {
+        String activationFormLink = UriComponentsBuilder.fromHttpUrl(props.getUi().getUserActivationFormLink())
+                .buildAndExpand(user.getId()).toString();
         return new RegistrationEmailDto()
                 .setEmail(user.getEmail())
                 .setPassword(password)
-                .setLoginLink("")
+                .setActivationFormLink(activationFormLink)
                 .setPreview("Учетная запись Angio");
+    }
+
+    private AbstractEmailDto prepareResetPasswordEmail(String password, User user) {
+        String resettingFormLink = UriComponentsBuilder.fromHttpUrl(props.getUi().getUserResettingFormLink())
+                .buildAndExpand(user.getId()).toString();
+        return new ResetPasswordDto()
+                .setEmail(user.getEmail())
+                .setPassword(password)
+                .setResettingFormLink(resettingFormLink)
+                .setPreview("Восстановление пароля учетной записи в Angio");
     }
 }

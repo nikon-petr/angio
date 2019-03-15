@@ -18,6 +18,7 @@ import org.hibernate.envers.NotAudited;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -28,6 +29,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,8 +40,8 @@ import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
-@ToString(exclude = {"roles", "tokens", "analyses", "notifications", "ownedRolesToManage", "starredAnalyses"})
-@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "notifications", "ownedRolesToManage", "starredAnalyses"})
+@ToString(exclude = {"roles", "tokens", "analyses", "notifications", "ownedRolesToManage", "starredAnalyses", "settings"})
+@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "notifications", "ownedRolesToManage", "starredAnalyses", "settings"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Audited
@@ -84,6 +86,13 @@ public class User implements UserDetails {
             orphanRemoval = true
     )
     private Set<Token> tokens = new HashSet<>();
+
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            mappedBy = "user",
+            cascade = CascadeType.ALL
+    )
+    private Settings settings;
 
     @NotAudited
     @OneToMany(

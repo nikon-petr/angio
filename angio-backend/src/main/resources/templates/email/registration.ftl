@@ -12,7 +12,7 @@
             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                 <tbody>
                 <tr>
-                    <td> <a href="${data.loginLink}" target="_blank">Активировать учетную запись</a> </td>
+                    <td> <a href="${data.activationFormLink}" target="_blank">Активировать учетную запись</a> </td>
                 </tr>
                 </tbody>
             </table>

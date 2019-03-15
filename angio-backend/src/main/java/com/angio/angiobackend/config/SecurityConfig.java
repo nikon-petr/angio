@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -59,7 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .antMatchers(SWAGGER_SERVICE_PATHS)
                 .antMatchers(format("/%s*", props.getUploadPath()))
-                .antMatchers(format("/%s*", props.getFrontendDistPath()));
+                .antMatchers(format("/%s*", props.getFrontendDistPath()))
+                .antMatchers(HttpMethod.POST, "/api/v2/user/*/password/reset")
+                .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/reset")
+                .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/enable");
         }
 
     @Override
@@ -72,10 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers("/oauth/token").permitAll()
-                .anyRequest().authenticated()
-
-                .and()
-                .anonymous().disable();
+                .anyRequest().authenticated();
     }
 
     @Bean

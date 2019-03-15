@@ -13,14 +13,14 @@ import javax.validation.constraints.Size;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangePasswordDto {
+public class ResetUserDto {
 
     @NotNull
-    @ApiModelProperty(name = "Old password")
-    private String oldPassword;
+    @ApiModelProperty(name = "Reset code")
+    private String resetCode;
 
     @NotNull
-    @Size(min = 8, max = 120)
+    @Size(min = 8)
     @ApiModelProperty(name = "New password")
     private String newPassword;
 }

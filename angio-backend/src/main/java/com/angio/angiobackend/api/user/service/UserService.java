@@ -1,7 +1,10 @@
 package com.angio.angiobackend.api.user.service;
 
+import com.angio.angiobackend.api.user.dto.EnableUserDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
+import com.angio.angiobackend.api.user.dto.ResetUserDto;
+import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
@@ -37,10 +40,28 @@ public interface UserService {
     UserDetailsDto getUserById(UUID id);
 
     @Transactional
-    UserDetailsDto updateUser(@NonNull UUID id, @NonNull UpdateUserDto dto);
+    UserDetailsDto updateUser(@NonNull UpdateUserDto dto);
 
     @Transactional
-    UserDetailsDto changePassword(@NonNull UUID id, @NonNull ChangePasswordDto dto);
+    SettingsDto getSettings();
+
+    @Transactional
+    SettingsDto updateSettings(@NonNull SettingsDto dto);
+
+    @Transactional
+    SettingsDto resetSettingsToDefault();
+
+    @Transactional
+    UserDetailsDto changePassword(@NonNull ChangePasswordDto dto);
+
+    @Transactional
+    void resetPassword(@NonNull String email);
+
+    @Transactional
+    void resetUser(@NonNull UUID id, @NonNull ResetUserDto resetUser);
+
+    @Transactional
+    UserDetailsDto enableUser(@NonNull UUID id, @NonNull EnableUserDto enableUser);
 
     @Transactional
     UserDetailsDto changeUserLocked(@NonNull UUID id, @NonNull UserLockedDto dto);

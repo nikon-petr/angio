@@ -34,7 +34,6 @@ public class PatientDto implements Serializable {
     /**
      * Email.
      */
-    @NotNull(message = "{validation.patient.email.NotNull}")
     @ApiModelProperty(value = "Patient email", example = "kozlito@yandex.ru")
     private String email;
 

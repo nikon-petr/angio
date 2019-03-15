@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Data
@@ -15,15 +16,15 @@ public class FullNameDto implements Serializable {
 
     private static final long serialVersionUID = 7628488078354439386L;
 
-    @NotNull(message = "{validation.common.fullName.firstname.NotNull}")
+    @Size(min = 1, max = 30)
     @ApiModelProperty(value = "First name", example = "Николай")
     private String firstname;
 
-    @NotNull(message = "{validation.common.fullName.lastname.NotNull}")
+    @Size(min = 1, max = 30)
     @ApiModelProperty(value = "Last name", example = "Козловский")
     private String lastname;
 
-    @NotNull(message = "{validation.common.fullName.patronymic.NotNull}")
+    @Size(max = 30)
     @ApiModelProperty(value = "Patronimic", example = "Николаевич")
     private String patronymic;
 }

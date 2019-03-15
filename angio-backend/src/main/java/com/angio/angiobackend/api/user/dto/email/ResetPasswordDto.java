@@ -6,9 +6,9 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class RegistrationEmailDto extends AbstractEmailDto {
+public class ResetPasswordDto extends AbstractEmailDto {
 
     private String email;
     private String password;
-    private String activationFormLink;
+    private String resettingFormLink;
 }
