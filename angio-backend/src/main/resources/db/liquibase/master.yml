@@ -38,6 +38,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/013_add_notification_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/014_add_strred_analyses_table.yml
 
 # always in the end of file
 - includeAll:

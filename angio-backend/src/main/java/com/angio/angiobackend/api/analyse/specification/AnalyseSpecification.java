@@ -23,6 +23,7 @@ import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Fetch;
 import java.util.Date;
+import java.util.UUID;
 
 import static com.angio.angiobackend.util.DateUtils.atEndOfDay;
 import static com.angio.angiobackend.util.DateUtils.atStartOfDay;

@@ -38,8 +38,8 @@ import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
-@ToString(exclude = {"roles", "tokens", "analyses", "notifications", "ownedRolesToManage"})
-@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "notifications", "ownedRolesToManage"})
+@ToString(exclude = {"roles", "tokens", "analyses", "notifications", "ownedRolesToManage", "starredAnalyses"})
+@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "notifications", "ownedRolesToManage", "starredAnalyses"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Audited
@@ -110,6 +110,20 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     private Set<Role> ownedRolesToManage = new HashSet<>();
+
+    @NotAudited
+    @ManyToMany
+    @JoinTable(
+            name = "starred_analyses",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "analyse_id", referencedColumnName = "id"))
+    private Set<Analyse> starredAnalyses = new HashSet<>();
+
+    public void addStarredAnalyse(Analyse analyse) {
+        analyse.addUserStarredThis(this);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

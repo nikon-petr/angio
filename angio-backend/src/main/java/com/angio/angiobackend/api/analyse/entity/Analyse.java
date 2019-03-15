@@ -5,6 +5,7 @@ import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
 import com.angio.angiobackend.api.analyse.embeddable.BloodFlowAnalyse;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse;
 import com.angio.angiobackend.api.uploads.entity.StaticFile;
+import com.angio.angiobackend.api.user.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,17 +27,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"originalImage"})
-@EqualsAndHashCode(exclude = {"id", "originalImage"})
+@ToString(exclude = {"originalImage", "usersStarredThis"})
+@EqualsAndHashCode(exclude = {"id", "originalImage", "usersStarredThis"})
 @Audited
 @Entity
 @Table(name = "analyses")
@@ -68,6 +72,20 @@ public class Analyse {
     @Access(AccessType.PROPERTY)
     @Embedded
     private BloodFlowAnalyse bloodFlowAnalyse;
+
+    @NotAudited
+    @ManyToMany(mappedBy = "starredAnalyses")
+    private Set<User> usersStarredThis = new HashSet<>();
+
+    public void addUserStarredThis(User user) {
+        usersStarredThis.add(user);
+        user.getStarredAnalyses().add(this);
+    }
+
+    public void removeUserStarredThis(User user) {
+        usersStarredThis.remove(user);
+        user.getStarredAnalyses().remove(this);
+    }
 
     public AdditionalInfo getAdditionalInfo() {
         if (additionalInfo == null) {

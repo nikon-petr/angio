@@ -68,5 +68,4 @@ public class AdditionalInfoDto implements Serializable {
      */
     @ApiModelProperty(value = "Analyse conclusion", example = "Все плохо")
     private String conclusion;
-
 }

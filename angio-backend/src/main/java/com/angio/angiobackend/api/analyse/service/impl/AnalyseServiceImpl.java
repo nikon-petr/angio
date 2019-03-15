@@ -5,6 +5,7 @@ import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
 import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.analyse.mapper.AdditionalInfoMapper;
@@ -15,6 +16,7 @@ import com.angio.angiobackend.api.analyse.service.AnalyseService;
 import com.angio.angiobackend.api.analyse.specification.AnalyseSpecification;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
+import com.angio.angiobackend.api.common.dto.Response;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
 import com.angio.angiobackend.api.notification.dto.SubjectDto;
@@ -22,6 +24,7 @@ import com.angio.angiobackend.api.notification.service.NotificationService;
 import com.angio.angiobackend.api.notification.type.NotificationType;
 import com.angio.angiobackend.api.notification.type.Subjects;
 import com.angio.angiobackend.api.patient.service.PatientService;
+import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
 import freemarker.template.TemplateException;
@@ -44,6 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -173,8 +177,14 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("filterAnalysesByQueryString() - filter analyse info");
         Page<Analyse> analyseInfoEntityPage = analyseRepository.findAll(specs, mappedPageRequest);
 
+        Set<Analyse> analyses = userService.getUserFromContext().getStarredAnalyses();
+
         log.trace("filterAnalysesByQueryString() - map and return analyse page");
-        return analyseInfoEntityPage.map(analyseMapper::toShortItemDto);
+        return analyseInfoEntityPage.map(analyse -> {
+            AnalyseShortItemDto dto = analyseMapper.toShortItemDto(analyse);
+            dto.setStarred(analyses.contains(analyse));
+            return dto;
+        });
     }
 
     /**
@@ -272,6 +282,28 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.trace("updateAnalyseAdditionalInfo() - end - save updated analyse info entity");
         return analyseMapper.toExtendedDto(analyseRepository.save(analyse));
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
+    public StarredAnalyseDto starAnalyse(@NonNull Long id, @NonNull StarredAnalyseDto starredAnalyse) {
+
+        log.debug("starAnalyse() - start: id {}", id);
+        Analyse analyse = analyseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
+
+        log.debug("starAnalyse() - star analyse and save");
+        if (starredAnalyse.getStarred() != null && starredAnalyse.getStarred()) {
+            analyse.addUserStarredThis(userService.getUserFromContext());
+        } else if (starredAnalyse.getStarred() != null && !starredAnalyse.getStarred()) {
+            analyse.removeUserStarredThis(userService.getUserFromContext());
+        }
+
+        analyseRepository.save(analyse);
+
+        return starredAnalyse;
     }
 
     @Override

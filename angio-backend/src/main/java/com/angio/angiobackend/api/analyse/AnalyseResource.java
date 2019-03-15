@@ -3,6 +3,7 @@ package com.angio.angiobackend.api.analyse;
 import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
+import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
 import com.angio.angiobackend.api.analyse.service.AnalyseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -83,6 +84,12 @@ public class AnalyseResource {
     @PatchMapping("/{id}/additional-info")
     public DetailedAnalyseDto updateAnalyseAdditionalInfo(@PathVariable Long id, @RequestBody AdditionalInfoDto additionalInfo) {
         return analyseService.updateAnalyseAdditionalInfo(id, additionalInfo);
+    }
+
+    @ApiOperation("Change starred property of analyse for current user")
+    @PostMapping("/{id}/starred")
+    public StarredAnalyseDto starAnalyse(@PathVariable Long id, @RequestBody StarredAnalyseDto starredAnalyseDto) {
+        return analyseService.starAnalyse(id, starredAnalyseDto);
     }
 
     @ApiOperation("Delete vessel from geometric analyse by id")

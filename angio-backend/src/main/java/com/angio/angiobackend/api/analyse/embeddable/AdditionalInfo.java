@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
