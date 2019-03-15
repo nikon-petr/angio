@@ -4,6 +4,7 @@ import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAcce
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.notification.dto.AbstractNotification;
 import com.angio.angiobackend.api.notification.entity.PushNotification;
+import com.angio.angiobackend.api.notification.exception.NotificationException;
 import com.angio.angiobackend.api.notification.repository.NotificationRepository;
 import com.angio.angiobackend.api.notification.service.NotificationService;
 import com.angio.angiobackend.api.user.entities.User;
@@ -39,8 +40,7 @@ public class EmailMockNotificationService implements NotificationService<UUID> {
     private final DynamicLocaleMessageSourceAccessor msa;
 
     @Override
-    public void notifyUser(@NonNull UUID id, @NonNull AbstractNotification notification)
-            throws IOException, TemplateException {
+    public void notifyUser(@NonNull UUID id, @NonNull AbstractNotification notification) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -56,8 +56,7 @@ public class EmailMockNotificationService implements NotificationService<UUID> {
     }
 
     @Override
-    public void notifyUsers(@NonNull Collection<UUID> ids, @NonNull AbstractNotification notification)
-            throws IOException, TemplateException {
+    public void notifyUsers(@NonNull Collection<UUID> ids, @NonNull AbstractNotification notification) {
 
         log.debug("notifyUsers() - start: ids={}, notification={}", ids, notification);
         List<User> users = userRepository.findAllById(ids);
@@ -78,7 +77,7 @@ public class EmailMockNotificationService implements NotificationService<UUID> {
     }
 
     @Override
-    public void notifyAllUsers(@NonNull AbstractNotification notification) throws IOException, TemplateException {
+    public void notifyAllUsers(@NonNull AbstractNotification notification) {
 
         log.debug("notifyAllUsers() - start: notification={}", notification);
         List<User> users = userRepository.findAll();
@@ -109,12 +108,17 @@ public class EmailMockNotificationService implements NotificationService<UUID> {
         return true;
     }
 
-    private String processEmailNotificationBody(Object dataModel, String templateName) throws IOException,
-            TemplateException {
-        Template template = freeMarkerConfig.getTemplate("email/root.ftl");
-        Map<String, Object> root = new HashMap<>();
-        root.put("data", dataModel);
-        root.put("contentTemplate", templateName);
-        return FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
+    private String processEmailNotificationBody(Object dataModel, String templateName) {
+        try {
+            Template template = freeMarkerConfig.getTemplate("email/root.ftl");
+            Map<String, Object> root = new HashMap<>();
+            root.put("data", dataModel);
+            root.put("contentTemplate", templateName);
+            return FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
+        } catch (TemplateException e) {
+            throw new NotificationException(msa.getMessage("errors.api.notification.templateProcessError", new Object[] {templateName}), e);
+        } catch (IOException e) {
+            throw new NotificationException(msa.getMessage("errors.api.notification.templateNotFound", new Object[] {templateName}), e);
+        }
     }
 }

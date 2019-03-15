@@ -22,6 +22,9 @@ databaseChangeLog:
             name: date
             type: TIMESTAMP(6) WITHOUT TIME ZONE
         - column:
+            name: type
+            type: INT
+        - column:
             name: payload
             type: TEXT
         - column:

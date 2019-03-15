@@ -2,10 +2,14 @@ package com.angio.angiobackend.api.analyse.messaging;
 
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 import com.angio.angiobackend.api.analyse.service.impl.AnalyseServiceImpl;
+import com.angio.angiobackend.api.notification.service.NotificationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Slf4j
 @AllArgsConstructor

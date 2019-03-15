@@ -31,7 +31,7 @@ public interface UserService {
     UUID getUserIdFromContext();
 
     @Transactional
-    List<NewUserDto> createUsers(List<NewUserDto> dtos) throws IOException, TemplateException;
+    List<NewUserDto> createUsers(List<NewUserDto> dtos);
 
     @Transactional
     UserDetailsDto getUserById(UUID id);

@@ -48,8 +48,7 @@ public class NotificationResource {
     @PostMapping("/push")
     @PreAuthorize("hasAuthority('PUSH_NOTIFICATION_SEND')")
     public Response sendNotification(@RequestParam(required = false) List<UUID> userIds,
-                                     @RequestBody @Validated NewNotificationDto newNotification)
-            throws IOException, TemplateException {
+                                     @RequestBody @Validated NewNotificationDto newNotification) {
 
         if (userIds == null) {
             pushNotificationService.notifyAllUsers(newNotification);

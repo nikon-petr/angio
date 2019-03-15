@@ -35,8 +35,7 @@ public class UserResource {
 
     @ApiOperation("Create users")
     @PostMapping
-    public List<NewUserDto> createPatient(@RequestBody @Validated List<NewUserDto> dtos)
-            throws IOException, TemplateException {
+    public List<NewUserDto> createPatient(@RequestBody @Validated List<NewUserDto> dtos) {
         return userService.createUsers(dtos);
     }
 

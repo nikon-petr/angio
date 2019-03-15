@@ -7,6 +7,7 @@ import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
 import com.angio.angiobackend.api.notification.dto.SubjectDto;
 import com.angio.angiobackend.api.notification.service.NotificationService;
+import com.angio.angiobackend.api.notification.type.NotificationType;
 import com.angio.angiobackend.api.notification.type.Subjects;
 import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.repository.RoleRepository;
@@ -51,7 +52,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     @Qualifier("emailNotificationService")
-    private final NotificationService emailNotificationService;
+    private final NotificationService<UUID> emailNotificationService;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -119,7 +120,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('USER_CREATE')")
-    public List<NewUserDto> createUsers(@NonNull List<NewUserDto> dtos) throws IOException, TemplateException {
+    public List<NewUserDto> createUsers(@NonNull List<NewUserDto> dtos) {
 
         log.trace("createUsers() - start");
         if (dtos.size() == 0) {
@@ -154,6 +155,7 @@ public class UserServiceImpl implements UserService {
         for (Map.Entry<String, User> entry : passwordsAndNewUsers.entrySet()) {
             NewNotificationDto notification = new NewNotificationDto()
                     .setDate(new Date())
+                    .setType(NotificationType.INFO)
                     .setTemplateName("registration.ftl")
                     .setSubject(new SubjectDto("Новая учетная запись Angio"))
                     .setDataModel(prepareRegistrationEmail(entry.getKey(), entry.getValue()));

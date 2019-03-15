@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.notification.entity;
 
+import com.angio.angiobackend.api.notification.type.NotificationType;
 import com.angio.angiobackend.api.user.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +40,9 @@ public class PushNotification {
 
     @Column(name = "date")
     private Date date;
+
+    @Column(name = "type")
+    private NotificationType type;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")

@@ -4,6 +4,7 @@ import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAcce
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.notification.dto.PushNotificationDto;
 import com.angio.angiobackend.api.notification.entity.PushNotification;
+import com.angio.angiobackend.api.notification.exception.NotificationException;
 import com.angio.angiobackend.api.notification.repository.NotificationRepository;
 import com.angio.angiobackend.api.notification.dto.AbstractNotification;
 import com.angio.angiobackend.api.notification.service.NotificationService;
@@ -12,6 +13,7 @@ import com.angio.angiobackend.api.user.repositories.UserRepository;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +36,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Slf4j
 @AllArgsConstructor
-@Service
+@Service("pushNotificationService")
 public class PushNotificationService implements NotificationService<UUID> {
 
     private final Map<UUID, Queue<DeferredResult<PushNotificationDto>>> deferredResultPool = new ConcurrentHashMap<>();
@@ -46,7 +48,7 @@ public class PushNotificationService implements NotificationService<UUID> {
 
     @Override
     @Transactional
-    public void notifyUser(@NonNull UUID id, @NonNull AbstractNotification notification) throws IOException, TemplateException {
+    public void notifyUser(@NonNull UUID id, @NonNull AbstractNotification notification) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -56,6 +58,7 @@ public class PushNotificationService implements NotificationService<UUID> {
         String notificationBody = processPushNotificationBody(notification.getDataModel(), notification.getTemplateName());
         PushNotification notificationEntity = new PushNotification()
                 .setDate(new Date())
+                .setType(notification.getType())
                 .setPayload(notificationBody)
                 .setRead(false)
                 .setSubject(notification.getSubject().getName())
@@ -72,8 +75,7 @@ public class PushNotificationService implements NotificationService<UUID> {
 
     @Override
     @Transactional
-    public void notifyUsers(@NonNull Collection<UUID> ids, @NonNull AbstractNotification notification)
-            throws IOException, TemplateException {
+    public void notifyUsers(@NonNull Collection<UUID> ids, @NonNull AbstractNotification notification) {
 
         List<User> users = userRepository.findAllById(ids);
         List<PushNotification> notificationEntities = new ArrayList<>();
@@ -84,6 +86,7 @@ public class PushNotificationService implements NotificationService<UUID> {
             String notificationBody = processPushNotificationBody(notification.getDataModel(), notification.getTemplateName());
             PushNotification notificationEntity = new PushNotification()
                     .setDate(new Date())
+                    .setType(notification.getType())
                     .setPayload(notificationBody)
                     .setRead(false)
                     .setSubject(notification.getSubject().getName())
@@ -103,7 +106,7 @@ public class PushNotificationService implements NotificationService<UUID> {
 
     @Override
     @Transactional
-    public void notifyAllUsers(@NonNull AbstractNotification notification) throws IOException, TemplateException {
+    public void notifyAllUsers(@NonNull AbstractNotification notification) {
 
         log.debug("notifyAllUsers() - start: notification={}", notification);
         notifyUsers(deferredResultPool.keySet(), notification);
@@ -160,6 +163,7 @@ public class PushNotificationService implements NotificationService<UUID> {
 
             PushNotificationDto pushNotificationDto = new PushNotificationDto()
                     .setDate(notification.getDate())
+                    .setType(notification.getType())
                     .setTitle(notification.getTitle())
                     .setBody(notificationBody)
                     .setSubject(notification.getSubject())
@@ -171,10 +175,16 @@ public class PushNotificationService implements NotificationService<UUID> {
         return true;
     }
 
-    private String processPushNotificationBody(Object dataModel, String templateName) throws IOException, TemplateException {
-        Template template = freeMarkerConfig.getTemplate("push/" + templateName);
-        Map<String, Object> root = new HashMap<>();
-        root.put("data", dataModel);
-        return FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
+    private String processPushNotificationBody(Object dataModel, String templateName) {
+        try {
+            Template template = freeMarkerConfig.getTemplate("push/" + templateName);
+            Map<String, Object> root = new HashMap<>();
+            root.put("data", dataModel);
+            return FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
+        } catch (TemplateException e) {
+            throw new NotificationException(msa.getMessage("errors.api.notification.templateProcessError", new Object[] {templateName}), e);
+        } catch (IOException e) {
+            throw new NotificationException(msa.getMessage("errors.api.notification.templateNotFound", new Object[] {templateName}), e);
+        }
     }
 }

@@ -16,12 +16,19 @@ import com.angio.angiobackend.api.analyse.specification.AnalyseSpecification;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
+import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
+import com.angio.angiobackend.api.notification.dto.SubjectDto;
+import com.angio.angiobackend.api.notification.service.NotificationService;
+import com.angio.angiobackend.api.notification.type.NotificationType;
+import com.angio.angiobackend.api.notification.type.Subjects;
 import com.angio.angiobackend.api.patient.service.PatientService;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
+import freemarker.template.TemplateException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,11 +38,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -49,6 +58,10 @@ public class AnalyseServiceImpl implements AnalyseService {
     private final AdditionalInfoMapper additionalInfoMapper;
     private final AnalyseRepository analyseRepository;
     private final UploadRepository uploadRepository;
+
+    @Qualifier("pushNotificationService")
+    private final NotificationService<UUID> pushNotificationService;
+
     private final PatientService patientService;
     private final UserService userService;
     private final AnalyseToExecuteSender analyseToExecuteSender;
@@ -118,9 +131,11 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         if (dto.getBloodFlowAnalyse() == null && dto.getGeometricAnalyse() == null) {
             entity.getStatus().setType(AnalyseStatusType.FAILED);
+            sendAnalyseFailedNotification(entity);
         } else {
             analyseMapper.updateAnalyseResult(dto, entity);
             entity.getStatus().setType(AnalyseStatusType.SUCCESS);
+            sendAnalyseSuccessNotification(entity);
         }
 
         log.trace("saveExecutedAnalyse() - save analyse info entity");
@@ -367,11 +382,43 @@ public class AnalyseServiceImpl implements AnalyseService {
             log.info("sendAnalyseToExecution() - analyse execution result status: IN_PROGRESS");
             analyse.setStatus(new AnalyseStatus().setType(AnalyseStatusType.IN_PROGRESS));
             analyseToExecuteSender.sendAnalyseToExecute(dto);
+            sendAnalyseInProgressNotification(analyse);
         } catch (Exception e) {
             log.info("sendAnalyseToExecution() - analyse execution result status: FAILED cause: {}", e);
             analyse.setStatus(new AnalyseStatus()
                     .setType(AnalyseStatusType.FAILED)
                     .setExtension(e.getMessage()));
+            sendAnalyseFailedNotification(analyse);
         }
+    }
+
+    private void sendAnalyseInProgressNotification(Analyse analyse){
+        pushNotificationService.notifyUser(analyse.getAdditionalInfo().getDiagnostician().getId(), new NewNotificationDto()
+                .setDate(new Date())
+                .setSubject(new SubjectDto().setName(Subjects.ANALYSE.getName()))
+                .setTemplateName("analyse-in-progress.ftl")
+                .setType(NotificationType.INFO)
+                .setTitle("Изменение статуса анализа")
+                .setDataModel(analyse.getAdditionalInfo()));
+    }
+
+    private void sendAnalyseSuccessNotification(Analyse analyse){
+        pushNotificationService.notifyUser(analyse.getAdditionalInfo().getDiagnostician().getId(), new NewNotificationDto()
+                .setDate(new Date())
+                .setSubject(new SubjectDto().setName(Subjects.ANALYSE.getName()))
+                .setTemplateName("analyse-success.ftl")
+                .setType(NotificationType.SUCCESS)
+                .setTitle("Изменение статуса анализа")
+                .setDataModel(analyse.getAdditionalInfo()));
+    }
+
+    private void sendAnalyseFailedNotification(Analyse analyse){
+        pushNotificationService.notifyUser(analyse.getAdditionalInfo().getDiagnostician().getId(), new NewNotificationDto()
+                .setDate(new Date())
+                .setSubject(new SubjectDto().setName(Subjects.ANALYSE.getName()))
+                .setTemplateName("analyse-failed.ftl")
+                .setType(NotificationType.ERROR)
+                .setTitle("Изменение статуса анализа")
+                .setDataModel(analyse.getAdditionalInfo()));
     }
 }

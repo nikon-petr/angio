@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.notification.dto;
 
+import com.angio.angiobackend.api.notification.type.NotificationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,9 @@ import java.util.Date;
 public class NewNotificationDto implements AbstractNotification {
 
     private Date date;
+
+    @NotNull
+    private NotificationType type;
 
     @NotNull
     private String templateName;

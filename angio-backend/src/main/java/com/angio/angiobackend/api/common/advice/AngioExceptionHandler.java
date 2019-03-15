@@ -2,6 +2,7 @@ package com.angio.angiobackend.api.common.advice;
 
 import com.angio.angiobackend.api.common.dto.Error;
 import com.angio.angiobackend.api.common.exception.OperationException;
+import com.angio.angiobackend.api.notification.exception.NotificationException;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,9 +14,9 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RestControllerAdvice
 public class AngioExceptionHandler {
 
-    @ExceptionHandler(OperationException.class)
+    @ExceptionHandler({OperationException.class, NotificationException.class})
     @ResponseStatus(BAD_REQUEST)
-    public Error handleOperationException(Exception e) {
+    public Error handleAngioBadRequestException(Exception e) {
         return Error.of(e.getMessage());
     }
 }

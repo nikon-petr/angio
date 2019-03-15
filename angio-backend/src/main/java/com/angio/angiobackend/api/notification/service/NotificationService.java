@@ -14,10 +14,9 @@ import java.util.Collection;
  */
 public interface NotificationService<ID> {
 
-    void notifyUser(@NonNull ID id, @NonNull AbstractNotification notification) throws IOException, TemplateException;
+    void notifyUser(@NonNull ID id, @NonNull AbstractNotification notification);
 
-    void notifyUsers(@NonNull Collection<ID> notifications, @NonNull AbstractNotification notification) throws
-            IOException, TemplateException;
+    void notifyUsers(@NonNull Collection<ID> notifications, @NonNull AbstractNotification notification);
 
-    void notifyAllUsers(@NonNull AbstractNotification notification) throws IOException, TemplateException;
+    void notifyAllUsers(@NonNull AbstractNotification notification);
 }
