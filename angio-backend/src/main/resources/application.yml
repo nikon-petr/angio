@@ -54,12 +54,16 @@ spring:
         port: 465
         username: angiovision.team@mail.ru
         password: q1w2e3r4%
+        protocol: smtp
         properties:
             mail:
                 smtp:
                     auth: true
                     starttls:
                         enable: true
+                    ssl:
+                        enable: true
+                        trust: smtp.mail.ru
 
     liquibase:
         change-log: classpath:db/liquibase/master.yml
@@ -86,6 +90,7 @@ logging:
 
 angiobackend:
     app:
+        sent-email-directory: angio-backend/src/main/resources/static/email
         upload-directory: angio-backend/src/main/resources/static/uploads/
         upload-path: static/uploads/
         frontend-dist-directory: angio-backend/src/main/resources/static/dist/

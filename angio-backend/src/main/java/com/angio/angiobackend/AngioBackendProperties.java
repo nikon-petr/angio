@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "angiobackend.app")
 public class AngioBackendProperties {
 
+    private String sentEmailDirectory;
     private String uploadDirectory;
     private String uploadPath;
     private String frontendDistDirectory;
