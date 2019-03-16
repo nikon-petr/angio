@@ -46,8 +46,8 @@ public class PushNotification {
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "payload")
-    private String payload;
+    @Column(name = "body")
+    private String body;
 
     @Column(name = "read")
     private Boolean read;

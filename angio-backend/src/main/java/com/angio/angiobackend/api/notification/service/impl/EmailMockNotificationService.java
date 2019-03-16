@@ -5,7 +5,7 @@ import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.notification.dto.AbstractNotification;
 import com.angio.angiobackend.api.notification.entity.PushNotification;
 import com.angio.angiobackend.api.notification.exception.NotificationException;
-import com.angio.angiobackend.api.notification.repository.NotificationRepository;
+import com.angio.angiobackend.api.notification.repository.PushNotificationRepository;
 import com.angio.angiobackend.api.notification.service.NotificationService;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.repositories.UserRepository;
@@ -22,7 +22,6 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,6 @@ public class EmailMockNotificationService implements NotificationService<UUID> {
 
     private final Configuration freeMarkerConfig;
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
     private final DynamicLocaleMessageSourceAccessor msa;
 
     @Override
@@ -60,7 +58,6 @@ public class EmailMockNotificationService implements NotificationService<UUID> {
 
         log.debug("notifyUsers() - start: ids={}, notification={}", ids, notification);
         List<User> users = userRepository.findAllById(ids);
-        List<PushNotification> notifications = new ArrayList<>();
 
         for (User user : users) {
 
@@ -69,9 +66,6 @@ public class EmailMockNotificationService implements NotificationService<UUID> {
             log.debug("notifyUsers() - send notification");
             sendNotification(user.getEmail(), notification);
         }
-
-        log.debug("notifyUsers() - save notification to db");
-        notificationRepository.saveAll(notifications);
 
         log.debug("notifyUsers() - end");
     }
@@ -82,19 +76,13 @@ public class EmailMockNotificationService implements NotificationService<UUID> {
         log.debug("notifyAllUsers() - start: notification={}", notification);
         List<User> users = userRepository.findAll();
 
-        List<PushNotification> notifications = new ArrayList<>();
-
         for (User user : users) {
 
             String notificationBody = processEmailNotificationBody(notification.getDataModel(), notification.getTemplateName());
 
             log.debug("notifyUsers() - send notification");
             sendNotification(user.getEmail(), notification);
-
         }
-
-        log.debug("notifyUsers() - save notification to db");
-        notificationRepository.saveAll(notifications);
 
         log.debug("notifyUsers() - end");
     }

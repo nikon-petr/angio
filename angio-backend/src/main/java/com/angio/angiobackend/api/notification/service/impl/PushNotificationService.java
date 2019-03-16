@@ -2,18 +2,18 @@ package com.angio.angiobackend.api.notification.service.impl;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
+import com.angio.angiobackend.api.notification.dto.AbstractNotification;
 import com.angio.angiobackend.api.notification.dto.PushNotificationDto;
 import com.angio.angiobackend.api.notification.entity.PushNotification;
 import com.angio.angiobackend.api.notification.exception.NotificationException;
-import com.angio.angiobackend.api.notification.repository.NotificationRepository;
-import com.angio.angiobackend.api.notification.dto.AbstractNotification;
+import com.angio.angiobackend.api.notification.mapper.PushNotificationMapper;
+import com.angio.angiobackend.api.notification.repository.PushNotificationRepository;
 import com.angio.angiobackend.api.notification.service.NotificationService;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.repositories.UserRepository;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,8 @@ public class PushNotificationService implements NotificationService<UUID> {
 
     private final Configuration freeMarkerConfig;
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
+    private final PushNotificationRepository pushNotificationRepository;
+    private final PushNotificationMapper pushNotificationMapper;
     private final DynamicLocaleMessageSourceAccessor msa;
 
     @Override
@@ -59,7 +60,7 @@ public class PushNotificationService implements NotificationService<UUID> {
         PushNotification notificationEntity = new PushNotification()
                 .setDate(new Date())
                 .setType(notification.getType())
-                .setPayload(notificationBody)
+                .setBody(notificationBody)
                 .setRead(false)
                 .setSubject(notification.getSubject().getName())
                 .setUser(user);
@@ -68,7 +69,7 @@ public class PushNotificationService implements NotificationService<UUID> {
         notificationEntity.setRead(sendNotification(user.getId(), notification, notificationBody));
 
         log.debug("notifyUser() - save notification to db");
-        notificationRepository.save(notificationEntity);
+        pushNotificationRepository.save(notificationEntity);
 
         log.debug("notifyUser() - end");
     }
@@ -87,7 +88,7 @@ public class PushNotificationService implements NotificationService<UUID> {
             PushNotification notificationEntity = new PushNotification()
                     .setDate(new Date())
                     .setType(notification.getType())
-                    .setPayload(notificationBody)
+                    .setBody(notificationBody)
                     .setRead(false)
                     .setSubject(notification.getSubject().getName())
                     .setUser(user);
@@ -99,7 +100,7 @@ public class PushNotificationService implements NotificationService<UUID> {
         }
 
         log.debug("notifyUsers() - save notification to db");
-        notificationRepository.saveAll(notificationEntities);
+        pushNotificationRepository.saveAll(notificationEntities);
 
         log.debug("notifyUsers() - end");
     }
@@ -130,6 +131,33 @@ public class PushNotificationService implements NotificationService<UUID> {
         deferredResultPool.get(id).offer(newResponse);
 
         log.debug("addResponse() - end");
+    }
+
+    /**
+     * Return all notifications for current user
+     *
+     * @param userId user id
+     * @return notification list
+     */
+    @Transactional(readOnly = true)
+    public List<PushNotificationDto> getPushNotifications(UUID userId) {
+        return pushNotificationMapper.toDtos(pushNotificationRepository.findAllByUser(userId));
+    }
+
+    /**
+     * Read notifications from given id list
+     *
+     * @param ids notifications id list
+     */
+    @Transactional
+    public void readNotifications(List<UUID> ids) {
+        List<PushNotification> notificationsToRead = pushNotificationRepository.findAllById(ids);
+
+        for (PushNotification notification : notificationsToRead) {
+            notification.setRead(true);
+        }
+
+        pushNotificationRepository.saveAll(notificationsToRead);
     }
 
     private void removeUnusableResponse(UUID id, DeferredResult<PushNotificationDto> response) {
@@ -164,7 +192,6 @@ public class PushNotificationService implements NotificationService<UUID> {
             PushNotificationDto pushNotificationDto = new PushNotificationDto()
                     .setDate(notification.getDate())
                     .setType(notification.getType())
-                    .setTitle(notification.getTitle())
                     .setBody(notificationBody)
                     .setSubject(notification.getSubject())
                     .setRead(true);

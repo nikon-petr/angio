@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
@@ -14,11 +15,11 @@ import java.util.Date;
 @NoArgsConstructor
 public class PushNotificationDto {
 
+    private UUID id;
+
     private Date date;
 
     private NotificationType type;
-
-    private String title;
 
     private String body;
 

@@ -4,7 +4,7 @@ import com.angio.angiobackend.api.notification.dto.AbstractSubject;
 
 public enum Subjects implements AbstractSubject {
 
-    MESSAGE,
+    COMMON,
     USER,
     ANALYSE;
 

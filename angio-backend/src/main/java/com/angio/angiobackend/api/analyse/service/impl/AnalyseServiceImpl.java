@@ -430,7 +430,6 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .setSubject(new SubjectDto().setName(Subjects.ANALYSE.getName()))
                 .setTemplateName("analyse-in-progress.ftl")
                 .setType(NotificationType.INFO)
-                .setTitle("Изменение статуса анализа")
                 .setDataModel(analyse.getAdditionalInfo()));
     }
 
@@ -440,7 +439,6 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .setSubject(new SubjectDto().setName(Subjects.ANALYSE.getName()))
                 .setTemplateName("analyse-success.ftl")
                 .setType(NotificationType.SUCCESS)
-                .setTitle("Изменение статуса анализа")
                 .setDataModel(analyse.getAdditionalInfo()));
     }
 
@@ -450,7 +448,6 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .setSubject(new SubjectDto().setName(Subjects.ANALYSE.getName()))
                 .setTemplateName("analyse-failed.ftl")
                 .setType(NotificationType.ERROR)
-                .setTitle("Изменение статуса анализа")
                 .setDataModel(analyse.getAdditionalInfo()));
     }
 }

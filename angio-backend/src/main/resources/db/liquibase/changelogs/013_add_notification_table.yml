@@ -25,7 +25,7 @@ databaseChangeLog:
             name: type
             type: INT
         - column:
-            name: payload
+            name: body
             type: TEXT
         - column:
             name: read

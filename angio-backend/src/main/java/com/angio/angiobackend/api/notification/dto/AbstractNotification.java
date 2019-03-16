@@ -12,8 +12,6 @@ public interface AbstractNotification {
 
     String getTemplateName();
 
-    String getTitle();
-
     AbstractSubject getSubject();
 
     Object getDataModel();

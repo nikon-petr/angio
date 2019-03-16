@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,8 +35,23 @@ public class NotificationResource {
     private final UserService userService;
     private final PushNotificationService pushNotificationService;
 
-    @ApiOperation("Get waiting for notifications")
+    @ApiOperation("Get all current user notifications")
     @GetMapping("/push")
+    @PreAuthorize("hasAuthority('PUSH_NOTIFICATION_RECEIVE')")
+    public List<PushNotificationDto> getPushNotifications() {
+        return pushNotificationService.getPushNotifications(userService.getUserIdFromContext());
+    }
+
+    @ApiOperation("Mark notifications as read by ids")
+    @PostMapping("/push/read")
+    @PreAuthorize("hasAuthority('PUSH_NOTIFICATION_RECEIVE')")
+    public Response getReadNotifications(@RequestBody List<UUID> ids) {
+        pushNotificationService.readNotifications(ids);
+        return Response.success(null);
+    }
+
+    @ApiOperation("Get waiting for notifications")
+    @GetMapping("/push/watch")
     @PreAuthorize("hasAuthority('PUSH_NOTIFICATION_RECEIVE')")
     public DeferredResult<PushNotificationDto> getNotifications() {
         DeferredResult<PushNotificationDto> response = new DeferredResult<>();

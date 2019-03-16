@@ -24,9 +24,6 @@ public class NewNotificationDto implements AbstractNotification {
     private String templateName;
 
     @NotNull
-    private String title;
-
-    @NotNull
     private SubjectDto subject;
 
     @NotNull
