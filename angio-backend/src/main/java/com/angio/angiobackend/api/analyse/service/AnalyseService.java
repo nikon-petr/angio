@@ -24,7 +24,7 @@ public interface AnalyseService {
     void saveExecutedAnalyse(@NonNull AnalyseJmsDto dto);
 
     @Transactional(readOnly = true)
-    Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Pageable pageable);
+    Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, boolean onlyStarred, Pageable pageable);
 
     @Transactional(readOnly = true)
     DetailedAnalyseDto getAnalyseById(@NonNull Long id);

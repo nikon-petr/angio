@@ -2,7 +2,9 @@ package com.angio.angiobackend.api.user.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
@@ -20,6 +22,8 @@ import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
+@ToString(exclude = {"user"})
+@EqualsAndHashCode(exclude = {"user"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Audited

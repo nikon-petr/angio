@@ -85,7 +85,7 @@ logging:
         org.springframework.security: INFO
         org.springframework.transaction: INFO
         org.hibernate.stat: INFO
-        org.hibernate.SQL: INFO
+        org.hibernate.SQL: DEBUG
         org.hibernate.type: INFO
         org.hibernate.cache: INFO
 

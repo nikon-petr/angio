@@ -13,6 +13,7 @@ import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
 import com.angio.angiobackend.api.common.embeddable.FullName_;
 import com.angio.angiobackend.api.patient.entity.Patient_;
+import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.entities.User_;
 import com.angio.angiobackend.util.EnumUtils;
 import lombok.AllArgsConstructor;
@@ -271,6 +272,21 @@ public class AnalyseSpecification {
     }
 
     /**
+     * Find analyses starred by user.
+     *
+     * @param user user
+     * @return specification
+     */
+    public Specification<Analyse> starred(User user) {
+        return (root, query, cb) -> {
+            if (user != null) {
+                return cb.isMember(user, root.get(Analyse_.usersStarredThis));
+            }
+            return null;
+        };
+    }
+
+    /**
      * Find analyses which have any status except DELETED.
      *
      * @return specification
@@ -318,8 +334,8 @@ public class AnalyseSpecification {
             Fetch<Analyse, GeometricAnalyse> analyseFetch = root.fetch(Analyse_.geometricAnalyse, LEFT);
             analyseFetch.fetch(GeometricAnalyse_.binarizedImage, LEFT);
             analyseFetch.fetch(GeometricAnalyse_.skeletonizedImage, LEFT);
-            analyseFetch.fetch(GeometricAnalyse_.vessels, LEFT).fetch(Vessel_.mainVesselImage);
-            analyseFetch.fetch(GeometricAnalyse_.vessels, LEFT).fetch(Vessel_.vesselImage);
+            analyseFetch.fetch(GeometricAnalyse_.vessels, LEFT).fetch(Vessel_.mainVesselImage, LEFT);
+            analyseFetch.fetch(GeometricAnalyse_.vessels, LEFT).fetch(Vessel_.vesselImage, LEFT);
             return cb.conjunction();
         };
     }
@@ -331,8 +347,8 @@ public class AnalyseSpecification {
      */
     public Specification<Analyse> fetchAll() {
         return fetchOriginalImage()
-                .and(fetchGeometricAnalyse())
-                .and(fetchBloodFlowAnalyse());
+                .or(fetchGeometricAnalyse())
+                .or(fetchBloodFlowAnalyse());
     }
 
     /**

@@ -161,14 +161,18 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Override
     @Transactional(readOnly = true)
     @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
-    public Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Pageable pageable) {
+    public Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, boolean onlyStarred, Pageable pageable) {
 
         log.trace("filterAnalysesByQueryString() - start");
+
+        log.debug("filterAnalysesByQueryString() - get starred user");
+        User currentUser = userService.getUserFromContext();
 
         log.trace("filterAnalysesByQueryString() - build analyse info specification");
         Specification<Analyse> specs = analyseSpecification.getAnalyseInfoFilter(queryString)
                 .and(analyseSpecification.analyseDate(date))
                 .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.starred(currentUser))
                 .and(analyseSpecification.fetchAll());
 
         log.trace("filterAnalysesByQueryString() - map sorting fields");
@@ -177,7 +181,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("filterAnalysesByQueryString() - filter analyse info");
         Page<Analyse> analyseInfoEntityPage = analyseRepository.findAll(specs, mappedPageRequest);
 
-        Set<Analyse> analyses = userService.getUserFromContext().getStarredAnalyses();
+        Set<Analyse> analyses = currentUser.getStarredAnalyses();
 
         log.trace("filterAnalysesByQueryString() - map and return analyse page");
         return analyseInfoEntityPage.map(analyse -> {

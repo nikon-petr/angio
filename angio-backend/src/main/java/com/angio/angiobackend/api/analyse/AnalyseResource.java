@@ -62,8 +62,9 @@ public class AnalyseResource {
     public Page<AnalyseShortItemDto> filterAnalyses(
             @RequestParam(value = "queryString", required = false) String queryString,
             @RequestParam(value = "date", required = false) @DateTimeFormat(pattern="dd-MM-yyyy") Date date,
+            @RequestParam(value = "onlyStarred", defaultValue = "false") Boolean onlyStarred,
             @ApiIgnore @PageableDefault Pageable pageable) {
-        return analyseService.filterAnalysesByQueryString(queryString, date, pageable);
+        return analyseService.filterAnalysesByQueryString(queryString, date, onlyStarred, pageable);
     }
 
     @ApiOperation("Delete analyse by id")
