@@ -30,21 +30,21 @@ Application for the analysis of retinal angiograms
 For startup you need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/install/)
 
 Clone repository
-```
+```bash
 git clone https://github.com/nikon-petr/angio
 ```
 
 Go to project folder
-```
+```bash
 cd angio
 ```
 
 Build, create and start by
-```
+```bash
 ./start-helper.sh dev # startup without angio-backend service
 ```
 or
-```
+```bash
 ./start-helper.sh prod # startup all services
 ```
 
