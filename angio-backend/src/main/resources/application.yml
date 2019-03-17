@@ -83,6 +83,7 @@ logging:
         com.angio.angiobackend: DEBUG
         org.springframework.web: INFO
         org.springframework.security: INFO
+        org.springframework.transaction: INFO
         org.hibernate.stat: INFO
         org.hibernate.SQL: INFO
         org.hibernate.type: INFO

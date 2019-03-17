@@ -1,7 +1,6 @@
 package com.angio.angiobackend.api.notification.service.impl;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
-import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.notification.dto.AbstractNotification;
 import com.angio.angiobackend.api.notification.dto.PushNotificationDto;
 import com.angio.angiobackend.api.notification.entity.PushNotification;
@@ -17,6 +16,7 @@ import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -47,12 +47,13 @@ public class PushNotificationService implements NotificationService<UUID> {
     private final PushNotificationMapper pushNotificationMapper;
     private final DynamicLocaleMessageSourceAccessor msa;
 
+    @Async
     @Override
     @Transactional
     public void notifyUser(@NonNull UUID id, @NonNull AbstractNotification notification) {
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
+                .orElseThrow(() -> new NotificationException(
                         msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {id})));
 
         log.debug("notifyUser() - start: notification={}", notification);
@@ -74,6 +75,7 @@ public class PushNotificationService implements NotificationService<UUID> {
         log.debug("notifyUser() - end");
     }
 
+    @Async
     @Override
     @Transactional
     public void notifyUsers(@NonNull Collection<UUID> ids, @NonNull AbstractNotification notification) {
@@ -105,6 +107,7 @@ public class PushNotificationService implements NotificationService<UUID> {
         log.debug("notifyUsers() - end");
     }
 
+    @Async
     @Override
     @Transactional
     public void notifyAllUsers(@NonNull AbstractNotification notification) {

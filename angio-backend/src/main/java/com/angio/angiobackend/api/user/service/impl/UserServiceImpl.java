@@ -43,6 +43,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.AbstractMap;
@@ -58,6 +59,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Service("userService")
 public class UserServiceImpl implements UserService {
+
+    private final TransactionTemplate transactionTemplate;
 
     @Qualifier("emailNotificationService")
     private final NotificationService<UUID> emailNotificationService;
@@ -132,44 +135,48 @@ public class UserServiceImpl implements UserService {
      * @return created user data
      */
     @Override
-    @Transactional
     @PreAuthorize("hasAuthority('USER_CREATE')")
     public List<NewUserDto> createUsers(@NonNull List<NewUserDto> dtos) {
 
-        log.trace("createUsers() - start");
-        if (dtos.size() == 0) {
-            log.trace("createUsers() - empty user list");
-            return Collections.emptyList();
-        }
+        Map<String, User> passwordsAndCreatedUsers = transactionTemplate.execute((status) -> {
 
-        log.trace("createUsers() - checking all requested email is unique");
-        checkEmailUnique(dtos);
+            log.trace("createUsers() - start");
+            if (dtos.size() == 0) {
+                log.trace("createUsers() - empty user list");
+                return Collections.emptyMap();
+            }
 
-        log.trace("createUsers() - fetch needed roles");
-        List<Role> newUserRoles = findRolesForUsers(dtos);
+            log.trace("createUsers() - checking all requested email is unique");
+            checkEmailUnique(dtos);
 
-        log.trace("createUsers() - checking that creator is owner of requested roles");
-        checkAllowedRoles(newUserRoles);
+            log.trace("createUsers() - fetch needed roles");
+            List<Role> newUserRoles = findRolesForUsers(dtos);
 
-        log.trace("createUsers() - generate passwords and save users");
-        Map<String, User> passwordsAndNewUsers = dtos.stream()
-                .map(dto -> new AbstractMap.SimpleEntry<>(PasswordUtils.generateNumberPassword(6), new User()
-                        .setEmail(dto.getEmail())
-                        .setEnabled(false)
-                        .setLocked(false)
-                        .setRoles(newUserRoles.stream()
-                                .filter(role -> dto.getRoleIds().contains(role.getId()))
-                                .collect(Collectors.toSet()))))
-                .peek(entry -> entry.getValue().setPassword(passwordEncoder.encode(entry.getKey())))
-                .peek(entry -> entry.setValue(userRepository.save(entry.getValue())))
-                .peek(entry -> settingsRepository.save(new Settings()
-                        .setDarkThemeEnabled(props.getUserDefaultSettings().getDarkThemeEnabled())
-                        .setUser(entry.getValue())))
-                .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
-        log.info("createUsers() - result: {}", passwordsAndNewUsers);
+            log.trace("createUsers() - checking that creator is owner of requested roles");
+            checkAllowedRoles(newUserRoles);
+
+            log.trace("createUsers() - generate passwords and save users");
+            Map<String, User> passwordsAndNewUsers = dtos.stream()
+                    .map(dto -> new AbstractMap.SimpleEntry<>(PasswordUtils.generateNumberPassword(6), new User()
+                            .setEmail(dto.getEmail())
+                            .setEnabled(false)
+                            .setLocked(false)
+                            .setRoles(newUserRoles.stream()
+                                    .filter(role -> dto.getRoleIds().contains(role.getId()))
+                                    .collect(Collectors.toSet()))))
+                    .peek(entry -> entry.getValue().setPassword(passwordEncoder.encode(entry.getKey())))
+                    .peek(entry -> entry.setValue(userRepository.save(entry.getValue())))
+                    .peek(entry -> settingsRepository.save(new Settings()
+                            .setDarkThemeEnabled(props.getUserDefaultSettings().getDarkThemeEnabled())
+                            .setUser(entry.getValue())))
+                    .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+            log.info("createUsers() - result: {}", passwordsAndNewUsers);
+
+            return passwordsAndNewUsers;
+        });
 
         log.trace("createUsers() - notify created users by email");
-        for (Map.Entry<String, User> entry : passwordsAndNewUsers.entrySet()) {
+        for (Map.Entry<String, User> entry : passwordsAndCreatedUsers.entrySet()) {
             NewNotificationDto notification = new NewNotificationDto()
                     .setDate(new Date())
                     .setType(NotificationType.INFO)
@@ -180,7 +187,7 @@ public class UserServiceImpl implements UserService {
         }
 
         log.trace("createUsers() - end");
-        return userMapper.toNewUserDtos(new ArrayList<>(passwordsAndNewUsers.values()));
+        return userMapper.toNewUserDtos(new ArrayList<>(passwordsAndCreatedUsers.values()));
     }
 
     /**
