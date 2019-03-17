@@ -6,17 +6,24 @@ Application for the analysis of retinal angiograms
 
 * data base
   * PostgreSQL
-* server
+* backend and analyse-executor
   * Spring Boot
   * Spring Data JPA
-  * Spring Security
-  * JWT
-* client
+  * Hibernate Envers
+  * Liquibase
+  * Spring OAuth Security
+  * Spring JMS
+  * Freemarker
+  * Swagger
+  * Mapstruct
+  * Lombok
+  * Log4j2
+* frontend
   * vue
   * vue-router
   * vue-auth
   * vue-axios
-  * vuetify
+  * vuetify  
 
 ### Run
 
@@ -34,9 +41,24 @@ cd angio
 
 Build, create and start by
 ```
-docker-compose up
+./start-helper.sh dev # startup without angio-backend service
+```
+or
+```
+./start-helper.sh prod # startup all services
 ```
 
-### Debug
+Backend rest api documentation: http://localhost:8080/swagger-ui.html
 
-Remote debugging is available on port 8000
+Test-users credentials:
+
+|Login|Password|Roles|
+| --- | --- | --- |
+|root@example.com|q1w2e3|ROOT (all permissions)|
+|admin@example.com|q1w2e3|ADMIN|
+|doctor@example.com|q1w2e3|DOCTOR|
+
+### Remote debug ports
+
+* angio-backend
+  * 8000
