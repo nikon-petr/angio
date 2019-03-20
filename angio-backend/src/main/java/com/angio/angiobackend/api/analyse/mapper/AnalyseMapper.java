@@ -1,6 +1,7 @@
 package com.angio.angiobackend.api.analyse.mapper;
 
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
+import com.angio.angiobackend.api.analyse.dto.AnalyseReportDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.entity.Analyse;
@@ -44,6 +45,9 @@ public interface AnalyseMapper {
     void updateAnalyseResult(AnalyseJmsDto dto, @MappingTarget Analyse entity);
 
     DetailedAnalyseDto toExtendedDto(Analyse entity);
+
+    @Mapping(source = "additionalInfo.patient", target = "patient")
+    AnalyseReportDto toReportDto(Analyse entity);
 
     AnalyseJmsDto toAnalyseDto(Analyse entity);
 

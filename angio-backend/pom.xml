@@ -36,6 +36,7 @@
 		<spring-oauth2-autoconfig.version>2.1.2.RELEASE</spring-oauth2-autoconfig.version>
 		<spring-oauth2.version>2.3.4.RELEASE</spring-oauth2.version>
 		<swagger.version>2.9.2</swagger.version>
+		<flying-saucer-pdf.version>9.1.5</flying-saucer-pdf.version>
 
 		<!-- datasource -->
 		<liquibase.plugin-url>jdbc:postgresql://localhost:5432/angio_app_db</liquibase.plugin-url>
@@ -123,7 +124,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<!--<scope>provided</scope>-->
 		</dependency>
 
 		<!-- Test -->
@@ -205,6 +205,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+
+		<!-- pdf render -->
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf</artifactId>
+			<version>${flying-saucer-pdf.version}</version>
 		</dependency>
 
 		<!-- Swagger -->

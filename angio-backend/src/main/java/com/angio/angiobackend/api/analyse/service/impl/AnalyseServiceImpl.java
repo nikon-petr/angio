@@ -3,11 +3,13 @@ package com.angio.angiobackend.api.analyse.service.impl;
 import com.angio.angiobackend.api.analyse.AnalyseActions;
 import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
+import com.angio.angiobackend.api.analyse.dto.AnalyseReportDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
 import com.angio.angiobackend.api.analyse.entity.Analyse;
+import com.angio.angiobackend.api.analyse.entity.Vessel;
 import com.angio.angiobackend.api.analyse.mapper.AdditionalInfoMapper;
 import com.angio.angiobackend.api.analyse.mapper.AnalyseMapper;
 import com.angio.angiobackend.api.analyse.messaging.AnalyseToExecuteSender;
@@ -16,8 +18,8 @@ import com.angio.angiobackend.api.analyse.service.AnalyseService;
 import com.angio.angiobackend.api.analyse.specification.AnalyseSpecification;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
-import com.angio.angiobackend.api.common.dto.Response;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
+import com.angio.angiobackend.api.common.report.exception.ReportException;
 import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
 import com.angio.angiobackend.api.notification.dto.SubjectDto;
 import com.angio.angiobackend.api.notification.service.NotificationService;
@@ -27,7 +29,6 @@ import com.angio.angiobackend.api.patient.service.PatientService;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
-import freemarker.template.TemplateException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -208,6 +208,43 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id}))));
+    }
+
+    /**
+     * Get analyse report by id or throw {@link ResourceNotFoundException} if not found.
+     *
+     * @param id analyse id
+     * @return analyse report
+     */
+    @Override
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
+    public AnalyseReportDto getAnalyseReport(@NonNull Long id) {
+
+        Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll()))
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
+
+        if (!analyse.getStatus().getType().equals(AnalyseStatusType.SUCCESS)) {
+            throw new ReportException(msa.getMessage("errors.api.analyse.invalidStatusForReport", new Object[] {id}));
+        }
+
+        AnalyseReportDto report = analyseMapper.toReportDto(analyse);
+        report.getGeometricAnalyse().setVesselsCount((long) analyse.getGeometricAnalyse().getVessels().size());
+        report.getGeometricAnalyse().setBranchesCount(analyse.getGeometricAnalyse().getVessels().stream()
+                .mapToLong(Vessel::getCountOfBranches).sum());
+        report.getGeometricAnalyse().setTortuosityDegreeAvg(analyse.getGeometricAnalyse().getVessels().stream()
+                .mapToDouble(Vessel::getTortuosityDegree).average().getAsDouble());
+        report.getGeometricAnalyse().setBranchingDegreeAvg(analyse.getGeometricAnalyse().getVessels().stream()
+                .mapToDouble(Vessel::getBranchingDegree).average().getAsDouble());
+        report.getGeometricAnalyse().setAreaSumPx(analyse.getGeometricAnalyse().getVessels().stream()
+                .mapToDouble(Vessel::getArea).sum());
+        report.getGeometricAnalyse().setAreaSumPercent(analyse.getGeometricAnalyse().getVessels().stream()
+                .mapToDouble(Vessel::getAreaPercent).sum());
+
+        return report;
     }
 
     /**

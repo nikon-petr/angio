@@ -1,6 +1,7 @@
 package com.angio.angiobackend.api.analyse.mapper;
 
 import com.angio.angiobackend.api.analyse.dto.GeometricAnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.GeometricAnalyseReportDto;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse;
 import com.angio.angiobackend.api.common.mapper.AbstractMapper;
 import com.angio.angiobackend.api.uploads.mapper.UploadMapper;
@@ -19,4 +20,6 @@ public interface GeometricAnalyseMapper extends AbstractMapper<GeometricAnalyse,
 
         @Named("updateGeometricAnalyseEntity")
         void updateEntity(GeometricAnalyseDto dto, @MappingTarget GeometricAnalyse entity);
+
+        GeometricAnalyseReportDto toReportDto(GeometricAnalyse entity);
 }

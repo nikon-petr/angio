@@ -3,6 +3,7 @@ package com.angio.angiobackend.api.analyse.service;
 import com.angio.angiobackend.api.analyse.AnalyseActions;
 import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
+import com.angio.angiobackend.api.analyse.dto.AnalyseReportDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
@@ -28,6 +29,10 @@ public interface AnalyseService {
 
     @Transactional(readOnly = true)
     DetailedAnalyseDto getAnalyseById(@NonNull Long id);
+
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
+    AnalyseReportDto getAnalyseReport(@NonNull Long id);
 
     @Transactional
     DetailedAnalyseDto deleteAnalyse(@NonNull Long id);

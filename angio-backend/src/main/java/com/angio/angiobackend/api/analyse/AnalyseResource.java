@@ -1,10 +1,12 @@
 package com.angio.angiobackend.api.analyse;
 
 import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
-import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.AnalyseReportDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
+import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
 import com.angio.angiobackend.api.analyse.service.AnalyseService;
+import com.angio.angiobackend.api.common.report.service.ReportService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -16,6 +18,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.nio.charset.Charset;
 import java.util.Date;
 
 @Slf4j
@@ -38,6 +46,9 @@ import java.util.Date;
 @RequestMapping(path = "/api/v2/analyse")
 public class AnalyseResource {
 
+    private final static String ANALYSE_REPORT_TEMPLATE = "analyse.ftl";
+
+    private final ReportService reportService;
     private final AnalyseService analyseService;
 
     @ApiOperation(value = "Create new analyse")
@@ -65,6 +76,24 @@ public class AnalyseResource {
             @RequestParam(value = "onlyStarred", defaultValue = "false") Boolean onlyStarred,
             @ApiIgnore @PageableDefault Pageable pageable) {
         return analyseService.filterAnalysesByQueryString(queryString, date, onlyStarred, pageable);
+    }
+
+    @ApiOperation(value = "Render analyse report to pdf file", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping("/{id}/report")
+    public ResponseEntity<byte[]> render(@PathVariable Long id) {
+
+        AnalyseReportDto dto = analyseService.getAnalyseReport(id);
+        byte[] contents = reportService.render(ANALYSE_REPORT_TEMPLATE, dto);
+
+        String filename = String.format("analyse-report-%s-%tD.pdf", dto.getAdditionalInfo().getName(), dto.getAnalyseDate());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.builder("attachment")
+                .filename(filename, Charset.forName("UTF-8")).build());
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(contents, headers, HttpStatus.OK);
     }
 
     @ApiOperation("Delete analyse by id")
