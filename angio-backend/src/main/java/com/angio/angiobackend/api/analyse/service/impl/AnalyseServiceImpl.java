@@ -161,7 +161,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Override
     @Transactional(readOnly = true)
     @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
-    public Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, boolean onlyStarred, Pageable pageable) {
+    public Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Boolean onlyStarred, Pageable pageable) {
 
         log.trace("filterAnalysesByQueryString() - start");
 
@@ -172,7 +172,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         Specification<Analyse> specs = analyseSpecification.getAnalyseInfoFilter(queryString)
                 .and(analyseSpecification.analyseDate(date))
                 .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.starred(currentUser))
+                .and(analyseSpecification.starred(currentUser, onlyStarred))
                 .and(analyseSpecification.fetchAll());
 
         log.trace("filterAnalysesByQueryString() - map sorting fields");

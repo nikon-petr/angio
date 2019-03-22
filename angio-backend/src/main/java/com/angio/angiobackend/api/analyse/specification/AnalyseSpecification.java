@@ -272,17 +272,23 @@ public class AnalyseSpecification {
     }
 
     /**
-     * Find analyses starred by user.
+     * Find analyses by onlyStarred condition. Find all if {@code onlyStarred} parameter is {@code null}.
      *
      * @param user user
+     * @param onlyStarred only starred condition
      * @return specification
      */
-    public Specification<Analyse> starred(User user) {
+    public Specification<Analyse> starred(User user, Boolean onlyStarred) {
         return (root, query, cb) -> {
-            if (user != null) {
-                return cb.isMember(user, root.get(Analyse_.usersStarredThis));
+            if (onlyStarred == null || user == null) {
+                return null;
             }
-            return null;
+
+            if (onlyStarred) {
+                return cb.isMember(user, root.get(Analyse_.usersStarredThis));
+            } else {
+                return cb.not(cb.isMember(user, root.get(Analyse_.usersStarredThis)));
+            }
         };
     }
 
