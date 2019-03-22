@@ -9,8 +9,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
-import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
-
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
@@ -19,9 +17,9 @@ public class AnalyseStatusDto implements Serializable {
 
     private static final long serialVersionUID = -8097058851511448671L;
 
-    @ApiModelProperty(value = "Analyse status type", example = "CREATED", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Analyse status type")
     private AnalyseStatusType type;
 
-    @ApiModelProperty(value = "Analyse status extension", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Analyse status extension")
     private String extension;
 }

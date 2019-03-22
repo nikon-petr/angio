@@ -6,6 +6,7 @@ import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
 import com.angio.angiobackend.api.analyse.service.AnalyseService;
+import com.angio.angiobackend.api.analyse.validation.group.NewAnalyse;
 import com.angio.angiobackend.api.common.report.service.ReportService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -53,7 +54,7 @@ public class AnalyseResource {
 
     @ApiOperation(value = "Create new analyse")
     @PostMapping
-    public DetailedAnalyseDto createAnalyse(@RequestBody @Validated DetailedAnalyseDto analyseDto) {
+    public DetailedAnalyseDto createAnalyse(@RequestBody @Validated(NewAnalyse.class) DetailedAnalyseDto analyseDto) {
         return analyseService.createAnalyse(analyseDto);
     }
 
@@ -112,13 +113,15 @@ public class AnalyseResource {
 
     @ApiOperation("Update one or more analyse additional info fields")
     @PatchMapping("/{id}/additional-info")
-    public DetailedAnalyseDto updateAnalyseAdditionalInfo(@PathVariable Long id, @RequestBody AdditionalInfoDto additionalInfo) {
+    public DetailedAnalyseDto updateAnalyseAdditionalInfo(@PathVariable Long id,
+                                                          @RequestBody @Validated AdditionalInfoDto additionalInfo) {
         return analyseService.updateAnalyseAdditionalInfo(id, additionalInfo);
     }
 
     @ApiOperation("Change starred property of analyse for current user")
     @PostMapping("/{id}/starred")
-    public StarredAnalyseDto starAnalyse(@PathVariable Long id, @RequestBody StarredAnalyseDto starredAnalyseDto) {
+    public StarredAnalyseDto starAnalyse(@PathVariable Long id,
+                                         @RequestBody @Validated StarredAnalyseDto starredAnalyseDto) {
         return analyseService.starAnalyse(id, starredAnalyseDto);
     }
 

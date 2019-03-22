@@ -17,10 +17,10 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UpdateUserDto {
 
-    @ApiModelProperty(name = "User id")
+    @ApiModelProperty(name = "User id", readOnly = true)
     private UUID id;
 
-    @Size(max = 30)
+    @Size(min = 3, max = 30)
     @ApiModelProperty(name = "User email")
     private String email;
 

@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +17,7 @@ public class IschemiaDto implements Serializable {
     /**
      * Ischemia id.
      */
-    @ApiModelProperty(value = "Ischemia id", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Ischemia id")
     private Long id;
 
     /**

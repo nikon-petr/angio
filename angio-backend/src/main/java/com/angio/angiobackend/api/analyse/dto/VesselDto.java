@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +18,7 @@ public class VesselDto implements Serializable {
     /**
      * Vessel id.
      */
-    @ApiModelProperty(value = "Vessel id", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Vessel id")
     private Long id;
 
     /**

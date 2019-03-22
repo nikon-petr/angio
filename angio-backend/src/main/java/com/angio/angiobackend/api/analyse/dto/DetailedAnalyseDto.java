@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.analyse.dto;
 
+import com.angio.angiobackend.api.analyse.validation.group.NewAnalyse;
 import com.angio.angiobackend.api.uploads.dto.StaticFileDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -7,10 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-
-import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
 
 @Data
 @NoArgsConstructor
@@ -22,24 +22,26 @@ public class DetailedAnalyseDto implements Serializable {
     /**
      * Analyse id.
      */
-    @ApiModelProperty(value = "Analyse info id", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Analyse info id", readOnly = true)
     private Long id;
 
     /**
      * Analyse date.
      */
-    @ApiModelProperty(value = "Analyse name", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Analyse name", readOnly = true)
     private Date analyseDate;
 
     /**
      * Analyse status.
      */
-    @ApiModelProperty(value = "Analyse status", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Analyse status", readOnly = true)
     private AnalyseStatusDto status;
 
     /**
      * Analyse original image
      */
+    @Valid
+    @NotNull(groups = {NewAnalyse.class})
     @ApiModelProperty("Analyse original image")
     private StaticFileDto originalImage;
 
@@ -47,18 +49,19 @@ public class DetailedAnalyseDto implements Serializable {
      * Additional analyse info.
      */
     @Valid
+    @NotNull(groups = {NewAnalyse.class})
     @ApiModelProperty("Additional analyse info")
     private AdditionalInfoDto additionalInfo;
 
     /**
      * Geometric analyse data.
      */
-    @ApiModelProperty(value = "Geometric analyse data", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Geometric analyse data", readOnly = true)
     private GeometricAnalyseDto geometricAnalyse;
 
     /**
      * Blood flow analyse data.
      */
-    @ApiModelProperty(value = "Blood flow analyse data", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Blood flow analyse data", readOnly = true)
     private BloodFlowAnalyseDto bloodFlowAnalyse;
 }

@@ -10,6 +10,7 @@ import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.service.UserService;
+import com.angio.angiobackend.api.user.validation.group.EnableUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -99,7 +100,8 @@ public class UserResource {
 
     @ApiOperation("Enable user")
     @PostMapping("{id}/enable")
-    public UserDetailsDto enableUser(@PathVariable UUID id, @RequestBody @Validated EnableUserDto enableUser) {
+    public UserDetailsDto enableUser(@PathVariable UUID id,
+                                     @RequestBody @Validated(EnableUser.class) EnableUserDto enableUser) {
         return userService.enableUser(id, enableUser);
     }
 

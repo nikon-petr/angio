@@ -20,7 +20,7 @@ public class ResetUserDto {
     private String resetCode;
 
     @NotNull
-    @Size(min = 8)
+    @Size(min = 8, max = 120)
     @ApiModelProperty(name = "New password")
     private String newPassword;
 }

@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
-
-import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
 
 @Data
 @Accessors(chain = true)
@@ -21,17 +21,20 @@ public class StaticFileDto implements Serializable {
     /**
      * Upload id.
      */
+    @NotNull
+    @Positive
     @ApiModelProperty("Static file id")
     private Long id;
 
     /**
      * URL of the static file.
      */
-    @ApiModelProperty(value = "URL of the static file", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "URL of the static file", readOnly = true)
     private String url;
 
     /**
      * Upload filename.
      */
+    @ApiModelProperty(value = "name of the static file", readOnly = true)
     private String filename;
 }

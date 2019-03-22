@@ -3,9 +3,9 @@ package com.angio.angiobackend.api.user.service.impl;
 import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.dto.AbstractEmailDto;
-import com.angio.angiobackend.api.common.embeddable.FullName;
 import com.angio.angiobackend.api.common.exception.OperationException;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
+import com.angio.angiobackend.api.common.mapper.FullNameMapper;
 import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
 import com.angio.angiobackend.api.notification.dto.SubjectDto;
 import com.angio.angiobackend.api.notification.service.NotificationService;
@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService {
     private final SettingsRepository settingsRepository;
     private final UserMapper userMapper;
     private final SettingsMapper settingsMapper;
+    private final FullNameMapper fullNameMapper;
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final AngioBackendProperties props;
     private final DynamicLocaleMessageSourceAccessor msa;
@@ -376,10 +377,7 @@ public class UserServiceImpl implements UserService {
         }
 
         log.debug("resetUser() - reset user and save");
-        user.setFullName(new FullName()
-                .setFirstname(enableUser.getFirstname())
-                .setLastname(enableUser.getLastname())
-                .setPatronymic(enableUser.getPatronymic()));
+        user.setFullName(fullNameMapper.toEntity(enableUser.getFullName()));
         user.setPassword(passwordEncoder.encode(enableUser.getNewPassword()));
         user.setEnabled(true);
 
@@ -389,8 +387,8 @@ public class UserServiceImpl implements UserService {
                 .setTemplateName("greeting.ftl")
                 .setSubject(new SubjectDto("Добро пожаловать!"))
                 .setDataModel(new GreetingPushDto()
-                        .setFirstname(enableUser.getFirstname())
-                        .setLastname(enableUser.getLastname()));
+                        .setFirstname(enableUser.getFullName().getFirstname())
+                        .setLastname(enableUser.getFullName().getLastname()));
         pushNotificationService.notifyUser(user.getId(), notification);
 
         log.debug("resetUser() - end");

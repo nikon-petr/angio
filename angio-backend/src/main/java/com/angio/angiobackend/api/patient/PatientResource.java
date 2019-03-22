@@ -2,6 +2,7 @@ package com.angio.angiobackend.api.patient;
 
 import com.angio.angiobackend.api.patient.dto.PatientDto;
 import com.angio.angiobackend.api.patient.service.PatientService;
+import com.angio.angiobackend.api.patient.validation.group.NewPatient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +28,7 @@ public class PatientResource {
 
     @ApiOperation("Create patient")
     @PostMapping
-    public PatientDto createPatient(@RequestBody @Validated PatientDto dto) {
+    public PatientDto createPatient(@RequestBody @Validated(NewPatient.class) PatientDto dto) {
         return patientService.createPatient(dto);
     }
 
@@ -46,7 +46,7 @@ public class PatientResource {
 
     @ApiOperation("Update one or more patient fields")
     @PatchMapping
-    public PatientDto updatePatient(@RequestBody PatientDto dto, Long id) {
+    public PatientDto updatePatient(@RequestBody @Validated PatientDto dto, Long id) {
         return patientService.updatePatient(dto, id);
     }
 }

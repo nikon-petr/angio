@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +18,7 @@ public class AnalyseJmsDto implements Serializable {
     /**
      * Analyse id.
      */
-    @ApiModelProperty(value = "Analyse info id", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Analyse info id")
     private Long id;
 
     /**
@@ -32,12 +30,12 @@ public class AnalyseJmsDto implements Serializable {
     /**
      * Geometric analyse data.
      */
-    @ApiModelProperty(value = "Geometric analyse data", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Geometric analyse data")
     private GeometricAnalyseDto geometricAnalyse;
 
     /**
      * Blood flow analyse data.
      */
-    @ApiModelProperty(value = "Blood flow analyse data", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Blood flow analyse data")
     private BloodFlowAnalyseDto bloodFlowAnalyse;
 }

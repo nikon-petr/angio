@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +17,7 @@ public class DensityDto implements Serializable {
     /**
      * Density id.
      */
-    @ApiModelProperty(value = "Density id", accessMode = READ_ONLY)
+    @ApiModelProperty(value = "Density id")
     private Long id;
 
     /**
