@@ -129,7 +129,7 @@ public class AnalyseResource {
     }
 
     @ApiOperation("Purge analyses in status DELETED")
-    @PostMapping("/purge")
+    @DeleteMapping
     @PreAuthorize("hasAuthority('ANALYSE_PURGE_DELETED')")
     public Integer purgeAnalysesInStatusDeleted() {
         return analyseService.purgeAnalysesInStatusDeleted();

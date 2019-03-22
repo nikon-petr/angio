@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,29 +26,20 @@ public class UploadResource {
 
     private final UploadService uploadService;
 
-    @ApiOperation(value = "Resource to upload image", httpMethod = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Client error"),
-            @ApiResponse(code = 500, message = "Server error")})
-    @PostMapping(path = "/image")
+    @ApiOperation(value = "Resource to upload image")
+    @PostMapping("/image")
     public StaticFileDto uploadImage(MultipartFile multipartFile) throws IOException {
         return uploadService.uploadImage(multipartFile);
     }
 
-    @ApiOperation(value = "Resource to upload document", httpMethod = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Client error"),
-            @ApiResponse(code = 500, message = "Server error")})
-    @PostMapping(path = "/document")
+    @ApiOperation(value = "Resource to upload document")
+    @PostMapping("/document")
     public StaticFileDto uploadDocument(MultipartFile multipartFile) throws IOException {
         return uploadService.uploadDocument(multipartFile);
     }
 
-    @ApiOperation(value = "Resource to purge unused images", httpMethod = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Client error"),
-            @ApiResponse(code = 500, message = "Server error")})
-    @PostMapping("/image/purge")
+    @ApiOperation(value = "Resource to purge unused images")
+    @DeleteMapping("/image")
     @PreAuthorize("hasAuthority('IMAGE_UPLOAD_PURGE_UNUSED')")
     public Integer purgeUnusedImages() {
         return uploadService.purgeUnusedImages();
