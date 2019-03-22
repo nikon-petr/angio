@@ -7,9 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.server.i18n.AcceptHeaderLocaleContextResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -18,11 +16,8 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Properties;
 
 import static java.lang.String.format;
 
@@ -30,15 +25,13 @@ import static java.lang.String.format;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-
     private final AngioBackendProperties props;
-    private final Environment environment;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(format("/%s*",props.getUploadPath()))
+        registry.addResourceHandler(format("%s*",props.getUploadPath()))
                 .addResourceLocations(format("file:%s", props.getUploadDirectory()));
-        registry.addResourceHandler(format("/%s*",props.getFrontendDistPath()))
+        registry.addResourceHandler(format("%s**",props.getFrontendDistPath()))
                 .addResourceLocations(format("file:%s", props.getFrontendDistDirectory()));
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
@@ -47,16 +40,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedMethods("OPTIONS", "PUT", "DELETE", "POST", "GET")
+                .allowedMethods("OPTIONS", "PATCH", "PUT", "DELETE", "POST", "GET")
                 .maxAge(3600);
     }
 
     @Bean
-    public UriComponents uploadsUriBuilder() throws UnknownHostException {
-        return UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host(InetAddress.getLocalHost().getCanonicalHostName())
-                .port(environment.getProperty("server.port"))
+    public UriComponents uploadsUriBuilder() {
+        return UriComponentsBuilder.fromHttpUrl(props.getBaseUrl())
                 .path(props.getUploadPath() + "{file-name}").build();
     }
 

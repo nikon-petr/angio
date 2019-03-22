@@ -1,4 +1,4 @@
-package com.angio.angiobackend.config.init;
+package com.angio.angiobackend.init;
 
 import com.angio.angiobackend.api.security.entity.Permission;
 import com.angio.angiobackend.api.security.entity.Role;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;

@@ -459,7 +459,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private AbstractEmailDto prepareRegistrationEmail(String password, User user) {
-        String activationFormLink = UriComponentsBuilder.fromHttpUrl(props.getUi().getUserActivationFormLink())
+        String activationFormLink = UriComponentsBuilder.fromHttpUrl(props.getBaseUrl())
+                .path(props.getUi().getUserActivationFormPath())
                 .buildAndExpand(user.getId()).toString();
         return new RegistrationEmailDto()
                 .setEmail(user.getEmail())
@@ -469,7 +470,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private AbstractEmailDto prepareResetPasswordEmail(String password, User user) {
-        String resettingFormLink = UriComponentsBuilder.fromHttpUrl(props.getUi().getUserResettingFormLink())
+        String resettingFormLink = UriComponentsBuilder.fromHttpUrl(props.getBaseUrl())
+                .path(props.getUi().getUserResettingFormPath())
                 .buildAndExpand(user.getId()).toString();
         return new ResetPasswordDto()
                 .setEmail(user.getEmail())

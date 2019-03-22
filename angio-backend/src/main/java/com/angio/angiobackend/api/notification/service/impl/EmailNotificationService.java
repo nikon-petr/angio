@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -119,11 +121,9 @@ public class EmailNotificationService implements NotificationService<UUID> {
             SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
             String date = df.format(new Date());
 
-            String filePath = String.format("%s/%s/%s", props.getSentEmailDirectory(), date, FileUtils.generateHashedNameForFile("eml"));
-
-            File emailFile = new File(filePath);
-            emailFile.getParentFile().mkdirs();
-            filePath = emailFile.getAbsolutePath();
+            String filePath = Paths.get(props.getSentEmailDirectory(), date, FileUtils.generateHashedNameForFile("eml"))
+                    .toAbsolutePath()
+                    .toString();
             log.debug("saveEmailToFs() - save to file={}", filePath);
 
             OutputStream out = new FileOutputStream(filePath);

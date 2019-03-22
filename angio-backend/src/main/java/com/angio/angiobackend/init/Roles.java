@@ -1,4 +1,4 @@
-package com.angio.angiobackend.config.init;
+package com.angio.angiobackend.init;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

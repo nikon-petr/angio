@@ -91,11 +91,18 @@ logging:
 
 angiobackend:
     app:
+        base-url: http://localhost:8080
+        upload-path: /static/uploads/
+        frontend-dist-path: /static/dist/
+
         sent-email-directory: angio-backend/src/main/resources/static/email
         upload-directory: angio-backend/src/main/resources/static/uploads/
-        upload-path: static/uploads/
         frontend-dist-directory: angio-backend/src/main/resources/static/dist/
-        frontend-dist-path: static/dist/
+
+        ui:
+            user-activation-form-path: /user/{id}/activation/
+            user-resetting-form-path: /user/{id}/password/reset
+
         image-upload-extensions:
             - bmp
             - png
@@ -114,7 +121,3 @@ angiobackend:
 
         user-default-settings:
             dark-theme-enabled: true
-
-        ui:
-            user-activation-form-link: http://localhost:8080/user/{id}/activation/
-            user-resetting-form-link: http://localhost:8080/user/{id}/password/reset

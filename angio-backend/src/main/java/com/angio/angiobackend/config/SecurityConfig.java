@@ -59,8 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web
                 .ignoring()
                 .antMatchers(SWAGGER_SERVICE_PATHS)
-                .antMatchers(format("/%s*", props.getUploadPath()))
-                .antMatchers(format("/%s*", props.getFrontendDistPath()))
+                .antMatchers(format("%s*", props.getUploadPath()))
+                .antMatchers(format("%s**", props.getFrontendDistPath()))
                 .antMatchers(HttpMethod.POST, "/api/v2/user/*/password/reset")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/reset")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/enable");
