@@ -8,6 +8,7 @@ import "./plugins/moment";
 import "./plugins/vuetify";
 import "./plugins/notification";
 import "./plugins/lightbox";
+import "./plugins/filepond";
 
 // always in the end of imports
 import App from "./App.vue";
