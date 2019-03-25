@@ -1,21 +1,36 @@
-# angio-vue
+# angio-frontend
 
-> Frontend application of Angio app
-
-## Build Setup
-
-``` bash
-# install dependencies
+## Project setup
+```bash
 npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+### Compiles and hot-reloads for development
+```bash
+npm run serve # run dev server on http://localhost:8081
+```
+
+### Compiles and minifies for production
+```bash
+npm run build
+```
+
+### Run your tests
+```bash
+npm run test
+```
+
+### Lints and fixes files
+```bash
+npm run lint
+```
+
+### Run your end-to-end tests
+```bash
+npm run test:e2e
+```
+
+### Run your unit tests
+```bash
+npm run test:unit
+```

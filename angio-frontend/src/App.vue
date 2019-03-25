@@ -1,25 +1,38 @@
 <template>
-  <v-app id="inspire" dark>
-    <TheDrawer ref="drawer"></TheDrawer>
-    <TheHeader @toggle-drawer="$refs.drawer.drawer = !$refs.drawer.drawer"></TheHeader>
-    <TheContent></TheContent>
-    <TheFooter></TheFooter>
-    <TheSignUpForm></TheSignUpForm>
-    <TheSignInForm></TheSignInForm>
-    <TheAlert></TheAlert>
+  <v-app>
+    <v-toolbar app>
+      <v-toolbar-title class="headline text-uppercase">
+        <span>Vuetify</span>
+        <span class="font-weight-light">MATERIAL DESIGN</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn
+        flat
+        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        target="_blank"
+      >
+        <span class="mr-2">Latest Release</span>
+      </v-btn>
+    </v-toolbar>
+
+    <v-content>
+      <HelloWorld/>
+    </v-content>
   </v-app>
 </template>
 
 <script>
-import TheHeader from './components/TheHeader'
-import TheDrawer from './components/TheDrawer'
-import TheContent from './components/TheContent'
-import TheFooter from './components/TheFooter'
-import TheAlert from './components/TheAlert'
-import TheSignUpForm from './components/TheSignUpForm'
-import TheSignInForm from './components/TheSignInForm'
+import HelloWorld from './components/HelloWorld'
 
 export default {
-  components: {TheSignInForm, TheSignUpForm, TheAlert, TheFooter, TheContent, TheDrawer, TheHeader}
+  name: 'App',
+  components: {
+    HelloWorld
+  },
+  data () {
+    return {
+      //
+    }
+  }
 }
 </script>
