@@ -9,6 +9,7 @@ import "./plugins/vuetify";
 import "./plugins/notification";
 import "./plugins/lightbox";
 import "./plugins/filepond";
+import i18n from './plugins/i18n';
 
 // always in the end of imports
 import App from "./App.vue";
@@ -20,5 +21,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
+  i18n,
   render: h => h(App)
 }).$mount("#app");
