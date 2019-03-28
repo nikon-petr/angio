@@ -1,10 +1,14 @@
 import axios from "axios";
 import ls from "local-storage";
+import root from "loglevel";
 import userApi from "../../api/user";
 import storeUtils from "../../utils/storeUtils";
-import userService from "../helpers/user";
+import userHelper from "../helpers/user";
+
+const log = root.getLogger("store/modules/user");
 
 const _types = {
+  // mutations
   CLEAR_USER: "CLEAR_USER",
   SET_USER: "SET_USER",
   SET_AUTH: "SET_AUTH",
@@ -13,17 +17,17 @@ const _types = {
   START_FETCHING: "START_FETCHING",
   END_FETCHING: "END_FETCHING",
 
+  // getters
   IS_AUTHENTIFICATED: "IS_AUTHENTIFICATED",
   HAS_PERMISSIONS: "HAS_PERMISSION",
   HAS_ANY_OF_PERMISSIONS: "HAS_ANY_OF_PERMISSIONS",
   HAS_ANY_PERMISSION: "HAS_ANY_PERMISSION",
 
+  // actions
   AUTH_USER: "AUTH_USER",
   REFRESH_ACCESS_TOKEN: "REFRESH_ACCESS_TOKEN",
   FETCH_USER: "FETCH_USER"
 };
-
-export const types = storeUtils.addNamespace(_types, "user");
 
 const state = () => ({
   fetching: false,
@@ -36,7 +40,8 @@ const state = () => ({
   accessToken: ls.get("accessToken") || null,
   refreshToken: ls.get("refreshToken") || null,
   settings: {
-    darkThemeEnabled: ls.get("settings.darkThemeEnabled") || false
+    darkThemeEnabled: ls.get("settings.darkThemeEnabled") || false,
+    locale: ls.get("settings.locale") || "ru"
   }
 });
 
@@ -80,6 +85,7 @@ const mutations = {
 
   [_types.SET_SETTINGS](state, payload) {
     state.settings.darkThemeEnabled = payload.darkThemeEnabled;
+    state.settings.locale = payload.locale;
   }
 };
 
@@ -91,7 +97,6 @@ const actions = {
       .then(async resp => {
         commit(_types.CLEAR_USER);
         commit(_types.SET_AUTH, resp.data);
-        userService.writeAuthDataToLocalStorage(resp.data);
 
         axios.defaults.headers.common["Authorization"] = `Bearer ${
           resp.data.access_token
@@ -99,16 +104,15 @@ const actions = {
 
         await userApi.getMe(credentials).then(resp => {
           commit(_types.SET_USER, resp.data.data);
-          userService.writeUserDataToLocalStorage(resp.data.data);
         });
         await userApi.getSettings().then(resp => {
           commit(_types.SET_SETTINGS, resp.data.data);
-          userService.writeUserSettingsToLocalStorage(resp.data.data);
         });
       })
-      .catch(() => {
+      .catch(error => {
         commit(_types.CLEAR_USER);
         delete axios.defaults.headers.common["Authorization"];
+        log.error(error);
       })
       .then(() => {
         commit(_types.END_FETCHING);
@@ -121,11 +125,11 @@ const actions = {
       .refreshToken(state.refreshToken)
       .then(resp => {
         commit(_types.SET_ACCESS_TOKEN, resp.data);
-        userService.writeAccessTokenToLocalStorage(resp.data);
       })
-      .catch(() => {
+      .catch(error => {
         commit(_types.CLEAR_USER);
         delete axios.defaults.headers.common["Authorization"];
+        log.error(error);
       })
       .then(() => commit(_types.END_FETCHING));
   },
@@ -134,10 +138,12 @@ const actions = {
     commit(_types.START_FETCHING);
     await userApi
       .getMe(credentials)
-      .then(resp => commit(_types.SET_USER, resp.data.data));
+      .then(resp => commit(_types.SET_USER, resp.data.data))
+      .catch(error => log.error(error));
     await userApi
       .getSettings()
-      .then(resp => commit(_types.SET_SETTINGS, resp.data.data));
+      .then(resp => commit(_types.SET_SETTINGS, resp.data.data))
+      .catch(error => log.error(error));
     commit(_types.END_FETCHING);
   }
 };
@@ -163,6 +169,28 @@ const getters = {
     return state.permissions.length > 0;
   }
 };
+
+export const userMutationInterceptor = (mutation, state) => {
+  switch(mutation.type) {
+    case types.CLEAR_USER:
+      userHelper.clearLocalStorage(mutation.payload);
+      break;
+    case types.SET_ACCESS_TOKEN:
+      userHelper.writeAccessTokenToLocalStorage(mutation.payload);
+      break;
+    case types.SET_AUTH:
+      userHelper.writeAuthDataToLocalStorage(mutation.payload);
+      break;
+    case types.SET_USER:
+      userHelper.writeUserDataToLocalStorage(mutation.payload);
+      break;
+    case types.SET_SETTINGS:
+      userHelper.writeUserSettingsToLocalStorage(mutation.payload);
+      break;
+  }
+};
+
+export const types = storeUtils.addNamespace(_types, "user");
 
 export default {
   namespaced: true,

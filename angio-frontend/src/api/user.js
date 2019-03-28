@@ -1,4 +1,7 @@
 import axios from "axios";
+import root from "loglevel";
+
+const log = root.getLogger("api/user");
 
 export default {
   getToken({ username, password }) {
@@ -9,6 +12,7 @@ export default {
       username,
       password
     };
+    log.debug(`create getToken request with data: ${data}`);
     return axios.post("/oauth/token", data);
   },
 
@@ -19,14 +23,17 @@ export default {
       grant_type: "refresh_token",
       refresh_token: refreshToken
     };
+    log.debug(`create refreshToken request with data: ${data}`);
     return axios.post("/oauth/token", data);
   },
 
   getMe() {
+    log.debug("create getMe request");
     return axios.get("/user/me");
   },
 
   getSettings() {
+    log.debug("create getSettings request");
     return axios.get("/user/me/settings");
   }
 };

@@ -6,7 +6,7 @@ import flushPromises from "flush-promises";
 import { createLocalVue } from "@vue/test-utils";
 import { cloneDeep } from "lodash";
 import { storeConfig } from "@/store/index";
-import { types as userTypes } from "@/store/modules/user";
+import { types as userTypes, userMutationInterceptor } from "@/store/modules/user";
 
 describe("store/modules/user.js", () => {
   const accessToken = "jwt1";
@@ -27,7 +27,8 @@ describe("store/modules/user.js", () => {
   };
   const settings = {
     data: {
-      darkThemeEnabled: true
+      darkThemeEnabled: true,
+      locale: "ru"
     }
   };
   const mock = new MockAdapter(axios);
@@ -50,6 +51,7 @@ describe("store/modules/user.js", () => {
     ls.set("patronymic", user.data.patronymic);
     ls.set("permissions", user.data.permissions);
     ls.set("settings.darkThemeEnabled", settings.data.darkThemeEnabled);
+    ls.set("settings.locale", settings.data.locale);
 
     // when
     const localVue = createLocalVue();
@@ -66,15 +68,17 @@ describe("store/modules/user.js", () => {
     expect(store.state.user.lastname).toBe(user.data.lastname);
     expect(store.state.user.patronymic).toBe(user.data.patronymic);
     expect(store.state.user.permissions).toEqual(user.data.permissions);
-    expect(store.state.user.settings.darkThemeEnabled).toEqual(
-      settings.data.darkThemeEnabled
-    );
+    expect(store.state.user.settings).toEqual(settings.data);
   });
 
   it("auth user when credentials is ok", async () => {
     const localVue = createLocalVue();
     localVue.use(Vuex);
     const store = new Vuex.Store(cloneDeep(storeConfig));
+
+    store.subscribe((mutation, state) => {
+      userMutationInterceptor(mutation, state);
+    });
 
     // given
     const mock = new MockAdapter(axios);
@@ -100,9 +104,7 @@ describe("store/modules/user.js", () => {
     expect(store.state.user.lastname).toBe(user.data.lastname);
     expect(store.state.user.patronymic).toBe(user.data.patronymic);
     expect(store.state.user.permissions).toEqual(user.data.permissions);
-    expect(store.state.user.settings.darkThemeEnabled).toEqual(
-      settings.data.darkThemeEnabled
-    );
+    expect(store.state.user.settings).toEqual(settings.data);
 
     expect(ls.get("accessToken")).toBe(accessToken);
     expect(ls.get("refreshToken")).toBe(refreshToken);
@@ -114,6 +116,9 @@ describe("store/modules/user.js", () => {
     expect(ls.get("permissions")).toEqual(user.data.permissions);
     expect(ls.get("settings.darkThemeEnabled")).toEqual(
       settings.data.darkThemeEnabled
+    );
+    expect(ls.get("settings.locale")).toEqual(
+      settings.data.locale
     );
   });
 });

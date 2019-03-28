@@ -1,7 +1,8 @@
+import Vue from "vue";
 import log from "loglevel";
 import * as prefixer from "loglevel-plugin-prefix";
 
-log.setLevel(process.env.NODE_ENV === "production" ? "error" : "debug", true);
+log.setLevel(process.env.VUE_APP_LOGGING_LEVEL, true);
 
 prefixer.reg(log);
 prefixer.apply(log, {
@@ -16,3 +17,5 @@ prefixer.apply(log, {
     return date.toLocaleTimeString();
   }
 });
+
+Vue.prototype.$log = log.getLogger("vue");

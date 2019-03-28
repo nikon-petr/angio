@@ -9,6 +9,7 @@ import "./plugins/vuetify";
 import "./plugins/notification";
 import "./plugins/lightbox";
 import "./plugins/filepond";
+import "./plugins/morphling";
 import i18n from "./plugins/i18n";
 
 // always in the end of imports
