@@ -1,14 +1,18 @@
-import Vue from "vue";
-import VueLogger from "vuejs-logger";
+import log from "loglevel";
+import * as prefixer from "loglevel-plugin-prefix";
 
-const options = {
-  isEnabled: true,
-  logLevel: process.env.VUE_APP_LOGGING_LEVEL,
-  stringifyArguments: false,
-  showLogLevel: true,
-  showMethodName: true,
-  separator: "|",
-  showConsoleColors: true
-};
+log.setLevel(process.env.NODE_ENV === "production" ? "error" : "debug", true);
 
-Vue.use(VueLogger, options);
+prefixer.reg(log);
+prefixer.apply(log, {
+  template: "%t [%l] %n - ",
+  levelFormatter(level) {
+    return level.toUpperCase();
+  },
+  nameFormatter: function(name) {
+    return name || "root";
+  },
+  timestampFormatter(date) {
+    return date.toLocaleTimeString();
+  }
+});

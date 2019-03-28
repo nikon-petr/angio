@@ -1,4 +1,3 @@
-import Vue from "vue";
 import axios from "axios";
 import ls from "local-storage";
 import userApi from "../../api/user";
@@ -14,9 +13,10 @@ const _types = {
   START_FETCHING: "START_FETCHING",
   END_FETCHING: "END_FETCHING",
 
-  GET_PERMISSIONS: "GET_PERMISSIONS",
-  GET_SETTINGS: "GET_SETTINGS",
   IS_AUTHENTIFICATED: "IS_AUTHENTIFICATED",
+  HAS_PERMISSIONS: "HAS_PERMISSION",
+  HAS_ANY_OF_PERMISSIONS: "HAS_ANY_OF_PERMISSIONS",
+  HAS_ANY_PERMISSION: "HAS_ANY_PERMISSION",
 
   AUTH_USER: "AUTH_USER",
   REFRESH_ACCESS_TOKEN: "REFRESH_ACCESS_TOKEN",
@@ -36,7 +36,7 @@ const state = () => ({
   accessToken: ls.get("accessToken") || null,
   refreshToken: ls.get("refreshToken") || null,
   settings: {
-    darkThemeEnabled: ls.get("settings.darkThemeEnabled") || false,
+    darkThemeEnabled: ls.get("settings.darkThemeEnabled") || false
   }
 });
 
@@ -65,8 +65,8 @@ const mutations = {
     state.refreshToken = refresh_token;
   },
 
-  [_types.SET_ACCESS_TOKEN](state, {access_token}) {
-      state.accessToken = access_token;
+  [_types.SET_ACCESS_TOKEN](state, { access_token }) {
+    state.accessToken = access_token;
   },
 
   [_types.SET_USER](state, payload) {
@@ -97,18 +97,14 @@ const actions = {
           resp.data.access_token
         }`;
 
-        await userApi
-          .getMe(credentials)
-          .then(resp => {
-              commit(_types.SET_USER, resp.data.data);
-              userService.writeUserDataToLocalStorage(resp.data.data);
-            });
-        await userApi
-          .getSettings()
-          .then(resp => {
-              commit(_types.SET_SETTINGS, resp.data.data);
-              userService.writeUserSettingsToLocalStorage(resp.data.data)
-            });
+        await userApi.getMe(credentials).then(resp => {
+          commit(_types.SET_USER, resp.data.data);
+          userService.writeUserDataToLocalStorage(resp.data.data);
+        });
+        await userApi.getSettings().then(resp => {
+          commit(_types.SET_SETTINGS, resp.data.data);
+          userService.writeUserSettingsToLocalStorage(resp.data.data);
+        });
       })
       .catch(() => {
         commit(_types.CLEAR_USER);
@@ -119,19 +115,19 @@ const actions = {
       });
   },
 
-  async [_types.REFRESH_ACCESS_TOKEN]({commit, state}) {
-      commit(_types.START_FETCHING);
-      userApi
-        .refreshToken(state.refreshToken)
-        .then(resp => {
-            commit(_types.SET_ACCESS_TOKEN, resp.data);
-            userService.writeAccessTokenToLocalStorage(resp.data)
-        })
-        .catch(() => {
-            commit(_types.CLEAR_USER);
-            delete axios.defaults.headers.common["Authorization"];
-        })
-        .then(() => commit(_types.END_FETCHING));
+  async [_types.REFRESH_ACCESS_TOKEN]({ commit, state }) {
+    commit(_types.START_FETCHING);
+    userApi
+      .refreshToken(state.refreshToken)
+      .then(resp => {
+        commit(_types.SET_ACCESS_TOKEN, resp.data);
+        userService.writeAccessTokenToLocalStorage(resp.data);
+      })
+      .catch(() => {
+        commit(_types.CLEAR_USER);
+        delete axios.defaults.headers.common["Authorization"];
+      })
+      .then(() => commit(_types.END_FETCHING));
   },
 
   async [_types.FETCH_USER]({ commit }, credentials) {
@@ -147,8 +143,24 @@ const actions = {
 };
 
 const getters = {
-  [_types.IS_AUTHENTIFICATED](state) {
-    return !state.token;
+  [_types.IS_AUTHENTIFICATED]: state => {
+    return !!state.accessToken;
+  },
+
+  [_types.HAS_PERMISSIONS]: state => permissions => {
+    return permissions.every(permission =>
+      state.permissions.includes(permission)
+    );
+  },
+
+  [_types.HAS_ANY_OF_PERMISSIONS]: state => permissions => {
+    return permissions.some(permission =>
+      state.permissions.includes(permission)
+    );
+  },
+
+  [_types.HAS_ANY_PERMISSION]: state => {
+    return state.permissions.length > 0;
   }
 };
 
