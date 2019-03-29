@@ -12,7 +12,7 @@
     </v-toolbar>
 
     <v-content>
-      <HelloI18n/>
+      <HelloI18n></HelloI18n>
     </v-content>
   </v-app>
 </template>

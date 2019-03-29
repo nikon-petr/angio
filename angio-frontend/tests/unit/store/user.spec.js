@@ -18,19 +18,19 @@ describe("store/modules/user.js", () => {
   let store;
 
   // data
-  const accessToken = "jwt1";
-  const refreshToken = "jwt2";
+  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJjMjhlMzMwOC00MTBiLTExZTktYjI4ZC0wMjQyYWMxMzAwMDIiLCJzY29wZSI6WyJ0cnVzdCJdLCJleHAiOjE1NTM4NjAzMjAsImlhdCI6MTU1Mzg1OTQyMDEzMCwiYXV0aG9yaXRpZXMiOlsiQU5BTFlTRV9FRElUIiwiUEFUSUVOVF9DUkVBVEUiLCJBTkFMWVNFX1JFTU9WRSIsIlBBVElFTlRfUkVNT1ZFIiwiQU5BTFlTRV9DUkVBVEUiLCJBTkFMWVNFX0VYRUNVVEVfQUNUSU9OIiwiUEFUSUVOVF9WSUVXIiwiUFVTSF9OT1RJRklDQVRJT05fUkVDRUlWRSIsIlRPS0VOX1JFVk9LRSIsIkFOQUxZU0VfVklFVyIsIlBBVElFTlRfRURJVCIsIklNQUdFX1VQTE9BRCJdLCJqdGkiOiIxNGQ2NzM3Ny01MDhmLTQ5ODQtOWIyNC03NjNiMmI3NmMyZGEiLCJjbGllbnRfaWQiOiJhbmdpby13ZWItY2xpZW50In0.kRycIjgtwVK2Tqd-bsQrhVC7isY0Ga4Sj94B1DTrllo";
+  const refreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJjMjhlMzMwOC00MTBiLTExZTktYjI4ZC0wMjQyYWMxMzAwMDIiLCJzY29wZSI6WyJ0cnVzdCJdLCJhdGkiOiIxNGQ2NzM3Ny01MDhmLTQ5ODQtOWIyNC03NjNiMmI3NmMyZGEiLCJleHAiOjE1NTQ0NjQyMjAsImlhdCI6MTU1Mzg1OTQyMDEzMCwiYXV0aG9yaXRpZXMiOlsiQU5BTFlTRV9FRElUIiwiUEFUSUVOVF9DUkVBVEUiLCJBTkFMWVNFX1JFTU9WRSIsIlBBVElFTlRfUkVNT1ZFIiwiQU5BTFlTRV9DUkVBVEUiLCJBTkFMWVNFX0VYRUNVVEVfQUNUSU9OIiwiUEFUSUVOVF9WSUVXIiwiUFVTSF9OT1RJRklDQVRJT05fUkVDRUlWRSIsIlRPS0VOX1JFVk9LRSIsIkFOQUxZU0VfVklFVyIsIlBBVElFTlRfRURJVCIsIklNQUdFX1VQTE9BRCJdLCJqdGkiOiIwNTkxOGI0NC05YWI2LTQyNDgtOTFhYy00OWRiNTU1ZDE5OTgiLCJjbGllbnRfaWQiOiJhbmdpby13ZWItY2xpZW50In0.Etlhe2F2ASfiCuTghNclvj2Une1Rl0gwTKF5OdP6q4I";
   const credentials = {
-    username: "user@example.com",
-    password: "password"
+    username: "doctor@example.com",
+    password: "q1w2e3"
   };
   const user = {
     data: {
-      id: "ae158b49-3040-4c7f-8837-60a55dc089f6",
+      id: "c28e3308-410b-11e9-b28d-0242ac130002",
       email: "doctor@example.com",
-      firstname: "Иван",
-      lastname: "Иванов",
-      patronymic: "Иванович",
+      firstname: "Геннадий",
+      lastname: "Врачебный",
+      patronymic: "Aдреевич",
       permissions: [
         "ANALYSE_VIEW",
         "ANALYSE_CREATE",
@@ -109,8 +109,7 @@ describe("store/modules/user.js", () => {
 
   it("given credentials is ok when dispatch AUTH_USER action then user data filled", async () => {
     // given
-    const mock = new MockAdapter(axios);
-    mock
+    axiosMock
       .onPost("/oauth/token")
       .reply(200, { access_token: accessToken, refresh_token: refreshToken })
       .onGet("/user/me")
@@ -261,5 +260,42 @@ describe("store/modules/user.js", () => {
 
     // then
     expect(actual).toBeFalsy();
+  });
+
+  it("given user data when refresh token then ok", async () => {
+    //given
+    ls.set("refreshToken", refreshToken);
+    const refreshedAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJjMjhlMzMwOC00MTBiLTExZTktYjI4ZC0wMjQyYWMxMzAwMDIiLCJzY29wZSI6WyJ0cnVzdCJdLCJleHAiOjE1NTM4NjAzMjAsImlhdCI6MTU1Mzg1OTQyMDEzMCwiYXV0aG9yaXRpZXMiOlsiUEFUSUVOVF9WSUVXIl0sImp0aSI6IjE0ZDY3Mzc3LTUwOGYtNDk4NC05YjI0LTc2M2IyYjc2YzJkYSIsImNsaWVudF9pZCI6ImFuZ2lvLXdlYi1jbGllbnQifQ.w2QCLkebZSQUAh34K7WbRzQRTVpa-aazgBkWCjtfQVg";
+    const newPermissions = ["PATIENT_VIEW"];
+
+    localVue = createLocalVue();
+    localVue.use(Vuex);
+    store = new Vuex.Store(cloneDeep(storeConfig));
+
+    store.subscribe((mutation, state) => {
+      userMutationInterceptor(mutation, state);
+    });
+
+    axiosMock
+      .onPost("/oauth/token")
+      .reply(200, { 
+        access_token: refreshedAccessToken, 
+        refresh_token: refreshToken,
+        token_type: "bearer"
+      });
+
+    // when
+    await store.dispatch(userTypes.REFRESH_ACCESS_TOKEN, refreshToken);
+
+    // then
+    await flushPromises();
+    expect(store.getters[userTypes.IS_AUTHENTIFICATED]).toBeTruthy();
+    expect(store.state.user.accessToken).toBe(refreshedAccessToken);
+    expect(store.state.user.refreshToken).toBe(refreshToken);
+    expect(store.state.user.permissions.map(p => p.name).sort()).toEqual(newPermissions.map(p => p.name).sort());
+
+    expect(ls.get("accessToken")).toBe(refreshedAccessToken);
+    expect(ls.get("refreshToken")).toBe(refreshToken);
+    expect(ls.get("permissions").map(p => p.name).sort()).toEqual(newPermissions.map(p => p.name).sort());
   });
 });

@@ -54,7 +54,7 @@ router.beforeEach((to, from, next) => {
 
     if (
       record.meta.auth === auth.IS_AUTHENTIFICATED &&
-      !store.getters[userTypes.IS_AUTHENTIFICATED]
+      !store.getters[userTypes.IS_ANONYMOUS]
     ) {
       result = 0;
     }

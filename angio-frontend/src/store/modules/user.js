@@ -3,6 +3,7 @@ import ls from "local-storage";
 import root from "loglevel";
 import userApi from "../../api/user";
 import storeUtils from "../../utils/storeUtils";
+import jwtUtils from "../../utils/jwtUtils";
 import userHelper from "../helpers/user";
 
 const log = root.getLogger("store/modules/user");
@@ -11,6 +12,7 @@ const _types = {
   // mutations
   CLEAR_USER: "CLEAR_USER",
   SET_USER: "SET_USER",
+  SET_PERMISSIONS: "SET_PERMISSIONS",
   SET_AUTH: "SET_AUTH",
   SET_ACCESS_TOKEN: "SET_ACCESS_TOKEN",
   SET_SETTINGS: "SET_SETTINGS",
@@ -18,6 +20,7 @@ const _types = {
   END_FETCHING: "END_FETCHING",
 
   // getters
+  IS_ANONYMOUS: "IS_ANONYMOUS",
   IS_AUTHENTIFICATED: "IS_AUTHENTIFICATED",
   HAS_PERMISSIONS: "HAS_PERMISSION",
   HAS_ANY_OF_PERMISSIONS: "HAS_ANY_OF_PERMISSIONS",
@@ -83,6 +86,10 @@ const mutations = {
     state.permissions = payload.permissions;
   },
 
+  [_types.SET_PERMISSIONS](state, { permissions }) {
+    state.permissions = permissions;
+  },
+
   [_types.SET_SETTINGS](state, payload) {
     state.settings.darkThemeEnabled = payload.darkThemeEnabled;
     state.settings.locale = payload.locale;
@@ -125,6 +132,15 @@ const actions = {
       .refreshToken(state.refreshToken)
       .then(resp => {
         commit(_types.SET_ACCESS_TOKEN, resp.data);
+        jwtUtils.decodeJwtToken(resp.data.access_token)
+          .then(jwtClaims => {
+            commit(_types.SET_PERMISSIONS, {
+              permissions: jwtClaims.authorities
+            });
+          })
+          .catch(() => {
+            log.error("jwt decryption failed");
+          });
       })
       .catch(error => {
         commit(_types.CLEAR_USER);
@@ -149,20 +165,26 @@ const actions = {
 };
 
 const getters = {
+  [_types.IS_ANONYMOUS]: (state, getters) => {
+    return !getters[_types.IS_AUTHENTIFICATED];
+  },
+
   [_types.IS_AUTHENTIFICATED]: state => {
-    return !!state.accessToken;
+    return !!state.accessToken && !!state.refreshToken;
   },
 
   [_types.HAS_PERMISSIONS]: state => permissions => {
-    return permissions.every(permission =>
-      state.permissions.includes(permission)
-    ) && permissions.length > 0;
+    return (
+      permissions.every(permission => state.permissions.includes(permission)) &&
+      permissions.length > 0
+    );
   },
 
   [_types.HAS_ANY_OF_PERMISSIONS]: state => permissions => {
-    return permissions.some(permission =>
-      state.permissions.includes(permission)
-    ) && permissions.length > 0;
+    return (
+      permissions.some(permission => state.permissions.includes(permission)) &&
+      permissions.length > 0
+    );
   },
 
   [_types.HAS_ANY_PERMISSION]: state => {
@@ -170,8 +192,10 @@ const getters = {
   }
 };
 
+export const types = storeUtils.addNamespace(_types, "user");
+
 export const userMutationInterceptor = (mutation, state) => {
-  switch(mutation.type) {
+  switch (mutation.type) {
     case types.CLEAR_USER:
       userHelper.clearLocalStorage(mutation.payload);
       break;
@@ -184,13 +208,14 @@ export const userMutationInterceptor = (mutation, state) => {
     case types.SET_USER:
       userHelper.writeUserDataToLocalStorage(mutation.payload);
       break;
+    case types.SET_PERMISSIONS:
+      userHelper.writeUserPermissionsToLocalStorage(mutation.payload);
+      break;
     case types.SET_SETTINGS:
       userHelper.writeUserSettingsToLocalStorage(mutation.payload);
       break;
   }
 };
-
-export const types = storeUtils.addNamespace(_types, "user");
 
 export default {
   namespaced: true,

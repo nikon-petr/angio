@@ -38,6 +38,10 @@ export default {
     ls.set("firstname", user.firstname);
   },
 
+  writeUserPermissionsToLocalStorage({permissions}) {
+    ls.set("permissions", permissions);
+  },
+
   writeUserSettingsToLocalStorage(settings) {
     log.debug("save user settings to local storage");
     ls.set("settings.darkThemeEnabled", settings.darkThemeEnabled);

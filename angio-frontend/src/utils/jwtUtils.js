@@ -1,9 +1,9 @@
-import jwtDecode from "jwt-decode";
+import JwtDecode from "jwt-decode";
 
 export default {
   decodeJwtToken(token) {
     return new Promise((resolve, reject) => {
-      resolve(jwtDecode(token));
+      resolve(JwtDecode(token));
     });
   }
 };
