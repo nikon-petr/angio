@@ -7,6 +7,8 @@ axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 axios.defaults.headers.common["Authorization"] =
   ls.get("accessToken") || undefined;
 
+Vue.prototype.$axios = axios;
+
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -23,11 +25,11 @@ const processQueue = (error, token = null) => {
 };
 
 axios.interceptors.response.use(
-  (response) => {
+  response => {
     return response;
   },
 
-  (error) => {
+  error => {
     const originalRequest = error.config;
 
     if (error.response.status === 401 && !originalRequest._retry) {
@@ -54,7 +56,8 @@ axios.interceptors.response.use(
         if (Vue.store.getters[userTypes.IS_AUTHENTIFICATED]) {
           processQueue(null, data.token);
           isRefreshing = false;
-          originalRequest.headers['Authorization'] = 'Bearer ' + ls.get("accessToken");
+          originalRequest.headers["Authorization"] =
+            "Bearer " + ls.get("accessToken");
           resolve(axios(originalRequest));
         } else {
           processQueue(err, null);

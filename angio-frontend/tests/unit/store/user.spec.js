@@ -6,9 +6,18 @@ import flushPromises from "flush-promises";
 import { createLocalVue } from "@vue/test-utils";
 import { cloneDeep } from "lodash";
 import { storeConfig } from "@/store/index";
-import { types as userTypes, userMutationInterceptor } from "@/store/modules/user";
+import {
+  types as userTypes,
+  userMutationInterceptor
+} from "@/store/modules/user";
 
 describe("store/modules/user.js", () => {
+  // mocks
+  let axiosMock;
+  let localVue;
+  let store;
+
+  // data
   const accessToken = "jwt1";
   const refreshToken = "jwt2";
   const credentials = {
@@ -18,11 +27,24 @@ describe("store/modules/user.js", () => {
   const user = {
     data: {
       id: "ae158b49-3040-4c7f-8837-60a55dc089f6",
-      email: "user@example.com",
+      email: "doctor@example.com",
       firstname: "Иван",
       lastname: "Иванов",
       patronymic: "Иванович",
-      permissions: ["VIEW_ANALYSE"]
+      permissions: [
+        "ANALYSE_VIEW",
+        "ANALYSE_CREATE",
+        "ANALYSE_EDIT",
+        "ANALYSE_EXECUTE_ACTION",
+        "ANALYSE_REMOVE",
+        "PATIENT_VIEW",
+        "PATIENT_CREATE",
+        "PATIENT_EDIT",
+        "PATIENT_REMOVE",
+        "IMAGE_UPLOAD",
+        "TOKEN_REVOKE",
+        "PUSH_NOTIFICATION_RECEIVE"
+      ]
     }
   };
   const settings = {
@@ -31,16 +53,30 @@ describe("store/modules/user.js", () => {
       locale: "ru"
     }
   };
-  const mock = new MockAdapter(axios);
-  axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 
-  beforeEach(() => {
+  beforeAll(() => {
+    axiosMock = new MockAdapter(axios);
     axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
     ls.clear();
-    mock.reset();
+    axiosMock.reset();
   });
 
-  it("initialize auth and user from local storage", async () => {
+  afterEach(() => {
+    localVue = createLocalVue();
+    localVue.use(Vuex);
+    store = new Vuex.Store(cloneDeep(storeConfig));
+
+    store.subscribe((mutation, state) => {
+      userMutationInterceptor(mutation, state);
+    });
+  });
+
+  afterEach(() => {
+    ls.clear();
+    axiosMock.reset();
+  });
+
+  it("initialize user vuex module", async () => {
     //given
     ls.set("accessToken", accessToken);
     ls.set("refreshToken", refreshToken);
@@ -71,15 +107,7 @@ describe("store/modules/user.js", () => {
     expect(store.state.user.settings).toEqual(settings.data);
   });
 
-  it("auth user when credentials is ok", async () => {
-    const localVue = createLocalVue();
-    localVue.use(Vuex);
-    const store = new Vuex.Store(cloneDeep(storeConfig));
-
-    store.subscribe((mutation, state) => {
-      userMutationInterceptor(mutation, state);
-    });
-
+  it("given credentials is ok when dispatch AUTH_USER action then user data filled", async () => {
     // given
     const mock = new MockAdapter(axios);
     mock
@@ -117,8 +145,121 @@ describe("store/modules/user.js", () => {
     expect(ls.get("settings.darkThemeEnabled")).toEqual(
       settings.data.darkThemeEnabled
     );
-    expect(ls.get("settings.locale")).toEqual(
-      settings.data.locale
-    );
+    expect(ls.get("settings.locale")).toEqual(settings.data.locale);
+  });
+
+  it("given user permissions when call getter HAS_PERMISSIONS then true", () => {
+    //given
+    ls.set("permissions", user.data.permissions);
+
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const store = new Vuex.Store(cloneDeep(storeConfig));
+
+    // when
+    let actual = store.getters[userTypes.HAS_PERMISSIONS]([
+      "ANALYSE_VIEW",
+      "ANALYSE_CREATE"
+    ]);
+
+    // then
+    expect(actual).toBeTruthy();
+  });
+
+  it("given user permissions when call getter HAS_PERMISSIONS then false", () => {
+    //given
+    ls.set("permissions", user.data.permissions);
+
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const store = new Vuex.Store(cloneDeep(storeConfig));
+
+    // when
+    let actual = store.getters[userTypes.HAS_PERMISSIONS]([
+      "ANALYSE_VIEW",
+      "WRONG_PERMISSION"
+    ]);
+
+    // then
+    expect(actual).toBeFalsy();
+  });
+
+  it("given user permissions when call getter HAS_PERMISSIONS then false", () => {
+    //given
+    ls.set("permissions", user.data.permissions);
+
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const store = new Vuex.Store(cloneDeep(storeConfig));
+
+    // when
+    let actual = store.getters[userTypes.HAS_PERMISSIONS]([]);
+
+    // then
+    expect(actual).toBeFalsy();
+  });
+
+  it("given user permissions when call getter HAS_ANY_OF_PERMISSIONS then true", () => {
+    //given
+    ls.set("permissions", user.data.permissions);
+
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const store = new Vuex.Store(cloneDeep(storeConfig));
+
+    // when
+    let actual = store.getters[userTypes.HAS_ANY_OF_PERMISSIONS]([
+      "ANALYSE_VIEW",
+      "ANALYSE_CREATE"
+    ]);
+
+    // then
+    expect(actual).toBeTruthy();
+  });
+
+  it("given user permissions when call getter HAS_ANY_OF_PERMISSIONS then true", () => {
+    //given
+    ls.set("permissions", user.data.permissions);
+
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const store = new Vuex.Store(cloneDeep(storeConfig));
+
+    // when
+    let actual = store.getters[userTypes.HAS_ANY_OF_PERMISSIONS]([
+      "ANALYSE_VIEW",
+      "WRONG_PERMISSION"
+    ]);
+
+    // then
+    expect(actual).toBeTruthy();
+  });
+
+  it("given user permissions when call getter HAS_ANY_PERMISSION then true", () => {
+    //given
+    ls.set("permissions", user.data.permissions);
+
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const store = new Vuex.Store(cloneDeep(storeConfig));
+
+    // when
+    let actual = store.getters[userTypes.HAS_ANY_PERMISSION];
+
+    // then
+    expect(actual).toBeTruthy();
+  });
+
+  it("given no user permissions when call getter HAS_ANY_PERMISSION then false", () => {
+    //given
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const store = new Vuex.Store(cloneDeep(storeConfig));
+
+    // when
+    let actual = store.getters[userTypes.HAS_ANY_PERMISSION];
+
+    // then
+    expect(actual).toBeFalsy();
   });
 });

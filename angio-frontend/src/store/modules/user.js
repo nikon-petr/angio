@@ -156,13 +156,13 @@ const getters = {
   [_types.HAS_PERMISSIONS]: state => permissions => {
     return permissions.every(permission =>
       state.permissions.includes(permission)
-    );
+    ) && permissions.length > 0;
   },
 
   [_types.HAS_ANY_OF_PERMISSIONS]: state => permissions => {
     return permissions.some(permission =>
       state.permissions.includes(permission)
-    );
+    ) && permissions.length > 0;
   },
 
   [_types.HAS_ANY_PERMISSION]: state => {
