@@ -11,7 +11,7 @@ prefixer.apply(log, {
         return level.toUpperCase();
     },
     nameFormatter(name) {
-        return name || 'root';
+        return name || 'store.ts';
     },
     timestampFormatter(date) {
         return date.toLocaleTimeString();

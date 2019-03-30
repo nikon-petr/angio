@@ -3,39 +3,14 @@ import ls from 'local-storage';
 import {ActionContext} from 'vuex';
 import {getStoreAccessors} from 'vuex-typescript';
 import root from 'loglevel';
-import {RootState} from '@/store/root';
-import UserApi from '@/api/user';
+import {RootState} from '@/store';
+import {UserApiService} from '@/modules/user/services/userApiService';
 import JwtUtils from '@/utils/jwtUtils';
-import userStoreHelper from '@/store/helpers/user';
-import {UserAuthModel, UserPermission} from '@/models/user';
+import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageService';
+import {UserAuthModel} from '@/modules/user/models/user';
+import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
 
 const log = root.getLogger('store/modules/user');
-
-export interface UserState {
-    fetching: boolean;
-    info: UserInfo;
-    auth: UserAuth;
-    settings: UserSettings;
-}
-
-export interface UserInfo {
-    id: string | undefined;
-    email: string | undefined;
-    firstname: string | undefined;
-    lastname: string | undefined;
-    patronymic: string | undefined;
-    permissions: UserPermission[] | [];
-}
-
-export interface UserAuth {
-    accessToken: string | undefined;
-    refreshToken: string | undefined;
-}
-
-export interface UserSettings {
-    darkThemeEnabled: boolean;
-    locale: string;
-}
 
 type UserContext = ActionContext<UserState, RootState>;
 
@@ -78,16 +53,16 @@ export const user = {
             state.info.permissions = [];
             state.auth.accessToken = undefined;
             state.auth.refreshToken = undefined;
-            userStoreHelper.purgeUser();
+            UserLocalStorageService.purgeUser();
         },
         setAuth(state: UserState, userAuth: UserAuth) {
             state.auth.accessToken = userAuth.accessToken;
             state.auth.refreshToken = userAuth.refreshToken;
-            userStoreHelper.persistUserAuth(userAuth);
+            UserLocalStorageService.persistUserAuth(userAuth);
         },
         setAccessToken(state: UserState, accessToken: string) {
             state.auth.accessToken = accessToken;
-            userStoreHelper.persistAccessToken(accessToken);
+            UserLocalStorageService.persistAccessToken(accessToken);
         },
         setUser(state: UserState, userInfo: UserInfo) {
             state.info.id = userInfo.id;
@@ -96,16 +71,16 @@ export const user = {
             state.info.lastname = userInfo.lastname;
             state.info.patronymic = userInfo.patronymic;
             state.info.permissions = userInfo.permissions;
-            userStoreHelper.persistUserInfo(userInfo);
+            UserLocalStorageService.persistUserInfo(userInfo);
         },
         setPermissions(state: UserState, userPermissions: UserPermission[]) {
             state.info.permissions = userPermissions;
-            userStoreHelper.persistUserPermissions(userPermissions);
+            UserLocalStorageService.persistUserPermissions(userPermissions);
         },
         setSettings(state: UserState, userSettings: UserSettings) {
             state.settings.darkThemeEnabled = userSettings.darkThemeEnabled;
             state.settings.locale = userSettings.locale;
-            userStoreHelper.persistUserSetting(userSettings);
+            UserLocalStorageService.persistUserSetting(userSettings);
         },
     },
 
@@ -136,7 +111,7 @@ export const user = {
     actions: {
         async authUser(ctx: UserContext, credentials: { username: string; password: string }) {
             startFetching(ctx);
-            UserApi.getToken(credentials)
+            UserApiService.getToken(credentials)
                 .then(async (userAuthResponse: AxiosResponse<UserAuthModel>) => {
                     clearUser(ctx);
                     const userAuth: UserAuth = {
@@ -147,10 +122,10 @@ export const user = {
 
                     axios.defaults.headers.common.Authorization = `Bearer ${userAuthResponse.data.access_token}`;
 
-                    await UserApi.getMe().then((meResponse) => {
+                    await UserApiService.getMe().then((meResponse) => {
                         setUser(ctx, meResponse.data.data);
                     });
-                    await UserApi.getSettings().then((settingsResponse) => {
+                    await UserApiService.getSettings().then((settingsResponse) => {
                         setSettings(ctx, settingsResponse.data.data);
                     });
                 })
@@ -163,7 +138,7 @@ export const user = {
         },
         async refreshAccessToken(ctx: UserContext) {
             startFetching(ctx);
-            UserApi
+            UserApiService
                 .refreshToken(ctx.state.auth.refreshToken as string)
                 .then((response) => {
                     setAccessToken(ctx, response.data.access_token);
@@ -182,11 +157,11 @@ export const user = {
         },
         async fetchUser(ctx: UserContext) {
             startFetching(ctx);
-            await UserApi
+            await UserApiService
                 .getMe()
                 .then((response) => setUser(ctx, response.data.data))
                 .catch((error) => log.error(error));
-            await UserApi
+            await UserApiService
                 .getSettings()
                 .then((response) => setSettings(ctx, response.data.data))
                 .catch((error) => log.error(error));
@@ -218,4 +193,3 @@ export const setSettings = commit(user.mutations.setSettings);
 export const authUser = dispatch(user.actions.authUser);
 export const refreshAccessToken = dispatch(user.actions.refreshAccessToken);
 export const fetchUser = dispatch(user.actions.fetchUser);
-

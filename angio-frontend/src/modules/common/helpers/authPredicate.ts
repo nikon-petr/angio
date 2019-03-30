@@ -1,14 +1,14 @@
-import store from '@/store/root';
+import store from '@/store';
 import {
     hasAnyOfGivenPermissions,
     hasAnyPermission,
     hasPermissions,
     isAnonymous,
     isAuthenticated,
-} from '@/store/modules/user';
-import {UserPermission} from '@/models/user';
+} from '@/modules/user/store/userStore';
 import root, {Logger} from 'loglevel';
 import {Route} from 'vue-router';
+import {UserPermission} from '@/modules/user/store/userState';
 
 const log: Logger = root.getLogger('router');
 

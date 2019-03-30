@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Vuex, {Store, StoreOptions} from 'vuex';
-import {UserState} from '@/store/modules/user';
+import {UserState} from '@/modules/user/store/userState';
 import createLogger from 'vuex/dist/logger';
-import {user} from '@/store/modules/user';
+import {user} from '@/modules/user/store/userStore';
 
 Vue.use(Vuex);
 

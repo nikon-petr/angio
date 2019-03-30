@@ -1,31 +1,27 @@
-import {UserAuth, UserInfo, UserSettings} from '@/store/modules/user';
+export interface UserState {
+    fetching: boolean;
+    info: UserInfo;
+    auth: UserAuth;
+    settings: UserSettings;
+}
 
-export interface UserInfoModel extends UserInfo {
-    id: string;
-    email: string;
-    firstname: string;
-    lastname: string;
+export interface UserInfo {
+    id: string | undefined;
+    email: string | undefined;
+    firstname: string | undefined;
+    lastname: string | undefined;
     patronymic: string | undefined;
     permissions: UserPermission[] | [];
 }
 
-export interface UserAuthModel extends UserAuth {
-    access_token: string;
-    refresh_token: string;
+export interface UserAuth {
+    accessToken: string | undefined;
+    refreshToken: string | undefined;
 }
 
-export interface UserSettingsModel extends UserSettings {
+export interface UserSettings {
     darkThemeEnabled: boolean;
     locale: string;
-}
-
-export interface UserCredentialsModel {
-    username: string;
-    password: string;
-}
-
-export interface RefreshTokenModel {
-    access_token: string;
 }
 
 export enum UserPermission {
@@ -57,4 +53,3 @@ export enum UserPermission {
     PUSH_NOTIFICATION_RECEIVE = 'PUSH_NOTIFICATION_RECEIVE',
     PUSH_NOTIFICATION_SEND = 'PUSH_NOTIFICATION_SEND',
 }
-

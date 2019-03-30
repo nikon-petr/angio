@@ -7,7 +7,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import HelloI18n from '@/components/HelloI18n.vue';
+    import HelloI18n from '@/modules/common/components/HelloI18n.vue';
 
     @Component({
         components: {

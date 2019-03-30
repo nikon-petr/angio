@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueI18n, {LocaleMessages} from 'vue-i18n';
 import ls from 'local-storage';
-import store from '@/store/root';
+import store from '@/store';
 
 Vue.use(VueI18n);
 

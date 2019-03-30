@@ -6,7 +6,7 @@ import ls from 'local-storage';
 import flushPromises from 'flush-promises';
 import {createLocalVue} from '@vue/test-utils';
 import {cloneDeep} from 'lodash';
-import {RootState, storeOptions} from '@/store/root';
+import {RootState, storeOptions} from '@/store';
 import {
     authUser,
     hasAnyOfGivenPermissions,
@@ -14,9 +14,10 @@ import {
     hasPermissions,
     isAuthenticated,
     refreshAccessToken,
-} from '@/store/modules/user';
-import {UserCredentialsModel, UserInfoModel, UserPermission, UserSettingsModel} from '@/models/user';
-import {Response, ResponseStatus} from '@/models/response';
+} from '@/modules/user/store/userStore';
+import {UserCredentialsModel, UserInfoModel, UserSettingsModel} from '@/modules/user/models/user';
+import {Response, ResponseStatus} from '@/modules/common/models/response';
+import {UserPermission} from '@/modules/user/store/userState';
 
 describe('store/modules/user.js', () => {
     // mocks

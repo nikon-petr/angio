@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/views/Home.vue';
-import NotFound from '@/components/NotFound.vue';
-import VuetifyHelloWorld from '@/components/VuetifyHelloWorld.vue';
-import {AuthPredicate} from '@/router/authPredicate';
-import {UserPermission} from '@/models/user';
+import NotFound from '@/modules/common/components/NotFound.vue';
+import VuetifyHelloWorld from '@/modules/common/components/VuetifyHelloWorld.vue';
+import {AuthPredicate} from '@/modules/common/helpers/authPredicate';
+import {UserPermission} from '@/modules/user/store/userState';
 
 Vue.use(Router);
 
