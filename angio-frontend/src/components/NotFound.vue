@@ -1,11 +1,10 @@
 <template>
-    <p>{{ $t('message', { name: 'Петя' }) }}</p>
+    <div>404</div>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
 
     @Component
-    export default class HelloI18n extends Vue {
-    }
+    export default class NotFound extends Vue {}
 </script>
