@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import Home from '@/views/Home.vue';
 import NotFound from '@/components/NotFound.vue';
 import VuetifyHelloWorld from '@/components/VuetifyHelloWorld.vue';
-import {AuthPredicate} from '@/router/auth-predicate';
+import {AuthPredicate} from '@/router/authPredicate';
 import {UserPermission} from '@/models/user';
 
 Vue.use(Router);
