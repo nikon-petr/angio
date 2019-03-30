@@ -15,7 +15,7 @@ import i18n from '@/plugins/i18n';
 
 // always in the end of imports
 import App from '@/App.vue';
-import router from '@/router';
+import router from '@/router/router';
 import store from '@/store/root';
 
 Vue.config.productionTip = false;
