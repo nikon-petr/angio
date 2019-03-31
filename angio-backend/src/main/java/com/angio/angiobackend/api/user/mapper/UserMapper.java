@@ -2,10 +2,12 @@ package com.angio.angiobackend.api.user.mapper;
 
 import com.angio.angiobackend.api.analyse.dto.DiagnosticianDto;
 import com.angio.angiobackend.api.common.mapper.FullNameMapper;
+import com.angio.angiobackend.api.security.mapper.PermissionMapper;
 import com.angio.angiobackend.api.security.mapper.RoleMapper;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
+import com.angio.angiobackend.api.user.dto.UserDto;
 import com.angio.angiobackend.api.user.entities.User;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InheritInverseConfiguration;
@@ -22,7 +24,8 @@ import java.util.List;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = {
                 FullNameMapper.class,
-                RoleMapper.class
+                RoleMapper.class,
+                PermissionMapper.class
         })
 public interface UserMapper {
 
@@ -45,4 +48,7 @@ public interface UserMapper {
     void updateEntity(UpdateUserDto dto, @MappingTarget User entity);
 
     UserDetailsDto toDetailedDto(User entity);
+
+    @Mapping(target = "permissions", qualifiedByName = "toStringPermission")
+    UserDto toUserDto(User entity);
 }

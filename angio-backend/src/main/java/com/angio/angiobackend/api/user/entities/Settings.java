@@ -40,6 +40,9 @@ public class Settings {
     @Column(name = "dark_theme_enabled")
     private Boolean darkThemeEnabled;
 
+    @Column(name = "locale")
+    private String locale;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @MapsId

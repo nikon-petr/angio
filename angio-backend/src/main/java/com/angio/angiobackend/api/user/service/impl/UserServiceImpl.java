@@ -19,6 +19,7 @@ import com.angio.angiobackend.api.user.dto.ResetUserDto;
 import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
+import com.angio.angiobackend.api.user.dto.UserDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.dto.email.RegistrationEmailDto;
 import com.angio.angiobackend.api.user.dto.email.ResetPasswordDto;
@@ -167,8 +168,7 @@ public class UserServiceImpl implements UserService {
                                     .collect(Collectors.toSet()))))
                     .peek(entry -> entry.getValue().setPassword(passwordEncoder.encode(entry.getKey())))
                     .peek(entry -> entry.setValue(userRepository.save(entry.getValue())))
-                    .peek(entry -> settingsRepository.save(new Settings()
-                            .setDarkThemeEnabled(props.getUserDefaultSettings().getDarkThemeEnabled())
+                    .peek(entry -> settingsRepository.save(settingsMapper.toNewEntity(props.getUserDefaultSettings())
                             .setUser(entry.getValue())))
                     .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
             log.info("createUsers() - result: {}", passwordsAndNewUsers);
@@ -202,6 +202,18 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasAuthority('USER_VIEW') or #id == @userService.userIdFromContext")
     public UserDetailsDto getUserById(UUID id) {
         return userMapper.toDetailedDto(findUserEntityByUuid(id));
+    }
+
+    /**
+     * Get current user user.
+     *
+     * @return user data
+     */
+    @Override
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
+    public UserDto getCurrentUser() {
+        return userMapper.toUserDto(getUserFromContext());
     }
 
     /**

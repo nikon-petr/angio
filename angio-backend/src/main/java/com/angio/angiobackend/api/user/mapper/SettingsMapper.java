@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.user.mapper;
 
+import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.common.mapper.AbstractMapper;
 import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.entities.Settings;
@@ -18,4 +19,6 @@ public interface SettingsMapper extends AbstractMapper<Settings, SettingsDto> {
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
     )
     void toEntity(SettingsDto dto, @MappingTarget Settings entity);
+
+    Settings toNewEntity(AngioBackendProperties.UserDefaultSettings defaultSettings);
 }

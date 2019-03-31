@@ -14,4 +14,7 @@ public class SettingsDto {
 
     @ApiModelProperty(name = "Dark theme enabled setting")
     private Boolean darkThemeEnabled;
+
+    @ApiModelProperty(name = "User locale")
+    private String locale;
 }

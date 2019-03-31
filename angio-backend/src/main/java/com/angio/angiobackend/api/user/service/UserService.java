@@ -7,10 +7,12 @@ import com.angio.angiobackend.api.user.dto.ResetUserDto;
 import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
+import com.angio.angiobackend.api.user.dto.UserDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.entities.User;
 import freemarker.template.TemplateException;
 import lombok.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,9 @@ public interface UserService {
 
     @Transactional
     UserDetailsDto getUserById(UUID id);
+
+    @Transactional
+    UserDto getCurrentUser();
 
     @Transactional
     UserDetailsDto updateUser(@NonNull UpdateUserDto dto);

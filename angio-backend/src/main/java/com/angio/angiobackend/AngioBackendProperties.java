@@ -44,6 +44,7 @@ public class AngioBackendProperties {
     @Data
     public static class UserDefaultSettings {
         private Boolean darkThemeEnabled;
+        private String locale;
     }
 
     @Data

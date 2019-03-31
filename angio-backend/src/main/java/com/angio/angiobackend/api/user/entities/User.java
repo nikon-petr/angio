@@ -136,7 +136,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getPermissions(roles);
+        return getPermissions();
     }
 
     @Override
@@ -165,5 +165,9 @@ public class User implements UserDetails {
             permissions.addAll(role.getPermissions());
         }
         return permissions;
+    }
+
+    public List<Permission> getPermissions() {
+        return getPermissions(roles);
     }
 }

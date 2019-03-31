@@ -44,6 +44,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/015_add_settings_table.yml
+- include:
+      relativeToChangelogFile: true
+      file: ./changelogs/016_add_locale_column_to_settings_table.yml
 
 # always in the end of file
 - includeAll:

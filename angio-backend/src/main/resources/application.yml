@@ -121,3 +121,4 @@ angiobackend:
 
         user-default-settings:
             dark-theme-enabled: true
+            locale: ru

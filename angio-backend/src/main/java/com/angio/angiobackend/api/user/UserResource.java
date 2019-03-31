@@ -8,6 +8,7 @@ import com.angio.angiobackend.api.user.dto.ResetUserDto;
 import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
+import com.angio.angiobackend.api.user.dto.UserDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.user.validation.group.EnableUser;
@@ -50,8 +51,8 @@ public class UserResource {
 
     @ApiOperation("Get current user")
     @GetMapping("/me")
-    public UserDetailsDto getCurrentUser() {
-        return userService.getUserById(userService.getUserIdFromContext());
+    public UserDto getCurrentUser() {
+        return userService.getCurrentUser();
     }
 
     @ApiOperation("Update current user")
