@@ -63,8 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(format("%s**", props.getFrontendDistPath()))
                 .antMatchers(HttpMethod.POST, "/api/v2/user/*/password/reset")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/reset")
-                .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/enable")
-                .antMatchers(HttpMethod.OPTIONS, "/**");
+                .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/enable");
         }
 
     @Override
