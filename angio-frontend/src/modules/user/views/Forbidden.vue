@@ -1,11 +1,14 @@
 <template>
-    <p>{{ $t('message', { name: 'Петя' }) }}</p>
+    <div>403</div>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
 
     @Component
-    export default class HelloI18n extends Vue {
-    }
+    export default class Forbidden extends Vue {}
 </script>
+
+<style scoped>
+
+</style>
