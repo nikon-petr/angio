@@ -1,12 +1,12 @@
 import {UserAuth, UserInfo, UserPermission, UserSettings} from '@/modules/user/store/userState';
+import FullName from '@/modules/common/models/fullName';
 
 export interface UserInfoModel extends UserInfo {
     id: string;
     email: string;
-    firstname: string;
-    lastname: string;
-    patronymic: string | undefined;
+    fullName: FullName;
     permissions: UserPermission[] | [];
+    settings: UserSettingsModel;
 }
 
 export interface UserAuthModel extends UserAuth {

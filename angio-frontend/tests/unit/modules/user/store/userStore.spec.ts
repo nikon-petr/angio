@@ -15,7 +15,7 @@ import {
     isAuthenticated,
     refreshAccessToken,
 } from '@/modules/user/store/userStore';
-import {UserCredentialsModel, UserInfoModel, UserSettingsModel} from '@/modules/user/models/user';
+import {UserCredentialsModel, UserInfoModel} from '@/modules/user/models/user';
 import {Response, ResponseStatus} from '@/modules/common/models/response';
 import {UserPermission} from '@/modules/user/store/userState';
 
@@ -48,9 +48,11 @@ describe('store/modules/user.js', () => {
         data: {
             id: 'c28e3308-410b-11e9-b28d-0242ac130002',
             email: 'doctor@example.com',
-            firstname: 'Геннадий',
-            lastname: 'Врачебный',
-            patronymic: 'Aдреевич',
+            fullName: {
+                firstname: 'Геннадий',
+                lastname: 'Врачебный',
+                patronymic: 'Aдреевич',
+            },
             permissions: [
                 UserPermission.ANALYSE_VIEW,
                 UserPermission.ANALYSE_CREATE,
@@ -64,15 +66,11 @@ describe('store/modules/user.js', () => {
                 UserPermission.IMAGE_UPLOAD,
                 UserPermission.TOKEN_REVOKE,
                 UserPermission.PUSH_NOTIFICATION_RECEIVE,
-            ] as UserPermission[],
-        },
-    };
-    const settings: Response<UserSettingsModel> = {
-        date: new Date(),
-        status: ResponseStatus.SUCCESS,
-        data: {
-            darkThemeEnabled: true,
-            locale: 'ru',
+            ],
+            settings: {
+                darkThemeEnabled: true,
+                locale: 'ru',
+            },
         },
     };
 
@@ -94,12 +92,12 @@ describe('store/modules/user.js', () => {
         ls.set('refreshToken', refreshToken);
         ls.set('id', user.data.id);
         ls.set('email', user.data.email);
-        ls.set('firstname', user.data.firstname);
-        ls.set('lastname', user.data.lastname);
-        ls.set('patronymic', user.data.patronymic);
+        ls.set('firstname', user.data.fullName.firstname);
+        ls.set('lastname', user.data.fullName.lastname);
+        ls.set('patronymic', user.data.fullName.patronymic);
         ls.set('permissions', user.data.permissions);
-        ls.set('darkThemeEnabled', settings.data.darkThemeEnabled);
-        ls.set('locale', settings.data.locale);
+        ls.set('darkThemeEnabled', user.data.settings.darkThemeEnabled);
+        ls.set('locale', user.data.settings.locale);
 
         // when
         const localVue: VueConstructor<Vue> = createLocalVue();
@@ -111,11 +109,11 @@ describe('store/modules/user.js', () => {
         expect(store.state.user.auth.refreshToken).toBe(refreshToken);
         expect(store.state.user.info.id).toBe(user.data.id);
         expect(store.state.user.info.email).toBe(user.data.email);
-        expect(store.state.user.info.firstname).toBe(user.data.firstname);
-        expect(store.state.user.info.lastname).toBe(user.data.lastname);
-        expect(store.state.user.info.patronymic).toBe(user.data.patronymic);
+        expect(store.state.user.info.fullName.firstname).toBe(user.data.fullName.firstname);
+        expect(store.state.user.info.fullName.lastname).toBe(user.data.fullName.lastname);
+        expect(store.state.user.info.fullName.patronymic).toBe(user.data.fullName.patronymic);
         expect(store.state.user.info.permissions).toEqual(user.data.permissions);
-        expect(store.state.user.settings).toEqual(settings.data);
+        expect(store.state.user.settings).toEqual(user.data.settings);
     });
 
     it('givenCredentialsWhenAuthUser', async () => {
@@ -128,9 +126,7 @@ describe('store/modules/user.js', () => {
             .onPost('/oauth/token')
             .reply(200, { access_token: accessToken, refresh_token: refreshToken })
             .onGet('/user/me')
-            .reply(200, user)
-            .onGet('/user/me/settings')
-            .reply(200, settings);
+            .reply(200, user);
 
         // when
         await authUser(store, credentials);
@@ -142,24 +138,24 @@ describe('store/modules/user.js', () => {
         expect(store.state.user.auth.refreshToken).toBe(refreshToken);
         expect(store.state.user.info.id).toBe(user.data.id);
         expect(store.state.user.info.email).toBe(user.data.email);
-        expect(store.state.user.info.firstname).toBe(user.data.firstname);
-        expect(store.state.user.info.lastname).toBe(user.data.lastname);
-        expect(store.state.user.info.patronymic).toBe(user.data.patronymic);
+        expect(store.state.user.info.fullName.firstname).toBe(user.data.fullName.firstname);
+        expect(store.state.user.info.fullName.lastname).toBe(user.data.fullName.lastname);
+        expect(store.state.user.info.fullName.patronymic).toBe(user.data.fullName.patronymic);
         expect(store.state.user.info.permissions).toEqual(user.data.permissions);
-        expect(store.state.user.settings).toEqual(settings.data);
+        expect(store.state.user.settings).toEqual(user.data.settings);
 
         expect(ls.get('accessToken')).toBe(accessToken);
         expect(ls.get('refreshToken')).toBe(refreshToken);
         expect(ls.get('id')).toBe(user.data.id);
         expect(ls.get('email')).toBe(user.data.email);
-        expect(ls.get('firstname')).toBe(user.data.firstname);
-        expect(ls.get('lastname')).toBe(user.data.lastname);
-        expect(ls.get('patronymic')).toBe(user.data.patronymic);
+        expect(ls.get('firstname')).toBe(user.data.fullName.firstname);
+        expect(ls.get('lastname')).toBe(user.data.fullName.lastname);
+        expect(ls.get('patronymic')).toBe(user.data.fullName.patronymic);
         expect(ls.get('permissions')).toEqual(user.data.permissions);
         expect(ls.get('settings.darkThemeEnabled')).toEqual(
-            settings.data.darkThemeEnabled,
+            user.data.settings.darkThemeEnabled,
         );
-        expect(ls.get('settings.locale')).toEqual(settings.data.locale);
+        expect(ls.get('settings.locale')).toEqual(user.data.settings.locale);
     });
 
     it('givenPermissionsWhenHasMatchingPermissionsThenTrue', () => {
@@ -280,10 +276,10 @@ describe('store/modules/user.js', () => {
     it('givenUserWhenRefreshTokenThenOk', async () => {
         // given
         ls.set('refreshToken', refreshToken);
-        const refreshedAccessToken: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJjMjhlMzMwOC00MTBiLTExZTkt' +
-            'YjI4ZC0wMjQyYWMxMzAwMDIiLCJzY29wZSI6WyJ0cnVzdCJdLCJleHAiOjE1NTM4NjAzMjAsImlhdCI6MTU1Mzg1OTQyMDEzMCwiYXV0aG' +
-            '9yaXRpZXMiOlsiUEFUSUVOVF9WSUVXIl0sImp0aSI6IjE0ZDY3Mzc3LTUwOGYtNDk4NC05YjI0LTc2M2IyYjc2YzJkYSIsImNsaWVudF9p' +
-            'ZCI6ImFuZ2lvLXdlYi1jbGllbnQifQ.w2QCLkebZSQUAh34K7WbRzQRTVpa-aazgBkWCjtfQVg';
+        const refreshedAccessToken: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJjMjhlMzMwOC' +
+            '00MTBiLTExZTktYjI4ZC0wMjQyYWMxMzAwMDIiLCJzY29wZSI6WyJ0cnVzdCJdLCJleHAiOjE1NTM4NjAzMjAsImlhdCI6MTU1Mz' +
+            'g1OTQyMDEzMCwiYXV0aG9yaXRpZXMiOlsiUEFUSUVOVF9WSUVXIl0sImp0aSI6IjE0ZDY3Mzc3LTUwOGYtNDk4NC05YjI0LTc2M2' +
+            'IyYjc2YzJkYSIsImNsaWVudF9pZCI6ImFuZ2lvLXdlYi1jbGllbnQifQ.w2QCLkebZSQUAh34K7WbRzQRTVpa-aazgBkWCjtfQVg';
         const newPermissions: UserPermission[] = [UserPermission.PATIENT_VIEW];
 
         const localVue: VueConstructor<Vue> = createLocalVue();

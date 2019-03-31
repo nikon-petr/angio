@@ -1,4 +1,40 @@
 {
-  "$vuetify": {},
-  "message": "Привет мир от {name}!!"
+  "$vuetify": {
+    "dataIterator": {
+      "rowsPerPageText": "Записей на странице:",
+      "rowsPerPageAll": "Все",
+      "pageText": "{0}-{1} из {2}",
+      "noResultsText": "Не найдено подходящих записей",
+      "nextPage": "Следующая страница",
+      "prevPage": "Предыдущая страница"
+    },
+    "dataTable": {
+      "rowsPerPageText": "Строк на странице:"
+    },
+    "noDataText": "Отсутствуют данные",
+    "carousel": {
+      "prev": "Предыдущий",
+      "next": "Следующий"
+    }
+  },
+  "user": {
+    "components": {
+      "loginForm": {
+        "title": "Авторизация",
+          "username": {
+            "field": "Электронная почта",
+            "validation": {
+              "NotEmpty": "Электронная почта не должена быть пустой"
+            }
+          },
+        "password": {
+          "field": "Пароль",
+          "validation": {
+            "NotEmpty": "Пароль не должен быть пустым"
+          }
+        },
+        "submit": "Войти"
+      }
+    }
+  }
 }

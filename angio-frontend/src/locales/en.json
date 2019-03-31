@@ -1,4 +1,40 @@
 {
-  "$vuetify": {},
-  "message": "Hello world by {name}!!"
+  "$vuetify": {
+    "dataIterator": {
+      "rowsPerPageText": "Items per page:",
+      "rowsPerPageAll": "All",
+      "pageText": "{0}-{1} of {2}",
+      "noResultsText": "No matching records found",
+      "nextPage": "Next page",
+      "prevPage": "Previous page"
+    },
+    "dataTable": {
+      "rowsPerPageText": "Rows per page:"
+    },
+    "noDataText": "No data available",
+    "carousel": {
+      "prev": "Previous",
+      "next": "Next"
+    }
+  },
+  "user": {
+    "components": {
+      "loginForm": {
+        "title": "Authorization",
+        "username": {
+          "field": "Email",
+          "validation": {
+            "NotEmpty": "Email should not be empty"
+          }
+        },
+        "password": {
+          "field": "Password",
+          "validation": {
+            "NotEmpty": "Password should not be empty"
+          }
+        },
+        "submit": "Sign In"
+      }
+    }
+  }
 }

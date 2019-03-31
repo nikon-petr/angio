@@ -32,11 +32,10 @@ export class UserLocalStorageService {
         log.debug('save user data to local storage');
         ls.set('id', userInfo.id);
         ls.set('email', userInfo.email);
-        ls.set('firstname', userInfo.firstname);
-        ls.set('lastname', userInfo.lastname);
-        ls.set('patronymic', userInfo.patronymic);
+        ls.set('firstname', userInfo.fullName.firstname);
+        ls.set('lastname', userInfo.fullName.lastname);
+        ls.set('patronymic', userInfo.fullName.patronymic);
         ls.set('permissions', userInfo.permissions);
-        ls.set('firstname', userInfo.firstname);
     }
 
     public static persistUserPermissions(permissions: UserPermission[]) {

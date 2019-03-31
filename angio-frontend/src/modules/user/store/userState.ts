@@ -1,3 +1,5 @@
+import FullName from '@/modules/common/models/fullName';
+
 export interface UserState {
     fetching: boolean;
     info: UserInfo;
@@ -6,17 +8,15 @@ export interface UserState {
 }
 
 export interface UserInfo {
-    id: string | undefined;
-    email: string | undefined;
-    firstname: string | undefined;
-    lastname: string | undefined;
-    patronymic: string | undefined;
+    id?: string;
+    email?: string;
+    fullName: FullName;
     permissions: UserPermission[] | [];
 }
 
 export interface UserAuth {
-    accessToken: string | undefined;
-    refreshToken: string | undefined;
+    accessToken?: string;
+    refreshToken?: string;
 }
 
 export interface UserSettings {

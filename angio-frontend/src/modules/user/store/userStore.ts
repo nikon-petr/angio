@@ -9,6 +9,7 @@ import JwtUtils from '@/utils/jwtUtils';
 import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageService';
 import {UserAuthModel} from '@/modules/user/models/user';
 import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
+import FullName from '@/modules/common/models/fullName';
 
 const log = root.getLogger('store/modules/user');
 
@@ -22,9 +23,11 @@ export const user = {
         info: {
             id: ls.get('id') || undefined,
             email: ls.get('email') || undefined,
-            firstname: ls.get('firstname') || undefined,
-            lastname: ls.get('lastname') || undefined,
-            patronymic: ls.get('patronymic') || undefined,
+            fullName: {
+                firstname: ls.get('firstname') || undefined,
+                lastname: ls.get('lastname') || undefined,
+                patronymic: ls.get('patronymic') || undefined,
+            } as FullName,
             permissions: ls.get('permissions') || [],
         } as UserInfo,
         auth: {
@@ -47,9 +50,9 @@ export const user = {
         clearUser(state: UserState) {
             state.info.email = undefined;
             state.info.id = undefined;
-            state.info.firstname = undefined;
-            state.info.lastname = undefined;
-            state.info.patronymic = undefined;
+            state.info.fullName.firstname = undefined;
+            state.info.fullName.lastname = undefined;
+            state.info.fullName.patronymic = undefined;
             state.info.permissions = [];
             state.auth.accessToken = undefined;
             state.auth.refreshToken = undefined;
@@ -67,9 +70,9 @@ export const user = {
         setUser(state: UserState, userInfo: UserInfo) {
             state.info.id = userInfo.id;
             state.info.email = userInfo.email;
-            state.info.firstname = userInfo.firstname;
-            state.info.lastname = userInfo.lastname;
-            state.info.patronymic = userInfo.patronymic;
+            state.info.fullName.firstname = userInfo.fullName.firstname;
+            state.info.fullName.lastname = userInfo.fullName.lastname;
+            state.info.fullName.patronymic = userInfo.fullName.patronymic;
             state.info.permissions = userInfo.permissions;
             UserLocalStorageService.persistUserInfo(userInfo);
         },
@@ -124,9 +127,7 @@ export const user = {
 
                     await UserApiService.getMe().then((meResponse) => {
                         setUser(ctx, meResponse.data.data);
-                    });
-                    await UserApiService.getSettings().then((settingsResponse) => {
-                        setSettings(ctx, settingsResponse.data.data);
+                        setSettings(ctx, meResponse.data.data.settings);
                     });
                 })
                 .catch((error) => {
