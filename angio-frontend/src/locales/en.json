@@ -17,8 +17,19 @@
       "next": "Next"
     }
   },
+  "common": {
+    "component": {
+      "theHeader": {
+        "button": {
+          "login": "Log In",
+          "logout": "Log Out",
+          "register": "Registration"
+        }
+      }
+    }
+  },
   "user": {
-    "components": {
+    "component": {
       "loginForm": {
         "title": "Authorization",
         "username": {
@@ -33,7 +44,9 @@
             "NotEmpty": "Password should not be empty"
           }
         },
-        "submit": "Sign In"
+        "button": {
+          "submit": "Log In"
+        }
       }
     }
   }

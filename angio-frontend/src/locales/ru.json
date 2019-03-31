@@ -17,23 +17,36 @@
       "next": "Следующий"
     }
   },
+  "common": {
+    "component": {
+      "theHeader": {
+        "button": {
+          "login": "Войти",
+          "logout": "Выйти",
+          "register": "Регистрация"
+        }
+      }
+    }
+  },
   "user": {
-    "components": {
+    "component": {
       "loginForm": {
         "title": "Авторизация",
-          "username": {
-            "field": "Электронная почта",
-            "validation": {
-              "NotEmpty": "Электронная почта не должена быть пустой"
-            }
-          },
+        "username": {
+          "field": "Электронная почта",
+          "validation": {
+            "NotEmpty": "Электронная почта не должена быть пустой"
+          }
+        },
         "password": {
           "field": "Пароль",
           "validation": {
             "NotEmpty": "Пароль не должен быть пустым"
           }
         },
-        "submit": "Войти"
+        "button": {
+          "submit": "Войти"
+        }
       }
     }
   }

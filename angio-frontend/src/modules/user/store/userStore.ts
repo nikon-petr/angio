@@ -10,6 +10,7 @@ import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageS
 import {UserAuthModel} from '@/modules/user/models/user';
 import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
 import FullName from '@/modules/common/models/fullName';
+import {namespace} from "vuex-class";
 
 const log = root.getLogger('store/modules/user');
 
@@ -156,6 +157,12 @@ export const user = {
                 })
                 .then(() => endFetching(ctx));
         },
+        async logout(ctx: UserContext) {
+            startFetching(ctx);
+            // TODO: api call
+            clearUser(ctx);
+            endFetching(ctx);
+        },
         async fetchUser(ctx: UserContext) {
             startFetching(ctx);
             await UserApiService
@@ -193,4 +200,8 @@ export const setSettings = commit(user.mutations.setSettings);
 // actions
 export const authUser = dispatch(user.actions.authUser);
 export const refreshAccessToken = dispatch(user.actions.refreshAccessToken);
+export const logout = dispatch(user.actions.logout);
 export const fetchUser = dispatch(user.actions.fetchUser);
+
+// module
+export const userModule = namespace('user');

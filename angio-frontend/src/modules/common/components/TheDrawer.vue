@@ -1,24 +1,11 @@
 <template>
     <v-navigation-drawer
-
             v-model="drawer"
             clipped
             fixed
             app
     >
         <v-list dense>
-            <v-list-tile v-on:click="">
-
-                <v-list-tile-action>
-                    <v-icon>dashboard</v-icon>
-                </v-list-tile-action>
-
-                <v-list-tile-content>
-                    <v-list-tile-title>Dashboard</v-list-tile-title>
-                </v-list-tile-content>
-
-            </v-list-tile>
-
             <v-list-tile v-on:click="">
 
                 <v-list-tile-action>
@@ -36,22 +23,22 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {BusEvents} from '@/modules/common/helpers/busEvents';
+    import {BusEvent} from '@/modules/common/helpers/busEvent';
 
     @Component
     export default class TheDrawer extends Vue {
+
         drawer: boolean = false;
 
-        setDrawerVisibility() {
+        toggleDrawerVisibility() {
             this.drawer = !this.drawer;
         }
-
         created() {
-            this.$bus.on(BusEvents.TOGGLE_DRAWER_VISIBILITY_EVENT, this.setDrawerVisibility);
+            this.$bus.on(BusEvent.TOGGLE_DRAWER_VISIBILITY_EVENT, this.toggleDrawerVisibility);
         }
 
         beforeDestroy() {
-            this.$bus.off(BusEvents.TOGGLE_DRAWER_VISIBILITY_EVENT, this.setDrawerVisibility);
+            this.$bus.off(BusEvent.TOGGLE_DRAWER_VISIBILITY_EVENT, this.toggleDrawerVisibility);
         }
     }
 </script>

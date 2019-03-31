@@ -152,10 +152,10 @@ describe('store/modules/user.js', () => {
         expect(ls.get('lastname')).toBe(user.data.fullName.lastname);
         expect(ls.get('patronymic')).toBe(user.data.fullName.patronymic);
         expect(ls.get('permissions')).toEqual(user.data.permissions);
-        expect(ls.get('settings.darkThemeEnabled')).toEqual(
+        expect(ls.get('darkThemeEnabled')).toEqual(
             user.data.settings.darkThemeEnabled,
         );
-        expect(ls.get('settings.locale')).toEqual(user.data.settings.locale);
+        expect(ls.get('locale')).toEqual(user.data.settings.locale);
     });
 
     it('givenPermissionsWhenHasMatchingPermissionsThenTrue', () => {

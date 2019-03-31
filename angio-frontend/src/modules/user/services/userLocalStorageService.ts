@@ -44,8 +44,8 @@ export class UserLocalStorageService {
 
     public static persistUserSetting(settings: UserSettings) {
         log.debug('save user settings to local storage');
-        ls.set('settings.darkThemeEnabled', settings.darkThemeEnabled);
-        ls.set('settings.locale', settings.locale);
+        ls.set('darkThemeEnabled', settings.darkThemeEnabled);
+        ls.set('locale', settings.locale);
     }
 }
 

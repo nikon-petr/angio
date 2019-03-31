@@ -3,7 +3,7 @@
         <v-card class="elevation-12" max-width="500px">
 
             <v-card-title primary-title>
-                <span class="headline mb-0">{{ $t('user.components.loginForm.title') }}</span>
+                <span class="headline mb-0">{{ $t('user.component.loginForm.title') }}</span>
             </v-card-title>
             <v-card-text>
                 <v-form v-model="valid" ref="form">
@@ -11,8 +11,8 @@
                             type="text"
                             name="username"
                             v-model="form.username"
-                            :label="$t('user.components.loginForm.username.field')"
-                            :rules="[v => !!v || $t('user.components.loginForm.username.validation.NotEmpty')]"
+                            :label="$t('user.component.loginForm.username.field')"
+                            :rules="[v => !!v || $t('user.component.loginForm.username.validation.NotEmpty')]"
                             prepend-icon="person"
                             counter
                             maxlength="120"
@@ -24,8 +24,8 @@
                             id="password"
                             name="password"
                             v-model="form.password"
-                            :label="$t('user.components.loginForm.password.field')"
-                            :rules="[v => !!v || $t('user.components.loginForm.password.validation.NotEmpty')]"
+                            :label="$t('user.component.loginForm.password.field')"
+                            :rules="[v => !!v || $t('user.component.loginForm.password.validation.NotEmpty')]"
                             prepend-icon="lock"
                             counter
                             maxlength="120"
@@ -42,7 +42,7 @@
                         :disabled="!valid"
                         color="success"
                         flat
-                >{{ $t('user.components.loginForm.submit') }}</v-btn>
+                >{{ $t('user.component.loginForm.button.submit') }}</v-btn>
             </v-card-actions>
 
         </v-card>
@@ -50,9 +50,9 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from "vue-property-decorator";
+    import {Component, Emit, Vue} from "vue-property-decorator";
     import {UserCredentialsModel} from "@/modules/user/models/user";
-    import {CommonEvents} from "@/modules/common/helpers/commonEvents";
+    import {CommonEvent} from "@/modules/common/helpers/commonEvent";
 
     @Component
     export default class LoginForm extends Vue {
@@ -62,8 +62,9 @@
             password: ''
         };
 
+        @Emit(CommonEvent.SEND_FORM)
         submit() {
-            this.$emit(CommonEvents.SEND_FORM, this.form);
+            return this.form;
         }
     }
 </script>
