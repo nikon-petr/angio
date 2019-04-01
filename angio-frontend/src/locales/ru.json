@@ -18,7 +18,18 @@
     }
   },
   "common": {
+    "view":{
+      "404": {
+        "description": "Извините, страница не найдена"
+      },
+      "500": {
+        "description": "Извините, произошла внутренняя ошибка"
+      }
+    },
     "component": {
+      "error": {
+        "linkName": "Home"
+      },
       "theHeader": {
         "button": {
           "login": "Войти",
@@ -47,6 +58,11 @@
         "button": {
           "submit": "Войти"
         }
+      }
+    },
+    "view": {
+      "403": {
+        "description": "Извините, доступ запрещен"
       }
     }
   }

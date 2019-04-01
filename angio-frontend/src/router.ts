@@ -2,14 +2,16 @@ import Vue from 'vue';
 import Router, {RouteConfig} from 'vue-router';
 import {AuthPredicate} from '@/modules/common/helpers/authPredicate';
 import {userRouterConfig} from '@/modules/user/userRouter';
-import NotFound from "@/modules/common/views/NotFound.vue";
+import NotFound from "@/modules/common/views/404.vue";
 import store from "@/store";
+import ServerError from "@/modules/common/views/500.vue";
 
 Vue.use(Router);
 
 let rootRouterConfig: RouteConfig[] = [
-    {path: '/notfound', component: NotFound},
-    {path: '*', redirect: '/notfound', meta: {auth: AuthPredicate.permitAll()}},
+    {path: '/500', component: ServerError, meta: {auth: AuthPredicate.permitAll}},
+    {path: '/404', component: NotFound, meta: {auth: AuthPredicate.permitAll}},
+    {path: '*', redirect: '/404', meta: {auth: AuthPredicate.permitAll()}},
 ];
 
 rootRouterConfig = rootRouterConfig.concat(userRouterConfig);
@@ -20,6 +22,7 @@ const rootRouter: Router = new Router({
     routes: rootRouterConfig,
 });
 
+// check AuthPredicate
 rootRouter.beforeEach((to, from, next) => {
     for (const record of to.matched) {
         if (!!record.meta.auth) {

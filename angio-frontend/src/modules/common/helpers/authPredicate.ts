@@ -14,6 +14,10 @@ const log: Logger = root.getLogger('router');
 
 export class AuthPredicate {
 
+    public static FORBIDDEN_PATH = '/403';
+    public static HOME_PATH = '/';
+    public static LOGIN_PATH = 'login';
+
     public static permitAll() {
         return (to: Route, from: Route, next: any): any => next();
     }
@@ -22,7 +26,7 @@ export class AuthPredicate {
         return (to: Route, from: Route, next: any): any => {
             if (!isAnonymous(store)) {
                 log.debug(`path ${to.path} only for anonymous users. redirect to default authenticated user page`);
-                next({path: '/home'});
+                next({path: AuthPredicate.HOME_PATH});
             }
         };
     }
@@ -31,7 +35,7 @@ export class AuthPredicate {
         return (to: Route, from: Route, next: any): any => {
             if (!isAuthenticated(store)) {
                 log.debug(`path ${to.path} only for authenticated users. redirect to login page`);
-                next({path: '/login'});
+                next({path: AuthPredicate.LOGIN_PATH});
             }
         };
     }
@@ -41,7 +45,7 @@ export class AuthPredicate {
             if (!hasAnyPermission(store)) {
                 log.debug(`path ${to.path} only for users with any permissions. ` +
                     'redirect to forbidden page');
-                next({path: '/forbidden'});
+                next({path: AuthPredicate.FORBIDDEN_PATH});
             }
         };
     }
@@ -51,7 +55,7 @@ export class AuthPredicate {
             if (!hasAnyOfGivenPermissions(store)(permissions)) {
                 log.debug(`path ${to.path} only for users with any of permissions: ${permissions}. ` +
                     'redirect to forbidden page');
-                next({path: '/forbidden'});
+                next({path: AuthPredicate.FORBIDDEN_PATH});
             }
         };
     }
@@ -61,7 +65,7 @@ export class AuthPredicate {
             if (!hasPermissions(store)(permissions)) {
                 log.debug(`path ${to.path} only for users with permissions: ${permissions.toString()}. ` +
                     'redirect to forbidden page');
-                next({path: '/forbidden'});
+                next({path: AuthPredicate.FORBIDDEN_PATH});
             }
         };
     }

@@ -18,7 +18,18 @@
     }
   },
   "common": {
+    "view":{
+      "404": {
+        "description": "Sorry, page not found"
+      },
+      "500": {
+        "description": "Sorry, the server is down"
+      }
+    },
     "component": {
+      "error": {
+        "linkName": "Home"
+      },
       "theHeader": {
         "button": {
           "login": "Log In",
@@ -47,6 +58,11 @@
         "button": {
           "submit": "Log In"
         }
+      }
+    },
+    "view": {
+      "403": {
+        "description": "Sorry, access denied"
       }
     }
   }
