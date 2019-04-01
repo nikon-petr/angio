@@ -9,8 +9,8 @@ import ServerError from "@/modules/common/views/500.vue";
 Vue.use(Router);
 
 let rootRouterConfig: RouteConfig[] = [
-    {path: '/500', component: ServerError, meta: {auth: AuthPredicate.permitAll}},
-    {path: '/404', component: NotFound, meta: {auth: AuthPredicate.permitAll}},
+    {path: '/500', component: ServerError, meta: {auth: AuthPredicate.permitAll()}},
+    {path: '/404', component: NotFound, meta: {auth: AuthPredicate.permitAll()}},
     {path: '*', redirect: '/404', meta: {auth: AuthPredicate.permitAll()}},
 ];
 
