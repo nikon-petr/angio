@@ -18,6 +18,7 @@
     }
   },
   "common": {
+    "appName": "AngioVision",
     "view":{
       "404": {
         "description": "Sorry, page not found"
@@ -31,10 +32,12 @@
         "linkName": "Home"
       },
       "theHeader": {
+      },
+      "theFooter": {
         "button": {
-          "login": "Log In",
-          "logout": "Log Out",
-          "register": "Registration"
+          "home": "Home",
+          "about": "About",
+          "help": "Help"
         }
       }
     }
@@ -56,6 +59,7 @@
           }
         },
         "button": {
+          "reset": "Reset",
           "submit": "Log In"
         }
       }

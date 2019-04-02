@@ -1,8 +1,12 @@
 <template>
     <v-app :dark="darkThemeEnabled" id="inspire">
         <TheDrawer></TheDrawer>
-        <TheHeader :is-authenticated="isAuthenticated" v-on:logout="logout"></TheHeader>
+        <TheHeader
+                v-bind:is-authenticated="isAuthenticated"
+                v-on:logout="logout"
+        ></TheHeader>
         <TheContent></TheContent>
+        <TheFooter></TheFooter>
     </v-app>
 </template>
 
@@ -13,9 +17,11 @@
     import TheHeader from '@/modules/common/components/TheHeader.vue';
     import TheContent from '@/modules/common/components/TheContent.vue';
     import {logout, userModule} from "@/modules/user/store/userStore";
+    import TheFooter from "@/modules/common/components/TheFooter.vue";
 
     @Component({
         components: {
+            TheFooter,
             TheContent,
             TheHeader,
             TheDrawer,

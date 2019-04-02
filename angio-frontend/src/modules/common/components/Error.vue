@@ -7,7 +7,13 @@
             <h1 class="error-code font-weight-black shades">{{ code }}</h1>
             <h2 class="my-3 headline ">{{ description }}</h2>
             <div>
-                <v-btn color="primary" :to="link || '/'">{{ linkName || $t('common.component.error.linkName') }}</v-btn>
+                <v-btn
+                        v-bind:to="link || '/'"
+                        color="primary"
+                        round
+                >
+                    {{ linkName || $t('common.component.error.linkName') }}
+                </v-btn>
             </div>
         </div>
     </div>

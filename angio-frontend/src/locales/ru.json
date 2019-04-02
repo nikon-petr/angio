@@ -18,6 +18,7 @@
     }
   },
   "common": {
+    "appName": "AngioVision",
     "view":{
       "404": {
         "description": "Извините, страница не найдена"
@@ -28,13 +29,15 @@
     },
     "component": {
       "error": {
-        "linkName": "Home"
+        "linkName": "На главную"
       },
       "theHeader": {
+      },
+      "theFooter": {
         "button": {
-          "login": "Войти",
-          "logout": "Выйти",
-          "register": "Регистрация"
+          "home": "На главную",
+          "about": "О нас",
+          "help": "Справка"
         }
       }
     }
@@ -56,6 +59,7 @@
           }
         },
         "button": {
+          "reset": "Восстановить",
           "submit": "Войти"
         }
       }

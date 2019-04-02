@@ -1,5 +1,8 @@
 <template>
-    <LoginForm v-on:send-form="sendForm"></LoginForm>
+    <LoginForm
+            v-on:send-form="sendForm"
+            v-bind:fetching="fetching"
+    ></LoginForm>
 </template>
 
 <script lang="ts">
@@ -8,6 +11,7 @@
     import store from '@/store';
     import {authUser} from '@/modules/user/store/userStore';
     import {UserCredentialsModel} from '@/modules/user/models/user';
+    import {State} from "vuex-class";
 
     @Component({
         components: {
@@ -15,6 +19,10 @@
         }
     })
     export default class Login extends Vue {
+
+        @State(state => state.user.fetching)
+        readonly fetching!: boolean;
+
         sendForm(form: UserCredentialsModel) {
             authUser(store, form);
         }

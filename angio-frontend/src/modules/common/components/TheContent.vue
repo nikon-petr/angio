@@ -2,9 +2,11 @@
     <v-content>
         <v-container fluid fill-height>
             <v-layout justify-center align-center>
+                <transition name="slide-x-transition" mode="out-in">
 
-                <router-view></router-view>
+                    <router-view></router-view>
 
+                </transition>
             </v-layout>
         </v-container>
     </v-content>
@@ -14,9 +16,7 @@
     import {Component, Vue} from 'vue-property-decorator';
 
     @Component
-    export default class TheContent extends Vue {}
+    export default class TheContent extends Vue {
+
+    }
 </script>
-
-<style scoped>
-
-</style>

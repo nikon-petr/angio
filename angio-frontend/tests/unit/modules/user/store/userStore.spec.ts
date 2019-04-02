@@ -302,10 +302,10 @@ describe('store/modules/user.js', () => {
         expect(isAuthenticated(store)).toBeTruthy();
         expect(store.state.user.auth.accessToken).toBe(refreshedAccessToken);
         expect(store.state.user.auth.refreshToken).toBe(refreshToken);
-        // expect(store.state.user.info.permissions.map((p) => p.name).sort()).toEqual(newPermissions.map((p) => p.name).sort());
+        expect([...store.state.user.info.permissions].sort()).toEqual([...newPermissions]);
 
         expect(ls.get('accessToken')).toBe(refreshedAccessToken);
         expect(ls.get('refreshToken')).toBe(refreshToken);
-        // expect(ls.get('permissions').map((p) => p.name).sort()).toEqual(newPermissions.map((p) => p.name).sort());
+        expect(ls.get('permissions').map((p: UserPermission) => p).sort()).toEqual(newPermissions.map((p) => p).sort());
     });
 });
