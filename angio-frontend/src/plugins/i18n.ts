@@ -48,8 +48,9 @@ store.watch(
         i18n.locale = newValue;
 
         // set moments new locale
+        console.log(newValue);
         // @ts-ignore
-        Vue.moment.locale(newValue);
+        console.log(Vue.moment.locale(newValue));
     },
 );
 

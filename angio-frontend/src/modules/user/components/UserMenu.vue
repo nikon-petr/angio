@@ -12,7 +12,12 @@
         >
             <template v-slot:activator="{ on }">
                 <v-btn icon flat v-on="on">
-                    <v-icon>person</v-icon>
+                    <v-badge overlap color="info">
+                        <template v-slot:badge>
+                            <v-icon small>notifications</v-icon>
+                        </template>
+                        <v-icon>person</v-icon>
+                    </v-badge>
                 </v-btn>
             </template>
 
@@ -25,8 +30,7 @@
 
                         <v-list-tile-content>
                             <v-list-tile-title>Петрунин Никон Дмитриевич</v-list-tile-title>
-                            <v-list-tile-sub-title>Клиника глазных болезней СГМУ им. Разумовского
-                            </v-list-tile-sub-title>
+                            <v-list-tile-sub-title>Клиника глазных болезней СГМУ им. Разумовского</v-list-tile-sub-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
@@ -34,7 +38,7 @@
                 <v-divider></v-divider>
 
                 <v-list>
-                    <v-list-tile v-on:click="" v-ripple>
+                    <v-list-tile to="/user/settings" v-ripple>
                         <v-list-tile-title>Настройки</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile v-on:click="" v-ripple>
@@ -55,9 +59,10 @@
                                             check_circle_outline
                                         </v-icon>
                                         <v-icon color="error" medium v-if="notification.type === 'error'">
-                                            highlight_off
+                                            error_outline
                                         </v-icon>
-                                        <v-icon color="primary" medium v-if="notification.type === 'info'">schedule
+                                        <v-icon color="primary" medium v-if="notification.type === 'info'">
+                                            info_outline
                                         </v-icon>
                                     </v-flex>
                                     <v-flex xs10>
@@ -66,7 +71,7 @@
                                                 <span>{{ notification.text }}</span>
                                             </v-flex>
                                             <v-flex xs12 class="text--secondary">
-                                                <span>{{ notification.date | moment("from", "now") }}</span>
+                                                <span>{{ notification.date | moment('from', 'now') }}</span>
                                             </v-flex>
                                         </v-layout>
                                     </v-flex>
