@@ -7,7 +7,7 @@
         <v-spacer></v-spacer>
 
         <div v-show="isAuthenticated">
-            <UserMenu></UserMenu>
+            <UserMenuButton></UserMenuButton>
         </div>
 
         <div v-show="!isAuthenticated">
@@ -28,9 +28,10 @@
 <script lang="ts">
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
     import {BusEvent} from '@/modules/common/helpers/busEvent';
-    import UserMenu from "@/modules/user/components/UserMenu.vue";
+    import UserMenuButton from "@/modules/user/components/UserMenuButton.vue";
+
     @Component({
-        components: {UserMenu}
+        components: {UserMenuButton}
     })
     export default class TheHeader extends Vue {
 

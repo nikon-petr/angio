@@ -9,7 +9,7 @@ import '@/plugins/vuetify';
 import '@/plugins/notification';
 import '@/plugins/lightbox';
 import '@/plugins/filepond';
-import '@/plugins/morphling';
+import '@/plugins/filters';
 import '@/plugins/axios';
 import i18n from '@/plugins/i18n';
 
