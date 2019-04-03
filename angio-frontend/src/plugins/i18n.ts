@@ -22,11 +22,17 @@ function loadLocaleMessages(): LocaleMessages {
     return messages;
 }
 
+const initalLocale: string = ls.get('locale') || process.env.VUE_APP_I18N_LOCALE;
+
 const i18n = new VueI18n({
-    locale: ls.get('locale') || process.env.VUE_APP_I18N_LOCALE,
+    locale: initalLocale,
     fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
     messages: loadLocaleMessages(),
 });
+
+// set moments initial locale
+// @ts-ignore
+Vue.moment.locale(initalLocale);
 
 // Hot updates
 if (module.hot) {
@@ -40,6 +46,10 @@ store.watch(
     (state) => state.user.settings.locale,
     (newValue, oldValue) => {
         i18n.locale = newValue;
+
+        // set moments new locale
+        // @ts-ignore
+        Vue.moment.locale(newValue);
     },
 );
 

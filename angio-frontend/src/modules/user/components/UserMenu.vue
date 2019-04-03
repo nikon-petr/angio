@@ -34,27 +34,50 @@
                 <v-divider></v-divider>
 
                 <v-list>
-                    <v-subheader>Настройки</v-subheader>
-                    <v-list-tile>
-                        <v-list-tile-action>
-                            <v-switch v-model="message"></v-switch>
-                        </v-list-tile-action>
-                        <v-list-tile-title>Тёмная тема</v-list-tile-title>
+                    <v-list-tile v-on:click="" v-ripple>
+                        <v-list-tile-title>Настройки</v-list-tile-title>
                     </v-list-tile>
+                    <v-list-tile v-on:click="" v-ripple>
+                        <v-list-tile-title>Выйти из приложения</v-list-tile-title>
+                    </v-list-tile>
+                    <v-subheader>Уведомления</v-subheader>
                 </v-list>
 
-                <v-layout class="px-3">
-                    <v-select
-                            single-line
-                            :items="['Русский', 'English']"
-                            label="Язык интерфейса"
-                            solo
-                    ></v-select>
-                </v-layout>
+                <v-divider></v-divider>
 
-                <v-card-actions>
-                    <v-btn color="primary" flat block>Выйти из приложения</v-btn>
-                </v-card-actions>
+                <div class="scrollable">
+                    <template v-for="notification in notifications">
+                        <div>
+                            <v-card flat>
+                                <v-card-title class="pl-0">
+                                    <v-flex xs2 class="text-xs-center">
+                                        <v-icon color="success" medium v-if="notification.type === 'success'">
+                                            check_circle_outline
+                                        </v-icon>
+                                        <v-icon color="error" medium v-if="notification.type === 'error'">
+                                            highlight_off
+                                        </v-icon>
+                                        <v-icon color="primary" medium v-if="notification.type === 'info'">schedule
+                                        </v-icon>
+                                    </v-flex>
+                                    <v-flex xs10>
+                                        <v-layout row wrap>
+                                            <v-flex xs12>
+                                                <span>{{ notification.text }}</span>
+                                            </v-flex>
+                                            <v-flex xs12 class="text--secondary">
+                                                <span>{{ notification.date | moment("from", "now") }}</span>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-flex>
+                                </v-card-title>
+                            </v-card>
+
+                            <v-divider></v-divider>
+                        </div>
+                    </template>
+                </div>
+
             </v-card>
         </v-menu>
     </div>
@@ -69,12 +92,39 @@
         menu: boolean = false;
         message: boolean = false;
         hints: boolean = true;
+
+        notifications = [
+            {
+                id: 1,
+                type: 'success',
+                date: new Date(2019, 3, 3, 12, 30, 0),
+                text: 'Анализ "Первичный аналз состояния сосудов" успешно завершен'
+            },
+            {
+                id: 2,
+                type: 'info',
+                date: new Date(2019, 3, 3, 12, 30, 0),
+                text: 'Анализ "Первичный аналз состояния сосудов" принят в обработку'
+            },
+            {
+                id: 3,
+                type: 'error',
+                date: new Date(2019, 3, 1, 12, 40, 0),
+                text: 'Во время выполнения анализа "Первичный аналз состояния сосудов" произошла ошибка'
+            },
+            {
+                id: 4,
+                type: 'info',
+                date: new Date(2019, 3, 1, 12, 30, 0),
+                text: 'Анализ "Первичный аналз состояния сосудов" принят в обработку'
+            },
+        ]
     }
 </script>
 
 <style scoped>
-    .language-action {
-        width: 56px;
+    .scrollable {
+        overflow: auto;
+        height: 250px;
     }
-
 </style>
