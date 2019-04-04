@@ -1,5 +1,5 @@
 <template>
-    <div class="scrollable" v-bind:style="{height: height}">
+    <div class="scrollable" v-bind:style="{maxHeight: height}">
         <slot></slot>
     </div>
 </template>

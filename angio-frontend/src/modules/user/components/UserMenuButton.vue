@@ -81,7 +81,7 @@
                 date: new Date(2019, 3, 1, 12, 30, 0),
                 text: 'Анализ "Первичный аналз состояния сосудов" принят в обработку'
             },
-        ]
+        ];
 
         hasUnreadNotifications(): boolean {
             return this.notifications.some((notification) => !notification.read);
