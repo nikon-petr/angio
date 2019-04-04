@@ -17,7 +17,7 @@ import {
 } from '@/modules/user/store/userStore';
 import {UserCredentialsModel, UserInfoModel} from '@/modules/user/models/user';
 import {Response, ResponseStatus} from '@/modules/common/models/response';
-import {UserPermission} from '@/modules/user/store/userState';
+import {Locale, UserPermission} from '@/modules/user/store/userState';
 
 describe('store/modules/user.js', () => {
     // mocks
@@ -69,7 +69,7 @@ describe('store/modules/user.js', () => {
             ],
             settings: {
                 darkThemeEnabled: true,
-                locale: 'ru',
+                locale: Locale.RU,
             },
         },
     };

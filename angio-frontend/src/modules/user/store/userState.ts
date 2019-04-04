@@ -21,7 +21,7 @@ export interface UserAuth {
 
 export interface UserSettings {
     darkThemeEnabled: boolean;
-    locale: string;
+    locale: Locale;
 }
 
 export enum UserPermission {
@@ -52,4 +52,9 @@ export enum UserPermission {
 
     PUSH_NOTIFICATION_RECEIVE = 'PUSH_NOTIFICATION_RECEIVE',
     PUSH_NOTIFICATION_SEND = 'PUSH_NOTIFICATION_SEND',
+}
+
+export enum Locale {
+    EN = 'en',
+    RU = 'ru'
 }

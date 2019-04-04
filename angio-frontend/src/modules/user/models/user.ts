@@ -1,4 +1,4 @@
-import {UserAuth, UserInfo, UserPermission, UserSettings} from '@/modules/user/store/userState';
+import {Locale, UserAuth, UserInfo, UserPermission, UserSettings} from '@/modules/user/store/userState';
 import FullName from '@/modules/common/models/fullName';
 
 export interface UserInfoModel extends UserInfo {
@@ -16,7 +16,7 @@ export interface UserAuthModel extends UserAuth {
 
 export interface UserSettingsModel extends UserSettings {
     darkThemeEnabled: boolean;
-    locale: string;
+    locale: Locale;
 }
 
 export interface UserCredentialsModel {

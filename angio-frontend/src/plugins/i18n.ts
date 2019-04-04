@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueI18n, {LocaleMessages} from 'vue-i18n';
 import ls from 'local-storage';
 import store from '@/store';
+import {Locale} from "@/modules/user/store/userState";
 
 Vue.use(VueI18n);
 
@@ -26,7 +27,7 @@ const initalLocale: string = ls.get('locale') || process.env.VUE_APP_I18N_LOCALE
 
 const i18n = new VueI18n({
     locale: initalLocale,
-    fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
+    fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || Locale.EN,
     messages: loadLocaleMessages(),
 });
 
@@ -37,8 +38,8 @@ Vue.moment.locale(initalLocale);
 // Hot updates
 if (module.hot) {
     module.hot.accept(['../locales/en', '../locales/ru'], () => {
-        i18n.setLocaleMessage('en', require('../locales/en').default);
-        i18n.setLocaleMessage('ru', require('../locales/ru').default);
+        i18n.setLocaleMessage(Locale.EN, require('../locales/en').default);
+        i18n.setLocaleMessage(Locale.RU, require('../locales/ru').default);
     });
 }
 
