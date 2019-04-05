@@ -3,6 +3,7 @@ package com.angio.angiobackend.api.user.entities;
 import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.common.embeddable.FullName;
 import com.angio.angiobackend.api.notification.entity.PushNotification;
+import com.angio.angiobackend.api.organization.entity.Organization;
 import com.angio.angiobackend.api.security.entity.Permission;
 import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.entity.Token;
@@ -28,6 +29,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -40,8 +42,25 @@ import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
-@ToString(exclude = {"roles", "tokens", "analyses", "notifications", "ownedRolesToManage", "starredAnalyses", "settings"})
-@EqualsAndHashCode(exclude = {"id", "roles", "tokens", "analyses", "notifications", "ownedRolesToManage", "starredAnalyses", "settings"})
+@ToString(exclude = {
+        "roles",
+        "tokens",
+        "analyses",
+        "notifications",
+        "ownedRolesToManage",
+        "starredAnalyses",
+        "settings",
+        "organization"})
+@EqualsAndHashCode(exclude = {
+        "id",
+        "roles",
+        "tokens",
+        "analyses",
+        "notifications",
+        "ownedRolesToManage",
+        "starredAnalyses",
+        "settings",
+        "organization"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Audited
@@ -101,6 +120,11 @@ public class User implements UserDetails {
             orphanRemoval = true
     )
     private Set<Analyse> analyses = new HashSet<>();
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     @NotAudited
     @OneToMany(

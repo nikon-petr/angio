@@ -28,6 +28,11 @@ public enum  Permissions {
     USER_EDIT("Изменение пользователей системы"),
     USER_REMOVE("Удаление пользователй из системы"),
 
+    ORGANIZATION_VIEW("Просмотр данных организаций"),
+    ORGANIZATION_CREATE("Создание организаций"),
+    ORGANIZATION_EDIT("Редактирование оорганизаций"),
+    ORGANIZATION_REMOVE("Удаление организаций"),
+
     TOKEN_VIEW("Просмотр токенов пользователей"),
     TOKEN_REVOKE("Отзыв собственных refresh токенов"),
     TOKEN_REMOVE("Отзыв токенов любых пользователй"),

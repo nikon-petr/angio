@@ -49,6 +49,7 @@ public interface UserMapper {
 
     UserDetailsDto toDetailedDto(User entity);
 
+    @Mapping(target = "organizationName", source = "organization.name")
     @Mapping(target = "permissions", qualifiedByName = "toStringPermission")
     UserDto toUserDto(User entity);
 }

@@ -45,11 +45,22 @@ databaseChangeLog:
     relativeToChangelogFile: true
     file: ./changelogs/015_add_settings_table.yml
 - include:
-      relativeToChangelogFile: true
-      file: ./changelogs/016_add_locale_column_to_settings_table.yml
+    relativeToChangelogFile: true
+    file: ./changelogs/016_add_locale_column_to_settings_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/017_add_organizations_table.yml
 
 # always in the end of file
-- includeAll:
+- include:
     relativeToChangelogFile: true
-    path: ./changelogs/run-on-change
-
+    file: ./changelogs/run-on-change/004_load_organizations.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/run-on-change/001_load_users.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/run-on-change/002_load_patients.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/run-on-change/003_load_users_settings.yml

@@ -34,6 +34,11 @@ public enum  Roles {
             Permissions.USER_EDIT,
             Permissions.USER_REMOVE,
 
+            Permissions.ORGANIZATION_CREATE,
+            Permissions.ORGANIZATION_VIEW,
+            Permissions.ORGANIZATION_EDIT,
+            Permissions.ORGANIZATION_REMOVE,
+
             Permissions.TOKEN_VIEW,
             Permissions.TOKEN_REVOKE,
             Permissions.TOKEN_REMOVE,

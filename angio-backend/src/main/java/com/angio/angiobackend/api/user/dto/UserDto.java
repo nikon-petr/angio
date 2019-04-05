@@ -23,6 +23,9 @@ public class UserDto {
     @ApiModelProperty(name = "User email")
     private String email;
 
+    @ApiModelProperty(name = "User organization name")
+    private String organizationName;
+
     @ApiModelProperty(name = "User dull name")
     private FullNameDto fullName;
 
