@@ -37,13 +37,13 @@
     export default class UserMenuNotificationMessage extends Vue {
 
         @Prop()
-        type!: string;
+        public readonly type!: string;
 
         @Prop()
-        text!: string;
+        public readonly text!: string;
 
         @Prop()
-        date!: Date;
+        public readonly date!: Date;
     }
 </script>
 

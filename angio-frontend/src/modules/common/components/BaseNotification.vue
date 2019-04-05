@@ -16,23 +16,23 @@
     @Component
     export default class BaseNotification extends Vue {
 
+        private static isCssColor(color?: string | false): boolean {
+            return !!color && !!color.match(/^(#|(rgb|hsl)a?\()/);
+        }
+
         @Prop()
-        readonly color!: string;
+        public readonly color!: string;
 
         private cssClass = ['v-snack__wrapper'];
 
         private cssStyle = {};
 
-        private static isCssColor (color?: string | false): boolean {
-            return !!color && !!color.match(/^(#|(rgb|hsl)a?\()/)
-        }
-
-        @Watch('color', { immediate: true, deep: true })
-        watchColor(newVal: string, oldVal: string) {
+        @Watch('color', {immediate: true, deep: true})
+        public watchColor(newVal: string, oldVal: string) {
             if (BaseNotification.isCssColor(newVal)) {
                 this.cssStyle = {
                     'background-color': `${newVal}`,
-                    'border-color': `${newVal}`
+                    'border-color': `${newVal}`,
                 };
             } else if (newVal) {
                 this.cssClass = ['v-snack__wrapper', newVal];

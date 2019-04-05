@@ -2,9 +2,9 @@ import Vue from 'vue';
 import Router, {RouteConfig} from 'vue-router';
 import {AuthPredicate} from '@/modules/common/helpers/authPredicate';
 import {userRouterConfig} from '@/modules/user/userRouter';
-import NotFound from "@/modules/common/views/404.vue";
-import store from "@/store";
-import ServerError from "@/modules/common/views/500.vue";
+import NotFound from '@/modules/common/views/404.vue';
+import store from '@/store';
+import ServerError from '@/modules/common/views/500.vue';
 
 Vue.use(Router);
 
@@ -35,7 +35,7 @@ rootRouter.beforeEach((to, from, next) => {
 // redirect when user login or logout
 store.watch(((state, getters) => getters['user/isAuthenticated']), (newValue, oldValue) => {
     if (newValue) {
-        rootRouter.push({path: '/'})
+        rootRouter.push({path: '/'});
     } else {
         rootRouter.push({path: '/login'});
     }

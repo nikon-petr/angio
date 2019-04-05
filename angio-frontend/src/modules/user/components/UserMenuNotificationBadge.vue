@@ -17,7 +17,7 @@
     export default class UserMenuNotificationBadge extends Vue {
 
         @Prop()
-        value!: boolean;
+        public readonly value!: boolean;
     }
 </script>
 

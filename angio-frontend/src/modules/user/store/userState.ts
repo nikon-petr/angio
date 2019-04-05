@@ -56,5 +56,5 @@ export enum UserPermission {
 
 export enum Locale {
     EN = 'en',
-    RU = 'ru'
+    RU = 'ru',
 }

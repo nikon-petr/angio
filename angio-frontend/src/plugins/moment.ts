@@ -4,4 +4,4 @@ import 'moment/locale/ru';
 // @ts-ignore
 import VueMoment from 'vue-moment';
 
-Vue.use(VueMoment, { moment });
+Vue.use(VueMoment, {moment});

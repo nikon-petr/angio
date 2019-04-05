@@ -19,19 +19,19 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import FullName from "../../common/models/fullName";
+    import FullName from '@/modules/common/models/fullName';
 
     @Component
     export default class UserMenuAvatar extends Vue {
 
         @Prop()
-        fullName!: FullName;
+        public readonly fullName!: FullName;
 
         @Prop()
-        organization?: string;
+        public readonly organization?: string;
 
-        fullNameString() {
-            let words = [this.fullName.lastname, this.fullName.firstname, this.fullName.patronymic];
+        public fullNameString() {
+            const words = [this.fullName.lastname, this.fullName.firstname, this.fullName.patronymic];
             return words.join(' ');
         }
     }

@@ -12,12 +12,12 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {State} from "vuex-class";
+    import {State} from 'vuex-class';
     import TheDrawer from '@/modules/common/components/TheDrawer.vue';
     import TheHeader from '@/modules/common/components/TheHeader.vue';
     import TheContent from '@/modules/common/components/TheContent.vue';
-    import {logout, userModule} from "@/modules/user/store/userStore";
-    import TheFooter from "@/modules/common/components/TheFooter.vue";
+    import {logout, userModule} from '@/modules/user/store/userStore';
+    import TheFooter from '@/modules/common/components/TheFooter.vue';
 
     @Component({
         components: {
@@ -29,13 +29,13 @@
     })
     export default class App extends Vue {
 
-        @State(state => state.user.settings.darkThemeEnabled)
-        readonly darkThemeEnabled!: boolean;
+        @State((state) => state.user.settings.darkThemeEnabled)
+        public readonly darkThemeEnabled!: boolean;
 
         @userModule.Getter
-        readonly isAuthenticated!: boolean;
+        public readonly isAuthenticated!: boolean;
 
-        logout() {
+        public logout() {
             logout(this.$store);
         }
     }

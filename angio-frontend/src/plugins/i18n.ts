@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueI18n, {LocaleMessages} from 'vue-i18n';
 import ls from 'local-storage';
 import store from '@/store';
-import {Locale} from "@/modules/user/store/userState";
+import {Locale} from '@/modules/user/store/userState';
 
 Vue.use(VueI18n);
 
@@ -49,9 +49,8 @@ store.watch(
         i18n.locale = newValue;
 
         // set moments new locale
-        console.log(newValue);
         // @ts-ignore
-        console.log(Vue.moment.locale(newValue));
+        Vue.moment.locale(newValue);
     },
 );
 

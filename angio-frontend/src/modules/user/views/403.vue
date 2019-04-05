@@ -7,12 +7,13 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import Error from "@/modules/common/components/Error.vue";
+    import Error from '@/modules/common/components/Error.vue';
 
     @Component({
         components: {
-            Error
-        }
+            Error,
+        },
     })
-    export default class Forbidden extends Vue {}
+    export default class Forbidden extends Vue {
+    }
 </script>

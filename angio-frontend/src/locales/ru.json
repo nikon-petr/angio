@@ -19,7 +19,7 @@
   },
   "common": {
     "appName": "AngioVision",
-    "view":{
+    "view": {
       "404": {
         "description": "Извините, страница не найдена"
       },

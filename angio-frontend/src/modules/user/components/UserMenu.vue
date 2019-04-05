@@ -19,28 +19,28 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import UserMenuAvatar from "@/modules/user/components/UserMenuAvatar.vue";
-    import UserMenuActions from "@/modules/user/components/UserMenuActions.vue";
-    import {UserInfo} from "../store/userState";
-    import UserMenuNotificationScroller from "@/modules/user/components/UserMenuNotificationScroller.vue";
+    import UserMenuAvatar from '@/modules/user/components/UserMenuAvatar.vue';
+    import UserMenuActions from '@/modules/user/components/UserMenuActions.vue';
+    import {UserInfo} from '@/modules/user/store/userState';
+    import UserMenuNotificationScroller from '@/modules/user/components/UserMenuNotificationScroller.vue';
 
     @Component({
         components: {
             UserMenuNotificationScroller,
             UserMenuActions,
-            UserMenuAvatar
-        }
+            UserMenuAvatar,
+        },
     })
     export default class UserMenu extends Vue {
 
         @Prop()
-        user!: UserInfo;
+        public readonly user!: UserInfo;
 
         @Prop()
-        logout!: () => any;
+        public readonly logout!: () => any;
 
         @Prop()
-        notifications: any;
+        public readonly notifications: any;
 
     }
 </script>

@@ -43,7 +43,8 @@
                         color="primary"
                         flat
                         round
-                >{{ $t('user.component.loginForm.button.reset') }}</v-btn>
+                >{{ $t('user.component.loginForm.button.reset') }}
+                </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
                         v-on:click="submit"
@@ -52,7 +53,8 @@
                         color="success"
                         flat
                         round
-                >{{ $t('user.component.loginForm.button.submit') }}</v-btn>
+                >{{ $t('user.component.loginForm.button.submit') }}
+                </v-btn>
             </v-card-actions>
 
         </v-card>
@@ -60,26 +62,26 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Prop, Vue} from "vue-property-decorator";
-    import {UserCredentialsModel} from "@/modules/user/models/user";
-    import {CommonEvent} from "@/modules/common/helpers/commonEvent";
-    import {throttle} from "helpful-decorators";
+    import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
+    import {UserCredentialsModel} from '@/modules/user/models/user';
+    import {CommonEvent} from '@/modules/common/helpers/commonEvent';
+    import {throttle} from 'helpful-decorators';
 
     @Component
     export default class LoginForm extends Vue {
 
         @Prop()
-        readonly fetching?: boolean;
+        public readonly fetching?: boolean;
 
-        valid: boolean = false;
-        form: UserCredentialsModel = {
+        public valid: boolean = false;
+        public form: UserCredentialsModel = {
             username: '',
-            password: ''
+            password: '',
         };
 
         @throttle(1000)
         @Emit(CommonEvent.SEND_FORM)
-        submit() {
+        public submit() {
             return this.form;
         }
     }

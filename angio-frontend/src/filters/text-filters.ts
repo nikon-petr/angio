@@ -15,11 +15,11 @@ export function truncate(value: string, length: number, ending: string = '...'):
 /**
  * Return placeholder if value undefined or null or empty string.
  * @param value
- * @param placeholder
+ * @param placeholderStr
  */
-export function placeholder(value: string, placeholder: string) {
-    if(!value || value === ' ' || value == null) {
-        return placeholder;
+export function placeholder(value: string, placeholderStr: string) {
+    if (!value || value === ' ' || value == null) {
+        return placeholderStr;
     } else {
         return value;
     }

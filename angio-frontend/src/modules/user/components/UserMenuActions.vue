@@ -14,10 +14,10 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
 
     @Component
-    export default class UserMenuActions extends Vue{
+    export default class UserMenuActions extends Vue {
 
         @Prop()
-        logout!: () => any;
+        public readonly logout!: () => any;
     }
 </script>
 

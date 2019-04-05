@@ -29,16 +29,17 @@
     @Component
     export default class TheDrawer extends Vue {
 
-        drawer: boolean = false;
+        public drawer: boolean = false;
 
-        toggleDrawerVisibility() {
+        public toggleDrawerVisibility() {
             this.drawer = !this.drawer;
         }
-        created() {
+
+        public created() {
             this.$bus.on(BusEvent.TOGGLE_DRAWER_VISIBILITY_EVENT, this.toggleDrawerVisibility);
         }
 
-        beforeDestroy() {
+        public beforeDestroy() {
             this.$bus.off(BusEvent.TOGGLE_DRAWER_VISIBILITY_EVENT, this.toggleDrawerVisibility);
         }
     }

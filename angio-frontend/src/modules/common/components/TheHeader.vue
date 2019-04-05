@@ -28,20 +28,21 @@
 <script lang="ts">
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
     import {BusEvent} from '@/modules/common/helpers/busEvent';
-    import UserMenuButton from "@/modules/user/components/UserMenuButton.vue";
+    import UserMenuButton from '@/modules/user/components/UserMenuButton.vue';
 
     @Component({
-        components: {UserMenuButton}
+        components: {UserMenuButton},
     })
     export default class TheHeader extends Vue {
 
         @Prop()
-        readonly isAuthenticated!: boolean;
+        public readonly isAuthenticated!: boolean;
 
         @Emit()
-        logout() {}
+        public logout() {
+        }
 
-        toggleDrawer() {
+        public toggleDrawer() {
             this.$bus.emit(BusEvent.TOGGLE_DRAWER_VISIBILITY_EVENT);
         }
     }

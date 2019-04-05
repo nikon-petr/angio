@@ -26,19 +26,19 @@
     export default class TheContent extends Vue {
 
         @Prop()
-        readonly code!: number;
+        public readonly code!: number;
 
         @Prop()
-        readonly description!: string;
+        public readonly description!: string;
 
         @Prop()
-        readonly link?: string;
+        public readonly link?: string;
 
         @Prop()
-        readonly linkName?: string;
+        public readonly linkName?: string;
 
         @Prop()
-        readonly imageSrc?: string;
+        public readonly imageSrc?: string;
     }
 </script>
 

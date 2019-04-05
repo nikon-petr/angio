@@ -29,65 +29,65 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
 
-    import FullName from "@/modules/common/models/fullName";
-    import UserMenu from "@/modules/user/components/UserMenu.vue";
-    import UserMenuNotificationBadge from "@/modules/user/components/UserMenuNotificationBadge.vue";
-    import {UserInfo} from "@/modules/user/store/userState";
+    import FullName from '@/modules/common/models/fullName';
+    import UserMenu from '@/modules/user/components/UserMenu.vue';
+    import UserMenuNotificationBadge from '@/modules/user/components/UserMenuNotificationBadge.vue';
+    import {UserInfo} from '@/modules/user/store/userState';
 
     @Component({
         components: {
             UserMenu,
             UserMenuNotificationBadge,
-        }
+        },
     })
     export default class UserMenuButton extends Vue {
 
-        user = {
+        public user = {
             fullName: {
                 firstname: 'Никон',
                 lastname: 'Петрунин',
-                patronymic: 'Дмитриевич'
+                patronymic: 'Дмитриевич',
             } as FullName,
-            organization: "Клиника глазных болезней СГМУ им. Разумовского",
-            permissions: []
+            organization: 'Клиника глазных болезней СГМУ им. Разумовского',
+            permissions: [],
         } as UserInfo;
 
-        notifications = [
+        public notifications = [
             {
                 id: 1,
                 read: false,
                 type: 'success',
                 date: new Date(2019, 3, 3, 12, 55, 0),
-                text: 'Анализ "Первичный аналз состояния сосудов" успешно завершен'
+                text: 'Анализ "Первичный аналз состояния сосудов" успешно завершен',
             },
             {
                 id: 2,
                 read: true,
                 type: 'info',
                 date: new Date(2019, 3, 3, 12, 30, 0),
-                text: 'Анализ "Первичный аналз состояния сосудов" принят в обработку'
+                text: 'Анализ "Первичный аналз состояния сосудов" принят в обработку',
             },
             {
                 id: 3,
                 read: true,
                 type: 'error',
                 date: new Date(2019, 3, 1, 12, 40, 0),
-                text: 'Во время выполнения анализа "Первичный аналз состояния сосудов" произошла ошибка'
+                text: 'Во время выполнения анализа "Первичный аналз состояния сосудов" произошла ошибка',
             },
             {
                 id: 4,
                 read: true,
                 type: 'info',
                 date: new Date(2019, 3, 1, 12, 30, 0),
-                text: 'Анализ "Первичный аналз состояния сосудов" принят в обработку'
+                text: 'Анализ "Первичный аналз состояния сосудов" принят в обработку',
             },
         ];
 
-        hasUnreadNotifications(): boolean {
+        public hasUnreadNotifications(): boolean {
             return this.notifications.some((notification) => !notification.read);
         }
 
-        logout() {
+        public logout() {
         }
     }
 </script>

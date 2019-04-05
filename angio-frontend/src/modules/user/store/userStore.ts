@@ -10,7 +10,7 @@ import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageS
 import {UserAuthModel} from '@/modules/user/models/user';
 import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
 import FullName from '@/modules/common/models/fullName';
-import {namespace} from "vuex-class";
+import {namespace} from 'vuex-class';
 
 const log = root.getLogger('store/modules/user');
 

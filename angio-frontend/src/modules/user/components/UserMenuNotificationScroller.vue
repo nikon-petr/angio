@@ -20,21 +20,21 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import BaseScroller from "@/modules/common/components/BaseScroller.vue";
-    import UserMenuNonNotifications from "@/modules/user/components/UserMenuNonNotifications.vue";
-    import UserMenuNotificationMessage from "@/modules/user/components/UserMenuNotificationMessage.vue";
+    import BaseScroller from '@/modules/common/components/BaseScroller.vue';
+    import UserMenuNonNotifications from '@/modules/user/components/UserMenuNonNotifications.vue';
+    import UserMenuNotificationMessage from '@/modules/user/components/UserMenuNotificationMessage.vue';
 
     @Component({
         components: {
             BaseScroller,
             UserMenuNonNotifications,
-            UserMenuNotificationMessage
-        }
+            UserMenuNotificationMessage,
+        },
     })
     export default class UserMenuNotificationScroller extends Vue {
 
         @Prop()
-        notifications: any;
+        public notifications: any;
     }
 </script>
 

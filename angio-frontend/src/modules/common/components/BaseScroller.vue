@@ -11,10 +11,10 @@
     export default class BaseScroller extends Vue {
 
         @Prop()
-        height!: string;
+        public readonly height!: string;
 
         @Prop()
-        notifications!: any;
+        public readonly notifications!: any;
     }
 </script>
 

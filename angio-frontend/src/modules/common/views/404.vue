@@ -7,10 +7,11 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import Error from "@/modules/common/components/Error.vue";
+    import Error from '@/modules/common/components/Error.vue';
 
     @Component({
-        components: {Error}
+        components: {Error},
     })
-    export default class NotFound extends Vue {}
+    export default class NotFound extends Vue {
+    }
 </script>
