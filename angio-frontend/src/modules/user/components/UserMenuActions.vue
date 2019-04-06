@@ -6,7 +6,6 @@
         <v-list-tile v-on:click="logout" v-ripple>
             <v-list-tile-title>Выйти из приложения</v-list-tile-title>
         </v-list-tile>
-        <v-subheader>Уведомления</v-subheader>
     </v-list>
 </template>
 

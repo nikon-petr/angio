@@ -5,6 +5,7 @@ export interface UserInfoModel extends UserInfo {
     id: string;
     email: string;
     fullName: FullName;
+    organizationName?: string;
     permissions: UserPermission[] | [];
     settings: UserSettingsModel;
 }

@@ -1,13 +1,15 @@
 <template>
     <v-card>
         <UserMenuAvatar
-                v-bind:full-name="user.fullName"
-                v-bind:organization="user.organization"
+                v-bind:full-name="user.info.fullName"
+                v-bind:organization="user.info.organizationName"
         ></UserMenuAvatar>
 
         <UserMenuActions
                 v-bind:logout="logout"
         ></UserMenuActions>
+
+        <v-subheader>Уведомления</v-subheader>
 
         <v-divider></v-divider>
 

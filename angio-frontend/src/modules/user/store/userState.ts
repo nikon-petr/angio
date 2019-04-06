@@ -11,6 +11,7 @@ export interface UserInfo {
     id?: string;
     email?: string;
     fullName: FullName;
+    organizationName?: string;
     permissions: UserPermission[] | [];
 }
 

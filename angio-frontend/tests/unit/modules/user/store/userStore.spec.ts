@@ -53,6 +53,7 @@ describe('store/modules/user.js', () => {
                 lastname: 'Врачебный',
                 patronymic: 'Aдреевич',
             },
+            organizationName: "Клиника глазных болезней СГМУ им. Разумовского",
             permissions: [
                 UserPermission.ANALYSE_VIEW,
                 UserPermission.ANALYSE_CREATE,
@@ -95,6 +96,7 @@ describe('store/modules/user.js', () => {
         ls.set('firstname', user.data.fullName.firstname);
         ls.set('lastname', user.data.fullName.lastname);
         ls.set('patronymic', user.data.fullName.patronymic);
+        ls.set('organizationName', user.data.organizationName);
         ls.set('permissions', user.data.permissions);
         ls.set('darkThemeEnabled', user.data.settings.darkThemeEnabled);
         ls.set('locale', user.data.settings.locale);
@@ -112,6 +114,7 @@ describe('store/modules/user.js', () => {
         expect(store.state.user.info.fullName.firstname).toBe(user.data.fullName.firstname);
         expect(store.state.user.info.fullName.lastname).toBe(user.data.fullName.lastname);
         expect(store.state.user.info.fullName.patronymic).toBe(user.data.fullName.patronymic);
+        expect(store.state.user.info.organizationName).toBe(user.data.organizationName);
         expect(store.state.user.info.permissions).toEqual(user.data.permissions);
         expect(store.state.user.settings).toEqual(user.data.settings);
     });
@@ -141,6 +144,7 @@ describe('store/modules/user.js', () => {
         expect(store.state.user.info.fullName.firstname).toBe(user.data.fullName.firstname);
         expect(store.state.user.info.fullName.lastname).toBe(user.data.fullName.lastname);
         expect(store.state.user.info.fullName.patronymic).toBe(user.data.fullName.patronymic);
+        expect(store.state.user.info.organizationName).toBe(user.data.organizationName);
         expect(store.state.user.info.permissions).toEqual(user.data.permissions);
         expect(store.state.user.settings).toEqual(user.data.settings);
 
@@ -151,6 +155,7 @@ describe('store/modules/user.js', () => {
         expect(ls.get('firstname')).toBe(user.data.fullName.firstname);
         expect(ls.get('lastname')).toBe(user.data.fullName.lastname);
         expect(ls.get('patronymic')).toBe(user.data.fullName.patronymic);
+        expect(ls.get('organizationName')).toBe(user.data.organizationName);
         expect(ls.get('permissions')).toEqual(user.data.permissions);
         expect(ls.get('darkThemeEnabled')).toEqual(
             user.data.settings.darkThemeEnabled,

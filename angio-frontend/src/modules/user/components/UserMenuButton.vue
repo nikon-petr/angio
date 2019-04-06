@@ -1,12 +1,12 @@
 <template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div class="text-xs-center">
         <v-menu
-                v-bind:close-on-content-click="false"
                 min-width="400"
                 max-width="300"
                 offset-y
                 offset-x
                 nudge-bottom="25"
+
                 bottom
         >
             <template v-slot:activator="{ on }">
@@ -32,7 +32,9 @@
     import FullName from '@/modules/common/models/fullName';
     import UserMenu from '@/modules/user/components/UserMenu.vue';
     import UserMenuNotificationBadge from '@/modules/user/components/UserMenuNotificationBadge.vue';
-    import {UserInfo} from '@/modules/user/store/userState';
+    import {UserState} from '@/modules/user/store/userState';
+    import {logout} from '@/modules/user/store/userStore';
+    import {State} from 'vuex-class';
 
     @Component({
         components: {
@@ -42,15 +44,8 @@
     })
     export default class UserMenuButton extends Vue {
 
-        public user = {
-            fullName: {
-                firstname: 'Никон',
-                lastname: 'Петрунин',
-                patronymic: 'Дмитриевич',
-            } as FullName,
-            organization: 'Клиника глазных болезней СГМУ им. Разумовского',
-            permissions: [],
-        } as UserInfo;
+        @State((state) => state.user)
+        public readonly user!: UserState;
 
         public notifications = [
             {
@@ -88,6 +83,7 @@
         }
 
         public logout() {
+            logout(this.$store);
         }
     }
 </script>

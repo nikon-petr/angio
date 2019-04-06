@@ -14,6 +14,7 @@ export class UserLocalStorageService {
         ls.remove('firstname');
         ls.remove('lastname');
         ls.remove('patronymic');
+        ls.remove('organizationName');
         ls.remove('permissions');
     }
 
@@ -35,6 +36,7 @@ export class UserLocalStorageService {
         ls.set('firstname', userInfo.fullName.firstname);
         ls.set('lastname', userInfo.fullName.lastname);
         ls.set('patronymic', userInfo.fullName.patronymic);
+        ls.set('organizationName', userInfo.organizationName);
         ls.set('permissions', userInfo.permissions);
     }
 

@@ -29,6 +29,7 @@ export const user = {
                 lastname: ls.get('lastname') || undefined,
                 patronymic: ls.get('patronymic') || undefined,
             } as FullName,
+            organizationName: ls.get('organizationName') || undefined,
             permissions: ls.get('permissions') || [],
         } as UserInfo,
         auth: {
@@ -74,6 +75,7 @@ export const user = {
             state.info.fullName.firstname = userInfo.fullName.firstname;
             state.info.fullName.lastname = userInfo.fullName.lastname;
             state.info.fullName.patronymic = userInfo.fullName.patronymic;
+            state.info.organizationName = userInfo.organizationName;
             state.info.permissions = userInfo.permissions;
             UserLocalStorageService.persistUserInfo(userInfo);
         },
