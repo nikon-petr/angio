@@ -1,6 +1,7 @@
 package com.angio.angiobackend.api.user.dto;
 
 import com.angio.angiobackend.api.common.dto.FullNameDto;
+import com.angio.angiobackend.api.organization.dto.OrganizationDto;
 import com.angio.angiobackend.api.security.dto.RoleDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,9 @@ public class UserDetailsDto {
 
     @ApiModelProperty(name = "User enabled")
     private Boolean enabled;
+
+    @ApiModelProperty(name = "User organization")
+    private OrganizationDto organization;
 
     @ApiModelProperty(name = "User roles")
     private List<RoleDto> roles;

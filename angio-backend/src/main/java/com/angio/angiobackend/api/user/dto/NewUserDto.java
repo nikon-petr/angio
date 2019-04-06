@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.Set;
 import java.util.UUID;
@@ -24,6 +25,10 @@ public class NewUserDto {
     @Size(min = 3, max = 30)
     @ApiModelProperty(name = "New user email", example = "newuser@example.com")
     private String email;
+
+    @Positive
+    @ApiModelProperty(name = "User organization id", example = "2")
+    private Long organizationId;
 
     @NotNull
     @Size(min = 1)

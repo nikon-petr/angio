@@ -10,6 +10,8 @@ import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
 import com.angio.angiobackend.api.notification.dto.SubjectDto;
 import com.angio.angiobackend.api.notification.service.NotificationService;
 import com.angio.angiobackend.api.notification.type.NotificationType;
+import com.angio.angiobackend.api.organization.entity.Organization;
+import com.angio.angiobackend.api.organization.repository.OrganizationRepository;
 import com.angio.angiobackend.api.security.entity.Role;
 import com.angio.angiobackend.api.security.repository.RoleRepository;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
@@ -72,6 +74,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SettingsRepository settingsRepository;
+    private final OrganizationRepository organizationRepository;
     private final UserMapper userMapper;
     private final SettingsMapper settingsMapper;
     private final FullNameMapper fullNameMapper;
@@ -154,6 +157,9 @@ public class UserServiceImpl implements UserService {
             log.trace("createUsers() - fetch needed roles");
             List<Role> newUserRoles = findRolesForUsers(dtos);
 
+            log.trace("createUsers() - fetch needed organizations");
+            List<Organization> newUserOrganizations = findOrganizationsForUsers(dtos);
+
             log.trace("createUsers() - checking that creator is owner of requested roles");
             checkAllowedRoles(newUserRoles);
 
@@ -165,7 +171,11 @@ public class UserServiceImpl implements UserService {
                             .setLocked(false)
                             .setRoles(newUserRoles.stream()
                                     .filter(role -> dto.getRoleIds().contains(role.getId()))
-                                    .collect(Collectors.toSet()))))
+                                    .collect(Collectors.toSet()))
+                            .setOrganization(newUserOrganizations.stream()
+                                    .filter(organization -> organization.getId().equals(dto.getOrganizationId()))
+                                    .findFirst()
+                                    .orElse(null))))
                     .peek(entry -> entry.getValue().setPassword(passwordEncoder.encode(entry.getKey())))
                     .peek(entry -> entry.setValue(userRepository.save(entry.getValue())))
                     .peek(entry -> settingsRepository.save(settingsMapper.toNewEntity(props.getUserDefaultSettings())
@@ -456,6 +466,23 @@ public class UserServiceImpl implements UserService {
         }
 
         return roles;
+    }
+
+    private List<Organization> findOrganizationsForUsers(List<NewUserDto> dtos) {
+        List<Long> organizationsIds = dtos.stream()
+                .filter(dto -> dto.getOrganizationId() != null)
+                .map(NewUserDto::getOrganizationId)
+                .distinct()
+                .collect(Collectors.toList());
+        List<Organization> organizations = organizationRepository.findAllById(organizationsIds);
+
+        if (organizationsIds.size() != organizations.size()) {
+            organizationsIds.removeAll(organizations.stream().map(Organization::getId).collect(Collectors.toList()));
+            throw new OperationException(
+                    msa.getMessage("errors.api.user.organizationsForUserNotFound", new Object[]{organizationsIds}));
+        }
+
+        return organizations;
     }
 
     private void checkAllowedRoles(List<Role> roles) {

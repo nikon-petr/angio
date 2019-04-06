@@ -124,9 +124,11 @@ public class EmailNotificationService implements NotificationService<UUID> {
             String filePath = Paths.get(props.getSentEmailDirectory(), date, FileUtils.generateHashedNameForFile("eml"))
                     .toAbsolutePath()
                     .toString();
+            File emailFile = new File(filePath);
+            emailFile.getParentFile().mkdirs();
             log.debug("saveEmailToFs() - save to file={}", filePath);
 
-            OutputStream out = new FileOutputStream(filePath);
+            OutputStream out = new FileOutputStream(emailFile);
             mimeMessage.writeTo(out);
 
         } catch (MessagingException | IOException e) {
