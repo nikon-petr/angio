@@ -14,7 +14,7 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
 
     @Component
-    export default class UserMenuNotificationBadge extends Vue {
+    export default class NotificationBadge extends Vue {
 
         @Prop()
         public readonly value!: boolean;

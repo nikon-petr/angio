@@ -18,6 +18,7 @@
     import TheContent from '@/modules/common/components/TheContent.vue';
     import {logout, userModule} from '@/modules/user/store/userStore';
     import TheFooter from '@/modules/common/components/TheFooter.vue';
+    import {fetchNotifications} from "@/modules/notification/store/notificationStore";
 
     @Component({
         components: {
@@ -37,6 +38,10 @@
 
         public logout() {
             logout(this.$store);
+        }
+
+        public mounted() {
+            fetchNotifications(this.$store);
         }
     }
 </script>

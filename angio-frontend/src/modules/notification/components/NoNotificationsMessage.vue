@@ -9,9 +9,9 @@
 </template>
 
 <script>
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator/lib/vue-property-decorator';
 
     @Component
-    export default class UserMenuNonNotifications extends Vue {
+    export default class NoNotificationsMessage extends Vue {
     }
 </script>

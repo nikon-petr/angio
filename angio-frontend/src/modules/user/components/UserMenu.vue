@@ -9,13 +9,9 @@
                 v-bind:logout="logout"
         ></UserMenuActions>
 
-        <v-subheader>Уведомления</v-subheader>
-
-        <v-divider></v-divider>
-
-        <UserMenuNotificationScroller
+        <NotificationScroller
                 v-bind:notifications="notifications"
-        ></UserMenuNotificationScroller>
+        ></NotificationScroller>
     </v-card>
 </template>
 
@@ -24,11 +20,11 @@
     import UserMenuAvatar from '@/modules/user/components/UserMenuAvatar.vue';
     import UserMenuActions from '@/modules/user/components/UserMenuActions.vue';
     import {UserInfo} from '@/modules/user/store/userState';
-    import UserMenuNotificationScroller from '@/modules/user/components/UserMenuNotificationScroller.vue';
+    import NotificationScroller from '@/modules/notification/components/NotificationScroller.vue';
 
     @Component({
         components: {
-            UserMenuNotificationScroller,
+            NotificationScroller,
             UserMenuActions,
             UserMenuAvatar,
         },
@@ -42,7 +38,7 @@
         public readonly logout!: () => any;
 
         @Prop()
-        public readonly notifications: any;
+        public readonly notifications!: Notification[];
 
     }
 </script>

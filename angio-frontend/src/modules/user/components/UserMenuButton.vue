@@ -6,21 +6,20 @@
                 offset-y
                 offset-x
                 nudge-bottom="25"
-
                 bottom
         >
             <template v-slot:activator="{ on }">
                 <v-btn icon flat v-on="on">
-                    <UserMenuNotificationBadge
+                    <NotificationBadge
                             v-bind:value="hasUnreadNotifications()">
                         <v-icon>person</v-icon>
-                    </UserMenuNotificationBadge>
+                    </NotificationBadge>
                 </v-btn>
             </template>
             <UserMenu
                     v-bind:user="user"
                     v-bind:logout="logout"
-                    v-bind:notifications="notifications"
+                    v-bind:notifications="notification.list"
             ></UserMenu>
         </v-menu>
     </div>
@@ -29,17 +28,18 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
 
-    import FullName from '@/modules/common/models/fullName';
     import UserMenu from '@/modules/user/components/UserMenu.vue';
-    import UserMenuNotificationBadge from '@/modules/user/components/UserMenuNotificationBadge.vue';
+    import NotificationBadge from '@/modules/notification/components/NotificationBadge.vue';
     import {UserState} from '@/modules/user/store/userState';
     import {logout} from '@/modules/user/store/userStore';
     import {State} from 'vuex-class';
+    import {NotificationState} from "@/modules/notification/store/notificationState";
+    import {hasUnreadNotifications} from "@/modules/notification/store/notificationStore";
 
     @Component({
         components: {
             UserMenu,
-            UserMenuNotificationBadge,
+            NotificationBadge,
         },
     })
     export default class UserMenuButton extends Vue {
@@ -47,39 +47,11 @@
         @State((state) => state.user)
         public readonly user!: UserState;
 
-        public notifications = [
-            {
-                id: 1,
-                read: false,
-                type: 'success',
-                date: new Date(2019, 3, 3, 12, 55, 0),
-                text: 'Анализ "Первичный аналз состояния сосудов" успешно завершен',
-            },
-            {
-                id: 2,
-                read: true,
-                type: 'info',
-                date: new Date(2019, 3, 3, 12, 30, 0),
-                text: 'Анализ "Первичный аналз состояния сосудов" принят в обработку',
-            },
-            {
-                id: 3,
-                read: true,
-                type: 'error',
-                date: new Date(2019, 3, 1, 12, 40, 0),
-                text: 'Во время выполнения анализа "Первичный аналз состояния сосудов" произошла ошибка',
-            },
-            {
-                id: 4,
-                read: true,
-                type: 'info',
-                date: new Date(2019, 3, 1, 12, 30, 0),
-                text: 'Анализ "Первичный аналз состояния сосудов" принят в обработку',
-            },
-        ];
+        @State((state) => state.notification)
+        public readonly notification!: NotificationState;
 
         public hasUnreadNotifications(): boolean {
-            return this.notifications.some((notification) => !notification.read);
+            return hasUnreadNotifications(this.$store);
         }
 
         public logout() {

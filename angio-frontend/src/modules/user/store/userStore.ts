@@ -3,7 +3,7 @@ import ls from 'local-storage';
 import {ActionContext} from 'vuex';
 import {getStoreAccessors} from 'vuex-typescript';
 import root from 'loglevel';
-import {RootState} from '@/store';
+import store, {RootState} from '@/store';
 import {UserApiService} from '@/modules/user/services/userApiService';
 import JwtUtils from '@/utils/jwtUtils';
 import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageService';
@@ -11,6 +11,7 @@ import {UserAuthModel} from '@/modules/user/models/user';
 import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
 import FullName from '@/modules/common/models/fullName';
 import {namespace} from 'vuex-class';
+import {clearNotifications, fetchNotifications} from '@/modules/notification/store/notificationStore';
 
 const log = root.getLogger('store/modules/user');
 
@@ -132,6 +133,8 @@ export const user = {
                         setUser(ctx, meResponse.data.data);
                         setSettings(ctx, meResponse.data.data.settings);
                     });
+
+                    fetchNotifications(store);
                 })
                 .catch((error) => {
                     clearUser(ctx);
@@ -163,6 +166,7 @@ export const user = {
             startFetching(ctx);
             // TODO: api call
             clearUser(ctx);
+            clearNotifications(store);
             endFetching(ctx);
         },
         async fetchUser(ctx: UserContext) {

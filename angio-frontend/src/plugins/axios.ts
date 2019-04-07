@@ -5,7 +5,7 @@ import ls from 'local-storage';
 axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 
 if (!!ls.get('accessToken')) {
-    axios.defaults.headers.common.Authorization = ls.get('accessToken');
+    axios.defaults.headers.common.Authorization = `Bearer ${ls.get('accessToken')}`;
 }
 
 export const OAUTH_CONFIG = {
