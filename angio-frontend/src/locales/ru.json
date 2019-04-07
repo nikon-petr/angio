@@ -46,6 +46,12 @@
   },
   "user": {
     "component": {
+      "userMenuActions": {
+        "button": {
+          "settings": "Настройки",
+          "logout": "Выйти из приложения"
+        }
+      },
       "loginForm": {
         "title": "Авторизация",
         "username": {
@@ -73,6 +79,16 @@
       "403": {
         "title": "Доступ запрещен",
         "description": "Извините, доступ запрещен"
+      }
+    }
+  },
+  "notification": {
+    "component": {
+      "noNotificationsMessage": {
+        "body": "Уведомлений еще нет"
+      },
+      "notificationScroller": {
+        "subheader": "Уведомления"
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-subheader>Уведомления</v-subheader>
+        <v-subheader>{{ $t('notification.component.notificationScroller.subheader') }}</v-subheader>
 
         <v-divider></v-divider>
 

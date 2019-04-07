@@ -2,7 +2,7 @@
     <v-card flat>
         <v-card-text>
             <div class="text-xs-center text--secondary">
-                Уведомлений еще нет
+                {{ $t('notification.component.noNotificationsMessage.body') }}
             </div>
         </v-card-text>
     </v-card>

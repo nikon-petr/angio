@@ -46,6 +46,12 @@
   },
   "user": {
     "component": {
+      "userMenuActions": {
+        "button": {
+          "settings": "Settings",
+          "logout": "Log out"
+        }
+      },
       "loginForm": {
         "title": "Authorization",
         "username": {
@@ -73,6 +79,16 @@
       "403": {
         "title": "Access denied",
         "description": "Sorry, access denied"
+      }
+    }
+  },
+  "notification": {
+    "component": {
+      "noNotificationsMessage": {
+        "body": "No notifications yet"
+      },
+      "notificationScroller": {
+        "subheader": "Notifications"
       }
     }
   }
