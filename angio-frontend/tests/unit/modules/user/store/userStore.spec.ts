@@ -53,7 +53,7 @@ describe('store/modules/user.js', () => {
                 lastname: 'Врачебный',
                 patronymic: 'Aдреевич',
             },
-            organizationName: "Клиника глазных болезней СГМУ им. Разумовского",
+            organizationName: 'Клиника глазных болезней СГМУ им. Разумовского',
             permissions: [
                 UserPermission.ANALYSE_VIEW,
                 UserPermission.ANALYSE_CREATE,

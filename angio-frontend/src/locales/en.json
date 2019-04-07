@@ -21,9 +21,11 @@
     "appName": "AngioVision",
     "view": {
       "404": {
+        "title": "Page not found",
         "description": "Sorry, page not found"
       },
       "500": {
+        "title": "Error",
         "description": "Sorry, the server is down"
       }
     },
@@ -65,7 +67,11 @@
       }
     },
     "view": {
+      "login": {
+        "title": "Authorization"
+      },
       "403": {
+        "title": "Access denied",
         "description": "Sorry, access denied"
       }
     }
