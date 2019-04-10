@@ -11,7 +11,9 @@ import {UserAuthModel} from '@/modules/user/models/user';
 import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
 import FullName from '@/modules/common/models/fullName';
 import {namespace} from 'vuex-class';
-import {clearNotifications, fetchNotifications} from '@/modules/notification/store/notificationStore';
+import {addNotification, clearNotifications, fetchNotifications} from '@/modules/notification/store/notificationStore';
+import NotificationLongPollingService from '@/modules/notification/services/notificationLongPollingService';
+import {NotificationModel} from '@/modules/notification/models/notification';
 
 const log = root.getLogger('store/modules/user');
 
@@ -134,14 +136,29 @@ export const user = {
                         setSettings(ctx, meResponse.data.data.settings);
                     });
 
+                    NotificationLongPollingService.getInstance()
+                        .notificationCallBack = (notification: NotificationModel) => {
+                        addNotification(store, notification);
+                    };
+                    NotificationLongPollingService.getInstance().startPolling();
+
                     fetchNotifications(store);
                 })
                 .catch((error) => {
                     clearUser(ctx);
                     delete axios.defaults.headers.common.Authorization;
-                    log.error(error);
                 })
                 .then(() => endFetching(ctx));
+        },
+        async refreshAuth(ctx: UserContext) {
+            if (isAuthenticated(ctx)) {
+                fetchNotifications(store);
+                NotificationLongPollingService.getInstance()
+                    .notificationCallBack = (notification: NotificationModel) => {
+                    addNotification(store, notification);
+                };
+                NotificationLongPollingService.getInstance().startPolling();
+            }
         },
         async refreshAccessToken(ctx: UserContext) {
             startFetching(ctx);
@@ -165,6 +182,7 @@ export const user = {
         async logout(ctx: UserContext) {
             startFetching(ctx);
             // TODO: api call
+            NotificationLongPollingService.getInstance().stopPolling();
             clearUser(ctx);
             clearNotifications(store);
             endFetching(ctx);
@@ -205,6 +223,7 @@ export const setSettings = commit(user.mutations.setSettings);
 
 // actions
 export const authUser = dispatch(user.actions.authUser);
+export const refreshAuth = dispatch(user.actions.refreshAuth);
 export const refreshAccessToken = dispatch(user.actions.refreshAccessToken);
 export const logout = dispatch(user.actions.logout);
 export const fetchUser = dispatch(user.actions.fetchUser);

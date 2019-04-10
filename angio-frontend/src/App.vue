@@ -16,9 +16,8 @@
     import TheDrawer from '@/modules/common/components/TheDrawer.vue';
     import TheHeader from '@/modules/common/components/TheHeader.vue';
     import TheContent from '@/modules/common/components/TheContent.vue';
-    import {logout, userModule} from '@/modules/user/store/userStore';
+    import {logout, refreshAuth, userModule} from '@/modules/user/store/userStore';
     import TheFooter from '@/modules/common/components/TheFooter.vue';
-    import {fetchNotifications} from "@/modules/notification/store/notificationStore";
 
     @Component({
         components: {
@@ -41,7 +40,7 @@
         }
 
         public mounted() {
-            fetchNotifications(this.$store);
+            refreshAuth(this.$store);
         }
     }
 </script>

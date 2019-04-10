@@ -1,6 +1,6 @@
-import {NotificationType, Subject} from '@/modules/notification/store/notificationState';
+import {Notification, NotificationType, Subject} from '@/modules/notification/store/notificationState';
 
-export interface NotificationModel {
+export interface NotificationModel extends Notification {
     id: string;
     date: Date;
     type: NotificationType;
