@@ -9,13 +9,15 @@
                 v-bind:notifications="notifications"
         >
             <template v-if="notifications.length > 0">
-                <NotificationMessage
-                        v-for="notification in notifications"
-                        v-bind:key="notification.id"
-                        v-bind:type="notification.type"
-                        v-bind:body="notification.body"
-                        v-bind:date="notification.date"
-                ></NotificationMessage>
+                <transition-group name="scale-transition">
+                    <NotificationMessage
+                            v-for="{id, type, body, date} in notifications"
+                            v-bind:key="id"
+                            v-bind:type="type"
+                            v-bind:body="body"
+                            v-bind:date="date"
+                    ></NotificationMessage>
+                </transition-group>
             </template>
             <template v-else>
                 <NoNotificationsMessage></NoNotificationsMessage>
