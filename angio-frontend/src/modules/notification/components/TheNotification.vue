@@ -8,8 +8,7 @@
             <template slot="body" slot-scope="props">
                 <BaseNotification
                         v-bind:type="props.item.data.type"
-                        v-bind:title="props.item.data.title"
-                        v-bind:text="props.item.data.body"
+                        v-bind:body="props.item.data.body"
                 >
                 </BaseNotification>
             </template>
@@ -30,6 +29,6 @@
 
 <style scoped>
     .notifications-offset >>> .notification-wrapper:last-child {
-        margin-bottom: 15px;
+        margin-bottom: 4px;
     }
 </style>

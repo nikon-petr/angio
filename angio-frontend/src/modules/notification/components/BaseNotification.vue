@@ -11,11 +11,8 @@
             </v-flex>
             <v-flex xs10>
                 <v-layout row wrap>
-                    <v-flex xs12 v-if="title">
-                        <span class="font-weight-bold">{{ title }}</span>
-                    </v-flex>
                     <v-flex xs12>
-                        <span>{{ text }}</span>
+                        <span>{{ body }}</span>
                     </v-flex>
                 </v-layout>
             </v-flex>
@@ -33,11 +30,8 @@
         @Prop()
         public readonly type!: string;
 
-        @Prop({ default: null })
-        public readonly title!: string;
-
         @Prop()
-        public readonly text!: string;
+        public readonly body!: string;
 
         public translateNotificationTypeToColor(notificationType: NotificationType): string {
             switch (notificationType) {

@@ -9,6 +9,7 @@ export default class NotificationLongPollingService {
 
     private _notificationCallBack?: (notification: NotificationModel) => any;
     private _pollingEnabled: boolean = false;
+    private _watching: boolean = false;
 
     private static _instance: NotificationLongPollingService;
 
@@ -27,6 +28,12 @@ export default class NotificationLongPollingService {
 
         this._pollingEnabled = true;
 
+        if (this._watching) {
+            return;
+        } else {
+            this._watching = true;
+        }
+
         NotificationApiService.watchNotification()
             .then((watchResponse) => {
 
@@ -41,13 +48,17 @@ export default class NotificationLongPollingService {
                 }
 
                 if (this._pollingEnabled) {
+                    this._watching = false;
                     this.startPolling();
                 }
             })
             .catch((error) => {
                     log.error(error);
                     setTimeout(() => {
-                        this.startPolling();
+                        if (this._pollingEnabled) {
+                            this._watching = false;
+                            this.startPolling();
+                        }
                     }, 30000);
                 }
             );
