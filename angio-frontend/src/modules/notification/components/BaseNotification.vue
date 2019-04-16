@@ -1,46 +1,43 @@
 <template>
-    <div>
-        <v-card flat>
-            <v-card-title class="pl-0">
-                <v-flex xs2 class="text-xs-center">
-                    <v-icon v-bind:color="translateNotificationTypeToColor(type)" medium>
-                        {{ translateNotificationTypeToIcon(type) }}
-                    </v-icon>
-                </v-flex>
-                <v-flex xs10>
-                    <v-layout row wrap>
-                        <v-flex xs12>
-                            <span>{{ body }}</span>
-                        </v-flex>
-                        <v-flex xs12 class="text--secondary">
-                            <span>{{ date | moment('from', 'now') }}</span>
-                        </v-flex>
-                    </v-layout>
-                </v-flex>
-            </v-card-title>
-        </v-card>
-
-        <v-divider></v-divider>
-    </div>
+    <v-card
+            v-bind:color="translateNotificationTypeToColor(type)"
+            class="my-1 mr-2 elevation-1"
+    >
+        <v-card-title class="pl-0">
+            <v-flex xs2 class="text-xs-center">
+                <v-icon medium>
+                    {{ translateNotificationTypeToIcon(type) }}
+                </v-icon>
+            </v-flex>
+            <v-flex xs10>
+                <v-layout row wrap>
+                    <v-flex xs12 v-if="title">
+                        <span class="font-weight-bold">{{ title }}</span>
+                    </v-flex>
+                    <v-flex xs12>
+                        <span>{{ text }}</span>
+                    </v-flex>
+                </v-layout>
+            </v-flex>
+        </v-card-title>
+    </v-card>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {NotificationType} from '@/modules/notification/store/notificationState';
+    import {NotificationType} from "../store/notificationState";
 
     @Component
-    export default class NotificationMessage extends Vue {
-
-        public notificationType: any = NotificationType;
+    export default class BaseNotification extends Vue {
 
         @Prop()
         public readonly type!: string;
 
-        @Prop()
-        public readonly body!: string;
+        @Prop({ default: null })
+        public readonly title!: string;
 
         @Prop()
-        public readonly date!: Date;
+        public readonly text!: string;
 
         public translateNotificationTypeToColor(notificationType: NotificationType): string {
             switch (notificationType) {
@@ -69,7 +66,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

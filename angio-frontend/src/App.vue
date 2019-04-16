@@ -1,5 +1,6 @@
 <template>
     <v-app :dark="darkThemeEnabled" id="inspire">
+        <TheNotification></TheNotification>
         <TheDrawer></TheDrawer>
         <TheHeader
                 v-bind:is-authenticated="isAuthenticated"
@@ -18,9 +19,11 @@
     import TheContent from '@/modules/common/components/TheContent.vue';
     import {logout, refreshAuth, userModule} from '@/modules/user/store/userStore';
     import TheFooter from '@/modules/common/components/TheFooter.vue';
+    import TheNotification from "@/modules/notification/components/TheNotification.vue";
 
     @Component({
         components: {
+            TheNotification,
             TheFooter,
             TheContent,
             TheHeader,

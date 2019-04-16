@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import axios, {AxiosResponse} from 'axios';
 import ls from 'local-storage';
 import {ActionContext} from 'vuex';
@@ -183,6 +184,7 @@ export const user = {
             startFetching(ctx);
             // TODO: api call
             NotificationLongPollingService.getInstance().stopPolling();
+            Vue.notify({clean: true});
             clearUser(ctx);
             clearNotifications(store);
             endFetching(ctx);

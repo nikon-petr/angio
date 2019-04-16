@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import {NotificationApiService} from '@/modules/notification/services/notificationApiService';
 import {NotificationModel} from '@/modules/notification/models/notification';
 import root from 'loglevel';
@@ -32,6 +33,9 @@ export default class NotificationLongPollingService {
                 if (this._notificationCallBack && this._pollingEnabled) {
                     log.debug(`get new notification: ${JSON.stringify(watchResponse.data.data)}`);
                     this._notificationCallBack(watchResponse.data.data);
+                    Vue.notify({
+                        data: watchResponse.data.data
+                    })
                 } else {
                     throw new Error('notification callback is not set');
                 }

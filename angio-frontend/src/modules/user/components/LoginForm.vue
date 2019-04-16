@@ -8,7 +8,7 @@
             </v-card-title>
 
             <v-card-text>
-                <v-form v-model="valid" ref="form">
+                <v-form v-model="valid" ref="form" v-on:submit.prevent="submit" id="login-form">
                     <v-text-field
                             type="text"
                             name="username"
@@ -47,9 +47,10 @@
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
-                        v-on:click="submit"
                         v-bind:disabled="!valid"
                         v-bind:loading="fetching"
+                        form="login-form"
+                        type="submit"
                         color="success"
                         flat
                         round
