@@ -58,6 +58,7 @@ public class PushNotificationService implements NotificationService<UUID> {
 
         log.debug("notifyUser() - start: notification={}", notification);
         String notificationBody = processPushNotificationBody(notification.getDataModel(), notification.getTemplateName());
+        Date notificationDate = new Date();
         PushNotification notificationEntity = new PushNotification()
                 .setDate(new Date())
                 .setType(notification.getType())
@@ -67,7 +68,7 @@ public class PushNotificationService implements NotificationService<UUID> {
                 .setUser(user);
 
         log.debug("notifyUser() - send notification");
-        notificationEntity.setRead(sendNotification(user.getId(), notification, notificationBody));
+        notificationEntity.setRead(sendNotification(user.getId(), notification, notificationBody, notificationDate));
 
         log.debug("notifyUser() - save notification to db");
         pushNotificationRepository.save(notificationEntity);
@@ -87,8 +88,9 @@ public class PushNotificationService implements NotificationService<UUID> {
         for (User user : users) {
 
             String notificationBody = processPushNotificationBody(notification.getDataModel(), notification.getTemplateName());
+            Date notificationDate = new Date();
             PushNotification notificationEntity = new PushNotification()
-                    .setDate(new Date())
+                    .setDate(notificationDate)
                     .setType(notification.getType())
                     .setBody(notificationBody)
                     .setRead(false)
@@ -96,7 +98,7 @@ public class PushNotificationService implements NotificationService<UUID> {
                     .setUser(user);
 
             log.debug("notifyUsers() - send notification");
-            notificationEntity.setRead(sendNotification(user.getId(), notification, notificationBody));
+            notificationEntity.setRead(sendNotification(user.getId(), notification, notificationBody, notificationDate));
 
             notificationEntities.add(notificationEntity);
         }
@@ -173,7 +175,7 @@ public class PushNotificationService implements NotificationService<UUID> {
         log.debug("removeUnusableResponse() - end");
     }
 
-    private boolean sendNotification(UUID id, AbstractNotification notification, String notificationBody) {
+    private boolean sendNotification(UUID id, AbstractNotification notification, String notificationBody, Date date) {
         Queue<DeferredResult<PushNotificationDto>> deferredResults = deferredResultPool.getOrDefault(id, null);
 
         if (deferredResults == null || deferredResults.isEmpty()) {
@@ -193,7 +195,7 @@ public class PushNotificationService implements NotificationService<UUID> {
             }
 
             PushNotificationDto pushNotificationDto = new PushNotificationDto()
-                    .setDate(notification.getDate())
+                    .setDate(date)
                     .setType(notification.getType())
                     .setBody(notificationBody)
                     .setSubject(notification.getSubject())
