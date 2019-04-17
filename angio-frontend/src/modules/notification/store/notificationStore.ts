@@ -33,6 +33,11 @@ export const notification = {
         },
         addNotification(state: NotificationState, notification: Notification) {
             state.list.unshift(notification);
+        },
+        setReadNotifications(state: NotificationState, ids: string[]) {
+            state.list
+                .filter((notification) => ids.includes(notification.id))
+                .forEach((notification) => notification.read = true);
         }
     },
 
@@ -51,6 +56,13 @@ export const notification = {
                 })
                 .catch((error) => log.error(error))
                 .then(() => endFetching(ctx));
+        },
+        async readNotifications(ctx: NotificationContext, ids: string[]) {
+            NotificationApiService.readNotification(ids)
+                .then((notificationReadResponse) => {
+                    setReadNotifications(ctx, ids)
+                })
+                .catch((error) => log.error(error));
         }
     }
 };
@@ -66,9 +78,11 @@ export const endFetching = commit(notification.mutations.endFetching);
 export const clearNotifications = commit(notification.mutations.clearNotifications);
 export const setNotifications = commit(notification.mutations.setNotifications);
 export const addNotification = commit(notification.mutations.addNotification);
+export const setReadNotifications = commit(notification.mutations.setReadNotifications);
 
 // actions
 export const fetchNotifications = dispatch(notification.actions.fetchNotifications);
+export const readNotifications = dispatch(notification.actions.readNotifications);
 
 // module
 export const notificationModule = namespace('notification');

@@ -5,6 +5,7 @@ import '@/plugins/bus';
 import '@/plugins/axios';
 import '@/plugins/logger';
 import '@/plugins/moment';
+import '@/plugins/check-view';
 import '@/plugins/vuetify';
 import '@/plugins/notification';
 import '@/plugins/lightbox';

@@ -15,4 +15,9 @@ export class NotificationApiService {
         log.debug('create watchNotification request');
         return axios.get<Response<NotificationModel>>('/notification/push/watch');
     }
+
+    public static readNotification(notificationIds: string[]): AxiosPromise<Response<any>> {
+        log.debug(`create readNotification request id=${JSON.stringify(notificationIds)}`);
+        return axios.post<Response<any>>('/notification/push/read', notificationIds);
+    }
 }

@@ -20,6 +20,7 @@
                     v-bind:user="user"
                     v-bind:logout="logout"
                     v-bind:notifications="notification.list"
+                    v-bind:read-notifications="readNotifications"
             ></UserMenu>
         </v-menu>
     </div>
@@ -34,7 +35,7 @@
     import {logout} from '@/modules/user/store/userStore';
     import {State} from 'vuex-class';
     import {NotificationState} from "@/modules/notification/store/notificationState";
-    import {hasUnreadNotifications} from "@/modules/notification/store/notificationStore";
+    import {hasUnreadNotifications, readNotifications} from "@/modules/notification/store/notificationStore";
 
     @Component({
         components: {
@@ -52,6 +53,10 @@
 
         public hasUnreadNotifications(): boolean {
             return hasUnreadNotifications(this.$store);
+        }
+
+        public readNotifications(ids: string[]) {
+            return readNotifications(this.$store, ids);
         }
 
         public logout() {

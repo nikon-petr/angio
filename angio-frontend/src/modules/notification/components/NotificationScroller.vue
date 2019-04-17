@@ -12,6 +12,7 @@
                 <transition-group name="scale-transition">
                     <NotificationMessage
                             v-for="{id, type, body, date, read} in notifications"
+                            v-on:mouseover.once.native="!read ? addNotificationToRead(id) : null"
                             v-bind:key="id"
                             v-bind:type="type"
                             v-bind:body="body"
@@ -32,6 +33,8 @@
     import BaseScroller from '@/modules/common/components/BaseScroller.vue';
     import NotificationMessage from '@/modules/notification/components/NotificationMessage.vue';
     import NoNotificationsMessage from '@/modules/notification/components/NoNotificationsMessage.vue';
+    import {Notification} from "@/modules/notification/store/notificationState";
+    import {throttle} from "helpful-decorators";
 
     @Component({
         components: {
@@ -43,7 +46,23 @@
     export default class NotificationScroller extends Vue {
 
         @Prop()
-        public notifications!: Notification[];
+        public readonly notifications!: Notification[];
+
+        @Prop()
+        public readonly readNotifications!: (ids: string[]) => any;
+
+        public notificationIdQueue: string[] = [];
+
+        addNotificationToRead(id: string) {
+            this.notificationIdQueue.push(id);
+            this.readNotificationThrottle();
+        }
+
+        @throttle(2000)
+        readNotificationThrottle() {
+            this.readNotifications([...this.notificationIdQueue]);
+            this.notificationIdQueue.length = 0;
+        }
     }
 </script>
 

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import {NotificationApiService} from '@/modules/notification/services/notificationApiService';
 import {NotificationModel} from '@/modules/notification/models/notification';
 import root from 'loglevel';
+import NotificationSoundService from "@/modules/notification/services/notificationSoundService";
 
 const log = root.getLogger('NotificationLongPollingService');
 
@@ -29,7 +30,7 @@ export default class NotificationLongPollingService {
         this._pollingEnabled = true;
 
         if (this._watching) {
-            return;
+            throw new Error('watching push notifications already enabled');
         } else {
             this._watching = true;
         }
@@ -42,7 +43,8 @@ export default class NotificationLongPollingService {
                     this._notificationCallBack(watchResponse.data.data);
                     Vue.notify({
                         data: watchResponse.data.data
-                    })
+                    });
+                    NotificationSoundService.getInstance().playNewNotificationSound();
                 } else {
                     throw new Error('notification callback is not set');
                 }

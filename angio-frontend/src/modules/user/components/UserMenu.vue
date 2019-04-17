@@ -11,6 +11,7 @@
 
         <NotificationScroller
                 v-bind:notifications="notifications"
+                v-bind:read-notifications="readNotifications"
         ></NotificationScroller>
     </v-card>
 </template>
@@ -20,6 +21,7 @@
     import UserMenuAvatar from '@/modules/user/components/UserMenuAvatar.vue';
     import UserMenuActions from '@/modules/user/components/UserMenuActions.vue';
     import {UserInfo} from '@/modules/user/store/userState';
+    import {Notification} from "@/modules/notification/store/notificationState";
     import NotificationScroller from '@/modules/notification/components/NotificationScroller.vue';
 
     @Component({
@@ -39,6 +41,9 @@
 
         @Prop()
         public readonly notifications!: Notification[];
+
+        @Prop()
+        public readonly readNotifications!: (ids: string[]) => any;
 
     }
 </script>
