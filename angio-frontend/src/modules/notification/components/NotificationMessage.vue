@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card flat>
+        <v-card flat v-bind:color="color(read)">
             <v-card-title class="pl-0">
                 <v-flex xs2 class="text-xs-center">
                     <v-icon v-bind:color="translateNotificationTypeToColor(type)" medium>
@@ -42,6 +42,9 @@
         @Prop()
         public readonly date!: Date;
 
+        @Prop()
+        public readonly read!: boolean;
+
         public translateNotificationTypeToColor(notificationType: NotificationType): string {
             switch (notificationType) {
                 case NotificationType.INFO:
@@ -65,6 +68,16 @@
                     return 'error_outline';
                 case NotificationType.ERROR:
                     return 'error_outline';
+            }
+        }
+
+        public color(read: boolean) {
+
+            // @ts-ignore
+            if (this.$vuetify.dark) {
+                return read ? undefined : 'secondary lighten-1';
+            } else {
+                return read ? undefined : 'grey lighten-2'
             }
         }
     }

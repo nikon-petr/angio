@@ -11,11 +11,12 @@
             <template v-if="notifications.length > 0">
                 <transition-group name="scale-transition">
                     <NotificationMessage
-                            v-for="{id, type, body, date} in notifications"
+                            v-for="{id, type, body, date, read} in notifications"
                             v-bind:key="id"
                             v-bind:type="type"
                             v-bind:body="body"
                             v-bind:date="date"
+                            v-bind:read="read"
                     ></NotificationMessage>
                 </transition-group>
             </template>
