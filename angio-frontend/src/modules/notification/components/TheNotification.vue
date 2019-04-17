@@ -4,6 +4,7 @@
                 v-bind:duration="15000"
                 v-bind:max="5"
                 position="bottom right"
+                animation-name="scale-transition"
         >
             <template slot="body" slot-scope="props">
                 <BaseNotification
