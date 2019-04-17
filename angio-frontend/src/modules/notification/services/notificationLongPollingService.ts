@@ -47,16 +47,16 @@ export default class NotificationLongPollingService {
                     throw new Error('notification callback is not set');
                 }
 
+                this._watching = false;
                 if (this._pollingEnabled) {
-                    this._watching = false;
                     this.startPolling();
                 }
             })
             .catch((error) => {
                     log.error(error);
                     setTimeout(() => {
+                        this._watching = false;
                         if (this._pollingEnabled) {
-                            this._watching = false;
                             this.startPolling();
                         }
                     }, 30000);

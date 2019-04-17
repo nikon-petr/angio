@@ -1,11 +1,11 @@
 <template>
     <v-card
             v-bind:color="translateNotificationTypeToColor(type)"
-            class="my-1 mr-2 elevation-1"
+            class="mb-2 mr-2 elevation-1"
     >
-        <v-card-title class="pl-0">
+        <v-card-title class="pl-0 white--text">
             <v-flex xs2 class="text-xs-center">
-                <v-icon medium>
+                <v-icon medium dark>
                     {{ translateNotificationTypeToIcon(type) }}
                 </v-icon>
             </v-flex>
