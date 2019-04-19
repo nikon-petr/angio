@@ -2,7 +2,7 @@ import Vue from 'vue';
 import {NotificationApiService} from '@/modules/notification/services/notificationApiService';
 import {NotificationModel} from '@/modules/notification/models/notification';
 import root from 'loglevel';
-import NotificationSoundService from "@/modules/notification/services/notificationSoundService";
+import NotificationSoundService from '@/modules/notification/services/notificationSoundService';
 
 const log = root.getLogger('NotificationLongPollingService');
 
@@ -38,7 +38,7 @@ export default class NotificationLongPollingService {
         NotificationApiService.watchNotification()
             .then((watchResponse) => {
 
-                if (this._notificationCallBack && this._pollingEnabled) {
+                if (this._notificationCallBack) {
                     log.debug(`get new notification: ${JSON.stringify(watchResponse.data.data)}`);
                     this._notificationCallBack(watchResponse.data.data);
                     Vue.notify({
@@ -56,8 +56,8 @@ export default class NotificationLongPollingService {
             })
             .catch((error) => {
                     log.error(error);
+                    this._watching = false;
                     setTimeout(() => {
-                        this._watching = false;
                         if (this._pollingEnabled) {
                             this.startPolling();
                         }

@@ -15,6 +15,8 @@ import {namespace} from 'vuex-class';
 import {addNotification, clearNotifications, fetchNotifications} from '@/modules/notification/store/notificationStore';
 import NotificationLongPollingService from '@/modules/notification/services/notificationLongPollingService';
 import {NotificationModel} from '@/modules/notification/models/notification';
+import {cancelAllRequests} from '@/plugins/axios';
+import '@/modules/user/interceptors/refreshAccessTokenInterceptor';
 
 const log = root.getLogger('store/modules/user');
 
@@ -146,6 +148,7 @@ export const user = {
                     fetchNotifications(store);
                 })
                 .catch((error) => {
+                    log.error(error);
                     clearUser(ctx);
                     delete axios.defaults.headers.common.Authorization;
                 })
@@ -163,10 +166,11 @@ export const user = {
         },
         async refreshAccessToken(ctx: UserContext) {
             startFetching(ctx);
-            UserApiService
+            await UserApiService
                 .refreshToken(ctx.state.auth.refreshToken as string)
                 .then((response) => {
                     setAccessToken(ctx, response.data.access_token);
+                    axios.defaults.headers.common.Authorization = `Bearer ${response.data.access_token}`;
                     JwtUtils.decodeJwtToken(response.data.access_token)
                         .then((jwtClaims) => {
                             setPermissions(ctx, jwtClaims.authorities as UserPermission[]);
@@ -184,6 +188,7 @@ export const user = {
             startFetching(ctx);
             // TODO: api call
             NotificationLongPollingService.getInstance().stopPolling();
+            cancelAllRequests();
             Vue.notify({clean: true});
             clearUser(ctx);
             clearNotifications(store);

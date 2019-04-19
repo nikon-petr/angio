@@ -29,7 +29,7 @@ export class UserApiService {
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
         };
-        log.debug(`create refreshToken request with data: ${JSON.stringify(data)}`);
+        log.debug(`create refreshToken request with data: [SECRET]`);
         return axios.post('/oauth/token', qs.stringify(data), OAUTH_CONFIG);
     }
 
