@@ -30,7 +30,7 @@ rootRouter.beforeEach((to, from, next) => {
             record.meta.auth(to, from, next);
         }
     }
-    document.title = i18n.t(to.meta.title).toString();
+    document.title = `${i18n.t(to.meta.title).toString()} | AngioVision`;
     next();
 });
 
