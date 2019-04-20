@@ -7,17 +7,19 @@
             app
     >
         <v-list dense>
-            <v-list-tile v-on:click="">
+            <PreAuthorize is-authenticated>
+                <v-list-tile v-on:click="">
 
-                <v-list-tile-action>
-                    <v-icon>settings</v-icon>
-                </v-list-tile-action>
+                    <v-list-tile-action>
+                        <v-icon>settings</v-icon>
+                    </v-list-tile-action>
 
-                <v-list-tile-content>
-                    <v-list-tile-title>Settings</v-list-tile-title>
-                </v-list-tile-content>
+                    <v-list-tile-content>
+                        <v-list-tile-title>Settings</v-list-tile-title>
+                    </v-list-tile-content>
 
-            </v-list-tile>
+                </v-list-tile>
+            </PreAuthorize>
         </v-list>
     </v-navigation-drawer>
 </template>
@@ -25,8 +27,11 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import {BusEvent} from '@/modules/common/helpers/busEvent';
+    import PreAuthorize from "@/modules/common/components/PreAuthorize.vue";
 
-    @Component
+    @Component({
+        components: {PreAuthorize}
+    })
     export default class TheDrawer extends Vue {
 
         public drawer: boolean = false;
