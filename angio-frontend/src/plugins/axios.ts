@@ -1,11 +1,24 @@
 import Vue from 'vue';
 import ls from 'local-storage';
 import axios from 'axios';
+import root from 'loglevel';
+
+const log = root.getLogger('plugins/axios');
 
 axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 
+export const setAxiosAccessToken = (accessToken: string) => {
+    log.debug('set access token [SECRET]');
+    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+};
+
+export const deleteAxiosAccessToken = () => {
+    log.debug('delete access token');
+    delete axios.defaults.headers.common.Authorization;
+};
+
 if (!!ls.get('accessToken')) {
-    axios.defaults.headers.common.Authorization = `Bearer ${ls.get('accessToken')}`;
+    setAxiosAccessToken(ls.get('accessToken'));
 }
 
 export const OAUTH_CONFIG = {
@@ -19,29 +32,24 @@ export const OAUTH_CONFIG = {
     },
 };
 
-// cancel token
+// setup cancel token
 const CancelToken = axios.CancelToken;
 
-const cancelSourceConteiner = {
+const cancelSourceContainer = {
     cancelSource: CancelToken.source(),
 };
 
-const refreshCancelToken = () => {
-    cancelSourceConteiner.cancelSource = CancelToken.source();
-};
-
 export const cancelAllRequests = () => {
-    cancelSourceConteiner.cancelSource.cancel('cancel all requests');
-    refreshCancelToken();
+    log.debug('cancel all requests');
+    cancelSourceContainer.cancelSource.cancel();
+    cancelSourceContainer.cancelSource = CancelToken.source();
 };
 
 axios.interceptors.request.use(function (config) {
-    config.cancelToken = cancelSourceConteiner.cancelSource.token;
+    config.cancelToken = cancelSourceContainer.cancelSource.token;
     return config;
 }, function (error) {
     return Promise.reject(error);
 });
-
-// refresh access token interceptor
 
 Vue.prototype.$axios = axios;

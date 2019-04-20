@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import axios, {AxiosResponse} from 'axios';
+import {AxiosResponse} from 'axios';
 import ls from 'local-storage';
 import {ActionContext} from 'vuex';
 import {getStoreAccessors} from 'vuex-typescript';
@@ -10,12 +9,9 @@ import JwtUtils from '@/utils/jwtUtils';
 import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageService';
 import {UserAuthModel} from '@/modules/user/models/user';
 import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
-import FullName from '@/modules/common/models/fullName';
 import {namespace} from 'vuex-class';
-import {addNotification, clearNotifications, fetchNotifications} from '@/modules/notification/store/notificationStore';
-import NotificationLongPollingService from '@/modules/notification/services/notificationLongPollingService';
-import {NotificationModel} from '@/modules/notification/models/notification';
-import {cancelAllRequests} from '@/plugins/axios';
+import {downNotificationPolling, initiateNotificationPolling} from '@/modules/notification/store/notificationStore';
+import {cancelAllRequests, deleteAxiosAccessToken, setAxiosAccessToken} from '@/plugins/axios';
 import '@/modules/user/interceptors/refreshAccessTokenInterceptor';
 
 const log = root.getLogger('store/modules/user');
@@ -34,18 +30,18 @@ export const user = {
                 firstname: ls.get('firstname') || undefined,
                 lastname: ls.get('lastname') || undefined,
                 patronymic: ls.get('patronymic') || undefined,
-            } as FullName,
+            },
             organizationName: ls.get('organizationName') || undefined,
             permissions: ls.get('permissions') || [],
-        } as UserInfo,
+        },
         auth: {
             accessToken: ls.get('accessToken') || undefined,
             refreshToken: ls.get('refreshToken') || undefined,
-        } as UserAuth,
+        },
         settings: {
             darkThemeEnabled: ls.get('darkThemeEnabled') || false,
             locale: ls.get('locale') || process.env.VUE_APP_I18N_LOCALE,
-        } as UserSettings,
+        },
     }),
 
     mutations: {
@@ -132,36 +128,25 @@ export const user = {
                     };
                     setAuth(ctx, userAuth);
 
-                    axios.defaults.headers.common.Authorization = `Bearer ${userAuthResponse.data.access_token}`;
+                    setAxiosAccessToken(userAuthResponse.data.access_token);
 
                     await UserApiService.getMe().then((meResponse) => {
                         setUser(ctx, meResponse.data.data);
                         setSettings(ctx, meResponse.data.data.settings);
                     });
 
-                    NotificationLongPollingService.getInstance()
-                        .notificationCallBack = (notification: NotificationModel) => {
-                        addNotification(store, notification);
-                    };
-                    NotificationLongPollingService.getInstance().startPolling();
-
-                    fetchNotifications(store);
+                    initiateNotificationPolling(store);
                 })
                 .catch((error) => {
                     log.error(error);
                     clearUser(ctx);
-                    delete axios.defaults.headers.common.Authorization;
+                    deleteAxiosAccessToken();
                 })
                 .then(() => endFetching(ctx));
         },
         async refreshAuth(ctx: UserContext) {
             if (isAuthenticated(ctx)) {
-                fetchNotifications(store);
-                NotificationLongPollingService.getInstance()
-                    .notificationCallBack = (notification: NotificationModel) => {
-                    addNotification(store, notification);
-                };
-                NotificationLongPollingService.getInstance().startPolling();
+                initiateNotificationPolling(store);
             }
         },
         async refreshAccessToken(ctx: UserContext) {
@@ -170,7 +155,7 @@ export const user = {
                 .refreshToken(ctx.state.auth.refreshToken as string)
                 .then((response) => {
                     setAccessToken(ctx, response.data.access_token);
-                    axios.defaults.headers.common.Authorization = `Bearer ${response.data.access_token}`;
+                    setAxiosAccessToken(response.data.access_token);
                     JwtUtils.decodeJwtToken(response.data.access_token)
                         .then((jwtClaims) => {
                             setPermissions(ctx, jwtClaims.authorities as UserPermission[]);
@@ -179,7 +164,7 @@ export const user = {
                 })
                 .catch((error) => {
                     clearUser(ctx);
-                    delete axios.defaults.headers.common.Authorization;
+                    deleteAxiosAccessToken();
                     log.error(error);
                 })
                 .then(() => endFetching(ctx));
@@ -187,11 +172,9 @@ export const user = {
         async logout(ctx: UserContext) {
             startFetching(ctx);
             // TODO: api call
-            NotificationLongPollingService.getInstance().stopPolling();
-            cancelAllRequests();
-            Vue.notify({clean: true});
+            downNotificationPolling(store);
             clearUser(ctx);
-            clearNotifications(store);
+            cancelAllRequests();
             endFetching(ctx);
         },
         async fetchUser(ctx: UserContext) {

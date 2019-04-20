@@ -1,9 +1,9 @@
 import Vue from 'vue';
 
 // plugins importing here
+import '@/plugins/logger';
 import '@/plugins/bus';
 import '@/plugins/axios';
-import '@/plugins/logger';
 import '@/plugins/moment';
 import '@/plugins/vuetify';
 import '@/plugins/notification';

@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import root from 'loglevel';
 import {ActionContext} from 'vuex';
 import {RootState} from '@/store';
@@ -5,6 +6,7 @@ import {NotificationState, Notification} from '@/modules/notification/store/noti
 import {namespace} from 'vuex-class';
 import {getStoreAccessors} from 'vuex-typescript';
 import {NotificationApiService} from '@/modules/notification/services/notificationApiService';
+import NotificationLongPollingService from "@/modules/notification/services/notificationLongPollingService";
 
 const log = root.getLogger('store/modules/notification');
 
@@ -63,7 +65,17 @@ export const notification = {
                     setReadNotifications(ctx, ids)
                 })
                 .catch((error) => log.error(error));
-        }
+        },
+        async initiateNotificationPolling(ctx: NotificationContext) {
+            fetchNotifications(ctx);
+            NotificationLongPollingService.getInstance().startPolling();
+        },
+        async downNotificationPolling(ctx: NotificationContext) {
+            clearNotifications(ctx);
+            NotificationLongPollingService.getInstance().stopPolling();
+            Vue.notify({clean: true});
+        },
+
     }
 };
 
@@ -83,6 +95,8 @@ export const setReadNotifications = commit(notification.mutations.setReadNotific
 // actions
 export const fetchNotifications = dispatch(notification.actions.fetchNotifications);
 export const readNotifications = dispatch(notification.actions.readNotifications);
+export const initiateNotificationPolling = dispatch(notification.actions.initiateNotificationPolling);
+export const downNotificationPolling = dispatch(notification.actions.downNotificationPolling);
 
 // module
 export const notificationModule = namespace('notification');
