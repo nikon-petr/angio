@@ -1,7 +1,6 @@
 <template>
     <v-toolbar app fixed clipped-left>
 
-        <v-toolbar-side-icon v-on:click.stop="toggleDrawer"></v-toolbar-side-icon>
         <v-toolbar-title>{{ $t('common.appName') }}</v-toolbar-title>
 
         <v-spacer></v-spacer>
@@ -29,7 +28,6 @@
 
 <script lang="ts">
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
-    import {BusEvent} from '@/modules/common/helpers/busEvent';
     import UserMenuButton from '@/modules/user/components/UserMenuButton.vue';
     import PreAuthorize from "@/modules/common/components/PreAuthorize.vue";
 
@@ -43,10 +41,6 @@
 
         @Emit()
         public logout() {
-        }
-
-        public toggleDrawer() {
-            this.$bus.emit(BusEvent.TOGGLE_DRAWER_VISIBILITY_EVENT);
         }
     }
 </script>

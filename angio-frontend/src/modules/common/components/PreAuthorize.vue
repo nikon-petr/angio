@@ -1,16 +1,16 @@
 <template>
-    <div v-if="show()">
+    <div v-if="show()" style="display: contents">
         <slot></slot>
     </div>
-    <div v-else="!show()">
+    <div v-else="!show()" style="display: contents">
         <slot name="not-authorized"></slot>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {UserPermission} from "@/modules/user/store/userState";
-    import {userModule} from "@/modules/user/store/userStore";
+    import {UserPermission} from '@/modules/user/store/userState';
+    import {userModule} from '@/modules/user/store/userStore';
 
     @Component
     export default class PreAuthorize extends Vue {
@@ -57,15 +57,15 @@
                 result = this.isAnonymousGetter;
             }
 
-            if(this.hasAnyPermission && result) {
+            if (this.hasAnyPermission && result) {
                 result = this.hasAnyPermissionGetter(this.hasAnyPermission);
             }
 
-            if(this.hasAnyOfGivenPermissions && result) {
+            if (this.hasAnyOfGivenPermissions && result) {
                 result = this.hasAnyOfGivenPermissionsGetter(this.hasAnyOfGivenPermissions);
             }
 
-            if(this.hasPermissions && result) {
+            if (this.hasPermissions && result) {
                 result = this.hasPermissionsGetter(this.hasPermissions);
             }
 
