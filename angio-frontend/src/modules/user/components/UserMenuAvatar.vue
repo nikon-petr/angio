@@ -8,7 +8,7 @@
 
                 <v-list-tile-content>
                     <v-list-tile-title>{{ fullNameString() }}</v-list-tile-title>
-                    <v-list-tile-sub-title>{{ organization | placeholder('Без организации') }}</v-list-tile-sub-title>
+                    <v-list-tile-sub-title>{{ organization | placeholder($t('user.component.userMenuAvatar.organizationPlaceholder')) }}</v-list-tile-sub-title>
                 </v-list-tile-content>
             </v-list-tile>
         </v-list>

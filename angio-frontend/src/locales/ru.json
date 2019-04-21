@@ -52,6 +52,9 @@
           "logout": "Выйти из приложения"
         }
       },
+      "userMenuAvatar": {
+        "organizationPlaceholder": "Без организации"
+      },
       "loginForm": {
         "title": "Авторизация",
         "username": {

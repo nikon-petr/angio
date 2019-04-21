@@ -52,6 +52,9 @@
           "logout": "Log out"
         }
       },
+      "userMenuAvatar": {
+        "organizationPlaceholder": "No organization"
+      },
       "loginForm": {
         "title": "Authorization",
         "username": {
