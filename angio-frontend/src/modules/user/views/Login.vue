@@ -1,8 +1,8 @@
 <template>
-    <LoginForm
-            v-on:send-form="sendForm"
-            v-bind:fetching="fetching"
-    ></LoginForm>
+        <LoginForm
+                v-bind:submit="sendForm()"
+                v-bind:fetching="fetching"
+        ></LoginForm>
 </template>
 
 <script lang="ts">
@@ -23,8 +23,8 @@
         @State((state) => state.user.fetching)
         public readonly fetching!: boolean;
 
-        public sendForm(form: UserCredentialsModel) {
-            authUser(store, form);
+        public sendForm() {
+            return (form: UserCredentialsModel) => authUser(store, form);
         }
     }
 </script>

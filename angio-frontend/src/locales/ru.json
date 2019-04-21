@@ -63,7 +63,8 @@
         "password": {
           "field": "Пароль",
           "validation": {
-            "NotEmpty": "Пароль не должен быть пустым"
+            "NotEmpty": "Пароль не должен быть пустым",
+            "Unauthorized": "Логин или пароль не верен"
           }
         },
         "button": {

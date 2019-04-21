@@ -63,7 +63,8 @@
         "password": {
           "field": "Password",
           "validation": {
-            "NotEmpty": "Password should not be empty"
+            "NotEmpty": "Password should not be empty",
+            "Unauthorized": "Login or password are wrong"
           }
         },
         "button": {

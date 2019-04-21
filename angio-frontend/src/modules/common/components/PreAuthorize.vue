@@ -1,6 +1,9 @@
 <template>
-    <div  v-if="show()">
+    <div v-if="show()">
         <slot></slot>
+    </div>
+    <div v-else="!show()">
+        <slot name="not-authorized"></slot>
     </div>
 </template>
 

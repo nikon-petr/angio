@@ -1,49 +1,52 @@
 <template lang="html">
-    <v-flex xs12 sm8 md4>
-        <v-card class="elevation-12" max-width="500px">
-
-            <v-card-title class="title font-weight-regular justify-space-between">
-                <span>{{ $t('user.component.loginForm.title') }}</span>
-                <v-spacer></v-spacer>
-            </v-card-title>
-
-            <v-card-text>
-                <v-form v-model="valid" ref="form" v-on:submit.prevent="submit" id="login-form">
+    <v-flex xs12 sm6 md5 lg4 xl3>
+        <BaseSingleFormContainer v-bind:title="$t('user.component.loginForm.title')">
+            <template slot="form">
+                <v-form v-model="valid" ref="form" v-on:submit.prevent="submitForm" id="login-form">
                     <v-text-field
-                            type="text"
-                            name="username"
                             v-model="form.username"
                             v-bind:label="$t('user.component.loginForm.username.field')"
                             v-bind:rules="[v => !!v || $t('user.component.loginForm.username.validation.NotEmpty')]"
                             v-bind:disabled="fetching"
+                            type="text"
+                            name="username"
                             prepend-inner-icon="person"
                             counter
                             maxlength="120"
+                            outline
                             required
                     ></v-text-field>
                     <v-text-field
-                            type="password"
-                            id="password"
-                            name="password"
                             v-model="form.password"
                             v-bind:label="$t('user.component.loginForm.password.field')"
                             v-bind:rules="[v => !!v || $t('user.component.loginForm.password.validation.NotEmpty')]"
                             v-bind:disabled="fetching"
+                            type="password"
+                            id="password"
+                            name="password"
                             prepend-inner-icon="lock"
                             counter
                             maxlength="120"
+                            outline
                             required
                     ></v-text-field>
+                    <v-expand-transition>
+                        <ul v-if="unauthorized">
+                            <li class="red--text body-1">
+                                {{ $t('user.component.loginForm.password.validation.Unauthorized') }}
+                            </li>
+                        </ul>
+                    </v-expand-transition>
                 </v-form>
-            </v-card-text>
-
-            <v-card-actions>
+            </template>
+            <template slot="buttons">
                 <v-btn
                         to="/user/reset"
                         color="primary"
                         flat
                         round
-                >{{ $t('user.component.loginForm.button.reset') }}
+                >
+                    {{ $t('user.component.loginForm.button.reset') }}
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
@@ -54,25 +57,32 @@
                         color="success"
                         flat
                         round
-                >{{ $t('user.component.loginForm.button.submit') }}
+                >
+                    {{ $t('user.component.loginForm.button.submit') }}
                 </v-btn>
-            </v-card-actions>
-
-        </v-card>
+            </template>
+        </BaseSingleFormContainer>
     </v-flex>
 </template>
 
 <script lang="ts">
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
     import {UserCredentialsModel} from '@/modules/user/models/user';
-    import {CommonEvent} from '@/modules/common/helpers/commonEvent';
     import {throttle} from 'helpful-decorators';
+    import BaseSingleFormContainer from '@/modules/common/components/BaseSingleFormContainer.vue';
 
-    @Component
+    @Component({
+        components: {BaseSingleFormContainer}
+    })
     export default class LoginForm extends Vue {
 
         @Prop()
         public readonly fetching?: boolean;
+
+        @Prop()
+        public readonly submit!: (form: UserCredentialsModel) => Promise<any>;
+
+        public unauthorized: boolean = false;
 
         public valid: boolean = false;
         public form: UserCredentialsModel = {
@@ -81,9 +91,14 @@
         };
 
         @throttle(1000)
-        @Emit(CommonEvent.SEND_FORM)
-        public submit() {
-            return this.form;
+        public submitForm() {
+            this.unauthorized = false;
+            return this.submit(this.form)
+                .catch((error) => {
+                    if (error.response.status == 401) {
+                        this.unauthorized = true;
+                    }
+                });
         }
     }
 </script>

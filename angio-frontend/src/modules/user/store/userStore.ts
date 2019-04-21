@@ -119,7 +119,7 @@ export const user = {
     actions: {
         async authUser(ctx: UserContext, credentials: { username: string; password: string }) {
             startFetching(ctx);
-            UserApiService.getToken(credentials)
+            return UserApiService.getToken(credentials)
                 .then(async (userAuthResponse: AxiosResponse<UserAuthModel>) => {
                     clearUser(ctx);
                     const userAuth: UserAuth = {
@@ -141,8 +141,9 @@ export const user = {
                     log.error(error);
                     clearUser(ctx);
                     deleteAxiosAccessToken();
+                    throw error;
                 })
-                .then(() => endFetching(ctx));
+                .finally(() => endFetching(ctx));
         },
         async refreshAuth(ctx: UserContext) {
             if (isAuthenticated(ctx)) {
