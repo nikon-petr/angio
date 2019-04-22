@@ -1,5 +1,5 @@
 <template>
-    <v-toolbar app fixed clipped-left>
+    <v-toolbar app clipped-left>
 
         <v-toolbar-title>{{ $t('common.appName') }}</v-toolbar-title>
 
@@ -44,7 +44,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

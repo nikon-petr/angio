@@ -33,6 +33,42 @@
       "error": {
         "linkName": "Home"
       },
+      "theDrawer": {
+        "link": {
+          "newAnalyse": {
+            "name": "Add new analyse",
+            "tooltip": "Add new analyse"
+          },
+          "search": {
+            "name": "Analyses",
+            "tooltip": "Search analyses"
+          },
+          "dashboard": {
+            "name": "Dashboard",
+            "tooltip": "Admin dashboard"
+          },
+          "users": {
+            "name": "Users",
+            "tooltip": "Users"
+          },
+          "organizations": {
+            "name": "Organization",
+            "tooltip": "Organization"
+          },
+          "newNotification": {
+            "name": "New notification",
+            "tooltip": "Send new notification"
+          },
+          "help": {
+            "name": "Help",
+            "tooltip": "Help"
+          },
+          "about": {
+            "name": "About",
+            "tooltip": "About"
+          }
+        }
+      },
       "theHeader": {
       },
       "theFooter": {

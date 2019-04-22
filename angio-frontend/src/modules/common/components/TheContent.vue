@@ -1,7 +1,6 @@
 <template>
     <v-content>
-        <v-container fluid fill-height pl-0 py-0>
-            <TheDrawer></TheDrawer>
+        <v-container fluid fill-height>
             <v-layout justify-center align-center>
                 <transition name="slide-x-transition" mode="out-in">
 
@@ -15,11 +14,8 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import TheDrawer from '@/modules/common/components/TheDrawer.vue';
 
-    @Component({
-        components: {TheDrawer}
-    })
+    @Component
     export default class TheContent extends Vue {
 
     }

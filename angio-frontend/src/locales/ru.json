@@ -33,6 +33,42 @@
       "error": {
         "linkName": "На главную"
       },
+      "theDrawer": {
+        "link": {
+          "newAnalyse": {
+            "name": "Новый анализ",
+            "tooltip": "Добавить новый анализ"
+          },
+          "search": {
+            "name": "Анализы",
+            "tooltip": "Поиск анализов"
+          },
+          "dashboard": {
+            "name": "Панель управления",
+            "tooltip": "Панель управления"
+          },
+          "users": {
+            "name": "Пользователи",
+            "tooltip": "Пользователи"
+          },
+          "organizations": {
+            "name": "Организации",
+            "tooltip": "Организации"
+          },
+          "newNotification": {
+            "name": "Отправть уведомление",
+            "tooltip": "Отправть новое уведомление"
+          },
+          "help": {
+            "name": "Справка",
+            "tooltip": "Справка"
+          },
+          "about": {
+            "name": "О нас",
+            "tooltip": "О нас"
+          }
+        }
+      },
       "theHeader": {
       },
       "theFooter": {

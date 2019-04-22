@@ -1,5 +1,5 @@
 <template>
-    <v-card class="elevation-12 pa-3">
+    <v-card class="elevation-12 pa-3 ma-4">
 
         <v-card-title class="headline font-weight-regular justify-space-between">
             <span>{{ title }}</span>
@@ -25,7 +25,3 @@
         public readonly title!: string;
     }
 </script>
-
-<style scoped>
-
-</style>

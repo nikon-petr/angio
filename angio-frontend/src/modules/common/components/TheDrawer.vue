@@ -2,62 +2,147 @@
     <v-navigation-drawer
             v-bind:value="isAuthenticated"
             mini-variant
+            clipped
             floating
-            stateless
-            style="z-index: 0"
+            permanent
+            app
     >
         <v-list>
+
+            <PreAuthorize v-bind:has-permissions="['ANALYSE_VIEW']">
+
+                <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                        <v-list-tile to="/analyse/list" ripple v-on="on">
+                            <v-list-tile-action>
+                                <v-icon>add</v-icon>
+                            </v-list-tile-action>
+
+                            <v-list-tile-content>
+                                <v-list-tile-title>{{ $t('common.component.theDrawer.link.newAnalyse.name') }}</v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </template>
+                    <span>{{ $t('common.component.theDrawer.link.newAnalyse.tooltip') }}</span>
+                </v-tooltip>
+
+            </PreAuthorize>
+
+            <PreAuthorize v-bind:has-permissions="['ANALYSE_CREATE']">
+
+                <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                        <v-list-tile to="/analyse/new" ripple v-on="on">
+                            <v-list-tile-action>
+                                <v-icon>search</v-icon>
+                            </v-list-tile-action>
+
+                            <v-list-tile-content>
+                                <v-list-tile-title>{{ $t('common.component.theDrawer.link.search.name') }}</v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </template>
+                    <span>{{ $t('common.component.theDrawer.link.search.tooltip') }}</span>
+                </v-tooltip>
+
+            </PreAuthorize>
+
+            <PreAuthorize v-bind:has-any-of-given-permissions="['USER_VIEW', 'ORGANIZATION_VIEW', 'TOKEN_VIEW', 'ANALYSE_PURGE_DELETED', 'IMAGE_UPLOAD_PURGE_UNUSED']">
+
+                <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                        <v-list-tile to="/admin/dashboard" ripple v-on="on">
+                            <v-list-tile-action>
+                                <v-icon>dashboard</v-icon>
+                            </v-list-tile-action>
+
+                            <v-list-tile-title>{{ $t('common.component.theDrawer.link.dashboard.name') }}</v-list-tile-title>
+                        </v-list-tile>
+                    </template>
+                    <span>{{ $t('common.component.theDrawer.link.dashboard.tooltip') }}</span>
+                </v-tooltip>
+
+            </PreAuthorize>
+
+            <PreAuthorize v-bind:has-permissions="['USER_VIEW']">
+
+                <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                        <v-list-tile to="/admin/user/list" ripple v-on="on">
+                            <v-list-tile-action>
+                                <v-icon>group</v-icon>
+                            </v-list-tile-action>
+
+                            <v-list-tile-title>{{ $t('common.component.theDrawer.link.users.name') }}</v-list-tile-title>
+                        </v-list-tile>
+                    </template>
+                    <span>{{ $t('common.component.theDrawer.link.users.tooltip') }}</span>
+                </v-tooltip>
+
+            </PreAuthorize>
+
+            <PreAuthorize v-bind:has-permissions="['ORGANIZATION_VIEW']">
+
+                <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                        <v-list-tile to="/admin/organization/list" ripple v-on="on">
+                            <v-list-tile-action>
+                                <v-icon>domain</v-icon>
+                            </v-list-tile-action>
+
+                            <v-list-tile-title>{{ $t('common.component.theDrawer.link.organizations.name') }}</v-list-tile-title>
+                        </v-list-tile>
+                    </template>
+                    <span>{{ $t('common.component.theDrawer.link.organizations.tooltip') }}</span>
+                </v-tooltip>
+
+            </PreAuthorize>
+
+            <PreAuthorize v-bind:has-permissions="['PUSH_NOTIFICATION_SEND']">
+
+                <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                        <v-list-tile to="/admin/organization/list" ripple v-on="on">
+                            <v-list-tile-action>
+                                <v-icon>add_alert</v-icon>
+                            </v-list-tile-action>
+
+                            <v-list-tile-title>{{ $t('common.component.theDrawer.link.newNotification.name') }}</v-list-tile-title>
+                        </v-list-tile>
+                    </template>
+                    <span>{{ $t('common.component.theDrawer.link.newNotification.tooltip') }}</span>
+                </v-tooltip>
+
+            </PreAuthorize>
+
             <PreAuthorize is-authenticated>
 
-                <v-list-tile to="/analyse/list" ripple>
-                    <v-list-tile-action>
-                        <v-icon>search</v-icon>
-                    </v-list-tile-action>
+                <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                        <v-list-tile to="/help" ripple v-on="on">
+                            <v-list-tile-action>
+                                <v-icon>help_outline</v-icon>
+                            </v-list-tile-action>
 
-                    <v-list-tile-content>
-                        <v-list-tile-title>Analyses</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
+                            <v-list-tile-title>{{ $t('common.component.theDrawer.link.help.name') }}</v-list-tile-title>
+                        </v-list-tile>
+                    </template>
+                    <span>{{ $t('common.component.theDrawer.link.help.tooltip') }}</span>
+                </v-tooltip>
 
-                <v-list-tile to="/dashboard" ripple>
-                    <v-list-tile-action>
-                        <v-icon>dashboard</v-icon>
-                    </v-list-tile-action>
+                <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                        <v-list-tile to="/about" ripple v-on="on">
+                            <v-list-tile-action>
+                                <v-icon>info_outline</v-icon>
+                            </v-list-tile-action>
 
-                    <v-list-tile-title>Dashboard</v-list-tile-title>
-                </v-list-tile>
+                            <v-list-tile-title>{{ $t('common.component.theDrawer.link.about.name') }}</v-list-tile-title>
+                        </v-list-tile>
+                    </template>
+                    <span>{{ $t('common.component.theDrawer.link.about.tooltip') }}</span>
+                </v-tooltip>
 
-                <v-list-tile to="/user/list" ripple>
-                    <v-list-tile-action>
-                        <v-icon>group</v-icon>
-                    </v-list-tile-action>
-
-                    <v-list-tile-title>Users</v-list-tile-title>
-                </v-list-tile>
-
-                <v-list-tile to="/organization/list" ripple>
-                    <v-list-tile-action>
-                        <v-icon>domain</v-icon>
-                    </v-list-tile-action>
-
-                    <v-list-tile-title>Organizations</v-list-tile-title>
-                </v-list-tile>
-
-                <v-list-tile to="/help" ripple>
-                    <v-list-tile-action>
-                        <v-icon>help_outline</v-icon>
-                    </v-list-tile-action>
-
-                    <v-list-tile-title>Help</v-list-tile-title>
-                </v-list-tile>
-
-                <v-list-tile to="/about" ripple>
-                    <v-list-tile-action>
-                        <v-icon>info_outline</v-icon>
-                    </v-list-tile-action>
-
-                    <v-list-tile-title>About</v-list-tile-title>
-                </v-list-tile>
             </PreAuthorize>
         </v-list>
     </v-navigation-drawer>
@@ -77,7 +162,3 @@
         public readonly isAuthenticated!: boolean;
     }
 </script>
-
-<style scoped>
-
-</style>
