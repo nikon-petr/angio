@@ -4,7 +4,8 @@
             mini-variant
             clipped
             floating
-            permanent
+            stateless
+            dark
             app
     >
         <v-list>
@@ -13,7 +14,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/analyse/list" ripple v-on="on">
+                        <v-list-tile to="/analyse/new" ripple v-on="on" active-class="accent--text">
                             <v-list-tile-action>
                                 <v-icon>add</v-icon>
                             </v-list-tile-action>
@@ -32,7 +33,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/analyse/new" ripple v-on="on">
+                        <v-list-tile to="/analyse/list" ripple v-on="on" active-class="accent--text">
                             <v-list-tile-action>
                                 <v-icon>search</v-icon>
                             </v-list-tile-action>
@@ -51,7 +52,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/admin/dashboard" ripple v-on="on">
+                        <v-list-tile to="/admin/dashboard" ripple v-on="on" active-class="accent--text">
                             <v-list-tile-action>
                                 <v-icon>dashboard</v-icon>
                             </v-list-tile-action>
@@ -68,7 +69,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/admin/user/list" ripple v-on="on">
+                        <v-list-tile to="/admin/user/list" ripple v-on="on" active-class="accent--text">
                             <v-list-tile-action>
                                 <v-icon>group</v-icon>
                             </v-list-tile-action>
@@ -85,7 +86,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/admin/organization/list" ripple v-on="on">
+                        <v-list-tile to="/admin/organization/list" ripple v-on="on" active-class="accent--text">
                             <v-list-tile-action>
                                 <v-icon>domain</v-icon>
                             </v-list-tile-action>
@@ -102,7 +103,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/admin/organization/list" ripple v-on="on">
+                        <v-list-tile to="/admin/organization/list" ripple v-on="on" active-class="accent--text">
                             <v-list-tile-action>
                                 <v-icon>add_alert</v-icon>
                             </v-list-tile-action>
@@ -119,7 +120,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/help" ripple v-on="on">
+                        <v-list-tile to="/help" ripple v-on="on" active-class="accent--text">
                             <v-list-tile-action>
                                 <v-icon>help_outline</v-icon>
                             </v-list-tile-action>
@@ -132,7 +133,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/about" ripple v-on="on">
+                        <v-list-tile to="/about" ripple v-on="on" active-class="accent--text">
                             <v-list-tile-action>
                                 <v-icon>info_outline</v-icon>
                             </v-list-tile-action>

@@ -27,6 +27,14 @@
       "500": {
         "title": "Error",
         "description": "Sorry, the server is down"
+      },
+      "about": {
+        "title": "About",
+        "app": "Application",
+        "repository": "Repository",
+        "developers": "Developers",
+        "nikon": "Nikon Petrunin",
+        "artem": "Artem Karkavin"
       }
     },
     "component": {

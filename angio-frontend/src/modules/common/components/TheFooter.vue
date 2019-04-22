@@ -16,6 +16,7 @@
                     flat
                     round
                     color="white"
+                    active-class
             >
                 {{ $t('common.component.theFooter.button.home') }}
             </v-btn>
@@ -24,6 +25,7 @@
                     flat
                     round
                     color="white"
+                    active-class
             >
                 {{ $t('common.component.theFooter.button.about') }}
             </v-btn>
@@ -32,6 +34,7 @@
                     flat
                     round
                     color="white"
+                    active-class
             >
                 {{ $t('common.component.theFooter.button.help') }}
             </v-btn>

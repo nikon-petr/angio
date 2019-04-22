@@ -5,12 +5,14 @@ import {userRouterConfig} from '@/modules/user/userRouter';
 import NotFound from '@/modules/common/views/404.vue';
 import store from '@/store';
 import ServerError from '@/modules/common/views/500.vue';
-import i18n from "@/plugins/i18n";
+import i18n from '@/plugins/i18n';
+import About from '@/modules/common/views/About.vue';
 import {analyseRouterConfig} from '@/modules/analyse/analyseRouter';
 
 Vue.use(Router);
 
 let rootRouterConfig: RouteConfig[] = [
+    {path: '/about', component: About, meta: {title: 'common.view.about.title', auth: AuthPredicate.permitAll()}},
     {path: '/500', component: ServerError, meta: {title: 'common.view.500.title', auth: AuthPredicate.permitAll()}},
     {path: '/404', component: NotFound, meta: {title: 'common.view.404.title', auth: AuthPredicate.permitAll()}},
     {path: '*', redirect: '/404', meta: {auth: AuthPredicate.permitAll()}},
