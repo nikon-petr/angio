@@ -5,7 +5,6 @@
             clipped
             floating
             stateless
-            dark
             app
     >
         <v-list>

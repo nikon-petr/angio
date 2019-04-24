@@ -39,7 +39,9 @@ rootRouter.beforeEach((to, from, next) => {
             record.meta.auth(to, from, next);
         }
     }
-    document.title = `${i18n.t(to.meta.title).toString()} | AngioVision`;
+    if (to.meta.title) {
+        document.title = `${i18n.t(to.meta.title).toString()} | AngioVision`;
+    }
     next();
 });
 

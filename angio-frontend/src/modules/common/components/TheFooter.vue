@@ -1,10 +1,10 @@
 <template>
     <v-footer
+            v-bind:color="$vuetify.dark ? 'secondary' : 'white'"
             app
             absolute
             inset
             height="auto"
-            color="secondary"
     >
         <v-layout
                 justify-center
@@ -15,7 +15,6 @@
                     to="/"
                     flat
                     round
-                    color="white"
                     active-class
             >
                 {{ $t('common.component.theFooter.button.home') }}
@@ -24,7 +23,6 @@
                     to="/about"
                     flat
                     round
-                    color="white"
                     active-class
             >
                 {{ $t('common.component.theFooter.button.about') }}
@@ -33,7 +31,6 @@
                     to="/help"
                     flat
                     round
-                    color="white"
                     active-class
             >
                 {{ $t('common.component.theFooter.button.help') }}
@@ -42,7 +39,6 @@
                     py-3
                     text-xs-center
                     xs12
-                    white--text
             >
                 &copy; 2018-{{ new Date() | moment('YYYY') }} {{ $t('common.appName') }}
             </v-flex>
