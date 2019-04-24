@@ -6,6 +6,7 @@ import NotFound from '@/modules/common/views/404.vue';
 import store from '@/store';
 import ServerError from '@/modules/common/views/500.vue';
 import i18n from "@/plugins/i18n";
+import {analyseRouterConfig} from '@/modules/analyse/analyseRouter';
 
 Vue.use(Router);
 
@@ -15,7 +16,7 @@ let rootRouterConfig: RouteConfig[] = [
     {path: '*', redirect: '/404', meta: {auth: AuthPredicate.permitAll()}},
 ];
 
-rootRouterConfig = rootRouterConfig.concat(userRouterConfig);
+rootRouterConfig = rootRouterConfig.concat(userRouterConfig, analyseRouterConfig);
 
 const rootRouter: Router = new Router({
     mode: 'history',

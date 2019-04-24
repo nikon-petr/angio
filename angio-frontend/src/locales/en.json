@@ -77,6 +77,11 @@
           "about": "About",
           "help": "Help"
         }
+      },
+      "periodDatePicker": {
+        "startDate": "Start date",
+        "endDate": "End date",
+        "singleDate": "Date"
       }
     }
   },
@@ -129,6 +134,28 @@
       },
       "notificationScroller": {
         "subheader": "Notifications"
+      }
+    }
+  },
+  "analyse": {
+    "component": {
+      "analyseListFilter": {
+        "status": {
+          "CREATED": "Created",
+          "IN_PROGRESS": "In progress",
+          "SUCCESS": "Successed",
+          "FAILED": "Failed"
+        },
+        "search": "Analyses search",
+        "statusField": "Status",
+        "period": "Period",
+        "starred": "Starred analyses",
+        "statusWithoutMatches": "The search has not given any results"
+      }
+    },
+    "view": {
+      "analyseList": {
+        "subheader": "List of analyses"
       }
     }
   }

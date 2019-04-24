@@ -1,26 +1,28 @@
 <template>
-    <div>
-        <div class="mr-3 hidden-sm-and-down" v-if="imageSrc">
-            <img :src="imageSrc" :alt="code">
-        </div>
-        <div class="text-md-center">
-            <h1 class="error-code font-weight-black shades">{{ code }}</h1>
-            <h2 class="my-3 headline ">{{ description }}</h2>
-            <div>
-                <v-btn
-                        v-bind:to="link || '/'"
-                        color="primary"
-                        round
-                >
-                    {{ linkName || $t('common.component.error.linkName') }}
-                </v-btn>
+    <v-layout justify-center align-center>
+        <div>
+            <div class="mr-3 hidden-sm-and-down" v-if="imageSrc">
+                <img :src="imageSrc" :alt="code">
+            </div>
+            <div class="text-md-center">
+                <h1 class="error-code font-weight-black shades">{{ code }}</h1>
+                <h2 class="my-3 headline ">{{ description }}</h2>
+                <div>
+                    <v-btn
+                            v-bind:to="link || '/'"
+                            color="primary"
+                            round
+                    >
+                        {{ linkName || $t('common.component.error.linkName') }}
+                    </v-btn>
+                </div>
             </div>
         </div>
-    </div>
+    </v-layout>
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {Component, Prop, Vue} from "vue-property-decorator";
 
     @Component
     export default class TheContent extends Vue {

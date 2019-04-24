@@ -77,6 +77,11 @@
           "about": "О нас",
           "help": "Справка"
         }
+      },
+      "periodDatePicker": {
+        "startDate": "Начальная дата",
+        "endDate": "Конечная дата",
+        "singleDate": "Выберите дату"
       }
     }
   },
@@ -129,6 +134,28 @@
       },
       "notificationScroller": {
         "subheader": "Уведомления"
+      }
+    }
+  },
+  "analyse": {
+    "component": {
+      "analyseListFilter": {
+        "status": {
+          "CREATED": "Создан",
+          "IN_PROGRESS": "В обработке",
+          "SUCCESS": "Завершён",
+          "FAILED": "Завершён с ошибкой"
+        },
+        "search": "Поиск по анализам",
+        "statusField": "Статус",
+        "period": "Промежуток времени",
+        "starred": "Избранные анализы",
+        "statusWithoutMatches": "Поиск не дал результатов"
+      }
+    },
+    "view": {
+      "analyseList": {
+        "subheader": "Список анализов"
       }
     }
   }
