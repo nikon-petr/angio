@@ -42,42 +42,42 @@
         @Prop()
         public isPeriod!: boolean;
 
-        public periodDateModel: PeriodDateModel = {
+        public periodDate: PeriodDateModel = {
             startDate: undefined,
             endDate: undefined,
             date: undefined
         };
 
         public onStartDateSelected(date?: Date) {
-            this.periodDateModel.startDate = date;
+            this.periodDate.startDate = date;
             this.sendPeriod();
         }
 
         public onEndDateSelected(date?: Date) {
-            this.periodDateModel.endDate = date;
+            this.periodDate.endDate = date;
             this.sendPeriod();
         }
 
         public onDateSelected(date?: Date) {
-            this.periodDateModel.date = date;
+            this.periodDate.date = date;
             this.sendPeriod();
         }
 
         @Watch('isPeriod')
         public onIsPeriodChanged(newVal: boolean, oldVal: boolean) {
+            if (this.isPeriod) {
+                this.periodDate.date = undefined;
+
+            } else {
+                this.periodDate.startDate = undefined;
+                this.periodDate.endDate = undefined;
+            }
             this.sendPeriod();
         }
         
         @Emit(CommonEvent.SEND_PERIOD)
         public sendPeriod() {
-            if (this.isPeriod) {
-                this.periodDateModel.date = undefined;
-
-            } else {
-                this.periodDateModel.startDate = undefined;
-                this.periodDateModel.endDate = undefined;
-            }
-            return this.periodDateModel;
+            return this.periodDate;
         }
     }
 </script>

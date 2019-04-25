@@ -1,36 +1,36 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <v-menu
-            v-model="menu"
-            v-bind:close-on-content-click="false"
-            v-bind:nudge-right="40"
+    <v-dialog
+            v-model="modal"
+            ref="dialog"
+            persistent
             lazy
-            transition="scale-transition"
-            offset-y
             full-width
-            min-width="290px"
+            width="290px"
     >
         <template v-slot:activator="{ on }">
             <v-text-field
-                    v-model="date"
+                    v-model="formattedDate"
                     v-bind:label="label"
-                    v-on:input="onDateSelected"
-                    v-on="on"
-                    prepend-icon="event"
+                    v-on:focus="modal = true"
+                    prepend-inner-icon="event"
                     readonly
                     clearable
+                    outline
             ></v-text-field>
         </template>
         <v-date-picker
-                v-model="date"
+                v-model="dateString"
                 v-bind:locale="locale.toString()"
-                v-on:input="onDateSelected"
         >
+            <v-spacer></v-spacer>
+            <v-btn flat round color="primary" v-on:click="modal = false">Cancel</v-btn>
+            <v-btn flat round color="primary" v-on:click="onDateSelected">OK</v-btn>
         </v-date-picker>
-    </v-menu>
+    </v-dialog>
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Model, Prop, Vue} from 'vue-property-decorator';
+    import {Component, Emit, Model, Prop, Vue, Watch} from 'vue-property-decorator';
     import {Locale} from '@/modules/user/store/userState';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
 
@@ -43,16 +43,35 @@
         @Prop()
         public readonly label!: string;
 
-        public menu: boolean = false;
+        public modal: boolean = false;
 
-        @Model('send-selected-date', { type: String })
-        public date: string = '';
+        @Model('send-selected-date', { type: Date })
+        public readonly date!: Date;
+
+        public dateValue?: Date | null = null;
+
+        @Watch('date', { immediate: true })
+        public onDateChange(newVal: Date, oldVal: Date) {
+            this.dateValue = newVal;
+        }
+
+        get dateString(): string {
+            return this.dateValue ? this.dateValue.toISOString().substr(0, 10) : '';
+        }
+
+        set dateString(value: string) {
+            this.dateValue = new Date(value);
+        }
+
+        get formattedDate(): string {
+            // @ts-ignore
+            return this.dateValue ? this.$moment(this.dateValue, 'YYYY-MM-DD').format('DD.MM.YYYY') : this.dateValue;
+        }
 
         @Emit(CommonEvent.SEND_SELECTED_DATE)
         public onDateSelected() {
-            this.menu = false;
-
-            return this.date ? new Date(this.date) : undefined;
+            this.modal = false;
+            return this.dateValue;
         }
     }
 </script>

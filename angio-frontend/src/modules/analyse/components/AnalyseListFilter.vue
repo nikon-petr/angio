@@ -1,17 +1,30 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <v-card flat>
-        <v-card-title>
-            <v-layout row wrap>
-                <v-flex xs12>
-                    <v-layout align-end>
-                        <v-flex xs7>
-                            <v-text-field
-                                    v-model="analyseFilterModel.search"
-                                    v-bind:label="$t('analyse.component.analyseListFilter.search')"
-                            ></v-text-field>
-                        </v-flex>
-
-                        <v-flex xs5 pl-2>
+    <v-card>
+        <v-card-text class="pa-0">
+            <v-container fluid class="pb-0">
+                <v-layout row wrap justify-space-between align-content-space-around>
+                    <v-flex xs12>
+                        <v-text-field
+                                v-model="analyseFilterModel.search"
+                                v-bind:label="$t('analyse.component.analyseListFilter.search')"
+                                v-bind:append-outer-icon="extended ? 'expand_less' : 'expand_more'"
+                                v-on:click:append-outer="extended = !extended"
+                                prepend-inner-icon="search"
+                                clearable
+                                outline
+                        ></v-text-field>
+                    </v-flex>
+                </v-layout>
+                <v-expand-transition>
+                    <v-layout
+                            v-show="extended"
+                            row
+                            wrap
+                            grid-list-md
+                            justify-space-between
+                            align-content-space-around
+                    >
+                        <v-flex xl8 lg8 md8 sm12 xs12>
                             <v-combobox
                                     v-model="analyseFilterModel.statuses"
                                     v-bind:items="statuses"
@@ -21,6 +34,7 @@
                                     multiple
                                     clearable
                                     small-chips
+                                    outline
                             >
                                 <template v-slot:selection="data">
                                     <v-chip
@@ -35,7 +49,8 @@
                                         <v-icon
                                                 v-on:click="data.parent.selectItem(data.item)"
                                                 small
-                                        >close</v-icon>
+                                        >close
+                                        </v-icon>
                                     </v-chip>
                                 </template>
                                 <template v-slot:no-data>
@@ -49,37 +64,31 @@
                                 </template>
                             </v-combobox>
                         </v-flex>
-                    </v-layout>
-                </v-flex>
-
-                <v-flex xs12>
-                    <v-layout align-center>
-                        <v-flex xs5>
-                            <PeriodDatePicker
-                                    v-bind:locale="locale"
-                                    v-bind:isPeriod="isPeriod"
-                                    v-on:send-period="onPeriodDataChanged"
-                            ></PeriodDatePicker>
+                        <v-flex xl3 lg3 md3 sm4 xs4>
+                            <v-checkbox
+                                    v-model="analyseFilterModel.isStarred"
+                                    v-bind:label="$t('analyse.component.analyseListFilter.starred')"
+                            ></v-checkbox>
                         </v-flex>
 
-                        <v-flex xs5 pl-2>
+                        <v-flex xl3 lg3 md3 sm4 xs4>
                             <v-checkbox
                                     v-model="isPeriod"
                                     v-bind:label="$t('analyse.component.analyseListFilter.period')"
                             ></v-checkbox>
                         </v-flex>
 
-                        <v-flex xs2 pl-2>
-                            <v-checkbox
-                                    v-model="analyseFilterModel.isStarred"
-                                    v-bind:label="$t('analyse.component.analyseListFilter.starred')"
-                                    class="justify-end"
-                            ></v-checkbox>
+                        <v-flex xl8 lg8 md8 sm12 xs12>
+                            <PeriodDatePicker
+                                    v-bind:locale="locale"
+                                    v-bind:isPeriod="isPeriod"
+                                    v-on:send-period="onPeriodDataChanged"
+                            ></PeriodDatePicker>
                         </v-flex>
                     </v-layout>
-                </v-flex>
-            </v-layout>
-        </v-card-title>
+                </v-expand-transition>
+            </v-container>
+        </v-card-text>
     </v-card>
 </template>
 
@@ -87,7 +96,6 @@
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
     import {AnalyseFilterModel, AnalyseStatusType} from '@/modules/analyse/models/analyse';
     import {Locale} from '@/modules/user/store/userState';
-    import {debounce} from 'helpful-decorators';
     import PeriodDatePicker from '@/modules/common/components/PeriodDatePicker.vue';
     import {PeriodDateModel} from '@/modules/common/models/PeriodDateModel';
     import {AnalyseStatusRepresentation} from '@/modules/analyse/helpers/representation';
@@ -102,13 +110,15 @@
         public readonly locale!: Locale;
 
         public statuses: AnalyseStatusRepresentation[] = [
-            { value: AnalyseStatusType.CREATED, text: 'analyse.component.analyseListFilter.status.CREATED' },
-            { value: AnalyseStatusType.SUCCESS, text: 'analyse.component.analyseListFilter.status.SUCCESS' },
-            { value: AnalyseStatusType.IN_PROGRESS, text: 'analyse.component.analyseListFilter.status.IN_PROGRESS' },
-            { value: AnalyseStatusType.FAILED, text: 'analyse.component.analyseListFilter.status.FAILED' }
+            {value: AnalyseStatusType.CREATED, text: 'analyse.component.analyseListFilter.status.CREATED'},
+            {value: AnalyseStatusType.SUCCESS, text: 'analyse.component.analyseListFilter.status.SUCCESS'},
+            {value: AnalyseStatusType.IN_PROGRESS, text: 'analyse.component.analyseListFilter.status.IN_PROGRESS'},
+            {value: AnalyseStatusType.FAILED, text: 'analyse.component.analyseListFilter.status.FAILED'}
         ];
 
         public isPeriod: boolean = true;
+
+        public extended: boolean = false;
 
         public analyseFilterModel: AnalyseFilterModel = {
             search: undefined,
@@ -125,7 +135,6 @@
             this.analyseFilterModel.endDate = periodDateModel.endDate;
         }
 
-        @debounce(1500)
         @Emit(CommonEvent.SEND_FORM)
         public submit() {
             return this.analyseFilterModel;

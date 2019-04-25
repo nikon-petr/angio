@@ -1,6 +1,7 @@
 import Vue from 'vue';
 
 // plugins importing here
+import 'animate.css';
 import '@/plugins/logger';
 import '@/plugins/bus';
 import '@/plugins/axios';
