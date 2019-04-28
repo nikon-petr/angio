@@ -82,6 +82,9 @@
         public readonly fetching?: boolean;
 
         @Prop()
+        public readonly next?: string;
+
+        @Prop()
         public readonly submit!: (form: UserCredentialsModel) => Promise<any>;
 
         public unauthorized: boolean = false;
@@ -96,8 +99,15 @@
         public submitForm() {
             this.unauthorized = false;
             return this.submit(this.form)
+                .then((reponse) => {
+                    if (this.next) {
+                        this.$router.push({path: this.next});
+                    } else {
+                        this.$router.push({path: '/'});
+                    }
+                })
                 .catch((error) => {
-                    if (error.response.status == 401) {
+                    if (error.response.status == 400) {
                         this.unauthorized = true;
                     }
                 });

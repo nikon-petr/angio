@@ -2,13 +2,14 @@
     <CentredLayout>
         <LoginForm
                 v-bind:submit="sendForm()"
+                v-bind:next="next"
                 v-bind:fetching="fetching"
         ></LoginForm>
     </CentredLayout>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
     import LoginForm from '@/modules/user/components/LoginForm.vue';
     import store from '@/store';
     import {authUser} from '@/modules/user/store/userStore';
@@ -23,6 +24,9 @@
         },
     })
     export default class Login extends Vue {
+
+        @Prop()
+        public readonly next?: string;
 
         @State((state) => state.user.fetching)
         public readonly fetching!: boolean;

@@ -16,7 +16,7 @@ export class AuthPredicate {
 
     public static FORBIDDEN_PATH = '/403';
     public static HOME_PATH = '/';
-    public static LOGIN_PATH = 'login';
+    public static LOGIN_PATH = '/login';
 
     public static permitAll() {
         return (to: Route, from: Route, next: any): any => next();
@@ -34,15 +34,16 @@ export class AuthPredicate {
     public static isAuthenticated() {
         return (to: Route, from: Route, next: any): any => {
             if (!isAuthenticated(store)) {
-                log.debug(`path ${to.path} only for authenticated users. redirect to login page`);
-                next({path: AuthPredicate.LOGIN_PATH});
+                AuthPredicate.redirectToLogin(to, from, next);
             }
         };
     }
 
     public static hasAnyPermission() {
         return (to: Route, from: Route, next: any): any => {
-            if (!hasAnyPermission(store)) {
+            if (!isAuthenticated(store)) {
+                AuthPredicate.redirectToLogin(to, from, next);
+            } else if (!hasAnyPermission(store)) {
                 log.debug(`path ${to.path} only for users with any permissions. ` +
                     'redirect to forbidden page');
                 next({path: AuthPredicate.FORBIDDEN_PATH});
@@ -52,7 +53,9 @@ export class AuthPredicate {
 
     public static hasAnyOfGivenPermissions(permissions: UserPermission[]) {
         return (to: Route, from: Route, next: any): any => {
-            if (!hasAnyOfGivenPermissions(store)(permissions)) {
+            if (!isAuthenticated(store)) {
+                AuthPredicate.redirectToLogin(to, from, next);
+            } else if (!hasAnyOfGivenPermissions(store)(permissions)) {
                 log.debug(`path ${to.path} only for users with any of permissions: ${permissions}. ` +
                     'redirect to forbidden page');
                 next({path: AuthPredicate.FORBIDDEN_PATH});
@@ -62,11 +65,18 @@ export class AuthPredicate {
 
     public static hasPermissions(permissions: UserPermission[]) {
         return (to: Route, from: Route, next: any): any => {
-            if (!hasPermissions(store)(permissions)) {
+            if (!isAuthenticated(store)) {
+                AuthPredicate.redirectToLogin(to, from, next);
+            } else if (!hasPermissions(store)(permissions)) {
                 log.debug(`path ${to.path} only for users with permissions: ${permissions.toString()}. ` +
                     'redirect to forbidden page');
                 next({path: AuthPredicate.FORBIDDEN_PATH});
             }
         };
+    }
+
+    private static redirectToLogin(to: Route, from: Route, next: any) {
+        log.debug(`path ${to.path} only for authenticated users. redirect to login page`);
+        next({path: `${AuthPredicate.LOGIN_PATH}?next=${to.fullPath}`});
     }
 }

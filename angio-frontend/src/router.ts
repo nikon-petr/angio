@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import root, {Logger} from 'loglevel';
-import Router, {Route, RouteConfig} from 'vue-router';
+import Router, {RawLocation, Route, RouteConfig} from 'vue-router';
 import {AuthPredicate} from '@/modules/common/helpers/authPredicate';
 import {userRouterConfig} from '@/modules/user/userRouter';
 import NotFound from '@/modules/common/views/404.vue';
@@ -41,6 +41,8 @@ rootRouter.beforeEach((to, from, next) => {
     }
     if (to.meta.title) {
         document.title = `${i18n.t(to.meta.title).toString()} | AngioVision`;
+    } else {
+        document.title = 'AngioVision';
     }
     next();
 });
@@ -55,7 +57,7 @@ store.watch(((state, getters) => getters['user/isAuthenticated']), (newValue, ol
 });
 
 // home redirect
-function homeRedirect(to: Route) {
+function homeRedirect(to: Route): RawLocation {
     if (hasAnyOfGivenPermissions(store)([
         UserPermission.USER_VIEW,
         UserPermission.ORGANIZATION_VIEW,
