@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import 'reflect-metadata';
 
 // plugins importing here
 import 'animate.css';

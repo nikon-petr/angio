@@ -1,4 +1,4 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <v-dialog
             v-model="modal"
             ref="dialog"
@@ -11,10 +11,14 @@
             <v-text-field
                     v-model="formattedDate"
                     v-bind:label="label"
-                    v-on:focus="modal = true"
+                    v-on:focusin="modal = true"
+                    v-on:click:clear.stop="clearDateValue"
+                    placeholder="дд.мм.гггг"
+                    ref="dateTextField"
                     prepend-inner-icon="event"
                     readonly
                     clearable
+                    hide-details
                     outline
             ></v-text-field>
         </template>
@@ -45,12 +49,12 @@
 
         public modal: boolean = false;
 
-        @Model('send-selected-date', { type: Date })
+        @Model('send-selected-date', {type: Date})
         public readonly date!: Date;
 
         public dateValue?: Date | null = null;
 
-        @Watch('date', { immediate: true })
+        @Watch('date', {immediate: true})
         public onDateChange(newVal: Date, oldVal: Date) {
             this.dateValue = newVal;
         }
@@ -68,7 +72,21 @@
             return this.dateValue ? this.$moment(this.dateValue, 'YYYY-MM-DD').format('DD.MM.YYYY') : this.dateValue;
         }
 
-        @Emit(CommonEvent.SEND_SELECTED_DATE)
+        set formattedDate(value: string) {
+            // @ts-ignore
+            this.dateValue = value ? this.$moment(this.dateValue, 'YYYY-MM-DD').toDate() : undefined;
+        }
+
+        public clearDateValue() {
+            this.dateValue = undefined;
+            this.onDateSelected();
+            this.$nextTick(() => {
+                // @ts-ignore
+                this.$refs.dateTextField.blur();
+            })
+        }
+
+        @Emit(CommonEvent.CHANGE)
         public onDateSelected() {
             this.modal = false;
             return this.dateValue;

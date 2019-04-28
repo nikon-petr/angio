@@ -1,7 +1,5 @@
 <template>
-    <v-layout mb-4>
-        <h3 class="display-1 font-weight-regular">{{ value }}</h3>
-    </v-layout>
+    <h3 class="display-1 font-weight-regular">{{ value }}</h3>
 </template>
 
 <script lang="ts">

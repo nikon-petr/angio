@@ -154,6 +154,13 @@
           "SUCCESS": "Successed",
           "FAILED": "Failed"
         },
+        "chips": {
+          "search": "Search: {0}",
+          "statuses": "Statuses: {0}",
+          "singleDate": "Date: {0}",
+          "datePeriod": "From {0} to {1}",
+          "isStarred": "Starred"
+        },
         "search": "Analyses search",
         "statusField": "Status",
         "period": "Period",

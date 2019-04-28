@@ -1,5 +1,6 @@
 export enum CommonEvent {
+    CHANGE = 'change',
+    INPUT = 'input',
+    UPDATE = 'update',
     SEND_FORM = 'send-form',
-    SEND_SELECTED_DATE = 'send-selected-date',
-    SEND_PERIOD = 'send-period',
 }

@@ -55,11 +55,8 @@ store.watch(((state, getters) => getters['user/isAuthenticated']), (newValue, ol
 });
 
 // home redirect
-function homeRedirect (to: Route) {
-    if(hasPermissions(store)([UserPermission.ANALYSE_VIEW])) {
-        log.debug('redirect to /analyse');
-        return {path: '/analyse', replace: true};
-    } else if (hasAnyOfGivenPermissions(store)([
+function homeRedirect(to: Route) {
+    if (hasAnyOfGivenPermissions(store)([
         UserPermission.USER_VIEW,
         UserPermission.ORGANIZATION_VIEW,
         UserPermission.TOKEN_VIEW,
@@ -68,6 +65,9 @@ function homeRedirect (to: Route) {
     ])) {
         log.debug('redirect to /dashboard');
         return {path: '/dashboard', replace: true};
+    } else if (hasPermissions(store)([UserPermission.ANALYSE_VIEW])) {
+        log.debug('redirect to /analyse');
+        return {path: '/analyse', replace: true};
     } else {
         log.debug('redirect to /landing');
         return {path: '/landing', replace: true};

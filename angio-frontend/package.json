@@ -21,6 +21,7 @@
     "lodash": "latest",
     "loglevel": "^1.6.1",
     "loglevel-plugin-prefix": "^0.8.4",
+    "reflect-metadata": "^0.1.13",
     "vue": "^2.6.6",
     "vue-bus": "latest",
     "vue-class-component": "^6.0.0",

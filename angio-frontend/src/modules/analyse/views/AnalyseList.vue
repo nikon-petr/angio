@@ -1,14 +1,22 @@
 <template>
-    <v-flex>
-        <BaseSubheader
-                v-bind:value="$t('analyse.view.analyseList.subheader')"
-        ></BaseSubheader>
+    <StackLayout>
+        <v-flex xs12>
+            <BaseSubheader
+                    v-bind:value="$t('analyse.view.analyseList.subheader')"
+            ></BaseSubheader>
+        </v-flex>
 
-        <AnalyseListFilter
-                v-bind:locale="locale"
-                v-on:send-analyse-filter="sendAnalyseFilter"
-        ></AnalyseListFilter>
-    </v-flex>
+        <v-flex xs12>
+            <AnalyseListFilter
+                    v-bind:locale="locale"
+                    v-on:send-analyse-filter="sendAnalyseFilter"
+            ></AnalyseListFilter>
+        </v-flex>
+
+        <v-flex xs12>
+            <AnalyseListTable></AnalyseListTable>
+        </v-flex>
+    </StackLayout>
 </template>
 
 <script lang="ts">
@@ -18,9 +26,11 @@
     import {State} from 'vuex-class';
     import {Locale} from '@/modules/user/store/userState';
     import {AnalyseFilterModel} from '@/modules/analyse/models/analyse';
+    import AnalyseListTable from "@/modules/analyse/components/AnalyseListTable.vue";
+    import StackLayout from "@/modules/common/components/StackLayout.vue";
 
     @Component({
-        components: {BaseSubheader, AnalyseListFilter},
+        components: {StackLayout, AnalyseListTable, BaseSubheader, AnalyseListFilter},
     })
     export default class AnalyseList extends Vue {
 
@@ -30,7 +40,6 @@
         public readonly locale!: Locale;
 
         public sendAnalyseFilter(model: AnalyseFilterModel) {
-
         }
     }
 </script>

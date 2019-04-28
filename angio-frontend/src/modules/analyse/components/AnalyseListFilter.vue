@@ -1,95 +1,134 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <v-card>
-        <v-card-text class="pa-0">
-            <v-container fluid class="pb-0">
-                <v-layout row wrap justify-space-between align-content-space-around>
-                    <v-flex xs12>
-                        <v-text-field
-                                v-model="analyseFilterModel.search"
-                                v-bind:label="$t('analyse.component.analyseListFilter.search')"
-                                v-bind:append-outer-icon="extended ? 'expand_less' : 'expand_more'"
-                                v-on:click:append-outer="extended = !extended"
-                                prepend-inner-icon="search"
-                                clearable
-                                outline
-                        ></v-text-field>
-                    </v-flex>
-                </v-layout>
-                <v-expand-transition>
-                    <v-layout
-                            v-show="extended"
-                            row
-                            wrap
-                            grid-list-md
-                            justify-space-between
-                            align-content-space-around
+<template>
+    <div>
+        <v-flex xs12 pa-0 ref="menuActivator">
+            <v-menu
+                    v-model="menu"
+                    v-bind:close-on-content-click="false"
+                    v-bind:min-width="menuWidth()"
+                    v-bind:max-width="menuWidth()"
+                    v-bind:attach="$refs.menuActivator"
+                    offset-y
+                    offset-x
+                    nudge-right="104"
+                    nudge-bottom="104"
+                    bottom
+                    left
+            >
+                <template v-slot:activator="{ on }">
+                    <v-text-field
+                            v-model="analyseFilterModel.search"
+                            v-bind:label="$t('analyse.component.analyseListFilter.search')"
+                            type="search"
+                            prepend-inner-icon="search"
+                            clearable
+                            hide-details
+                            solo
                     >
-                        <v-flex xl8 lg8 md8 sm12 xs12>
-                            <v-combobox
-                                    v-model="analyseFilterModel.statuses"
-                                    v-bind:items="statuses"
-                                    v-bind:item-text="(item) => $t(item.text)"
-                                    v-bind:label="$t('analyse.component.analyseListFilter.statusField')"
-                                    v-bind:return-object="false"
-                                    multiple
-                                    clearable
-                                    small-chips
-                                    outline
-                            >
-                                <template v-slot:selection="data">
-                                    <v-chip
-                                            v-bind:key="JSON.stringify(data.item)"
-                                            v-bind:selected="data.selected"
-                                            v-bind:disabled="data.disabled"
-                                            v-on:input="data.parent.selectItem(data.item)"
-                                            class="v-chip--select-multi caption"
-                                            small
-                                    >
-                                        {{ $t(statuses.find(status => status.value === data.item).text) }}
-                                        <v-icon
-                                                v-on:click="data.parent.selectItem(data.item)"
+                        <template slot="append">
+                            <v-btn icon
+                                   v-on="on">
+                                <v-icon>filter_list</v-icon>
+                            </v-btn>
+                        </template>
+                    </v-text-field>
+                </template>
+
+                <v-card>
+                    <v-container fluid>
+                        <v-layout
+                                row
+                                wrap
+                                grid-list-md
+                                justify-space-between
+                                align-content-space-around
+                        >
+                            <v-flex xl3 lg6 md6 sm12 xs12>
+                                <PeriodDatePicker
+                                        v-bind:start-date.sync="analyseFilterModel.startDate"
+                                        v-bind:end-date.sync="analyseFilterModel.endDate"
+                                        v-bind:single-date.sync="analyseFilterModel.singleDate"
+                                        v-bind:locale="locale"
+                                        v-bind:isPeriod="isPeriod"
+                                ></PeriodDatePicker>
+                            </v-flex>
+
+                            <v-flex xl3 lg6 md6 sm12 xs12>
+                                <v-switch
+                                        v-model="isPeriod"
+                                        v-bind:label="$t('analyse.component.analyseListFilter.period')"
+                                        hide-details
+                                ></v-switch>
+                            </v-flex>
+
+                            <v-flex xl3 lg4 md5 sm12 xs12>
+                                <v-combobox
+                                        v-model="analyseFilterModel.statuses"
+                                        v-bind:items="statuses"
+                                        v-bind:item-text="(item) => $t(item.text)"
+                                        v-bind:label="$t('analyse.component.analyseListFilter.statusField')"
+                                        v-bind:return-object="false"
+                                        multiple
+                                        clearable
+                                        small-chips
+                                        hide-details
+                                        outline
+                                >
+                                    <template v-slot:selection="data">
+                                        <v-chip
+                                                v-bind:key="JSON.stringify(data.item)"
+                                                v-bind:selected="data.selected"
+                                                v-bind:disabled="data.disabled"
+                                                v-on:input="data.parent.selectItem(data.item)"
+                                                class="v-chip--select-multi caption"
                                                 small
-                                        >close
-                                        </v-icon>
-                                    </v-chip>
-                                </template>
-                                <template v-slot:no-data>
-                                    <v-list-tile>
-                                        <v-list-tile-content>
-                                            <v-list-tile-title>
-                                                {{ $t('analyse.component.analyseListFilter.statusWithoutMatches') }}
-                                            </v-list-tile-title>
-                                        </v-list-tile-content>
-                                    </v-list-tile>
-                                </template>
-                            </v-combobox>
-                        </v-flex>
-                        <v-flex xl3 lg3 md3 sm4 xs4>
-                            <v-checkbox
-                                    v-model="analyseFilterModel.isStarred"
-                                    v-bind:label="$t('analyse.component.analyseListFilter.starred')"
-                            ></v-checkbox>
-                        </v-flex>
+                                        >
+                                            {{ $t(statuses.find(status => status.value === data.item).text) }}
+                                            <v-icon
+                                                    v-on:click="data.parent.selectItem(data.item)"
+                                                    small
+                                            >close
+                                            </v-icon>
+                                        </v-chip>
+                                    </template>
+                                    <template v-slot:no-data>
+                                        <v-list-tile>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title>
+                                                    {{ $t('analyse.component.analyseListFilter.statusWithoutMatches') }}
+                                                </v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-list-tile>
+                                    </template>
+                                </v-combobox>
+                            </v-flex>
 
-                        <v-flex xl3 lg3 md3 sm4 xs4>
-                            <v-checkbox
-                                    v-model="isPeriod"
-                                    v-bind:label="$t('analyse.component.analyseListFilter.period')"
-                            ></v-checkbox>
-                        </v-flex>
+                            <v-flex xl3 lg8 md7 sm12 xs12>
+                                <v-checkbox
+                                        v-model="analyseFilterModel.isStarred"
+                                        v-bind:label="$t('analyse.component.analyseListFilter.starred')"
+                                        hide-details
+                                ></v-checkbox>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-card>
+            </v-menu>
+        </v-flex>
 
-                        <v-flex xl8 lg8 md8 sm12 xs12>
-                            <PeriodDatePicker
-                                    v-bind:locale="locale"
-                                    v-bind:isPeriod="isPeriod"
-                                    v-on:send-period="onPeriodDataChanged"
-                            ></PeriodDatePicker>
-                        </v-flex>
-                    </v-layout>
-                </v-expand-transition>
-            </v-container>
-        </v-card-text>
-    </v-card>
+        <v-expand-transition appear>
+            <v-flex xs12 pt-4 pb-0 px-0
+                    v-if="showFilterLabels()">
+                <AnalyseListFilterChipsList
+                        v-bind:search.sync="analyseFilterModel.search"
+                        v-bind:start-date.sync="analyseFilterModel.startDate"
+                        v-bind:end-date.sync="analyseFilterModel.endDate"
+                        v-bind:single-date.sync="analyseFilterModel.singleDate"
+                        v-bind:statuses.sync="analyseFilterModel.statuses"
+                        v-bind:isStarred.sync="analyseFilterModel.isStarred"
+                ></AnalyseListFilterChipsList>
+            </v-flex>
+        </v-expand-transition>
+    </div>
 </template>
 
 <script lang="ts">
@@ -97,12 +136,12 @@
     import {AnalyseFilterModel, AnalyseStatusType} from '@/modules/analyse/models/analyse';
     import {Locale} from '@/modules/user/store/userState';
     import PeriodDatePicker from '@/modules/common/components/PeriodDatePicker.vue';
-    import {PeriodDateModel} from '@/modules/common/models/PeriodDateModel';
     import {AnalyseStatusRepresentation} from '@/modules/analyse/helpers/representation';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
+    import AnalyseListFilterChipsList from "@/modules/analyse/components/AnalyseListFilterChipsList.vue";
 
     @Component({
-        components: {PeriodDatePicker},
+        components: {AnalyseListFilterChipsList, PeriodDatePicker},
     })
     export default class AnalyseListFilter extends Vue {
 
@@ -118,21 +157,27 @@
 
         public isPeriod: boolean = true;
 
-        public extended: boolean = false;
+        public menu: boolean = false;
 
         public analyseFilterModel: AnalyseFilterModel = {
             search: undefined,
             statuses: [],
             startDate: undefined,
             endDate: undefined,
-            date: undefined,
+            singleDate: undefined,
             isStarred: undefined
         };
 
-        public onPeriodDataChanged(periodDateModel: PeriodDateModel) {
-            this.analyseFilterModel.date = periodDateModel.date;
-            this.analyseFilterModel.startDate = periodDateModel.startDate;
-            this.analyseFilterModel.endDate = periodDateModel.endDate;
+        public menuWidth(): number {
+            // @ ts-ignore
+            return this.$refs.menuActivator && this.$refs.menuActivator.clientWidth ? this.$refs.menuActivator.clientWidth : 'auto';
+        }
+
+        public showFilterLabels() {
+            return this.analyseFilterModel.search
+                || (this.analyseFilterModel.startDate && this.analyseFilterModel.endDate)
+                || this.analyseFilterModel.singleDate
+                || this.analyseFilterModel.isStarred;
         }
 
         @Emit(CommonEvent.SEND_FORM)

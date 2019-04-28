@@ -1,10 +1,12 @@
 <template>
-    <div v-if="show()" style="display: contents">
-        <slot></slot>
-    </div>
-    <div v-else="!show()" style="display: contents">
-        <slot name="not-authorized"></slot>
-    </div>
+    <transition name="expand" appear>
+        <div key="content" v-if="show()" style="display: contents">
+            <slot></slot>
+        </div>
+        <div key="not-authorized" v-else="!show()" style="display: contents">
+            <slot name="not-authorized"></slot>
+        </div>
+    </transition>
 </template>
 
 <script lang="ts">

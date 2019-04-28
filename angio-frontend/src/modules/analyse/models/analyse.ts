@@ -42,6 +42,6 @@ export interface AnalyseFilterModel {
     statuses?: AnalyseStatusType[];
     startDate?: Date;
     endDate?: Date;
-    date?: Date;
+    singleDate?: Date;
     isStarred?: boolean;
 }

@@ -1,14 +1,8 @@
 <template>
     <v-content>
-        <v-container fluid fill-height>
-            <v-layout class="px-4" wrap>
-                <transition name="slide-x-transition" mode="out-in">
-
-                    <router-view></router-view>
-
-                </transition>
-            </v-layout>
-        </v-container>
+        <transition name="slide-x-transition" mode="out-in">
+            <router-view></router-view>
+        </transition>
     </v-content>
 </template>
 

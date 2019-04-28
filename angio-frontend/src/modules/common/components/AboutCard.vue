@@ -1,5 +1,5 @@
 <template>
-    <v-layout justify-center align-center>
+    <CentredLayout>
         <v-card>
             <v-card-text>
                 <span class="text--secondary subheading">{{ $t('common.view.about.app') }}</span><br>
@@ -14,13 +14,16 @@
                 <a href="https://github.com/Karkavin" target="_blank">{{ $t('common.view.about.artem') }}</a><br>
             </v-card-text>
         </v-card>
-    </v-layout>
+    </CentredLayout>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
+    import CentredLayout from '@/modules/common/components/CentredLayout.vue';
 
-    @Component
+    @Component({
+        components: {CentredLayout}
+    })
     export default class About extends Vue {
 
         @Prop()
