@@ -28,8 +28,6 @@
                             <v-tooltip
                                     left
                                     open-delay="600"
-                                    color="rgba(0, 0, 0, 0)"
-                                    content-class="elevation-0"
                             >
                                 <template v-slot:activator="{ on: tooltip }">
                                     <v-btn icon
@@ -38,7 +36,7 @@
                                         <v-icon>filter_list</v-icon>
                                     </v-btn>
                                 </template>
-                                <span>Расширеный поиск</span>
+                                <span>{{ $t('analyse.component.analyseListFilter.field.search.button.advancedSearch.tooltip') }}</span>
                             </v-tooltip>
                         </template>
                         <v-card>
@@ -129,17 +127,15 @@
         </v-flex>
 
         <v-expand-transition appear>
-            <v-flex xs12 pt-4 pb-0 px-0
-                    v-if="showFilterLabels()">
-                <AnalyseListFilterChipsList
-                        v-bind:search.sync="analyseFilterModel.search"
-                        v-bind:start-date.sync="analyseFilterModel.startDate"
-                        v-bind:end-date.sync="analyseFilterModel.endDate"
-                        v-bind:single-date.sync="analyseFilterModel.singleDate"
-                        v-bind:statuses.sync="analyseFilterModel.statuses"
-                        v-bind:isStarred.sync="analyseFilterModel.isStarred"
-                ></AnalyseListFilterChipsList>
-            </v-flex>
+            <AnalyseListFilterChipsList
+                    v-if="showFilterLabels()"
+                    v-bind:search.sync="analyseFilterModel.search"
+                    v-bind:start-date.sync="analyseFilterModel.startDate"
+                    v-bind:end-date.sync="analyseFilterModel.endDate"
+                    v-bind:single-date.sync="analyseFilterModel.singleDate"
+                    v-bind:statuses.sync="analyseFilterModel.statuses"
+                    v-bind:isStarred.sync="analyseFilterModel.isStarred"
+            ></AnalyseListFilterChipsList>
         </v-expand-transition>
     </div>
 </template>
@@ -150,7 +146,7 @@
     import PeriodDatePicker from '@/modules/common/components/PeriodDatePicker.vue';
     import {AnalyseStatusRepresentation} from '@/modules/analyse/helpers/representation';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
-    import AnalyseListFilterChipsList from "@/modules/analyse/components/AnalyseListFilterChipsList.vue";
+    import AnalyseListFilterChipsList from '@/modules/analyse/components/AnalyseListFilterChipsList.vue';
 
     @Component({
         components: {AnalyseListFilterChipsList, PeriodDatePicker},
@@ -187,9 +183,10 @@
 
         public showFilterLabels() {
             return this.analyseFilterModel.search
-                || (this.analyseFilterModel.startDate && this.analyseFilterModel.endDate)
-                || this.analyseFilterModel.singleDate
-                || this.analyseFilterModel.isStarred;
+                    || (this.analyseFilterModel.statuses && this.analyseFilterModel.statuses.length > 0)
+                    || (this.analyseFilterModel.startDate && this.analyseFilterModel.endDate)
+                    || this.analyseFilterModel.singleDate
+                    || this.analyseFilterModel.isStarred;
         }
 
         @Emit(CommonEvent.SEND_FORM)

@@ -2,18 +2,18 @@
     <v-layout row align-center>
         <v-flex xs6 v-show="isPeriod">
             <SingleDatePicker
-                    v-bind:value="startDate"
+                    v-bind:date="startDate"
                     v-bind:locale="locale"
                     v-bind:label="$t('common.component.periodDatePicker.startDate')"
-                    v-on:change="(e) => $emit('update:startDate', e)"
+                    v-on:change="(e) => $emit('update:start-date', e)"
             ></SingleDatePicker>
         </v-flex>
         <v-flex xs6 v-show="isPeriod" pl-2>
             <SingleDatePicker
-                    v-bind:value="endDate"
+                    v-bind:date="endDate"
                     v-bind:locale="locale"
                     v-bind:label="$t('common.component.periodDatePicker.endDate')"
-                    v-on:change="(e) => $emit('update:endDate', e)"
+                    v-on:change="(e) => $emit('update:end-date', e)"
             ></SingleDatePicker>
         </v-flex>
         <v-flex xs6 v-show="!isPeriod">
@@ -21,7 +21,7 @@
                     v-bind:date="singleDate"
                     v-bind:locale="locale"
                     v-bind:label="$t('common.component.periodDatePicker.singleDate')"
-                    v-on:change="(e) => $emit('update:date', e)"
+                    v-on:change="(e) => $emit('update:single-date', e)"
             ></SingleDatePicker>
         </v-flex>
     </v-layout>

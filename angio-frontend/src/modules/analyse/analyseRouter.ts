@@ -4,5 +4,12 @@ import {AuthPredicate} from '@/modules/common/helpers/authPredicate';
 import {UserPermission} from '@/modules/user/store/userState';
 
 export const analyseRouterConfig: RouteConfig[] = [
-    {path: '/analyse', component: AnalyseList, meta: {auth: AuthPredicate.hasPermissions([UserPermission.ANALYSE_VIEW ])}}
+    {
+        path: '/analyse',
+        component: AnalyseList,
+        meta: {
+            title: 'analyse.view.analyseList.title',
+            auth: AuthPredicate.hasPermissions([UserPermission.ANALYSE_VIEW ])
+        }
+    }
 ];

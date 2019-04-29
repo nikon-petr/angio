@@ -1,20 +1,19 @@
 <template>
     <v-dialog
             v-model="modal"
+            v-bind:return-value.sync="dateString"
             ref="dialog"
-            persistent
-            lazy
-            full-width
             width="290px"
+            persistent
+            full-width
+            lazy
     >
         <template v-slot:activator="{ on }">
             <v-text-field
                     v-model="formattedDate"
                     v-bind:label="label"
-                    v-on:focusin="modal = true"
-                    v-on:click:clear.stop="clearDateValue"
-                    placeholder="дд.мм.гггг"
-                    ref="dateTextField"
+                    v-bind:placeholder="$t('common.component.singleDatePicker.placeholder')"
+                    v-on="on"
                     prepend-inner-icon="event"
                     readonly
                     clearable
@@ -27,8 +26,22 @@
                 v-bind:locale="locale"
         >
             <v-spacer></v-spacer>
-            <v-btn flat round color="primary" v-on:click="modal = false">Cancel</v-btn>
-            <v-btn flat round color="primary" v-on:click="onDateSelected">OK</v-btn>
+            <v-btn
+                    v-on:click="modal = false"
+                    round
+                    flat
+            >
+                {{ $t('common.component.singleDatePicker.button.cancel') }}
+            </v-btn>
+            <v-btn
+                    v-bind:disabled="!dateString"
+                    v-on:click="$refs.dialog.save(dateString)"
+                    color="success"
+                    round
+                    flat
+            >
+                {{ $t('common.component.singleDatePicker.button.ok') }}
+            </v-btn>
         </v-date-picker>
     </v-dialog>
 </template>
@@ -46,49 +59,27 @@
         @Prop()
         public readonly label!: string;
 
+        @Model(CommonEvent.CHANGE)
+        public readonly date?: Date;
+
         public modal: boolean = false;
 
-        @Model('send-selected-date', {type: Date})
-        public readonly date!: Date;
-
-        public dateValue?: Date | null = null;
-
-        @Watch('date', {immediate: true})
-        public onDateChange(newVal: Date, oldVal: Date) {
-            this.dateValue = newVal;
+        get dateString(): string | undefined {
+            return this.date ? this.date.toISOString().substr(0, 10) : '';
         }
 
-        get dateString(): string {
-            return this.dateValue ? this.dateValue.toISOString().substr(0, 10) : '';
+        set dateString(value: string | undefined) {
+            this.$emit(CommonEvent.CHANGE, value ? new Date(value) : undefined);
         }
 
-        set dateString(value: string) {
-            this.dateValue = new Date(value);
-        }
-
-        get formattedDate(): string {
+        get formattedDate(): string | undefined {
             // @ts-ignore
-            return this.dateValue ? this.$moment(this.dateValue, 'YYYY-MM-DD').format('DD.MM.YYYY') : this.dateValue;
+            return this.date ? this.$moment(this.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : undefined;
         }
 
-        set formattedDate(value: string) {
+        set formattedDate(value: string | undefined) {
             // @ts-ignore
-            this.dateValue = value ? this.$moment(this.dateValue, 'YYYY-MM-DD').toDate() : undefined;
-        }
-
-        public clearDateValue() {
-            this.dateValue = undefined;
-            this.onDateSelected();
-            this.$nextTick(() => {
-                // @ts-ignore
-                this.$refs.dateTextField.blur();
-            })
-        }
-
-        @Emit(CommonEvent.CHANGE)
-        public onDateSelected() {
-            this.modal = false;
-            return this.dateValue;
+            this.dateValue = this.$emit(CommonEvent.CHANGE, value ? this.$moment(this.dateValue, 'DD.MM.YYYY').toDate() : undefined);
         }
     }
 </script>
