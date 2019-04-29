@@ -12,7 +12,7 @@
                     v-if="search"
                     v-on:input="() => $emit('update:search', undefined)"
                     key="search"
-                    class="ml-0 mt-4 elevation-2"
+                    class="mt-4 elevation-2"
                     label
                     close
             >
@@ -36,7 +36,7 @@
                     label
                     close
             >
-                {{ $t('analyse.component.analyseListFilter.chips.singleDate', [formatDate(date)]) }}
+                {{ $t('analyse.component.analyseListFilter.chips.singleDate', [formatDate(singleDate)]) }}
             </v-chip>
             <v-chip
                     v-if="startDate && endDate"
@@ -53,7 +53,7 @@
                     v-if="isStarred"
                     v-on:input="() => $emit('update:is-starred', undefined)"
                     key="isStarred"
-                    class="mt-4 mr-0 elevation-2"
+                    class="mt-4 elevation-2"
                     label
                     close
             >

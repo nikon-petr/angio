@@ -2,7 +2,7 @@
     <div>
         <v-flex xs12 pa-0 ref="menuActivator">
             <v-text-field
-                    v-model="analyseFilterModel.search"
+                    v-model="search"
                     v-bind:label="$t('analyse.component.analyseListFilter.search')"
                     type="search"
                     browser-autocomplete="off"
@@ -175,6 +175,14 @@
             singleDate: undefined,
             isStarred: undefined
         };
+
+        set search(value: string | undefined) {
+            this.analyseFilterModel.search = value ? value : undefined;
+        }
+
+        get search(): string | undefined {
+            return this.analyseFilterModel.search;
+        }
 
         public menuWidth(): number {
             // @ ts-ignore
