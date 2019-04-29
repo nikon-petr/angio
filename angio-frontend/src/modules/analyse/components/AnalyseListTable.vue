@@ -56,7 +56,7 @@
     @Component
     export default class AnalyseListTable extends Vue {
 
-        public pagination: {
+        public pagination = {
             sortBy: 'name'
         };
 

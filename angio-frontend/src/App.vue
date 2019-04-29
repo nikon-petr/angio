@@ -1,5 +1,5 @@
 <template>
-    <v-app :dark="darkThemeEnabled" id="inspire">
+    <v-app v-bind:dark="darkThemeEnabled">
         <TheDrawer></TheDrawer>
         <TheNotification></TheNotification>
         <TheHeader

@@ -8,7 +8,7 @@ import {UserApiService} from '@/modules/user/services/userApiService';
 import JwtUtils from '@/utils/jwtUtils';
 import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageService';
 import {UserAuthModel} from '@/modules/user/models/user';
-import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
+import {Locale, UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
 import {namespace} from 'vuex-class';
 import {downNotificationPolling, initiateNotificationPolling} from '@/modules/notification/store/notificationStore';
 import {cancelAllRequests, deleteAxiosAccessToken, setAxiosAccessToken} from '@/plugins/axios';

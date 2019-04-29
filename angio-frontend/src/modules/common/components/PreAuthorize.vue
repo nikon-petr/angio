@@ -17,20 +17,20 @@
     @Component
     export default class PreAuthorize extends Vue {
 
-        @Prop(Boolean)
-        public readonly isAuthenticated!: boolean;
-
-        @Prop(Boolean)
-        public readonly isAnonymous!: boolean;
+        @Prop()
+        public readonly isAuthenticated?: boolean;
 
         @Prop()
-        public readonly hasAnyPermission: UserPermission[] | undefined;
+        public readonly isAnonymous?: boolean;
 
         @Prop()
-        public readonly hasAnyOfGivenPermissions: UserPermission[] | undefined;
+        public readonly hasAnyPermission?: UserPermission[];
 
         @Prop()
-        public readonly hasPermissions: UserPermission[] | undefined;
+        public readonly hasAnyOfGivenPermissions?: UserPermission[];
+
+        @Prop()
+        public readonly hasPermissions?: UserPermission[];
 
         @userModule.Getter('isAuthenticated')
         public readonly isAuthenticatedGetter!: boolean;

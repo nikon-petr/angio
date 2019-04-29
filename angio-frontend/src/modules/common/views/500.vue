@@ -1,7 +1,7 @@
 <template>
     <Error
-            code="500"
-            :description="$t('common.view.500.description')"
+            v-bind:code="500"
+            v-bind:description="$t('common.view.500.description')"
     ></Error>
 </template>
 

@@ -24,7 +24,7 @@
         </template>
         <v-date-picker
                 v-model="dateString"
-                v-bind:locale="locale.toString()"
+                v-bind:locale="locale"
         >
             <v-spacer></v-spacer>
             <v-btn flat round color="primary" v-on:click="modal = false">Cancel</v-btn>
@@ -35,14 +35,13 @@
 
 <script lang="ts">
     import {Component, Emit, Model, Prop, Vue, Watch} from 'vue-property-decorator';
-    import {Locale} from '@/modules/user/store/userState';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
 
     @Component
     export default class SingleDatePicker extends Vue {
 
         @Prop()
-        public readonly locale!: Locale;
+        public readonly locale!: string;
 
         @Prop()
         public readonly label!: string;

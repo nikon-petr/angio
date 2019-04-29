@@ -1,7 +1,7 @@
 <template>
     <Error
-            code="403"
-            :description="$t('user.view.403.description')"
+            v-bind:code="403"
+            v-bind:description="$t('user.view.403.description')"
     ></Error>
 </template>
 

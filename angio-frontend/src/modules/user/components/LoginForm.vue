@@ -14,6 +14,7 @@
                                 prepend-inner-icon="person"
                                 counter
                                 maxlength="120"
+                                browser-autocomplete="off"
                                 outline
                                 required
                         ></v-text-field>

@@ -1,5 +1,5 @@
 <template>
-    <transition name="scale-transition" mode="" appear>
+    <transition-group name="scale-transition" mode="" appear>
         <v-chip
                 v-if="search"
                 v-on:input="() => $emit('update:search', undefined)"
@@ -45,7 +45,7 @@
         >
             {{ $t('analyse.component.analyseListFilter.chips.isStarred') }}
         </v-chip>
-    </transition>
+    </transition-group>
 </template>
 
 <script lang="ts">

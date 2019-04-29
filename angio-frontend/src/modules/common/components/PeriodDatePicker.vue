@@ -29,7 +29,6 @@
 
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-    import {Locale} from '@/modules/user/store/userState';
     import SingleDatePicker from '@/modules/common/components/SingleDatePicker.vue';
 
     @Component({
@@ -38,19 +37,19 @@
     export default class PeriodDatePicker extends Vue {
 
         @Prop()
-        public readonly locale!: Locale;
+        public readonly locale!: string;
 
         @Prop()
-        public isPeriod!: boolean;
+        public readonly isPeriod!: boolean;
 
         @Prop()
-        public startDate!: Date;
+        public readonly startDate!: Date;
 
         @Prop()
-        public endDate!: Date;
+        public readonly endDate!: Date;
 
         @Prop()
-        public singleDate!: Date;
+        public readonly singleDate!: Date;
 
         @Watch('isPeriod')
         public onIsPeriodChanged(newVal: boolean, oldVal: boolean) {

@@ -12,9 +12,6 @@
 
         @Prop()
         public readonly height!: string;
-
-        @Prop()
-        public readonly notifications!: any;
     }
 </script>
 
