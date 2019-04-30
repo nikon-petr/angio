@@ -141,12 +141,13 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
+    import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator';
     import {AnalyseFilterModel, AnalyseStatusType} from '@/modules/analyse/models/analyse';
     import PeriodDatePicker from '@/modules/common/components/PeriodDatePicker.vue';
     import {AnalyseStatusRepresentation} from '@/modules/analyse/helpers/representation';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
     import AnalyseListFilterChipsList from '@/modules/analyse/components/AnalyseListFilterChipsList.vue';
+    import {Dictionary} from 'vue-router/types/router';
 
     @Component({
         components: {AnalyseListFilterChipsList, PeriodDatePicker},
@@ -167,14 +168,21 @@
 
         public menuOpen: boolean = false;
 
-        public analyseFilterModel: AnalyseFilterModel = {
-            search: undefined,
-            statuses: [],
-            startDate: undefined,
-            endDate: undefined,
-            singleDate: undefined,
-            isStarred: undefined
-        };
+        public analyseFilterModel!: AnalyseFilterModel;
+
+        // initiate analyseFilterModel in date hook because $route inject after vue instance created
+        public data() {
+            return {
+                analyseFilterModel: {
+                    search: this.$route.query && this.$route.query.search ? this.$route.query.search as string : undefined,
+                    statuses: this.$route.query && this.$route.query.statuses ? this.$route.query.statuses as AnalyseStatusType[] : [],
+                    startDate: this.$route.query && this.$route.query.startDate ? this.$moment(this.$route.query.startDate, 'YYYY-MM-DD').toDate() : undefined,
+                    endDate: this.$route.query && this.$route.query.endDate ? this.$moment(this.$route.query.endDate, 'YYYY-MM-DD').toDate() : undefined,
+                    singleDate: this.$route.query && this.$route.query.singleDate ? this.$moment(this.$route.query.singleDate, 'YYYY-MM-DD').toDate() : undefined,
+                    isStarred: this.$route.query && this.$route.query.isStarred ? this.$route.query.isStarred === 'true' : undefined
+                }
+            }
+        }
 
         set search(value: string | undefined) {
             this.analyseFilterModel.search = value ? value : undefined;
@@ -195,6 +203,28 @@
                     || (this.analyseFilterModel.startDate && this.analyseFilterModel.endDate)
                     || this.analyseFilterModel.singleDate
                     || this.analyseFilterModel.isStarred;
+        }
+
+        @Watch('analyseFilterModel', {deep: true})
+        public onAnalyseFilterChange(newVal: AnalyseFilterModel, oldVal: AnalyseFilterModel) {
+            const query: Dictionary<string> = {...newVal} as Dictionary<string>;
+
+            if (newVal.startDate) {
+                query.startDate = this.$moment(newVal.startDate).format('YYYY-MM-DD');
+            }
+
+            if (newVal.endDate) {
+                query.endDate = this.$moment(newVal.endDate).format('YYYY-MM-DD');
+            }
+
+            if (newVal.singleDate) {
+                query.singleDate = this.$moment(newVal.singleDate).format('YYYY-MM-DD');
+            }
+
+            this.$router.replace({
+                path: this.$route.path,
+                query
+            })
         }
 
         @Emit(CommonEvent.SEND_FORM)
