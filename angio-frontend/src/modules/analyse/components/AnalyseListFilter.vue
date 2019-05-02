@@ -154,6 +154,10 @@
     })
     export default class AnalyseListFilter extends Vue {
 
+        $refs!: {
+            menuActivator: HTMLFormElement
+        };
+
         @Prop()
         public readonly locale!: string;
 
@@ -192,7 +196,7 @@
             return this.analyseFilterModel.search;
         }
 
-        public menuWidth(): number {
+        public menuWidth(): number | 'auto' {
             // @ ts-ignore
             return this.$refs.menuActivator && this.$refs.menuActivator.clientWidth ? this.$refs.menuActivator.clientWidth : 'auto';
         }

@@ -1,7 +1,6 @@
 // https://docs.cypress.io/api/introduction/api.html
-/// <reference types="cypress" />
 
-describe('Home page', () => {
+describe('Home page redirection', () => {
 
   it('Visits app as anonymous user', () => {
     cy.visit('/');

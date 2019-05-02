@@ -5,3 +5,9 @@ import 'moment/locale/ru';
 import VueMoment from 'vue-moment';
 
 Vue.use(VueMoment, {moment});
+
+declare module 'vue/types/vue' {
+    export interface Vue {
+        $moment: typeof moment
+    }
+}

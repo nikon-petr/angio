@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import ls from 'local-storage';
-import axios from 'axios';
+import axios, {AxiosStatic} from 'axios';
 import root from 'loglevel';
 
 const log = root.getLogger('plugins/axios');
@@ -53,3 +53,9 @@ axios.interceptors.request.use(function (config) {
 });
 
 Vue.prototype.$axios = axios;
+
+declare module 'vue/types/vue' {
+    export interface Vue {
+        $axios: AxiosStatic;
+    }
+}

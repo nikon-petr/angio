@@ -1,0 +1,32 @@
+{
+  "status": "SUCCESS",
+  "date": "2019-04-30T13:45:47Z",
+  "data": {
+    "id": "c28e3308-410b-11e9-b28d-0242ac130002",
+    "email": "doctor@example.com",
+    "organizationName": "Клиника глазных болезней СГМУ им. Разумовского",
+    "fullName": {
+      "firstname": "Геннадий",
+      "lastname": "Врачебный",
+      "patronymic": "Aдреевич"
+    },
+    "permissions": [
+      "PATIENT_REMOVE",
+      "PATIENT_CREATE",
+      "PATIENT_EDIT",
+      "ANALYSE_CREATE",
+      "ANALYSE_EDIT",
+      "IMAGE_UPLOAD",
+      "ANALYSE_EXECUTE_ACTION",
+      "ANALYSE_REMOVE",
+      "PATIENT_VIEW",
+      "PUSH_NOTIFICATION_RECEIVE",
+      "ANALYSE_VIEW",
+      "TOKEN_REVOKE"
+    ],
+    "settings": {
+      "darkThemeEnabled": true,
+      "locale": "ru"
+    }
+  }
+}

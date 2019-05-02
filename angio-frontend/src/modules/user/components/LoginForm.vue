@@ -3,12 +3,19 @@
         <v-flex xs12 sm6 md5 lg4 xl3>
             <BaseSingleFormContainer v-bind:title="$t('user.component.loginForm.title')">
                 <template slot="form">
-                    <v-form v-model="valid" ref="form" v-on:submit.prevent="submitForm" id="login-form">
+                    <v-form
+                            v-model="valid"
+                            v-on:submit.prevent="submitForm"
+                            ref="form"
+                            id="login-form"
+                            data-test-id="login__form"
+                    >
                         <v-text-field
                                 v-model="form.username"
                                 v-bind:label="$t('user.component.loginForm.username.field')"
                                 v-bind:rules="[v => !!v || $t('user.component.loginForm.username.validation.NotEmpty')]"
                                 v-bind:disabled="fetching"
+                                data-test-id="username__input"
                                 type="text"
                                 name="username"
                                 prepend-inner-icon="person"
@@ -23,6 +30,7 @@
                                 v-bind:label="$t('user.component.loginForm.password.field')"
                                 v-bind:rules="[v => !!v || $t('user.component.loginForm.password.validation.NotEmpty')]"
                                 v-bind:disabled="fetching"
+                                data-test-id="password__input"
                                 type="password"
                                 id="password"
                                 name="password"
@@ -54,6 +62,7 @@
                     <v-btn
                             v-bind:disabled="!valid"
                             v-bind:loading="fetching"
+                            data-test-id="submit__button"
                             form="login-form"
                             type="submit"
                             color="success"
