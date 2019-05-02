@@ -11,6 +11,7 @@ import About from '@/modules/common/views/About.vue';
 import {analyseRouterConfig} from '@/modules/analyse/analyseRouter';
 import {hasAnyOfGivenPermissions, hasPermissions} from '@/modules/user/store/userStore';
 import {UserPermission} from '@/modules/user/store/userState';
+import Landing from '@/modules/common/views/Landing.vue';
 
 const log: Logger = root.getLogger('router');
 
@@ -22,6 +23,7 @@ let rootRouterConfig: RouteConfig[] = [
     {path: '/500', component: ServerError, meta: {title: 'common.view.500.title', auth: AuthPredicate.permitAll()}},
     {path: '/404', component: NotFound, meta: {title: 'common.view.404.title', auth: AuthPredicate.permitAll()}},
     {path: '*', redirect: '/404', meta: {auth: AuthPredicate.permitAll()}},
+    {path: '/landing', component: Landing, meta: {title: 'common.view.landing.title', auth: AuthPredicate.isAnonymous()}},
 ];
 
 rootRouterConfig = rootRouterConfig.concat(userRouterConfig, analyseRouterConfig);
