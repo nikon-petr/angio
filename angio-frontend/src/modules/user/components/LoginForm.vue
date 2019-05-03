@@ -41,7 +41,7 @@
                                 required
                         ></v-text-field>
                         <v-expand-transition>
-                            <ul v-if="unauthorized">
+                            <ul v-if="unauthorized" data-test-id="formMsg__list">
                                 <li class="red--text body-1">
                                     {{ $t('user.component.loginForm.password.validation.Unauthorized') }}
                                 </li>

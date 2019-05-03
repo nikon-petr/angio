@@ -77,6 +77,6 @@ export class AuthPredicate {
 
     private static redirectToLogin(to: Route, from: Route, next: any) {
         log.debug(`path ${to.path} only for authenticated users. redirect to login page`);
-        next({path: `${AuthPredicate.LOGIN_PATH}?next=${to.fullPath}`});
+        next({path: AuthPredicate.LOGIN_PATH, query: {next: to.fullPath}});
     }
 }

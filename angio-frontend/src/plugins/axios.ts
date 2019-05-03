@@ -21,6 +21,26 @@ if (!!ls.get('accessToken')) {
     setAxiosAccessToken(ls.get('accessToken'));
 }
 
+const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+
+axios.defaults.transformResponse = [(data: string) => {
+    let resp;
+
+    try {
+        resp = JSON.parse(data, (key, value) => {
+            if (typeof value === 'string' && dateFormat.test(value)) {
+                return new Date(value);
+            }
+
+            return value;
+        });
+    } catch (error) {
+        throw Error(`[requestClient] Error parsing response JSON data - ${JSON.stringify(error)}`)
+    }
+
+    return resp;
+}];
+
 export const OAUTH_CONFIG = {
     baseURL: process.env.VUE_APP_OAUTH_BASE_URL as string,
     auth: {

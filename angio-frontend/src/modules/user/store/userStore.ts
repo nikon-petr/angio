@@ -121,16 +121,18 @@ export const user = {
             startFetching(ctx);
             return UserApiService.getToken(credentials)
                 .then(async (userAuthResponse: AxiosResponse<UserAuthModel>) => {
-                    clearUser(ctx);
-                    const userAuth: UserAuth = {
-                        accessToken: userAuthResponse.data.access_token,
-                        refreshToken: userAuthResponse.data.refresh_token,
-                    };
-                    setAuth(ctx, userAuth);
 
                     setAxiosAccessToken(userAuthResponse.data.access_token);
 
                     await UserApiService.getMe().then((meResponse) => {
+
+                        clearUser(ctx);
+                        const userAuth: UserAuth = {
+                            accessToken: userAuthResponse.data.access_token,
+                            refreshToken: userAuthResponse.data.refresh_token,
+                        };
+                        setAuth(ctx, userAuth);
+
                         setUser(ctx, meResponse.data.data);
                         setSettings(ctx, meResponse.data.data.settings);
                     });
