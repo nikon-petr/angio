@@ -1,5 +1,5 @@
 module.exports = {
-    outputDir: "dist",
+    outputDir: "../angio-backend/src/main/resources/static/dist",
 
     devServer: {
         port: 8081,
