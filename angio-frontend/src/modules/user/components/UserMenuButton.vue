@@ -1,4 +1,4 @@
-<template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <div class="text-xs-center">
         <v-menu
                 min-width="400"
@@ -11,7 +11,7 @@
             <template v-slot:activator="{ on }">
                 <v-btn icon flat v-on="on">
                     <NotificationBadge
-                            v-bind:value="hasUnreadNotifications()">
+                            v-bind:value="hasUnreadNotifications">
                         <v-icon>person</v-icon>
                     </NotificationBadge>
                 </v-btn>
@@ -28,14 +28,14 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import {Action, Getter, State} from 'vuex-class';
 
     import UserMenu from '@/modules/user/components/UserMenu.vue';
     import NotificationBadge from '@/modules/notification/components/NotificationBadge.vue';
     import {UserState} from '@/modules/user/store/userState';
-    import {logout} from '@/modules/user/store/userStore';
-    import {State} from 'vuex-class';
-    import {NotificationState} from "@/modules/notification/store/notificationState";
-    import {hasUnreadNotifications, readNotifications} from "@/modules/notification/store/notificationStore";
+    import {UserAction} from '@/modules/user/store/userStore';
+    import {NotificationState} from '@/modules/notification/store/notificationState';
+    import {NotificationAction, NotificationGetter} from '@/modules/notification/store/notificationStore';
 
     @Component({
         components: {
@@ -45,23 +45,20 @@
     })
     export default class UserMenuButton extends Vue {
 
-        @State((state) => state.user)
-        public readonly user!: UserState;
-
         @State((state) => state.notification)
         public readonly notification!: NotificationState;
 
-        public hasUnreadNotifications(): boolean {
-            return hasUnreadNotifications(this.$store);
-        }
+        @Action(NotificationAction.READ_NOTIFICATIONS)
+        public readonly readNotifications!: (ids: string[]) => Promise<void>;
 
-        public readNotifications(ids: string[]) {
-            return readNotifications(this.$store, ids);
-        }
+        @Getter(NotificationGetter.HAS_UNREAD_NOTIFICATIONS)
+        public readonly hasUnreadNotifications!: boolean;
 
-        public logout() {
-            logout(this.$store);
-        }
+        @State((state) => state.user)
+        public readonly user!: UserState;
+
+        @Action(UserAction.LOGOUT)
+        public readonly logout!: () => Promise<void>;
     }
 </script>
 

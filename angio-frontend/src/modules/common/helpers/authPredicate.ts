@@ -1,13 +1,7 @@
 import store from '@/store';
-import {
-    hasAnyOfGivenPermissions,
-    hasAnyPermission,
-    hasPermissions,
-    isAnonymous,
-    isAuthenticated,
-} from '@/modules/user/store/userStore';
-import root, {Logger} from 'loglevel';
 import {Route} from 'vue-router';
+import root, {Logger} from 'loglevel';
+import {UserGetter} from '@/modules/user/store/userStore';
 import {UserPermission} from '@/modules/user/store/userState';
 
 const log: Logger = root.getLogger('router');
@@ -24,7 +18,7 @@ export class AuthPredicate {
 
     public static isAnonymous() {
         return (to: Route, from: Route, next: any): any => {
-            if (!isAnonymous(store)) {
+            if (!store.getters[UserGetter.IS_ANONYMOUS]) {
                 log.debug(`path ${to.path} only for anonymous users. redirect to default authenticated user page`);
                 next({path: AuthPredicate.HOME_PATH});
             }
@@ -33,7 +27,7 @@ export class AuthPredicate {
 
     public static isAuthenticated() {
         return (to: Route, from: Route, next: any): any => {
-            if (!isAuthenticated(store)) {
+            if (!store.getters[UserGetter.IS_AUTHENTICATED]) {
                 AuthPredicate.redirectToLogin(to, from, next);
             }
         };
@@ -41,9 +35,9 @@ export class AuthPredicate {
 
     public static hasAnyPermission() {
         return (to: Route, from: Route, next: any): any => {
-            if (!isAuthenticated(store)) {
+            if (!store.getters[UserGetter.IS_AUTHENTICATED]) {
                 AuthPredicate.redirectToLogin(to, from, next);
-            } else if (!hasAnyPermission(store)) {
+            } else if (!store.getters[UserGetter.HAS_ANY_PERMISSION]) {
                 log.debug(`path ${to.path} only for users with any permissions. ` +
                     'redirect to forbidden page');
                 next({path: AuthPredicate.FORBIDDEN_PATH});
@@ -53,9 +47,9 @@ export class AuthPredicate {
 
     public static hasAnyOfGivenPermissions(permissions: UserPermission[]) {
         return (to: Route, from: Route, next: any): any => {
-            if (!isAuthenticated(store)) {
+            if (!store.getters[UserGetter.IS_AUTHENTICATED]) {
                 AuthPredicate.redirectToLogin(to, from, next);
-            } else if (!hasAnyOfGivenPermissions(store)(permissions)) {
+            } else if (!store.getters[UserGetter.HAS_ANY_OF_GIVEN_PERMISSIONS](permissions)) {
                 log.debug(`path ${to.path} only for users with any of permissions: ${permissions}. ` +
                     'redirect to forbidden page');
                 next({path: AuthPredicate.FORBIDDEN_PATH});
@@ -65,9 +59,9 @@ export class AuthPredicate {
 
     public static hasPermissions(permissions: UserPermission[]) {
         return (to: Route, from: Route, next: any): any => {
-            if (!isAuthenticated(store)) {
+            if (!store.getters[UserGetter.IS_AUTHENTICATED]) {
                 AuthPredicate.redirectToLogin(to, from, next);
-            } else if (!hasPermissions(store)(permissions)) {
+            } else if (!store.getters[UserGetter.HAS_PERMISSIONS](permissions)) {
                 log.debug(`path ${to.path} only for users with permissions: ${permissions.toString()}. ` +
                     'redirect to forbidden page');
                 next({path: AuthPredicate.FORBIDDEN_PATH});

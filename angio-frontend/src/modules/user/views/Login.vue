@@ -1,7 +1,7 @@
 <template>
     <CentredLayout>
         <LoginForm
-                v-bind:submit="sendForm()"
+                v-bind:submit="authUser"
                 v-bind:next="next"
                 v-bind:fetching="fetching"
         ></LoginForm>
@@ -10,11 +10,10 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {Action, State} from 'vuex-class';
     import LoginForm from '@/modules/user/components/LoginForm.vue';
-    import store from '@/store';
-    import {authUser} from '@/modules/user/store/userStore';
+    import {UserAction} from '@/modules/user/store/userStore';
     import {UserCredentialsModel} from '@/modules/user/models/user';
-    import {State} from 'vuex-class';
     import CentredLayout from '@/modules/common/components/CentredLayout.vue';
 
     @Component({
@@ -31,9 +30,8 @@
         @State((state) => state.user.fetching)
         public readonly fetching!: boolean;
 
-        public sendForm() {
-            return (form: UserCredentialsModel) => authUser(store, form);
-        }
+        @Action(UserAction.AUTH_USER)
+        public readonly authUser!: (form: UserCredentialsModel) => Promise<void>;
     }
 </script>
 

@@ -1,9 +1,9 @@
 import Vue from 'vue';
-import {NotificationApiService} from '@/modules/notification/services/notificationApiService';
 import root from 'loglevel';
-import NotificationSoundService from '@/modules/notification/services/notificationSoundService';
-import {addNotification} from '@/modules/notification/store/notificationStore';
 import store from '@/store';
+import {NotificationApiService} from '@/modules/notification/services/notificationApiService';
+import NotificationSoundService from '@/modules/notification/services/notificationSoundService';
+import {NotificationMutation} from '@/modules/notification/store/notificationStore';
 
 const log = root.getLogger('NotificationLongPollingService');
 
@@ -35,7 +35,7 @@ export default class NotificationLongPollingService {
             .then((watchResponse) => {
 
                 log.debug(`get new notification: ${JSON.stringify(watchResponse.data.data)}`);
-                addNotification(store, watchResponse.data.data);
+                store.dispatch(NotificationMutation.ADD_NOTIFICATION, watchResponse.data.data);
                 Vue.notify({data: watchResponse.data.data});
                 NotificationSoundService.getInstance().playNewNotificationSound();
 

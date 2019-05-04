@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:e2e": "vue-cli-service test:e2e --mode development",
+    "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
@@ -34,8 +34,7 @@
     "vue-router": "^3.0.1",
     "vuetify": "^1.5.5",
     "vuex": "^3.0.1",
-    "vuex-class": "^0.3.2",
-    "vuex-typescript": "latest"
+    "vuex-class": "^0.3.2"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",

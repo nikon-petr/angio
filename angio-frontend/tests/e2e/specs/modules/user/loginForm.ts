@@ -1,6 +1,6 @@
 describe('Login', () => {
 
-    it('Login as doctor (successful)', () => {
+    it('Login as doctor (success)', () => {
 
         cy.server();
         cy.route('POST', `${Cypress.env('CYPRESS_API_BASE_URL')}/oauth/token`, 'fixture:modules/user/doctor_login.json');

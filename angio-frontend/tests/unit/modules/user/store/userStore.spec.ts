@@ -1,20 +1,13 @@
 import Vue, {VueConstructor} from 'vue';
 import Vuex, {Store} from 'vuex';
 import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import ls from 'local-storage';
 import flushPromises from 'flush-promises';
-import {createLocalVue} from '@vue/test-utils';
 import {cloneDeep} from 'lodash';
 import {RootState, storeOptions} from '@/store';
-import {
-    authUser,
-    hasAnyOfGivenPermissions,
-    hasAnyPermission,
-    hasPermissions,
-    isAuthenticated,
-    refreshAccessToken,
-} from '@/modules/user/store/userStore';
+import MockAdapter from 'axios-mock-adapter';
+import {createLocalVue} from '@vue/test-utils';
+import {UserAction, UserGetter} from '@/modules/user/store/userStore';
 import {UserCredentialsModel, UserInfoModel} from '@/modules/user/models/user';
 import {Response, ResponseStatus} from '@/modules/common/models/response';
 import {Locale, UserPermission} from '@/modules/user/store/userState';
@@ -126,17 +119,17 @@ describe('store/modules/user.js', () => {
         const store: Store<RootState> = new Vuex.Store<RootState>(cloneDeep(storeOptions));
 
         axiosMock
-            .onPost('/oauth/token')
+            .onPost(`${process.env.VUE_APP_OAUTH_BASE_URL}/oauth/token`)
             .reply(200, { access_token: accessToken, refresh_token: refreshToken })
             .onGet('/user/me')
             .reply(200, user);
 
         // when
-        await authUser(store, credentials);
+        await store.dispatch(UserAction.AUTH_USER, credentials);
 
         // then
         await flushPromises();
-        expect(isAuthenticated(store)).toBeTruthy();
+        expect(store.getters[UserGetter.IS_AUTHENTICATED]).toBeTruthy();
         expect(store.state.user.auth.accessToken).toBe(accessToken);
         expect(store.state.user.auth.refreshToken).toBe(refreshToken);
         expect(store.state.user.info.id).toBe(user.data.id);
@@ -172,7 +165,7 @@ describe('store/modules/user.js', () => {
         const store: Store<RootState> = new Vuex.Store<RootState>(cloneDeep(storeOptions));
 
         // when
-        const actual = hasPermissions(store)([
+        const actual = store.getters[UserGetter.HAS_PERMISSIONS]([
             UserPermission.ANALYSE_VIEW,
             UserPermission.ANALYSE_CREATE,
         ]);
@@ -190,7 +183,7 @@ describe('store/modules/user.js', () => {
         const store: Store<RootState> = new Vuex.Store<RootState>(cloneDeep(storeOptions));
 
         // when
-        const actual = hasPermissions(store)([
+        const actual = store.getters[UserGetter.HAS_PERMISSIONS]([
             UserPermission.ANALYSE_VIEW,
             UserPermission.IMAGE_UPLOAD_PURGE_UNUSED,
         ]);
@@ -208,7 +201,7 @@ describe('store/modules/user.js', () => {
         const store: Store<RootState> = new Vuex.Store<RootState>(cloneDeep(storeOptions));
 
         // when
-        const actual = hasPermissions(store)([]);
+        const actual = store.getters[UserGetter.HAS_PERMISSIONS]([]);
 
         // then
         expect(actual).toBeFalsy();
@@ -223,7 +216,7 @@ describe('store/modules/user.js', () => {
         const store: Store<RootState> = new Vuex.Store<RootState>(cloneDeep(storeOptions));
 
         // when
-        const actual = hasAnyOfGivenPermissions(store)([
+        const actual = store.getters[UserGetter.HAS_ANY_OF_GIVEN_PERMISSIONS]([
             UserPermission.ANALYSE_VIEW,
             UserPermission.ANALYSE_CREATE,
         ]);
@@ -241,7 +234,7 @@ describe('store/modules/user.js', () => {
         const store: Store<RootState> = new Vuex.Store<RootState>(cloneDeep(storeOptions));
 
         // when
-        const actual = hasAnyOfGivenPermissions(store)([
+        const actual = store.getters[UserGetter.HAS_ANY_OF_GIVEN_PERMISSIONS]([
             UserPermission.ANALYSE_VIEW,
             UserPermission.IMAGE_UPLOAD_PURGE_UNUSED,
         ]);
@@ -259,7 +252,7 @@ describe('store/modules/user.js', () => {
         const store: Store<RootState> = new Vuex.Store<RootState>(cloneDeep(storeOptions));
 
         // when
-        const actual = hasAnyPermission(store);
+        const actual = store.getters[UserGetter.HAS_ANY_PERMISSION];
 
         // then
         expect(actual).toBeTruthy();
@@ -272,7 +265,7 @@ describe('store/modules/user.js', () => {
         const store: Store<RootState> = new Vuex.Store<RootState>(cloneDeep(storeOptions));
 
         // when
-        const actual = hasAnyPermission(store);
+        const actual = store.getters[UserGetter.HAS_ANY_PERMISSION];
 
         // then
         expect(actual).toBeFalsy();
@@ -292,7 +285,7 @@ describe('store/modules/user.js', () => {
         const store: Store<RootState> = new Vuex.Store<RootState>(cloneDeep(storeOptions));
 
         axiosMock
-            .onPost('/oauth/token')
+            .onPost(`${process.env.VUE_APP_OAUTH_BASE_URL}/oauth/token`)
             .reply(200, {
                 access_token: refreshedAccessToken,
                 refresh_token: refreshToken,
@@ -300,11 +293,11 @@ describe('store/modules/user.js', () => {
             });
 
         // when
-        await refreshAccessToken(store);
+        await store.dispatch(UserAction.REFRESH_ACCESS_TOKEN);
 
         // then
         await flushPromises();
-        expect(isAuthenticated(store)).toBeTruthy();
+        expect(store.getters[UserGetter.IS_AUTHENTICATED]).toBeTruthy();
         expect(store.state.user.auth.accessToken).toBe(refreshedAccessToken);
         expect(store.state.user.auth.refreshToken).toBe(refreshToken);
         expect([...store.state.user.info.permissions].sort()).toEqual([...newPermissions]);

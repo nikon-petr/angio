@@ -79,8 +79,8 @@
 
 <script lang="ts">
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
-    import {UserCredentialsModel} from '@/modules/user/models/user';
     import {throttle} from 'helpful-decorators';
+    import {UserCredentialsModel} from '@/modules/user/models/user';
     import BaseSingleFormContainer from '@/modules/common/components/BaseSingleFormContainer.vue';
 
     @Component({
@@ -109,7 +109,7 @@
         public submitForm() {
             this.unauthorized = false;
             return this.submit(this.form)
-                .then((reponse) => {
+                .then(() => {
                     if (this.next) {
                         this.$router.push({path: this.next});
                     } else {

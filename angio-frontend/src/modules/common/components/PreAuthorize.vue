@@ -12,7 +12,8 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {UserPermission} from '@/modules/user/store/userState';
-    import {userModule} from '@/modules/user/store/userStore';
+    import {UserGetter} from '@/modules/user/store/userStore';
+    import {Getter} from "vuex-class";
 
     @Component
     export default class PreAuthorize extends Vue {
@@ -32,19 +33,19 @@
         @Prop()
         public readonly hasPermissions?: UserPermission[];
 
-        @userModule.Getter('isAuthenticated')
+        @Getter(UserGetter.IS_AUTHENTICATED)
         public readonly isAuthenticatedGetter!: boolean;
 
-        @userModule.Getter('isAnonymous')
+        @Getter(UserGetter.IS_ANONYMOUS)
         public readonly isAnonymousGetter!: boolean;
 
-        @userModule.Getter('hasAnyPermission')
+        @Getter(UserGetter.HAS_ANY_PERMISSION)
         public readonly hasAnyPermissionGetter!: (permissions: UserPermission[]) => boolean;
 
-        @userModule.Getter('hasAnyOfGivenPermissions')
+        @Getter(UserGetter.HAS_ANY_OF_GIVEN_PERMISSIONS)
         public readonly hasAnyOfGivenPermissionsGetter!: (permissions: UserPermission[]) => boolean;
 
-        @userModule.Getter('hasPermissions')
+        @Getter(UserGetter.HAS_PERMISSIONS)
         public readonly hasPermissionsGetter!: (permissions: UserPermission[]) => boolean;
 
         public show(): boolean {

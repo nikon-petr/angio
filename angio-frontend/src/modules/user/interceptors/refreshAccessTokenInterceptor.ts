@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {refreshAccessToken} from '@/modules/user/store/userStore';
+import {UserAction} from '@/modules/user/store/userStore';
 import store from '@/store';
 import root from 'loglevel';
 
@@ -27,7 +27,7 @@ axios.interceptors.response.use((response) => {
         if (!isAlreadyFetchingAccessToken) {
             log.debug('access token expired. start refreshing');
             isAlreadyFetchingAccessToken = true;
-            refreshAccessToken(store)
+            store.dispatch(UserAction.REFRESH_ACCESS_TOKEN)
                 .then(() => {
                     isAlreadyFetchingAccessToken = false;
                     onAccessTokenFetched();

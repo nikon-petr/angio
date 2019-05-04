@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import VueI18n, {LocaleMessages} from 'vue-i18n';
-import ls from 'local-storage';
 import store from '@/store';
+import ls from 'local-storage';
+import VueI18n, {LocaleMessages} from 'vue-i18n';
 import {Locale} from '@/modules/user/store/userState';
 
 Vue.use(VueI18n);
@@ -43,13 +43,12 @@ if (module.hot) {
     });
 }
 
-store.watch(
+store.watch<Locale>(
     (state) => state.user.settings.locale,
     (newValue, oldValue) => {
         i18n.locale = newValue;
 
         // set moments new locale
-        // @ts-ignore
         Vue.moment.locale(newValue);
     },
 );

@@ -21,7 +21,7 @@
     import UserMenuAvatar from '@/modules/user/components/UserMenuAvatar.vue';
     import UserMenuActions from '@/modules/user/components/UserMenuActions.vue';
     import {UserInfo} from '@/modules/user/store/userState';
-    import {Notification} from "@/modules/notification/store/notificationState";
+    import {Notification} from '@/modules/notification/store/notificationState';
     import NotificationScroller from '@/modules/notification/components/NotificationScroller.vue';
 
     @Component({
@@ -47,7 +47,3 @@
 
     }
 </script>
-
-<style scoped>
-
-</style>

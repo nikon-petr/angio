@@ -1,15 +1,15 @@
 import Vue from 'vue';
 import root, {Logger} from 'loglevel';
+import store from '@/store';
+import i18n from '@/plugins/i18n';
 import Router, {RawLocation, Route, RouteConfig} from 'vue-router';
 import {AuthPredicate} from '@/modules/common/helpers/authPredicate';
 import {userRouterConfig} from '@/modules/user/userRouter';
 import NotFound from '@/modules/common/views/404.vue';
-import store from '@/store';
 import ServerError from '@/modules/common/views/500.vue';
-import i18n from '@/plugins/i18n';
 import About from '@/modules/common/views/About.vue';
 import {analyseRouterConfig} from '@/modules/analyse/analyseRouter';
-import {hasAnyOfGivenPermissions, hasPermissions} from '@/modules/user/store/userStore';
+import {UserGetter} from '@/modules/user/store/userStore';
 import {UserPermission} from '@/modules/user/store/userState';
 import Landing from '@/modules/common/views/Landing.vue';
 
@@ -50,7 +50,7 @@ rootRouter.beforeEach((to, from, next) => {
 });
 
 // redirect when user login or logout
-store.watch(((state, getters) => getters['user/isAuthenticated']), (newValue, oldValue) => {
+store.watch<boolean>(((state, getters) => getters[UserGetter.IS_AUTHENTICATED]), (newValue, oldValue) => {
     if (newValue) {
         log.debug('login redirect to /');
         rootRouter.push({path: '/', replace: true});
@@ -62,7 +62,7 @@ store.watch(((state, getters) => getters['user/isAuthenticated']), (newValue, ol
 
 // home redirect
 function homeRedirect(to: Route): RawLocation {
-    if (hasAnyOfGivenPermissions(store)([
+    if (store.getters[UserGetter.HAS_ANY_OF_GIVEN_PERMISSIONS]([
         UserPermission.USER_VIEW,
         UserPermission.ORGANIZATION_VIEW,
         UserPermission.TOKEN_VIEW,
@@ -71,7 +71,7 @@ function homeRedirect(to: Route): RawLocation {
     ])) {
         log.debug('redirect to /dashboard');
         return {path: '/dashboard', replace: true};
-    } else if (hasPermissions(store)([UserPermission.ANALYSE_VIEW])) {
+    } else if (store.getters[UserGetter.HAS_PERMISSIONS]([UserPermission.ANALYSE_VIEW])) {
         log.debug('redirect to /analyse');
         return {path: '/analyse', replace: true};
     } else {

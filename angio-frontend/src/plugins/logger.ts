@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import log, {LogLevelDesc} from 'loglevel';
+import log, {LogLevelDesc, Logger} from 'loglevel';
 import * as prefixer from 'loglevel-plugin-prefix';
 
 log.setLevel(process.env.VUE_APP_LOGGING_LEVEL as LogLevelDesc, true);
@@ -18,4 +18,15 @@ prefixer.apply(log, {
     },
 });
 
-Vue.prototype.$log = log.getLogger('vue');
+const logger = log.getLogger('vue');
+Vue.prototype.$logger = logger;
+Vue.logger = logger;
+
+declare module 'vue/types/vue' {
+    export interface Vue {
+        $logger: Logger;
+    }
+    export interface VueConstructor {
+        logger: Logger
+    }
+}

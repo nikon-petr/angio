@@ -1,18 +1,16 @@
 import {AxiosResponse} from 'axios';
 import ls from 'local-storage';
 import {ActionContext} from 'vuex';
-import {getStoreAccessors} from 'vuex-typescript';
 import root from 'loglevel';
-import store, {RootState} from '@/store';
-import {UserApiService} from '@/modules/user/services/userApiService';
+import {RootState} from '@/store';
 import JwtUtils from '@/utils/jwtUtils';
+import {UserApiService} from '@/modules/user/services/userApiService';
 import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageService';
 import {UserAuthModel} from '@/modules/user/models/user';
-import {Locale, UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
-import {namespace} from 'vuex-class';
-import {downNotificationPolling, initiateNotificationPolling} from '@/modules/notification/store/notificationStore';
+import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
 import {cancelAllRequests, deleteAxiosAccessToken, setAxiosAccessToken} from '@/plugins/axios';
 import '@/modules/user/interceptors/refreshAccessTokenInterceptor';
+import {NotificationAction} from '@/modules/notification/store/notificationStore';
 
 const log = root.getLogger('store/modules/user');
 
@@ -117,109 +115,111 @@ export const user = {
     },
 
     actions: {
-        async authUser(ctx: UserContext, credentials: { username: string; password: string }) {
-            startFetching(ctx);
-            return UserApiService.getToken(credentials)
-                .then(async (userAuthResponse: AxiosResponse<UserAuthModel>) => {
+        async authUser(ctx: UserContext, credentials: { username: string; password: string }): Promise<void> {
+            return new Promise((resolve, reject) => {
+                ctx.commit(UserMutation.START_FETCHING, undefined, {root: true});
+                UserApiService
+                    .getToken(credentials)
+                    .then(async (userAuthResponse: AxiosResponse<UserAuthModel>) => {
 
-                    setAxiosAccessToken(userAuthResponse.data.access_token);
+                        setAxiosAccessToken(userAuthResponse.data.access_token);
 
-                    await UserApiService.getMe().then((meResponse) => {
+                        await UserApiService.getMe().then((meResponse) => {
 
-                        clearUser(ctx);
-                        const userAuth: UserAuth = {
-                            accessToken: userAuthResponse.data.access_token,
-                            refreshToken: userAuthResponse.data.refresh_token,
-                        };
-                        setAuth(ctx, userAuth);
+                            ctx.commit(UserMutation.CLEAR_USER, undefined, {root: true});
+                            const userAuth: UserAuth = {
+                                accessToken: userAuthResponse.data.access_token,
+                                refreshToken: userAuthResponse.data.refresh_token,
+                            };
+                            ctx.commit(UserMutation.SET_AUTH, userAuth, {root: true});
 
-                        setUser(ctx, meResponse.data.data);
-                        setSettings(ctx, meResponse.data.data.settings);
-                    });
+                            ctx.commit(UserMutation.SET_USER, meResponse.data.data, {root: true});
+                            ctx.commit(UserMutation.SET_SETTINGS, meResponse.data.data.settings, {root: true});
+                        });
 
-                    initiateNotificationPolling(store);
-                })
-                .catch((error) => {
-                    log.error(error);
-                    clearUser(ctx);
-                    deleteAxiosAccessToken();
-                    throw error;
-                })
-                .finally(() => endFetching(ctx));
+                        ctx.dispatch(NotificationAction.INITIATE_NOTIFICATION_POLLING, undefined, {root: true});
+                        resolve();
+                    })
+                    .catch((error) => {
+                        log.error(error);
+                        ctx.commit(UserMutation.CLEAR_USER, undefined, {root: true});
+                        deleteAxiosAccessToken();
+                        reject(error);
+                    })
+                    .finally(() => ctx.commit(UserMutation.END_FETCHING, undefined, {root: true}));
+            });
         },
         async refreshAuth(ctx: UserContext) {
-            if (isAuthenticated(ctx)) {
-                initiateNotificationPolling(store);
+            if (ctx.rootGetters[UserGetter.IS_AUTHENTICATED]) {
+                ctx.dispatch(NotificationAction.INITIATE_NOTIFICATION_POLLING, undefined, {root: true});
             }
         },
         async refreshAccessToken(ctx: UserContext) {
-            startFetching(ctx);
+            ctx.commit(UserMutation.START_FETCHING, undefined, {root: true});
             await UserApiService
                 .refreshToken(ctx.state.auth.refreshToken as string)
                 .then((response) => {
-                    setAccessToken(ctx, response.data.access_token);
+                    ctx.commit(UserMutation.SET_ACCESS_TOKEN, response.data.access_token, {root: true});
                     setAxiosAccessToken(response.data.access_token);
                     JwtUtils.decodeJwtToken(response.data.access_token)
                         .then((jwtClaims) => {
-                            setPermissions(ctx, jwtClaims.authorities as UserPermission[]);
+                            ctx.commit(UserMutation.SET_PERMISSIONS, jwtClaims.authorities as UserPermission[], {root: true});
                         })
                         .catch(() => log.error('jwt decryption failed'));
                 })
                 .catch((error) => {
-                    clearUser(ctx);
+                    ctx.commit(UserMutation.CLEAR_USER, undefined, {root: true});
                     deleteAxiosAccessToken();
                     log.error(error);
                 })
-                .then(() => endFetching(ctx));
+                .then(() => ctx.commit(UserMutation.END_FETCHING, undefined, {root: true}));
         },
         async logout(ctx: UserContext) {
-            startFetching(ctx);
+            ctx.commit(UserMutation.START_FETCHING, undefined, {root: true});
             // TODO: api call
-            downNotificationPolling(store);
-            clearUser(ctx);
+            ctx.dispatch(NotificationAction.DOWN_NOTIFICATION_POLLING, undefined, {root: true});
+            ctx.commit(UserMutation.CLEAR_USER, undefined, {root: true});
             cancelAllRequests();
-            endFetching(ctx);
+            ctx.commit(UserMutation.END_FETCHING, undefined, {root: true});
         },
         async fetchUser(ctx: UserContext) {
-            startFetching(ctx);
+            ctx.commit(UserMutation.START_FETCHING, undefined, {root: true});
             await UserApiService
                 .getMe()
-                .then((response) => setUser(ctx, response.data.data))
+                .then((response) => ctx.commit(UserMutation.SET_USER, response.data.data, {root: true}))
                 .catch((error) => log.error(error));
             await UserApiService
                 .getSettings()
-                .then((response) => setSettings(ctx, response.data.data))
+                .then((response) => ctx.commit(UserMutation.SET_SETTINGS, response.data.data, {root: true}))
                 .catch((error) => log.error(error));
-            endFetching(ctx);
+            ctx.commit(UserMutation.END_FETCHING, undefined, {root: true});
         },
     },
 };
 
-const {commit, read, dispatch} = getStoreAccessors<UserState, RootState>('user');
+export enum UserMutation {
+    START_FETCHING = 'user/startFetching',
+    END_FETCHING = 'user/endFetching',
+    CLEAR_USER = 'user/clearUser',
+    SET_AUTH = 'user/setAuth',
+    SET_ACCESS_TOKEN = 'user/setAccessToken',
+    SET_USER = 'user/setUser',
+    SET_PERMISSIONS = 'user/setPermissions',
+    SET_SETTINGS = 'user/setSettings'
+}
 
-// getters
-export const isAuthenticated = read(user.getters.isAuthenticated);
-export const isAnonymous = read(user.getters.isAnonymous);
-export const hasPermissions = read(user.getters.hasPermissions);
-export const hasAnyOfGivenPermissions = read(user.getters.hasAnyOfGivenPermissions);
-export const hasAnyPermission = read(user.getters.hasAnyPermission);
+export enum UserGetter {
+    IS_AUTHENTICATED = 'user/isAuthenticated',
+    IS_ANONYMOUS = 'user/isAnonymous',
+    HAS_PERMISSIONS = 'user/hasPermissions',
+    HAS_ANY_OF_GIVEN_PERMISSIONS = 'user/hasAnyOfGivenPermissions',
+    HAS_ANY_PERMISSION = 'user/hasAnyPermission'
+}
 
-// mutations
-export const startFetching = commit(user.mutations.startFetching);
-export const endFetching = commit(user.mutations.endFetching);
-export const clearUser = commit(user.mutations.clearUser);
-export const setAuth = commit(user.mutations.setAuth);
-export const setAccessToken = commit(user.mutations.setAccessToken);
-export const setUser = commit(user.mutations.setUser);
-export const setPermissions = commit(user.mutations.setPermissions);
-export const setSettings = commit(user.mutations.setSettings);
-
-// actions
-export const authUser = dispatch(user.actions.authUser);
-export const refreshAuth = dispatch(user.actions.refreshAuth);
-export const refreshAccessToken = dispatch(user.actions.refreshAccessToken);
-export const logout = dispatch(user.actions.logout);
-export const fetchUser = dispatch(user.actions.fetchUser);
-
-// module
-export const userModule = namespace('user');
+export enum UserAction {
+    AUTH_USER = 'user/authUser',
+    REFRESH_AUTH = 'user/refreshAuth',
+    REFRESH_ACCESS_TOKEN = 'user/refreshAccessToken',
+    LOGOUT = 'user/logout',
+    FETCH_USER = 'user/fetchUser'
+}

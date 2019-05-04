@@ -158,8 +158,9 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import PreAuthorize from '@/modules/common/components/PreAuthorize.vue';
-    import {userModule} from '@/modules/user/store/userStore';
-    import {UserPermission} from "@/modules/user/store/userState";
+    import {UserGetter} from '@/modules/user/store/userStore';
+    import {UserPermission} from '@/modules/user/store/userState';
+    import {Getter} from 'vuex-class';
 
     @Component({
         components: {PreAuthorize}
@@ -174,7 +175,7 @@
             UserPermission.IMAGE_UPLOAD_PURGE_UNUSED
         ];
 
-        @userModule.Getter
+        @Getter(UserGetter.IS_AUTHENTICATED)
         public readonly isAuthenticated!: boolean;
     }
 </script>

@@ -10,4 +10,7 @@ declare module 'vue/types/vue' {
     export interface Vue {
         $moment: typeof moment
     }
+    export interface VueConstructor {
+        moment: typeof moment
+    }
 }
