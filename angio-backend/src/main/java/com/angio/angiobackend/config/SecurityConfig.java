@@ -66,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         format("%s**/img/**", props.getFrontendDistPath()),
                         format("%s/favicon.ico", props.getFrontendDistPath()),
                         format("%s/index.html", props.getFrontendDistPath()))
+                .regexMatchers("^((?!/api/|/oauth/token).)*$")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/*/password/reset")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/reset")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/enable");
@@ -81,6 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers("/oauth/token").permitAll()
+                .regexMatchers("^((?!/api/).)*$").permitAll()
                 .anyRequest().authenticated();
     }
 
