@@ -3,8 +3,10 @@ import qs from 'querystring';
 import root from 'loglevel';
 import {
     RefreshTokenModel,
+    UserActivationModel,
     UserAuthModel,
     UserCredentialsModel,
+    UserDetailsModel,
     UserInfoModel,
     UserSettingsModel,
 } from '@/modules/user/models/user';
@@ -41,5 +43,10 @@ export class UserApiService {
     public static getSettings(): AxiosPromise<Response<UserSettingsModel>> {
         log.debug('create getSettings request');
         return axios.get<Response<UserSettingsModel>>('/user/me/settings');
+    }
+
+    public static activate(userId: string, model: UserActivationModel): AxiosPromise<UserDetailsModel> {
+        log.debug(`create activate request with data: ${JSON.stringify(model)}`);
+        return axios.post<UserDetailsModel>(`/user/${userId}/enable`, model);
     }
 }

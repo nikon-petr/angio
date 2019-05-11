@@ -40,13 +40,9 @@
                                 outline
                                 required
                         ></v-text-field>
-                        <v-expand-transition>
-                            <ul v-if="unauthorized" data-test-id="formMsg__list">
-                                <li class="red--text body-1">
-                                    {{ $t('user.component.loginForm.password.validation.Unauthorized') }}
-                                </li>
-                            </ul>
-                        </v-expand-transition>
+                        <BuiltInErrorMessage
+                                v-bind:error-messages="errorMessages.map(message => $t(message))"
+                        ></BuiltInErrorMessage>
                     </v-form>
                 </template>
                 <template slot="buttons">
@@ -82,9 +78,10 @@
     import {throttle} from 'helpful-decorators';
     import {UserCredentialsModel} from '@/modules/user/models/user';
     import BaseSingleFormContainer from '@/modules/common/components/BaseSingleFormContainer.vue';
+    import BuiltInErrorMessage from '@/modules/common/components/BuiltInErrorMessage.vue';
 
     @Component({
-        components: {BaseSingleFormContainer}
+        components: {BuiltInErrorMessage, BaseSingleFormContainer}
     })
     export default class LoginForm extends Vue {
 
@@ -97,7 +94,7 @@
         @Prop()
         public readonly submit!: (form: UserCredentialsModel) => Promise<any>;
 
-        public unauthorized: boolean = false;
+        public errorMessages: string[] = [];
 
         public valid: boolean = false;
         public form: UserCredentialsModel = {
@@ -107,7 +104,7 @@
 
         @throttle(1000)
         public submitForm() {
-            this.unauthorized = false;
+            this.errorMessages = [];
             return this.submit(this.form)
                 .then(() => {
                     if (this.next) {
@@ -118,7 +115,7 @@
                 })
                 .catch((error) => {
                     if (error.response.status == 400 || error.response.status == 401) {
-                        this.unauthorized = true;
+                        this.errorMessages = ['user.component.loginForm.password.validation.Unauthorized'];
                     }
                 });
         }

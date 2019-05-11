@@ -103,7 +103,7 @@ angiobackend:
         frontend-dist-directory: angio-backend/src/main/resources/static/dist/
 
         ui:
-            user-activation-form-path: /user/{id}/activation/
+            user-activation-form-path: /activation?userId={id}
             user-resetting-form-path: /user/{id}/password/reset
 
         image-upload-extensions:
