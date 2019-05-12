@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import qs from 'querystring';
 import ls from 'local-storage';
 import axios, {AxiosStatic} from 'axios';
 import root from 'loglevel';
@@ -40,6 +41,13 @@ axios.defaults.transformResponse = [(data: string) => {
 
     return resp;
 }];
+
+// @ts-ignore
+axios.defaults.paramsSerializer = (params) => {
+    const query = {...params};
+    Object.keys(query).forEach(key => query[key] === undefined && delete query[key]);
+    return qs.stringify(query);
+};
 
 export const OAUTH_CONFIG = {
     baseURL: process.env.VUE_APP_OAUTH_BASE_URL as string,

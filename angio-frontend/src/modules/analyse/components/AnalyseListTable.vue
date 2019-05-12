@@ -1,159 +1,155 @@
 <template>
-    <v-data-table
-            v-model="selected"
-            :headers="headers"
-            :items="desserts"
-            :pagination.sync="pagination"
-            select-all
-            item-key="name"
-            class="elevation-1"
-    >
-        <template v-slot:headers="props">
-            <tr>
-                <th>
-                    <v-checkbox
-                            :input-value="props.all"
-                            :indeterminate="props.indeterminate"
-                            primary
-                            hide-details
-                            @click.stop="toggleAll"
-                    ></v-checkbox>
-                </th>
-                <th
-                        v-for="header in props.headers"
-                        :key="header.text"
-                        :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-                        @click="changeSort(header.value)"
-                >
-                    <v-icon small>arrow_upward</v-icon>
-                    {{ header.text }}
-                </th>
-            </tr>
-        </template>
-        <template v-slot:items="props">
-            <tr :active="props.selected" @click="props.selected = !props.selected">
-                <td>
-                    <v-checkbox
-                            :input-value="props.selected"
-                            primary
-                            hide-details
-                    ></v-checkbox>
-                </td>
-                <td>{{ props.item.name }}</td>
-                <td class="text-xs-right">{{ props.item.calories }}</td>
-                <td class="text-xs-right">{{ props.item.fat }}</td>
-                <td class="text-xs-right">{{ props.item.carbs }}</td>
-                <td class="text-xs-right">{{ props.item.protein }}</td>
-                <td class="text-xs-right">{{ props.item.iron }}</td>
-            </tr>
-        </template>
-    </v-data-table>
+    <div>
+        <v-data-table
+                v-bind:headers="adoptedHeaders"
+                v-bind:items="analysePage.content"
+                v-bind:expand="expand"
+                v-bind:pagination="pagination"
+                v-bind:total-items="analysePage.totalElements"
+                v-on:update:pagination="updatePagination"
+                item-key="id"
+                class="elevation-2"
+                sort-icon="arrow_drop_down"
+                disable-initial-sort
+                hide-actions
+        >
+            <template slot="headerCell" slot-scope="props">
+                {{ $t(props.header.text) }}
+            </template>
+            <template slot:actions-prepend>
+                dfh
+            </template>
+            <template v-slot:expand="props">
+                <AnalyseListTablePreview
+                        v-bind:id="props.item.id"
+                        v-bind:name="props.item.name"
+                        v-bind:diagnostician="props.item.diagnostician"
+                        v-bind:patient="props.item.patient.fullName"
+                        v-bind:short-description="props.item.shortDescription"
+                        v-bind:analyse-type="props.item.analyseType"
+                        v-bind:status="props.item.status"
+                        v-bind:original-image-url="props.item.originalImage.url"
+                        v-bind:has-permissions="hasPermissions"
+                ></AnalyseListTablePreview>
+            </template>
+            <template v-slot:items="props">
+                <tr v-bind:active="props.selected" v-on:click="props.expanded = !props.expanded">
+                    <td>
+                        <v-checkbox
+                                v-bind:input-value="props.item.starred"
+                                v-on:click.stop="props.item.starred = !props.item.starred"
+                                color="yellow accent-3"
+                                on-icon="star"
+                                off-icon="star_border"
+                                primary
+                                hide-details
+                        ></v-checkbox>
+                    </td>
+                    <td class="text-xs-left">{{ props.item.id }}</td>
+                    <td class="text-xs-left">{{ props.item.name }}</td>
+                    <td class="text-xs-left">{{ props.item.analyseDate | moment('DD.MM.YYYY') }}</td>
+                    <td class="text-xs-left" v-if="!$vuetify.breakpoint.smAndDown">
+                        {{ compactName(props.item.patient.fullName) }}
+                    </td>
+                    <td class="text-xs-left" v-if="!$vuetify.breakpoint.mdAndDown">
+                        {{ compactName(props.item.diagnostician) }}
+                    </td>
+                    <td class="text-xs-center">
+                        <v-icon v-bind:color="statuseIconsColors[props.item.status.type]">
+                            {{ statuseIcons[props.item.status.type] }}
+                        </v-icon>
+                    </td>
+                </tr>
+            </template>
+        </v-data-table>
+    </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
+    import Page from '@/modules/common/models/page';
+    import AnalyseItem, {AnalyseStatusType} from '@/modules/analyse/models/analyse';
+    import FullName from '@/modules/common/models/fullName';
+    import {UserPermission} from '@/modules/user/store/userState';
+    import AnalyseListTablePreview from '@/modules/analyse/components/AnalyseListTablePreview.vue';
+    import Pagination from '@/modules/common/helpers/pagination';
 
-    @Component
+    @Component({
+        components: {AnalyseListTablePreview}
+    })
     export default class AnalyseListTable extends Vue {
 
-        public pagination = {
-            sortBy: 'name'
+        @Prop()
+        public readonly analysePage!: Page<AnalyseItem>;
+
+        @Prop()
+        public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;
+
+        @Prop()
+        public readonly pagination!: Pagination;
+
+        public expand: boolean = false;
+
+        public statuseIcons = {
+            [AnalyseStatusType.CREATED]: 'cloud_done',
+            [AnalyseStatusType.SUCCESS]: 'done',
+            [AnalyseStatusType.IN_PROGRESS]: 'schedule',
+            [AnalyseStatusType.FAILED]: 'clear'
         };
 
-        public selected = [];
+        public statuseIconsColors = {
+            [AnalyseStatusType.CREATED]: 'accent',
+            [AnalyseStatusType.SUCCESS]: 'success',
+            [AnalyseStatusType.IN_PROGRESS]: 'accent',
+            [AnalyseStatusType.FAILED]: 'error'
+        };
+
         public headers = [
+            {text: '', value: 'starred', align: 'left', sortable: false},
+            {text: 'analyse.component.analyseListTable.column.id', value: 'id', class: 'text-uppercase', align: 'left'},
+            {text: 'analyse.component.analyseListTable.column.name', value: 'name', class: 'text-uppercase', align: 'left'},
             {
-                text: 'Dessert (100g serving)',
+                text: 'analyse.component.analyseListTable.column.date',
+                value: 'analyseDate',
+                class: 'text-uppercase',
+                align: 'left'
+            },
+            {
+                text: 'analyse.component.analyseListTable.column.patient',
+                value: 'patient',
+                class: 'text-uppercase',
                 align: 'left',
-                value: 'name'
-            },
-            {text: 'Calories', value: 'calories'},
-            {text: 'Fat (g)', value: 'fat'},
-            {text: 'Carbs (g)', value: 'carbs'},
-            {text: 'Protein (g)', value: 'protein'},
-            {text: 'Iron (%)', value: 'iron'}
-        ];
-        public desserts = [
-            {
-                name: 'Frozen Yogurt',
-                calories: 159,
-                fat: 6.0,
-                carbs: 24,
-                protein: 4.0,
-                iron: '1%'
+                hide: 'smAndDown'
             },
             {
-                name: 'Ice cream sandwich',
-                calories: 237,
-                fat: 9.0,
-                carbs: 37,
-                protein: 4.3,
-                iron: '1%'
+                text: 'analyse.component.analyseListTable.column.diagnostician',
+                value: 'diagnostician',
+                class: 'text-uppercase',
+                align: 'left',
+                hide: 'mdAndDown'
             },
             {
-                name: 'Eclair',
-                calories: 262,
-                fat: 16.0,
-                carbs: 23,
-                protein: 6.0,
-                iron: '7%'
-            },
-            {
-                name: 'Cupcake',
-                calories: 305,
-                fat: 3.7,
-                carbs: 67,
-                protein: 4.3,
-                iron: '8%'
-            },
-            {
-                name: 'Gingerbread',
-                calories: 356,
-                fat: 16.0,
-                carbs: 49,
-                protein: 3.9,
-                iron: '16%'
-            },
-            {
-                name: 'Jelly bean',
-                calories: 375,
-                fat: 0.0,
-                carbs: 94,
-                protein: 0.0,
-                iron: '0%'
-            },
-            {
-                name: 'Lollipop',
-                calories: 392,
-                fat: 0.2,
-                carbs: 98,
-                protein: 0,
-                iron: '2%'
-            },
-            {
-                name: 'Honeycomb',
-                calories: 408,
-                fat: 3.2,
-                carbs: 87,
-                protein: 6.5,
-                iron: '45%'
-            },
-            {
-                name: 'Donut',
-                calories: 452,
-                fat: 25.0,
-                carbs: 51,
-                protein: 4.9,
-                iron: '22%'
-            },
-            {
-                name: 'KitKat',
-                calories: 518,
-                fat: 26.0,
-                carbs: 65,
-                protein: 7,
-                iron: '6%'
+                text: 'analyse.component.analyseListTable.column.statusType',
+                value: 'status.type',
+                class: 'text-uppercase',
+                align: 'center',
+                sortable: false
             }
         ];
+
+        get adoptedHeaders() {
+            return this.headers.filter(h => !h.hide || !this.$vuetify.breakpoint[h.hide]);
+        }
+
+        public compactName(name: FullName): string {
+            const firstname: string = name.firstname ? name.firstname.substr(0, 1) : '';
+            const patronymic: string = name.patronymic ? name.patronymic.substr(0, 1) : '';
+            return `${name.lastname}\u00A0${firstname}.${patronymic}.`;
+        }
+
+        @Emit('update:pagination')
+        public updatePagination(pagination: Pagination) {
+            return pagination;
+        }
     }
 </script>

@@ -309,6 +309,9 @@ public class AnalyseSpecification {
      */
     public Specification<Analyse> fetchOriginalImage() {
         return (root, query, cb) -> {
+            if (Long.class == query.getResultType()) {
+                return null;
+            }
             root.fetch(Analyse_.originalImage, LEFT);
             return cb.conjunction();
         };
@@ -321,6 +324,9 @@ public class AnalyseSpecification {
      */
     public Specification<Analyse> fetchBloodFlowAnalyse() {
         return (root, query, cb) -> {
+            if (Long.class == query.getResultType()) {
+                return null;
+            }
             Fetch<Analyse, BloodFlowAnalyse> analyseFetch = root.fetch(Analyse_.bloodFlowAnalyse, LEFT);
             analyseFetch.fetch(BloodFlowAnalyse_.ischemiaImage, LEFT);
             analyseFetch.fetch(BloodFlowAnalyse_.densityImage, LEFT);
@@ -337,6 +343,9 @@ public class AnalyseSpecification {
      */
     public Specification<Analyse> fetchGeometricAnalyse() {
         return (root, query, cb) -> {
+            if (Long.class == query.getResultType()) {
+                return null;
+            }
             Fetch<Analyse, GeometricAnalyse> analyseFetch = root.fetch(Analyse_.geometricAnalyse, LEFT);
             analyseFetch.fetch(GeometricAnalyse_.binarizedImage, LEFT);
             analyseFetch.fetch(GeometricAnalyse_.skeletonizedImage, LEFT);

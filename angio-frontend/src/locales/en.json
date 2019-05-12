@@ -207,6 +207,18 @@
     }
   },
   "analyse": {
+    "model": {
+      "analyseType": {
+        "PRIMARY": "Primary",
+        "SUBSEQUENT": "Subsequent"
+      },
+      "status": {
+        "CREATED": "Created",
+        "IN_PROGRESS": "In progress",
+        "SUCCESS": "Successed",
+        "FAILED": "Failed"
+      }
+    },
     "component": {
       "analyseListFilter": {
         "field": {
@@ -236,6 +248,30 @@
         "period": "Period",
         "starred": "Starred analyses",
         "statusWithoutMatches": "The search has not given any results"
+      },
+      "analyseListTablePreview": {
+        "field": {
+          "diagnostician": "Diagnostician: ",
+          "patient": "Patient: ",
+          "name": "Name: ",
+          "shortDescription": "Short description: ",
+          "analyseType": "Analyse Type: ",
+          "statusType": "Status: ",
+          "statusExtension": "Status extension: "
+        },
+        "button": {
+          "details": "Details"
+        }
+      },
+      "analyseListTable": {
+        "column": {
+          "id": "#",
+          "name": "Name",
+          "date": "Date",
+          "patient": "Patient",
+          "diagnostician": "Diagnostician",
+          "statusType": "Status"
+        }
       }
     },
     "view": {

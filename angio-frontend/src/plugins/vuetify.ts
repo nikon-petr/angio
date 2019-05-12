@@ -11,3 +11,9 @@ Vue.use(Vuetify, {
     } as VuetifyLanguage,
     iconfont: 'md',
 });
+
+declare module 'vue/types/vue' {
+    export interface Vue {
+        $vuetify: Vuetify;
+    }
+}

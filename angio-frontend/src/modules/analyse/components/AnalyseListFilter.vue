@@ -4,6 +4,7 @@
             <v-text-field
                     v-model="search"
                     v-bind:label="$t('analyse.component.analyseListFilter.search')"
+                    v-bind:loading="fetching"
                     type="search"
                     browser-autocomplete="off"
                     clearable
@@ -161,6 +162,9 @@
         @Prop()
         public readonly locale!: string;
 
+        @Prop()
+        public readonly fetching!: boolean;
+
         public statuses: AnalyseStatusRepresentation[] = [
             {value: AnalyseStatusType.CREATED, text: 'analyse.component.analyseListFilter.status.CREATED'},
             {value: AnalyseStatusType.SUCCESS, text: 'analyse.component.analyseListFilter.status.SUCCESS'},
@@ -209,7 +213,7 @@
                     || this.analyseFilterModel.isStarred;
         }
 
-        @Watch('analyseFilterModel', {deep: true})
+        @Watch('analyseFilterModel', {deep: true, immediate: true})
         public onAnalyseFilterChange(newVal: AnalyseFilterModel, oldVal: AnalyseFilterModel) {
             const query: Dictionary<string> = {...newVal} as Dictionary<string>;
 
@@ -228,12 +232,14 @@
             this.$router.replace({
                 path: this.$route.path,
                 query
-            })
+            });
+
+            this.submit(newVal);
         }
 
         @Emit(CommonEvent.SEND_FORM)
-        public submit() {
-            return this.analyseFilterModel;
+        public submit(filter: AnalyseFilterModel) {
+            return filter;
         }
     }
 </script>
