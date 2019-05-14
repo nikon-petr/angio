@@ -215,23 +215,23 @@
 
         @Watch('analyseFilterModel', {deep: true, immediate: true})
         public onAnalyseFilterChange(newVal: AnalyseFilterModel, oldVal: AnalyseFilterModel) {
-            const query: Dictionary<string> = {...newVal} as Dictionary<string>;
+            const filterQuery: Dictionary<string> = {...newVal} as Dictionary<string>;
 
             if (newVal.startDate) {
-                query.startDate = this.$moment(newVal.startDate).format('YYYY-MM-DD');
+                filterQuery.startDate = this.$moment(newVal.startDate).format('YYYY-MM-DD');
             }
 
             if (newVal.endDate) {
-                query.endDate = this.$moment(newVal.endDate).format('YYYY-MM-DD');
+                filterQuery.endDate = this.$moment(newVal.endDate).format('YYYY-MM-DD');
             }
 
             if (newVal.singleDate) {
-                query.singleDate = this.$moment(newVal.singleDate).format('YYYY-MM-DD');
+                filterQuery.singleDate = this.$moment(newVal.singleDate).format('YYYY-MM-DD');
             }
 
             this.$router.replace({
                 path: this.$route.path,
-                query
+                query: {...this.$route.query, ...filterQuery}
             });
 
             this.submit(newVal);

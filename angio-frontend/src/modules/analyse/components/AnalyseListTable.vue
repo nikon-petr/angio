@@ -2,11 +2,10 @@
     <div>
         <v-data-table
                 v-bind:headers="adoptedHeaders"
-                v-bind:items="analysePage.content"
+                v-bind:items="analysePage ? analysePage.content : []"
                 v-bind:expand="expand"
-                v-bind:pagination="pagination"
-                v-bind:total-items="analysePage.totalElements"
-                v-on:update:pagination="updatePagination"
+                v-bind:pagination.sync="pagination"
+                v-bind:total-items="totalItems"
                 item-key="id"
                 class="elevation-2"
                 sort-icon="arrow_drop_down"
@@ -67,7 +66,7 @@
 
 <script lang="ts">
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
-    import Page from '@/modules/common/models/page';
+    import Page, {SortingDirection} from '@/modules/common/models/page';
     import AnalyseItem, {AnalyseStatusType} from '@/modules/analyse/models/analyse';
     import FullName from '@/modules/common/models/fullName';
     import {UserPermission} from '@/modules/user/store/userState';
@@ -80,13 +79,16 @@
     export default class AnalyseListTable extends Vue {
 
         @Prop()
-        public readonly analysePage!: Page<AnalyseItem>;
+        public readonly analysePage?: Page<AnalyseItem>;
 
         @Prop()
         public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;
 
         @Prop()
-        public readonly pagination!: Pagination;
+        public readonly sort?: string; // format: fieldName,asc|desc
+
+        @Prop()
+        public readonly totalItems!: number;
 
         public expand: boolean = false;
 
@@ -141,15 +143,37 @@
             return this.headers.filter(h => !h.hide || !this.$vuetify.breakpoint[h.hide]);
         }
 
+        get pagination(): Pagination {
+            return {
+                sortBy: this.sort ? this.sort.split(',')[0] : null,
+                descending: this.sort ? this.sort.split(',')[1] === SortingDirection.DESC : null,
+                page: null,
+                totalItems: this.totalItems,
+                rowsPerPage: null
+            }
+        }
+
+        set pagination(pagination: Pagination) {
+            this.updatePagination(this.mapSortingForApi(pagination.sortBy, pagination.descending));
+        }
+
+        @Emit('update:sort')
+        public updatePagination(sort: string | undefined) {
+            return sort;
+        }
+
         public compactName(name: FullName): string {
             const firstname: string = name.firstname ? name.firstname.substr(0, 1) : '';
             const patronymic: string = name.patronymic ? name.patronymic.substr(0, 1) : '';
             return `${name.lastname}\u00A0${firstname}.${patronymic}.`;
         }
 
-        @Emit('update:pagination')
-        public updatePagination(pagination: Pagination) {
-            return pagination;
+        public mapSortingForApi(sortBy: string | null, descending: boolean | null): string | undefined {
+            if (sortBy && descending !== null) {
+                return `${sortBy},${descending ? SortingDirection.DESC : SortingDirection.ASC}`;
+            } else {
+                return undefined;
+            }
         }
     }
 </script>

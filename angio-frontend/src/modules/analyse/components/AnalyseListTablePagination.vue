@@ -20,7 +20,13 @@
     export default class AnalyseListTablePagination extends Vue {
 
         @Prop()
-        public readonly pagination!: Pagination;
+        public readonly page!: number;
+
+        @Prop()
+        public readonly rowsPerPage!: number;
+
+        @Prop()
+        public readonly totalItems!: number;
 
         get totalPages() {
             if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) {
@@ -30,9 +36,19 @@
             return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
         }
 
-        @Emit('update:pagination')
-        public updatePagination(page: number) {
-            return {...this.pagination, page};
+        get pagination(): Pagination {
+            return {
+                sortBy: null,
+                descending: null,
+                page: this.page,
+                rowsPerPage: this.rowsPerPage,
+                totalItems: this.totalItems
+            }
+        }
+
+        @Emit('update:page')
+        public updatePagination(pagination: Pagination) {
+            return pagination.page;
         }
     }
 </script>

@@ -24,3 +24,8 @@ export interface Sort {
     sorted: boolean;
     unsorted: boolean;
 }
+
+export enum SortingDirection {
+    ASC = 'asc',
+    DESC = 'desc'
+}

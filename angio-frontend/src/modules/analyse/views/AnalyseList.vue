@@ -18,13 +18,16 @@
             <AnalyseListTable
                     v-bind:analyse-page="analysePage"
                     v-bind:has-permissions="hasPermissions"
-                    v-bind:pagination.sync="pagination"
+                    v-bind:sort.sync="sort"
+                    v-bind:total-items="totalItems"
             ></AnalyseListTable>
         </v-flex>
 
         <v-flex xs12>
             <AnalyseListTablePagination
-                    v-bind:pagination.sync="pagination"
+                    v-bind:page.sync="page"
+                    v-bind:rows-per-page="rowsPerPage"
+                    v-bind:total-items="totalItems"
             ></AnalyseListTablePagination>
         </v-flex>
     </StackLayout>
@@ -44,14 +47,14 @@
     import Page from '@/modules/common/models/page';
     import {UserGetter} from '@/modules/user/store/userStore';
     import AnalyseListTablePagination from '@/modules/analyse/components/AnalyseListTablePagination.vue';
-    import Pagination from '@/modules/common/helpers/pagination';
+    import {Dictionary} from 'vue-router/types/router';
 
     @Component({
         components: {AnalyseListTablePagination, StackLayout, AnalyseListTable, BaseSubheader, AnalyseListFilter},
     })
     export default class AnalyseList extends Vue {
 
-        public static readonly ROWS_PER_PAGE = 30;
+        public static readonly ROWS_PER_PAGE = 1;
 
         @State((state) => state.user.settings.locale)
         public readonly locale!: Locale;
@@ -63,7 +66,13 @@
 
         public analyseFilter!: AnalyseFilterModel;
 
-        public pagination!: Pagination;
+        public sort?: string;
+
+        public page!: number;
+
+        public rowsPerPage: number = AnalyseList.ROWS_PER_PAGE;
+
+        public totalItems: number = 0;
 
         public fetching: boolean = false;
 
@@ -77,43 +86,39 @@
                     singleDate: undefined,
                     isStarred: undefined
                 },
-                analysePage: {
-                    content: [],
-                    pageable: {
-                        sort: {
-                            sorted: false,
-                            unsorted: true,
-                        },
-                        offset: 0,
-                        pageSize: AnalyseList.ROWS_PER_PAGE,
-                        pageNumber: 0,
-                        paged: true,
-                        unpaged: false
-                    },
-                    last: true,
-                    totalPages: 0,
-                    totalElements: 0,
-                    size: AnalyseList.ROWS_PER_PAGE,
-                    number: 0,
-                    numberOfElements: 0,
-                    first: true,
-                    sort: {
-                        sorted: false,
-                        unsorted: true
-                    }
-                },
-                pagination: {
-                    sortBy: null,
-                    descending: null,
-                    page: 1,
-                    rowsPerPage: AnalyseList.ROWS_PER_PAGE,
-                    totalItems: 0
-                }
+                analysePage: undefined,
+                sort: this.$route.query && this.$route.query.sort ? this.$route.query.sort as string : undefined,
+                page: this.$route.query && this.$route.query.page ? parseInt(this.$route.query.page as string) : 1,
             }
         }
 
-        @Watch('pagination', {deep: true})
-        public onPaginationChange(newVal: Pagination, oldVal: Pagination) {
+        @Watch('page')
+        public onPaginationChange(newVal: number, oldVal: number) {
+            this.$logger.debug('page watcher');
+            const paginationQuery: Dictionary<string> = {
+                page: newVal ? newVal.toString() : undefined,
+            } as Dictionary<string>;
+
+            this.$router.replace({
+                path: this.$route.path,
+                query: {...this.$route.query, ...paginationQuery}
+            });
+
+            this.getAnalysePage()
+        }
+
+        @Watch('sort')
+        public onSortChange(newVal: string | undefined, oldVal: string | undefined) {
+            this.$logger.debug('page watcher');
+            const sortQuery: Dictionary<string> = {
+                sort: newVal ? newVal.toString() : undefined,
+            } as Dictionary<string>;
+
+            this.$router.replace({
+                path: this.$route.path,
+                query: {...this.$route.query, ...sortQuery}
+            });
+
             this.getAnalysePage()
         }
 
@@ -125,17 +130,11 @@
 
         public getAnalysePage() {
             this.fetching = true;
-            const page: number | undefined = this.pagination.page
-                ? this.pagination.page - 1
-                : undefined;
-            const sort: string | undefined = this.pagination.sortBy
-                ? `${this.pagination.sortBy},${this.pagination.descending ? 'desc' : 'asc'}`
-                : undefined;
             AnalyseApiService
-                .getAnalyseFilter(this.analyseFilter, AnalyseList.ROWS_PER_PAGE, page, sort)
+                .getAnalyseFilter(this.analyseFilter, this.rowsPerPage, this.page - 1 , this.sort)
                 .then((response) => {
                     this.analysePage = response.data.data;
-                    this.pagination.totalItems = response.data.data.totalElements;
+                    this.totalItems = response.data.data.totalElements;
                 })
                 .catch((error) => this.$logger.error(error))
                 .finally(() => this.fetching = false)

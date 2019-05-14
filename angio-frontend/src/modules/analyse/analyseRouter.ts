@@ -9,7 +9,7 @@ export const analyseRouterConfig: RouteConfig[] = [
         component: AnalyseList,
         meta: {
             title: 'analyse.view.analyseList.title',
-            auth: AuthPredicate.hasPermissions([UserPermission.ANALYSE_VIEW ])
+            auth: AuthPredicate.hasPermissions([UserPermission.ANALYSE_VIEW])
         }
     }
 ];
