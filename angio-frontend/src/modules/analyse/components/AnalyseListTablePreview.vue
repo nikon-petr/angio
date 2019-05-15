@@ -52,6 +52,7 @@
                             <v-spacer></v-spacer>
                             <v-btn
                                     v-if="hasPermissions(['ANALYSE_REMOVE'])"
+                                    v-on:click="deleteAnalyse"
                                     class="ma-0"
                                     color="error"
                                     ripple
@@ -112,6 +113,7 @@
     import FullName from '@/modules/common/models/fullName';
     import {AnalyseStatus} from '@/modules/analyse/models/analyse';
     import {UserPermission} from '@/modules/user/store/userState';
+    import {ConfirmType} from '@/modules/analyse/helpers/confirm';
 
     @Component
     export default class AnalyseListTablePreview extends Vue {
@@ -142,6 +144,13 @@
 
         @Prop()
         public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;
+
+        public async deleteAnalyse() {
+            if(await this.$confirm('Удалить анализ', ConfirmType.DELETE, `Вы уверены, что хотите удалить анализ №${this.id}?`)) {
+                // TODO: rest api call
+                this.$logger.debug(`delete analyse ${this.id}`);
+            }
+        }
 
         public fullName(name: FullName): string {
             const patronymic: string = name.patronymic ? name.patronymic : '';

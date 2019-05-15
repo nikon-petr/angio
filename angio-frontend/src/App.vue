@@ -2,6 +2,9 @@
     <v-app v-bind:dark="darkThemeEnabled">
         <TheDrawer></TheDrawer>
         <TheNotification></TheNotification>
+        <TheConfirmDialog
+                ref="confirm"
+        ></TheConfirmDialog>
         <TheHeader
                 v-bind:is-authenticated="isAuthenticated"
                 v-on:logout="logout"
@@ -20,9 +23,11 @@
     import TheFooter from '@/modules/common/components/TheFooter.vue';
     import TheNotification from '@/modules/notification/components/TheNotification.vue';
     import TheDrawer from '@/modules/common/components/TheDrawer.vue';
+    import TheConfirmDialog from "@/modules/common/components/TheConfirmDialog.vue";
 
     @Component({
         components: {
+            TheConfirmDialog,
             TheDrawer,
             TheNotification,
             TheFooter,
@@ -44,8 +49,13 @@
         @Action(UserAction.REFRESH_AUTH)
         public readonly refreshAuth!: () => Promise<void>;
 
+        $refs!: {
+            confirm: HTMLFormElement
+        };
+
         public mounted() {
             this.refreshAuth();
+            Vue.prototype.$confirm = this.$refs.confirm.open;
         }
     }
 </script>

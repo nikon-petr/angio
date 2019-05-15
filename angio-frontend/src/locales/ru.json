@@ -151,6 +151,12 @@
         "startDate": "Начальная дата",
         "endDate": "Конечная дата",
         "singleDate": "Выберите дату"
+      },
+      "confirmDialog": {
+        "button": {
+          "yes": "Да",
+          "cancel": "Отменить"
+        }
       }
     }
   },
