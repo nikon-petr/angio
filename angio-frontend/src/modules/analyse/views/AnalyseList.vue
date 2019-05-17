@@ -23,6 +23,7 @@
                     v-bind:search="analyseFilter.search"
                     v-bind:set-starred-analyse="setStarredAnalyse"
                     v-bind:delete-analyse="deleteAnalyse"
+                    v-bind:print-analyse-report="printAnalyseReport"
             ></AnalyseListTable>
         </v-flex>
 
@@ -39,7 +40,7 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Getter, State} from 'vuex-class';
-    import {throttle} from 'helpful-decorators';
+    import {debounce} from 'helpful-decorators';
     import BaseSubheader from '@/modules/common/components/BaseSubheader.vue';
     import AnalyseListFilter from '@/modules/analyse/components/AnalyseListFilter.vue';
     import {Locale, UserPermission} from '@/modules/user/store/userState';
@@ -50,7 +51,6 @@
     import {UserGetter} from '@/modules/user/store/userStore';
     import AnalyseListTablePagination from '@/modules/analyse/components/AnalyseListTablePagination.vue';
     import {Dictionary} from 'vue-router/types/router';
-    import {ResponseStatus} from '@/modules/common/models/response';
 
     @Component({
         components: {AnalyseListTablePagination, StackLayout, AnalyseListTable, BaseSubheader, AnalyseListFilter},
@@ -122,14 +122,16 @@
             this.getAnalysePage()
         }
 
-        @throttle(1000)
+        @debounce(1500)
         public filter(filter: AnalyseFilterModel) {
             this.analyseFilter = filter;
             this.getAnalysePage();
         }
 
         public getAnalysePage() {
-            this.fetching = true;
+            if (!this.fetching) {
+                this.fetching = true;
+            }
             AnalyseApiService
                 .getAnalyseFilter(this.analyseFilter, this.rowsPerPage, this.page - 1 , this.sort)
                 .then((response) => {
@@ -160,6 +162,10 @@
                 .deleteAnalyse(id)
                 .catch((error) => this.$logger.error(error));
             this.getAnalysePage();
+        }
+
+        public printAnalyseReport(id: number) {
+            AnalyseApiService.printAnalyseReport(id);
         }
 
         public created() {

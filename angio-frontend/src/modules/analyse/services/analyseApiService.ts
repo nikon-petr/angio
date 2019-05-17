@@ -3,6 +3,7 @@ import root from 'loglevel';
 import {Response} from '@/modules/common/models/response';
 import AnalyseItem, {AnalyseFilterModel, AnalyseStarred} from '@/modules/analyse/models/analyse';
 import Page from '@/modules/common/models/page';
+import printJS from 'print-js';
 
 const log = root.getLogger('api/analyse');
 
@@ -20,5 +21,14 @@ export class AnalyseApiService {
     public static deleteAnalyse(id: number): AxiosPromise<Response<any>> {
         log.debug(`create deleteAnalyse request for analyse id=${id}`);
         return axios.delete(`/analyse/${id}`);
+    }
+
+    public static printAnalyseReport(id: number): void {
+        log.debug(`print analyse #${id}`);
+        axios.get(`/analyse/${id}/report`, {responseType: 'arraybuffer'})
+            .then((response) => {
+                // @ts-ignore
+                printJS({printable: Buffer.from(response.data, 'binary').toString('base64'), type: 'pdf', base64: true});
+            })
     }
 }

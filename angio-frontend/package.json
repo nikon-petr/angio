@@ -21,6 +21,8 @@
     "lodash": "latest",
     "loglevel": "^1.6.1",
     "loglevel-plugin-prefix": "^0.8.4",
+    "print-js": "^1.0.57",
+    "qs": "latest",
     "reflect-metadata": "^0.1.13",
     "vue": "^2.6.6",
     "vue-bus": "latest",
@@ -35,8 +37,7 @@
     "vue-text-highlight": "^2.0.6",
     "vuetify": "^1.5.5",
     "vuex": "^3.0.1",
-    "vuex-class": "^0.3.2",
-    "qs": "latest"
+    "vuex-class": "^0.3.2"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",

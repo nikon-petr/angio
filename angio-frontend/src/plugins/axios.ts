@@ -36,7 +36,7 @@ axios.defaults.transformResponse = [(data: string) => {
             return value;
         });
     } catch (error) {
-        throw Error(`[requestClient] Error parsing response JSON data - ${JSON.stringify(error)}`)
+        return data;
     }
 
     return resp;

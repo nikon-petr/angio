@@ -17,10 +17,10 @@ function addSubscriber(callback: () => any) {
     subscribers.push(callback)
 }
 
-axios.interceptors.response.use((response) => {
-    return response
-}, (error) => {
-    if (store.getters[UserGetter.IS_AUTHENTICATED]) {
+axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+    if (store.getters[UserGetter.IS_AUTHENTICATED] && error.response && error.response.status) {
         const {config, response: {status}} = error;
         const originalRequest = config;
 

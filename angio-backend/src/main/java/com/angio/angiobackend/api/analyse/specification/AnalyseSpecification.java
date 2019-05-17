@@ -85,8 +85,8 @@ public class AnalyseSpecification {
     public Specification<Analyse> name(String name) {
         return (root, query, cb) -> {
             if (name != null) {
-                return cb.like(root.get(Analyse_.additionalInfo)
-                        .get(AdditionalInfo_.name), substringPattern(name));
+                return cb.like(cb.upper(root.get(Analyse_.additionalInfo)
+                        .get(AdditionalInfo_.name)), substringPattern(name).toUpperCase());
             }
             return null;
         };
@@ -101,8 +101,8 @@ public class AnalyseSpecification {
     public Specification<Analyse> shortDescription(String shortDescription) {
         return (root, query, cb) -> {
             if (shortDescription != null) {
-                return cb.like(root.get(Analyse_.additionalInfo)
-                        .get(AdditionalInfo_.shortDescription), substringPattern(shortDescription));
+                return cb.like(cb.upper(root.get(Analyse_.additionalInfo)
+                        .get(AdditionalInfo_.shortDescription)), substringPattern(shortDescription).toUpperCase());
             }
             return null;
         };
@@ -134,10 +134,10 @@ public class AnalyseSpecification {
     public Specification<Analyse> userInfoFirstname(String firstname) {
         return (root, query, cb) -> {
             if (firstname != null) {
-                return cb.like(root.get(Analyse_.additionalInfo)
+                return cb.like(cb.upper(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.diagnostician)
                         .get(User_.fullName)
-                        .get(FullName_.firstname), substringPattern(firstname));
+                        .get(FullName_.firstname)), substringPattern(firstname).toUpperCase());
             }
             return null;
         };
@@ -152,10 +152,10 @@ public class AnalyseSpecification {
     public Specification<Analyse> userInfoLastname(String lastname) {
         return (root, query, cb) -> {
             if (lastname != null) {
-                return cb.like(root.get(Analyse_.additionalInfo)
+                return cb.like(cb.upper(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.diagnostician)
                         .get(User_.fullName)
-                        .get(FullName_.lastname), substringPattern(lastname));
+                        .get(FullName_.lastname)), substringPattern(lastname).toUpperCase());
             }
             return null;
         };
@@ -170,10 +170,10 @@ public class AnalyseSpecification {
     public Specification<Analyse> userInfoPatronymic(String patronymic) {
         return (root, query, cb) -> {
             if (patronymic != null) {
-                return cb.like(root.get(Analyse_.additionalInfo)
+                return cb.like(cb.upper(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.diagnostician)
                         .get(User_.fullName)
-                        .get(FullName_.patronymic), substringPattern(patronymic));
+                        .get(FullName_.patronymic)), substringPattern(patronymic).toUpperCase());
             }
             return null;
         };
@@ -188,10 +188,10 @@ public class AnalyseSpecification {
     public Specification<Analyse> patientFirstname(String firstname) {
         return (root, query, cb) -> {
             if (firstname != null) {
-                return cb.like(root.get(Analyse_.additionalInfo)
+                return cb.like(cb.upper(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.patient)
                         .get(Patient_.fullName)
-                        .get(FullName_.firstname), substringPattern(firstname));
+                        .get(FullName_.firstname)), substringPattern(firstname).toUpperCase());
             }
             return null;
         };
@@ -206,10 +206,10 @@ public class AnalyseSpecification {
     public Specification<Analyse> patientLastname(String lastname) {
         return (root, query, cb) -> {
             if (lastname != null) {
-                return cb.like(root.get(Analyse_.additionalInfo)
+                return cb.like(cb.upper(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.patient)
                         .get(Patient_.fullName)
-                        .get(FullName_.lastname), substringPattern(lastname));
+                        .get(FullName_.lastname)), substringPattern(lastname).toUpperCase());
             }
             return null;
         };
@@ -224,10 +224,10 @@ public class AnalyseSpecification {
     public Specification<Analyse> patientPatronymic(String patronymic) {
         return (root, query, cb) -> {
             if (patronymic != null) {
-                return cb.like(root.get(Analyse_.additionalInfo)
+                return cb.like(cb.upper(root.get(Analyse_.additionalInfo)
                         .get(AdditionalInfo_.patient)
                         .get(Patient_.fullName)
-                        .get(FullName_.patronymic), substringPattern(patronymic));
+                        .get(FullName_.patronymic)), substringPattern(patronymic).toUpperCase());
             }
             return null;
         };
@@ -383,8 +383,8 @@ public class AnalyseSpecification {
      */
     public Specification<Analyse> getAnalyseInfoFilter(String queryString) {
         return name(queryString)
+                .or(analyseId(parseLong(queryString)))
                 .or(shortDescription(queryString))
-                .or(analyseType(queryString))
                 .or(userInfoFirstname(queryString))
                 .or(userInfoLastname(queryString))
                 .or(userInfoPatronymic(queryString))
@@ -392,5 +392,13 @@ public class AnalyseSpecification {
                 .or(patientLastname(queryString))
                 .or(patientPatronymic(queryString))
                 .or(patientPolicy(queryString));
+    }
+
+    private Long parseLong(String number) {
+        try {
+            return Long.parseLong(number);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

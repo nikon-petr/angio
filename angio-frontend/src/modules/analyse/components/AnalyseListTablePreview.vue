@@ -96,7 +96,7 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                     v-if="status.type === 'SUCCESS'"
-                                    v-on:click="printAnalyse"
+                                    v-on:click="printAnalyseReport(id)"
                                     v-on="on"
                                     class="ma-0"
                                     ripple
@@ -181,6 +181,9 @@
         @Prop()
         public readonly deleteAnalyse!: (id: number) => void;
 
+        @Prop()
+        public readonly printAnalyseReport!: (id: number) => void;
+
         public async deleteAnalyseSafely() {
             const title = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.title').toString();
             const text = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.text', [this.id]).toString();
@@ -188,10 +191,6 @@
                 this.$logger.debug(`delete analyse #${this.id}`);
                 this.deleteAnalyse(this.id);
             }
-        }
-
-        public printAnalyse() {
-            this.$logger.debug(`print analyse #${this.id}`)
         }
 
         public downloadZipAnalyse() {
