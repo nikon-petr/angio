@@ -35,7 +35,8 @@
     "vue-text-highlight": "^2.0.6",
     "vuetify": "^1.5.5",
     "vuex": "^3.0.1",
-    "vuex-class": "^0.3.2"
+    "vuex-class": "^0.3.2",
+    "qs": "latest"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",
@@ -45,6 +46,7 @@
     "@types/lodash": "^4.14.123",
     "@types/loglevel": "^1.5.4",
     "@types/node": "^11.12.1",
+    "@types/qs": "^6.5.3",
     "@types/webpack": "^4.4.0",
     "@vue/cli-plugin-babel": "^3.5.0",
     "@vue/cli-plugin-e2e-cypress": "^3.5.0",

@@ -7,6 +7,7 @@ import com.angio.angiobackend.api.analyse.dto.AnalyseReportDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
+import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.common.dto.Response;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,14 @@ public interface AnalyseService {
     void saveExecutedAnalyse(@NonNull AnalyseJmsDto dto);
 
     @Transactional(readOnly = true)
-    Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Boolean onlyStarred, Pageable pageable);
+    Page<AnalyseShortItemDto> filterAnalysesByQueryString(
+            String search,
+            Date singleDate,
+            Date startDate,
+            Date endDate,
+            AnalyseStatusType[] statuses,
+            Boolean isStarred,
+            Pageable pageable);
 
     @Transactional(readOnly = true)
     DetailedAnalyseDto getAnalyseById(@NonNull Long id);

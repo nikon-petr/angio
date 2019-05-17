@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import qs from 'querystring';
+import qs from 'qs';
 import ls from 'local-storage';
 import axios, {AxiosStatic} from 'axios';
 import root from 'loglevel';
@@ -46,7 +46,7 @@ axios.defaults.transformResponse = [(data: string) => {
 axios.defaults.paramsSerializer = (params) => {
     const query = {...params};
     Object.keys(query).forEach(key => query[key] === undefined && delete query[key]);
-    return qs.stringify(query);
+    return qs.stringify(query, {arrayFormat: 'repeat'});
 };
 
 export const OAUTH_CONFIG = {

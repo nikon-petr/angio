@@ -67,6 +67,15 @@ public class AnalyseSpecification {
         };
     }
 
+    public Specification<Analyse> analysePeriod(Date startDate, Date endDate) {
+        return (root, query, cb) -> {
+            if (startDate != null && endDate != null) {
+                return cb.between(root.get(Analyse_.analyseDate), atStartOfDay(startDate), atEndOfDay(endDate));
+            }
+            return null;
+        };
+    }
+
     /**
      * Find analyses by name substring.
      *

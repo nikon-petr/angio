@@ -6,6 +6,7 @@ import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
 import com.angio.angiobackend.api.analyse.service.AnalyseService;
+import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.analyse.validation.group.NewAnalyse;
 import com.angio.angiobackend.api.common.report.service.ReportService;
 import io.swagger.annotations.Api;
@@ -72,11 +73,14 @@ public class AnalyseResource {
                     value = "format: property,asc|desc")})
     @GetMapping
     public Page<AnalyseShortItemDto> filterAnalyses(
-            @RequestParam(value = "queryString", required = false) String queryString,
-            @RequestParam(value = "date", required = false) @DateTimeFormat(pattern="dd-MM-yyyy") Date date,
-            @RequestParam(value = "onlyStarred", required = false) Boolean onlyStarred,
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "singleDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date singleDate,
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate,
+            @RequestParam(value = "statuses", required = false) AnalyseStatusType[] statuses,
+            @RequestParam(value = "isStarred", required = false) Boolean onlyStarred,
             @ApiIgnore @PageableDefault Pageable pageable) {
-        return analyseService.filterAnalysesByQueryString(queryString, date, onlyStarred, pageable);
+        return analyseService.filterAnalysesByQueryString(search, singleDate, startDate, endDate, statuses, onlyStarred, pageable);
     }
 
     @ApiOperation(value = "Render analyse report to pdf file", produces = MediaType.APPLICATION_PDF_VALUE)

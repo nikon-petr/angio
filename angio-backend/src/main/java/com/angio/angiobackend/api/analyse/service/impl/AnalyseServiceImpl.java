@@ -153,15 +153,26 @@ public class AnalyseServiceImpl implements AnalyseService {
     /**
      * Filter analysis by query string matching any one or more fields.
      *
-     * @param queryString query string
-     * @param date analyse date
+     * @param search query string
+     * @param singleDate analyse date
+     * @param startDate start date period
+     * @param endDate  end date period
+     * @param statuses analyse statuses
+     * @param isStarred analyse is starred
      * @param pageable page request
      * @return page of filtered analyses
      */
     @Override
     @Transactional(readOnly = true)
     @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
-    public Page<AnalyseShortItemDto> filterAnalysesByQueryString(String queryString, Date date, Boolean onlyStarred, Pageable pageable) {
+    public Page<AnalyseShortItemDto> filterAnalysesByQueryString(
+            String search,
+            Date singleDate,
+            Date startDate,
+            Date endDate,
+            AnalyseStatusType[] statuses,
+            Boolean isStarred,
+            Pageable pageable) {
 
         log.trace("filterAnalysesByQueryString() - start");
 
@@ -169,10 +180,12 @@ public class AnalyseServiceImpl implements AnalyseService {
         User currentUser = userService.getUserFromContext();
 
         log.trace("filterAnalysesByQueryString() - build analyse info specification");
-        Specification<Analyse> specs = analyseSpecification.getAnalyseInfoFilter(queryString)
-                .and(analyseSpecification.analyseDate(date))
+        Specification<Analyse> specs = analyseSpecification.getAnalyseInfoFilter(search)
+                .and(analyseSpecification.analyseDate(singleDate))
+                .and(analyseSpecification.analysePeriod(startDate, endDate))
+                .and(analyseSpecification.inStatus(statuses))
+                .and(analyseSpecification.starred(currentUser, isStarred))
                 .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.starred(currentUser, onlyStarred))
                 .and(analyseSpecification.fetchAll());
 
         log.trace("filterAnalysesByQueryString() - map sorting fields");
