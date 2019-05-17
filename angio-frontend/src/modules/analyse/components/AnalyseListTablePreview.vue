@@ -48,33 +48,9 @@
                                 </span>{{ status.extension }}
                             </div>
                         </div>
-                        <div>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                    v-if="hasPermissions(['ANALYSE_REMOVE'])"
-                                    v-on:click="deleteAnalyse"
-                                    class="ma-0"
-                                    color="error"
-                                    ripple
-                                    icon
-                                    flat
-                            >
-                                <v-icon>delete</v-icon>
-                            </v-btn>
-                            <v-btn
-                                    class="ma-0"
-                                    color="accent"
-                                    v-bind:to="`/analyse/${id}`"
-                                    ripple
-                                    round
-                                    flat
-                            >
-                                {{ $t('analyse.component.analyseListTablePreview.button.details') }}
-                            </v-btn>
-                        </div>
                     </v-layout>
                 </v-flex>
-                <v-flex xs12 sm6 md6 lg4 xl4>
+                <v-flex xs12 sm6 md6 lg4 xl4 v-if="$vuetify.breakpoint.mdAndUp">
                     <v-layout
                             justify-end
                             pa-0
@@ -102,6 +78,63 @@
                             </template>
                         </v-img>
                     </v-layout>
+                </v-flex>
+                <v-flex xs12>
+                    <v-divider class="py-1"></v-divider>
+                    <v-btn
+                            v-if="hasPermissions(['ANALYSE_REMOVE'])"
+                            v-on:click="deleteAnalyse"
+                            class="ma-0"
+                            color="error"
+                            ripple
+                            icon
+                            flat
+                    >
+                        <v-icon>delete</v-icon>
+                    </v-btn>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                    v-if="status.type === 'SUCCESS'"
+                                    v-on:click="printAnalyse"
+                                    v-on="on"
+                                    class="ma-0"
+                                    ripple
+                                    icon
+                                    flat
+                            >
+                                <v-icon>print</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>{{ $t('analyse.component.analyseListTablePreview.button.print.tooltip') }}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                    v-if="status.type === 'SUCCESS'"
+                                    v-on:click="downloadZipAnalyse"
+                                    v-on="on"
+                                    class="ma-0"
+                                    ripple
+                                    icon
+                                    flat
+                            >
+                                <v-icon>archive</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>{{ $t('analyse.component.analyseListTablePreview.button.downloadZip.tooltip') }}</span>
+                    </v-tooltip>
+                    <v-btn
+                            v-if="status.type === 'SUCCESS'"
+                            v-bind:to="`/analyse/${id}`"
+                            class="ma-0"
+                            color="accent"
+                            ripple
+                            round
+                            flat
+                    >
+                        {{ $t('analyse.component.analyseListTablePreview.button.details.name') }}
+                    </v-btn>
                 </v-flex>
             </v-layout>
         </v-card-text>
@@ -146,10 +179,20 @@
         public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;
 
         public async deleteAnalyse() {
-            if(await this.$confirm('Удалить анализ', ConfirmType.DELETE, `Вы уверены, что хотите удалить анализ №${this.id}?`)) {
+            const title = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.title').toString();
+            const text = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.text', [this.id]).toString();
+            if(await this.$confirm(title, ConfirmType.DELETE, text)) {
                 // TODO: rest api call
-                this.$logger.debug(`delete analyse ${this.id}`);
+                this.$logger.debug(`delete analyse #${this.id}`);
             }
+        }
+
+        public printAnalyse() {
+            this.$logger.debug(`print analyse #${this.id}`)
+        }
+
+        public downloadZipAnalyse() {
+            this.$logger.debug(`download zip for analyse #${this.id}`)
         }
 
         public fullName(name: FullName): string {

@@ -7,8 +7,8 @@ import Page from '@/modules/common/models/page';
 const log = root.getLogger('api/analyse');
 
 export class AnalyseApiService {
-    public static getAnalyseFilter(filter: AnalyseFilterModel, size?: number, page?: number, sort?: string): AxiosPromise<Response<Page<Array<AnalyseItem>>>> {
+    public static getAnalyseFilter(filter: AnalyseFilterModel, size?: number, page?: number, sort?: string): AxiosPromise<Response<Page<AnalyseItem>>> {
         log.debug(`create getAnalyseFilter request with data ${JSON.stringify(filter)}`);
-        return axios.get<Response<Page<Array<AnalyseItem>>>>('/analyse', {params: {...filter, size, page, sort}});
+        return axios.get<Response<Page<AnalyseItem>>>('/analyse', {params: {...filter, size, page, sort}});
     }
 }

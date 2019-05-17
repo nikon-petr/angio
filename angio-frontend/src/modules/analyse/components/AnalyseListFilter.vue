@@ -2,7 +2,7 @@
     <div>
         <v-flex xs12 pa-0 ref="menuActivator">
             <v-text-field
-                    v-model="search"
+                    v-model.trim="search"
                     v-bind:label="$t('analyse.component.analyseListFilter.search')"
                     v-bind:loading="fetching"
                     type="search"
@@ -89,12 +89,12 @@
                                                         class="v-chip--select-multi caption"
                                                         small
                                                 >
-                                                    {{ $t(statuses.find(status => status.value === data.item).text)
-                                                    }}
+                                                    {{ $t(statuses.find(status => status.value === data.item).text) }}
                                                     <v-icon
                                                             v-on:click="data.parent.selectItem(data.item)"
                                                             small
-                                                    >close
+                                                    >
+                                                        close
                                                     </v-icon>
                                                 </v-chip>
                                             </template>
@@ -102,9 +102,7 @@
                                                 <v-list-tile>
                                                     <v-list-tile-content>
                                                         <v-list-tile-title>
-                                                            {{
-                                                            $t('analyse.component.analyseListFilter.statusWithoutMatches')
-                                                            }}
+                                                            {{ $t('analyse.component.analyseListFilter.statusWithoutMatches') }}
                                                         </v-list-tile-title>
                                                     </v-list-tile-content>
                                                 </v-list-tile>

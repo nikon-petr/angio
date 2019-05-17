@@ -266,7 +266,21 @@
           "statusExtension": "Расширение статуса: "
         },
         "button": {
-          "details": "Подробнее"
+          "delete": {
+            "confirm": {
+              "title": "Удалить анализ",
+              "text": "Вы уверены, что хотите удалить анализ №{0}?"
+            }
+          },
+          "details": {
+            "name": "Подробнее"
+          },
+          "print": {
+            "tooltip": "Печатать отчёт"
+          },
+          "downloadZip": {
+            "tooltip": "Выгрузить архив"
+          }
         }
       },
       "analyseListTable": {

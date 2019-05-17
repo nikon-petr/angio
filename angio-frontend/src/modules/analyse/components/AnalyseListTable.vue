@@ -2,7 +2,7 @@
     <div>
         <v-data-table
                 v-bind:headers="adoptedHeaders"
-                v-bind:items="analysePage ? analysePage.content : []"
+                v-bind:items="analysePageContent"
                 v-bind:expand="expand"
                 v-bind:pagination.sync="pagination"
                 v-bind:total-items="totalItems"
@@ -14,9 +14,6 @@
         >
             <template slot="headerCell" slot-scope="props">
                 {{ $t(props.header.text) }}
-            </template>
-            <template slot:actions-prepend>
-                dfh
             </template>
             <template v-slot:expand="props">
                 <AnalyseListTablePreview
@@ -32,7 +29,11 @@
                 ></AnalyseListTablePreview>
             </template>
             <template v-slot:items="props">
-                <tr v-bind:active="props.selected" v-on:click="props.expanded = !props.expanded">
+                <tr
+                        v-bind:key="props.item.id"
+                        v-bind:active="props.selected"
+                        v-on:click="props.expanded = !props.expanded"
+                >
                     <td>
                         <v-checkbox
                                 v-bind:input-value="props.item.starred"
@@ -44,14 +45,28 @@
                                 hide-details
                         ></v-checkbox>
                     </td>
-                    <td class="text-xs-left">{{ props.item.id }}</td>
-                    <td class="text-xs-left">{{ props.item.name }}</td>
-                    <td class="text-xs-left">{{ props.item.analyseDate | moment('DD.MM.YYYY') }}</td>
-                    <td class="text-xs-left" v-if="!$vuetify.breakpoint.smAndDown">
-                        {{ compactName(props.item.patient.fullName) }}
+                    <td class="text-xs-left">
+                        <text-highlight v-bind:queries="searchForHighlight">
+                            {{ props.item.id }}
+                        </text-highlight>
                     </td>
-                    <td class="text-xs-left" v-if="!$vuetify.breakpoint.mdAndDown">
-                        {{ compactName(props.item.diagnostician) }}
+                    <td class="text-xs-left">
+                        <text-highlight v-bind:queries="searchForHighlight">
+                            {{ props.item.name }}
+                        </text-highlight>
+                    </td>
+                    <td v-if="!$vuetify.breakpoint.xs" class="text-xs-left">
+                        {{ props.item.analyseDate | moment('DD.MM.YYYY') }}
+                    </td>
+                    <td v-if="!$vuetify.breakpoint.smAndDown" class="text-xs-left" >
+                        <text-highlight v-bind:queries="searchForHighlight">
+                            {{ compactName(props.item.patient.fullName) }}
+                        </text-highlight>
+                    </td>
+                    <td v-if="!$vuetify.breakpoint.mdAndDown" class="text-xs-left" >
+                        <text-highlight v-bind:queries="searchForHighlight">
+                            {{ compactName(props.item.diagnostician) }}
+                        </text-highlight>
                     </td>
                     <td class="text-xs-center">
                         <v-icon v-bind:color="statuseIconsColors[props.item.status.type]">
@@ -66,7 +81,7 @@
 
 <script lang="ts">
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
-    import Page, {SortingDirection} from '@/modules/common/models/page';
+    import {SortingDirection} from '@/modules/common/models/page';
     import AnalyseItem, {AnalyseStatusType} from '@/modules/analyse/models/analyse';
     import FullName from '@/modules/common/models/fullName';
     import {UserPermission} from '@/modules/user/store/userState';
@@ -79,7 +94,7 @@
     export default class AnalyseListTable extends Vue {
 
         @Prop()
-        public readonly analysePage?: Page<AnalyseItem>;
+        public readonly analysePageContent!: AnalyseItem[];
 
         @Prop()
         public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;
@@ -89,6 +104,9 @@
 
         @Prop()
         public readonly totalItems!: number;
+
+        @Prop()
+        public readonly search?: string;
 
         public expand: boolean = false;
 
@@ -114,21 +132,24 @@
                 text: 'analyse.component.analyseListTable.column.date',
                 value: 'analyseDate',
                 class: 'text-uppercase',
-                align: 'left'
+                align: 'left',
+                hide: 'xs'
             },
             {
                 text: 'analyse.component.analyseListTable.column.patient',
                 value: 'patient',
                 class: 'text-uppercase',
                 align: 'left',
-                hide: 'smAndDown'
+                hide: 'smAndDown',
+                sortable: false
             },
             {
                 text: 'analyse.component.analyseListTable.column.diagnostician',
                 value: 'diagnostician',
                 class: 'text-uppercase',
                 align: 'left',
-                hide: 'mdAndDown'
+                hide: 'mdAndDown',
+                sortable: false
             },
             {
                 text: 'analyse.component.analyseListTable.column.statusType',
@@ -141,6 +162,10 @@
 
         get adoptedHeaders() {
             return this.headers.filter(h => !h.hide || !this.$vuetify.breakpoint[h.hide]);
+        }
+
+        get searchForHighlight(): string {
+            return this.search ? this.search : '';
         }
 
         get pagination(): Pagination {

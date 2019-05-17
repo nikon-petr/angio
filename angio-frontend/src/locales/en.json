@@ -266,7 +266,21 @@
           "statusExtension": "Status extension: "
         },
         "button": {
-          "details": "Details"
+          "delete": {
+            "confirm": {
+              "title": "Delete analyse",
+              "text": "Are you sure you want to delete analyse #{0}?"
+            }
+          },
+          "details": {
+            "name": "Details"
+          },
+          "print": {
+            "tooltip": "Print report"
+          },
+          "downloadZip": {
+            "tooltip": "Download archive"
+          }
         }
       },
       "analyseListTable": {

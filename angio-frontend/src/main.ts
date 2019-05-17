@@ -13,6 +13,7 @@ import '@/plugins/lightbox';
 import '@/plugins/filepond';
 import '@/plugins/filters';
 import '@/plugins/axios';
+import '@/plugins/highlight';
 import i18n from '@/plugins/i18n';
 
 // always in the end of imports
