@@ -21,6 +21,7 @@
                     v-bind:sort.sync="sort"
                     v-bind:total-items="totalItems"
                     v-bind:search="analyseFilter.search"
+                    v-bind:set-starred-analyse="setStarredAnalyse"
             ></AnalyseListTable>
         </v-flex>
 
@@ -44,10 +45,11 @@
     import AnalyseItem, {AnalyseFilterModel} from '@/modules/analyse/models/analyse';
     import AnalyseListTable from '@/modules/analyse/components/AnalyseListTable.vue';
     import StackLayout from '@/modules/common/components/StackLayout.vue';
-    import {AnalyseApiService} from '@/modules/analyse/services/AnalyseApiService';
+    import {AnalyseApiService} from '@/modules/analyse/services/analyseApiService';
     import {UserGetter} from '@/modules/user/store/userStore';
     import AnalyseListTablePagination from '@/modules/analyse/components/AnalyseListTablePagination.vue';
     import {Dictionary} from 'vue-router/types/router';
+    import {ResponseStatus} from '@/modules/common/models/response';
 
     @Component({
         components: {AnalyseListTablePagination, StackLayout, AnalyseListTable, BaseSubheader, AnalyseListFilter},
@@ -132,6 +134,22 @@
                 .then((response) => {
                     this.analysePageContent = [...response.data.data.content];
                     this.totalItems = response.data.data.totalElements;
+                })
+                .catch((error) => this.$logger.error(error))
+                .finally(() => this.fetching = false)
+        }
+
+        public setStarredAnalyse(id: number, starred: boolean) {
+            this.fetching = true;
+            AnalyseApiService
+                .setAnalyseStarred(id, starred)
+                .then((response) => {
+                    if (response.data.status === ResponseStatus.SUCCESS) {
+                        const analyseItem = this.analysePageContent.find((v) => v.id === id);
+                        if (analyseItem) {
+                            analyseItem.starred = response.data.data.starred;
+                        }
+                    }
                 })
                 .catch((error) => this.$logger.error(error))
                 .finally(() => this.fetching = false)

@@ -45,3 +45,7 @@ export interface AnalyseFilterModel {
     singleDate?: Date;
     isStarred?: boolean;
 }
+
+export interface AnalyseStarred {
+    starred: boolean;
+}

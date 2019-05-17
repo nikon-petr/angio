@@ -37,7 +37,7 @@
                     <td>
                         <v-checkbox
                                 v-bind:input-value="props.item.starred"
-                                v-on:click.stop="props.item.starred = !props.item.starred"
+                                v-on:click.stop="setStarredAnalyse(props.item.id, !props.item.starred)"
                                 color="yellow accent-3"
                                 on-icon="star"
                                 off-icon="star_border"
@@ -107,6 +107,9 @@
 
         @Prop()
         public readonly search?: string;
+
+        @Prop()
+        public readonly setStarredAnalyse!: (id: number, starred: boolean) => void;
 
         public expand: boolean = false;
 
