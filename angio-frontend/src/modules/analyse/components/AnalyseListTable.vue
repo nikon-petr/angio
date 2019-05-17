@@ -26,6 +26,7 @@
                         v-bind:status="props.item.status"
                         v-bind:original-image-url="props.item.originalImage.url"
                         v-bind:has-permissions="hasPermissions"
+                        v-bind:delete-analyse="deleteAnalyse"
                 ></AnalyseListTablePreview>
             </template>
             <template v-slot:items="props">
@@ -110,6 +111,9 @@
 
         @Prop()
         public readonly setStarredAnalyse!: (id: number, starred: boolean) => void;
+
+        @Prop()
+        public readonly deleteAnalyse!: (id: number) => void;
 
         public expand: boolean = false;
 

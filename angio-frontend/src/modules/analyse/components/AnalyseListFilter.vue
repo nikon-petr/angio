@@ -18,8 +18,10 @@
                             v-bind:min-width="menuWidth()"
                             v-bind:max-width="menuWidth()"
                             v-bind:attach="$refs.menuActivator"
+                            origin="center center"
+                            transition="scale-transition"
                             nudge-right="104"
-                            nudge-bottom="104"
+                            nudge-bottom="96"
                             offset-y
                             offset-x
                             bottom
@@ -59,10 +61,11 @@
                                         ></PeriodDatePicker>
                                     </v-flex>
 
-                                    <v-flex xl3 lg6 md6 sm12 xs12>
+                                    <v-flex xl3 lg6 md6 sm12 xs12 align-self-center>
                                         <v-switch
                                                 v-model="isPeriod"
                                                 v-bind:label="$t('analyse.component.analyseListFilter.period')"
+                                                class="mt-0"
                                                 hide-details
                                         ></v-switch>
                                     </v-flex>
@@ -110,10 +113,11 @@
                                         </v-combobox>
                                     </v-flex>
 
-                                    <v-flex xl3 lg8 md7 sm12 xs12>
+                                    <v-flex xl3 lg8 md7 sm12 xs12 align-self-center>
                                         <v-checkbox
                                                 v-model="analyseFilterModel.isStarred"
                                                 v-bind:label="$t('analyse.component.analyseListFilter.starred')"
+                                                class="mt-0"
                                                 hide-details
                                         ></v-checkbox>
                                     </v-flex>

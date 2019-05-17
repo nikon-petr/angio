@@ -13,7 +13,12 @@ export class AnalyseApiService {
     }
 
     public static setAnalyseStarred(id: number, starred: boolean): AxiosPromise<Response<AnalyseStarred>> {
-        log.debug(`create setAnalyseStarred request starred: ${starred}`);
+        log.debug(`create setAnalyseStarred request starred: ${starred} for analyse id=${id}`);
         return axios.post<Response<AnalyseStarred>>(`/analyse/${id}/starred`, {starred})
+    }
+
+    public static deleteAnalyse(id: number): AxiosPromise<Response<any>> {
+        log.debug(`create deleteAnalyse request for analyse id=${id}`);
+        return axios.delete(`/analyse/${id}`);
     }
 }

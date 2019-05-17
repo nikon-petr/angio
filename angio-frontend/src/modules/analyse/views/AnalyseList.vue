@@ -22,6 +22,7 @@
                     v-bind:total-items="totalItems"
                     v-bind:search="analyseFilter.search"
                     v-bind:set-starred-analyse="setStarredAnalyse"
+                    v-bind:delete-analyse="deleteAnalyse"
             ></AnalyseListTable>
         </v-flex>
 
@@ -144,15 +145,21 @@
             AnalyseApiService
                 .setAnalyseStarred(id, starred)
                 .then((response) => {
-                    if (response.data.status === ResponseStatus.SUCCESS) {
-                        const analyseItem = this.analysePageContent.find((v) => v.id === id);
-                        if (analyseItem) {
-                            analyseItem.starred = response.data.data.starred;
-                        }
+                    const analyseItem = this.analysePageContent.find((v) => v.id === id);
+                    if (analyseItem) {
+                        analyseItem.starred = response.data.data.starred;
                     }
                 })
                 .catch((error) => this.$logger.error(error))
                 .finally(() => this.fetching = false)
+        }
+
+        public async deleteAnalyse(id: number) {
+            this.fetching = true;
+            await AnalyseApiService
+                .deleteAnalyse(id)
+                .catch((error) => this.$logger.error(error));
+            this.getAnalysePage();
         }
 
         public created() {

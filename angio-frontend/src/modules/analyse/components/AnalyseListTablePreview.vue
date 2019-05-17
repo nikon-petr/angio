@@ -83,7 +83,7 @@
                     <v-divider class="py-1"></v-divider>
                     <v-btn
                             v-if="hasPermissions(['ANALYSE_REMOVE'])"
-                            v-on:click="deleteAnalyse"
+                            v-on:click="deleteAnalyseSafely"
                             class="ma-0"
                             color="error"
                             ripple
@@ -178,12 +178,15 @@
         @Prop()
         public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;
 
-        public async deleteAnalyse() {
+        @Prop()
+        public readonly deleteAnalyse!: (id: number) => void;
+
+        public async deleteAnalyseSafely() {
             const title = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.title').toString();
             const text = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.text', [this.id]).toString();
             if(await this.$confirm(title, ConfirmType.DELETE, text)) {
-                // TODO: rest api call
                 this.$logger.debug(`delete analyse #${this.id}`);
+                this.deleteAnalyse(this.id);
             }
         }
 
