@@ -83,6 +83,7 @@
                     <v-divider class="py-1"></v-divider>
                     <v-btn
                             v-if="hasPermissions(['ANALYSE_REMOVE'])"
+                            v-bind:loading="deleteLoading"
                             v-on:click="deleteAnalyseSafely"
                             class="ma-0"
                             color="error"
@@ -96,7 +97,8 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                     v-if="status.type === 'SUCCESS'"
-                                    v-on:click="printAnalyseReport(id)"
+                                    v-bind:loading="printAnalyseReportLoading"
+                                    v-on:click="onPrintAnalyseReport()"
                                     v-on="on"
                                     class="ma-0"
                                     ripple
@@ -179,18 +181,30 @@
         public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;
 
         @Prop()
-        public readonly deleteAnalyse!: (id: number) => void;
+        public readonly deleteAnalyse!: (id: number) => Promise<void>;
 
         @Prop()
-        public readonly printAnalyseReport!: (id: number) => void;
+        public readonly printAnalyseReport!: (id: number) => Promise<void>;
+
+        public deleteLoading: boolean = false;
+
+        public printAnalyseReportLoading: boolean = false;
 
         public async deleteAnalyseSafely() {
             const title = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.title').toString();
             const text = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.text', [this.id]).toString();
             if(await this.$confirm(title, ConfirmType.DELETE, text)) {
+                this.deleteLoading = true;
                 this.$logger.debug(`delete analyse #${this.id}`);
-                this.deleteAnalyse(this.id);
+                this.deleteAnalyse(this.id)
+                    .finally(() => this.deleteLoading = false);
             }
+        }
+
+        public onPrintAnalyseReport() {
+            this.printAnalyseReportLoading = true;
+            this.printAnalyseReport(this.id)
+                .finally(() => this.printAnalyseReportLoading = false);
         }
 
         public downloadZipAnalyse() {

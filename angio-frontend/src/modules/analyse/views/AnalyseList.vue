@@ -133,7 +133,7 @@
                 this.fetching = true;
             }
             AnalyseApiService
-                .getAnalyseFilter(this.analyseFilter, this.rowsPerPage, this.page - 1 , this.sort)
+                .getAnalyseFilter(this.analyseFilter, this.rowsPerPage, this.page - 1, this.sort)
                 .then((response) => {
                     this.analysePageContent = [...response.data.data.content];
                     this.totalItems = response.data.data.totalElements;
@@ -142,30 +142,30 @@
                 .finally(() => this.fetching = false)
         }
 
+        @debounce(500)
         public setStarredAnalyse(id: number, starred: boolean) {
-            this.fetching = true;
+            const analyseItem = this.analysePageContent.find((v) => v.id === id);
+            if (analyseItem) {
+                analyseItem.starred = starred;
+            }
             AnalyseApiService
                 .setAnalyseStarred(id, starred)
-                .then((response) => {
-                    const analyseItem = this.analysePageContent.find((v) => v.id === id);
-                    if (analyseItem) {
-                        analyseItem.starred = response.data.data.starred;
-                    }
-                })
                 .catch((error) => this.$logger.error(error))
-                .finally(() => this.fetching = false)
         }
 
-        public async deleteAnalyse(id: number) {
-            this.fetching = true;
-            await AnalyseApiService
-                .deleteAnalyse(id)
-                .catch((error) => this.$logger.error(error));
-            this.getAnalysePage();
+        public async deleteAnalyse(id: number): Promise<void> {
+            return new Promise<void>(async (resolve, reject) => {
+                this.fetching = true;
+                await AnalyseApiService
+                    .deleteAnalyse(id)
+                    .catch((error) => this.$logger.error(error));
+                this.getAnalysePage();
+                resolve();
+            });
         }
 
-        public printAnalyseReport(id: number) {
-            AnalyseApiService.printAnalyseReport(id);
+        public printAnalyseReport(id: number): Promise<void> {
+            return AnalyseApiService.printAnalyseReport(id);
         }
 
         public created() {

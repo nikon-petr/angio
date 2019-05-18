@@ -23,12 +23,19 @@ export class AnalyseApiService {
         return axios.delete(`/analyse/${id}`);
     }
 
-    public static printAnalyseReport(id: number): void {
-        log.debug(`print analyse #${id}`);
-        axios.get(`/analyse/${id}/report`, {responseType: 'arraybuffer'})
-            .then((response) => {
-                // @ts-ignore
-                printJS({printable: Buffer.from(response.data, 'binary').toString('base64'), type: 'pdf', base64: true});
-            })
+    public static printAnalyseReport(id: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            log.debug(`print analyse #${id}`);
+            axios.get(`/analyse/${id}/report`, {responseType: 'arraybuffer'})
+                .then((response) => {
+                    // @ts-ignore
+                    printJS({
+                        printable: Buffer.from(response.data, 'binary').toString('base64'),
+                        type: 'pdf',
+                        base64: true,
+                        onPrintDialogClose: () => resolve()
+                    });
+                });
+        });
     }
 }

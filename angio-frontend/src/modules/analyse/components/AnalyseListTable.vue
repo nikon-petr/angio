@@ -114,10 +114,10 @@
         public readonly setStarredAnalyse!: (id: number, starred: boolean) => void;
 
         @Prop()
-        public readonly deleteAnalyse!: (id: number) => void;
+        public readonly deleteAnalyse!: (id: number) => Promise<void>;
 
         @Prop()
-        public readonly printAnalyseReport!: (id: number) => void;
+        public readonly printAnalyseReport!: (id: number) => Promise<void>;
 
         public expand: boolean = false;
 
