@@ -114,7 +114,8 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                     v-if="status.type === 'SUCCESS'"
-                                    v-on:click="downloadZipAnalyse"
+                                    v-bind:loading="downloadAnalyseArchiveLoading"
+                                    v-on:click="onDownloadAnalyseArchive()"
                                     v-on="on"
                                     class="ma-0"
                                     ripple
@@ -186,9 +187,14 @@
         @Prop()
         public readonly printAnalyseReport!: (id: number) => Promise<void>;
 
+        @Prop()
+        public readonly downloadAnalyseArchive!: (id: number) => Promise<void>;
+
         public deleteLoading: boolean = false;
 
         public printAnalyseReportLoading: boolean = false;
+
+        public downloadAnalyseArchiveLoading: boolean = false;
 
         public async deleteAnalyseSafely() {
             const title = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.title').toString();
@@ -207,8 +213,10 @@
                 .finally(() => this.printAnalyseReportLoading = false);
         }
 
-        public downloadZipAnalyse() {
-            this.$logger.debug(`download zip for analyse #${this.id}`)
+        public onDownloadAnalyseArchive() {
+            this.downloadAnalyseArchiveLoading = true;
+            this.downloadAnalyseArchive(this.id)
+                .finally(() => this.downloadAnalyseArchiveLoading = false);
         }
 
         public fullName(name: FullName): string {

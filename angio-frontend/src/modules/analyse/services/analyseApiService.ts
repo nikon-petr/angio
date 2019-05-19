@@ -35,7 +35,31 @@ export class AnalyseApiService {
                         base64: true,
                         onPrintDialogClose: () => resolve()
                     });
+                })
+                .catch((error) => {
+                    log.error(error);
+                    reject();
                 });
         });
+    }
+
+    public static downloadArchive(id: number): Promise<void> {
+        return new Promise<void>(((resolve, reject) => {
+            log.debug(`create downloadArchive request for analyse id=${id}`);
+            axios.get(`/analyse/${id}/archive`, {responseType: 'arraybuffer'})
+                .then((response) => {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `analyse_${id}.zip`);
+                    document.body.appendChild(link);
+                    link.click();
+                    resolve();
+                })
+                .catch((error) => {
+                    log.error(error);
+                    reject();
+                })
+        }))
     }
 }

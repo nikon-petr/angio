@@ -58,5 +58,8 @@ public interface AnalyseService {
     DetailedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId);
 
     @Transactional
+    byte[] createArchive(DetailedAnalyseDto dto);
+
+    @Transactional
     int purgeAnalysesInStatusDeleted();
 }

@@ -101,6 +101,27 @@ public class AnalyseResource {
         return new ResponseEntity<>(contents, headers, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Unload analyse resources archive", produces = "application/zip")
+    @GetMapping("/{id}/archive")
+    public ResponseEntity<byte[]> getArchive(@PathVariable Long id) {
+
+        DetailedAnalyseDto dto = analyseService.getAnalyseById(id);
+        byte[] contents = analyseService.createArchive(dto);
+
+        String filename = String.format("analyse-archive-%s-%s-%tD.pdf",
+                dto.getId(),
+                dto.getAdditionalInfo().getName(),
+                dto.getAnalyseDate());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/zip"));
+        headers.setContentDisposition(ContentDisposition.builder("attachment")
+                .filename(filename, Charset.forName("UTF-8")).build());
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(contents, headers, HttpStatus.OK);
+    }
+
     @ApiOperation("Delete analyse by id")
     @DeleteMapping("/{id}")
     public DetailedAnalyseDto deleteAnalyse(@PathVariable Long id) {

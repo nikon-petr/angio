@@ -24,6 +24,7 @@
                     v-bind:set-starred-analyse="setStarredAnalyse"
                     v-bind:delete-analyse="deleteAnalyse"
                     v-bind:print-analyse-report="printAnalyseReport"
+                    v-bind:download-analyse-archive="downloadAnalyseArchive"
             ></AnalyseListTable>
         </v-flex>
 
@@ -166,6 +167,10 @@
 
         public printAnalyseReport(id: number): Promise<void> {
             return AnalyseApiService.printAnalyseReport(id);
+        }
+
+        public downloadAnalyseArchive(id: number): Promise<void> {
+            return AnalyseApiService.downloadArchive(id);
         }
 
         public created() {

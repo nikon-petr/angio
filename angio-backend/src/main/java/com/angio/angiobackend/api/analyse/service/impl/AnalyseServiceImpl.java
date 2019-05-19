@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.analyse.service.impl;
 
+import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.analyse.AnalyseActions;
 import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
@@ -7,6 +8,7 @@ import com.angio.angiobackend.api.analyse.dto.AnalyseReportDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
+import com.angio.angiobackend.api.analyse.dto.VesselDto;
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
 import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.analyse.entity.Vessel;
@@ -18,6 +20,7 @@ import com.angio.angiobackend.api.analyse.service.AnalyseService;
 import com.angio.angiobackend.api.analyse.specification.AnalyseSpecification;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
+import com.angio.angiobackend.api.common.exception.OperationException;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.common.report.exception.ReportException;
 import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
@@ -29,9 +32,11 @@ import com.angio.angiobackend.api.patient.service.PatientService;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +47,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,7 +57,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import static java.lang.String.format;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
@@ -69,6 +80,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     private final PatientService patientService;
     private final UserService userService;
     private final AnalyseToExecuteSender analyseToExecuteSender;
+    private final AngioBackendProperties props;
     private final DynamicLocaleMessageSourceAccessor msa;
 
     /**
@@ -384,6 +396,50 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.trace("deleteAnalyse() - end");
         return analyseMapper.toExtendedDto(analyse);
+    }
+
+    @Override
+    public byte[] createArchive(DetailedAnalyseDto dto) {
+        log.trace("createArchive() - start");
+
+        Map<String, File> images = new HashMap<>();
+        String originalImageName = format("originalImage.%s", FilenameUtils.getExtension(dto.getOriginalImage().getFilename()));
+        images.put(originalImageName, new File(props.getUploadDirectory(), dto.getOriginalImage().getFilename()));
+
+        String skeletonizedImageName = format("skeletonizedImage.%s", FilenameUtils.getExtension(dto.getGeometricAnalyse().getSkeletonizedImage().getFilename()));
+        images.put(skeletonizedImageName, new File(props.getUploadDirectory(), dto.getGeometricAnalyse().getSkeletonizedImage().getFilename()));
+
+        String binarizedImageName = format("skeletonizedImage.%s", FilenameUtils.getExtension(dto.getGeometricAnalyse().getBinarizedImage().getFilename()));
+        images.put(binarizedImageName, new File(props.getUploadDirectory(), dto.getGeometricAnalyse().getBinarizedImage().getFilename()));
+
+        for (VesselDto vessel : dto.getGeometricAnalyse().getVessels()) {
+            String vesselMainImageName = format("geometric/vessel_main_%s.%s", vessel.getId(), FilenameUtils.getExtension(vessel.getMainVesselImage().getFilename()));
+            images.put(vesselMainImageName, new File(props.getUploadDirectory(), vessel.getMainVesselImage().getFilename()));
+
+            String vesselImageName = format("geometric/vessel_%s.%s", vessel.getId(), FilenameUtils.getExtension(vessel.getVesselImage().getFilename()));
+            images.put(vesselImageName, new File(props.getUploadDirectory(), vessel.getVesselImage().getFilename()));
+        }
+
+        String ischemiaImageName = format("ischemiaImage.%s", FilenameUtils.getExtension(dto.getBloodFlowAnalyse().getIschemiaImage().getFilename()));
+        images.put(ischemiaImageName, new File(props.getUploadDirectory(), dto.getBloodFlowAnalyse().getIschemiaImage().getFilename()));
+
+        String densityImageName = format("densityImage.%s", FilenameUtils.getExtension(dto.getBloodFlowAnalyse().getDensityImage().getFilename()));
+        images.put(densityImageName, new File(props.getUploadDirectory(), dto.getBloodFlowAnalyse().getDensityImage().getFilename()));
+
+
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); ZipOutputStream zip = new ZipOutputStream(bos)) {
+
+            for (String imageName : images.keySet()) {
+                ZipEntry zipEntry = new ZipEntry(images.get(imageName).getAbsolutePath());
+                zip.putNextEntry(zipEntry);
+            }
+
+            zip.finish();
+
+            return bos.toByteArray();
+        } catch (IOException e) {
+            throw new OperationException(msa.getMessage("errors.api.analyse.archive", new Object[] {dto.getId()}));
+        }
     }
 
     @Override
