@@ -1,5 +1,10 @@
 package com.angio.angiobackend.config;
 
+import static com.angio.angiobackend.AngioApplication.SUPPORTED_LOCALES;
+import static com.angio.angiobackend.config.AuthorizationServerConfig.CLIENT_ID;
+import static com.angio.angiobackend.config.AuthorizationServerConfig.CLIENT_SECRET;
+import static com.angio.angiobackend.config.AuthorizationServerConfig.SCOPE_TRUST;
+
 import com.angio.angiobackend.AngioApplication;
 import com.angio.angiobackend.AngioBackendProperties;
 import lombok.AllArgsConstructor;
@@ -33,14 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.angio.angiobackend.AngioApplication.SUPPORTED_LOCALES;
-import static com.angio.angiobackend.config.AuthorizationServerConfig.CLIENT_ID;
-import static com.angio.angiobackend.config.AuthorizationServerConfig.CLIENT_SECRET;
-import static com.angio.angiobackend.config.AuthorizationServerConfig.SCOPE_TRUST;
-import static com.google.common.base.Predicates.not;
-import static springfox.documentation.builders.PathSelectors.ant;
-import static springfox.documentation.builders.RequestHandlerSelectors.basePackage;
-
 @Configuration
 @EnableSwagger2
 @AllArgsConstructor
@@ -60,7 +57,8 @@ public class SwaggerConfig {
     public Docket analyseApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(basePackage("com.angio.angiobackend.api"))
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.ant("/api/v2/**"))
                 .build()
                 .globalResponseMessage(RequestMethod.GET, getGetResponses())
                 .globalResponseMessage(RequestMethod.POST, getPostResponses())

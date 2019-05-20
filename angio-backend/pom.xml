@@ -65,6 +65,12 @@
 			<artifactId>spring-boot-starter-artemis</artifactId>
 		</dependency>
 
+		<!-- Spring Actuator -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -243,6 +249,7 @@
 				<executions>
 					<execution>
 						<goals>
+							<goal>build-info</goal>
 							<goal>repackage</goal>
 						</goals>
 					</execution>

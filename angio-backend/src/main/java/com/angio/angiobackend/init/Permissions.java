@@ -33,6 +33,8 @@ public enum  Permissions {
     ORGANIZATION_EDIT("Редактирование оорганизаций"),
     ORGANIZATION_REMOVE("Удаление организаций"),
 
+    ACTUATOR_VIEW("Взаимодействие с Spring Actuator"),
+
     TOKEN_VIEW("Просмотр токенов пользователей"),
     TOKEN_REVOKE("Отзыв собственных refresh токенов"),
     TOKEN_REMOVE("Отзыв токенов любых пользователй"),

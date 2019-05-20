@@ -1,11 +1,17 @@
 package com.angio.angiobackend.config;
 
+import static com.angio.angiobackend.config.SwaggerConfig.SWAGGER_SERVICE_PATHS;
+import static java.lang.String.format;
+
 import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.config.security.AngioAuthProvider;
+import com.angio.angiobackend.init.Permissions;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.actuate.info.InfoEndpoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,9 +26,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import static com.angio.angiobackend.config.SwaggerConfig.SWAGGER_SERVICE_PATHS;
-import static java.lang.String.format;
 
 @Slf4j
 @AllArgsConstructor
@@ -67,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         format("%s/favicon.ico", props.getFrontendDistPath()),
                         format("%s/index.html", props.getFrontendDistPath()))
                 .regexMatchers("^((?!/api/|/oauth/token).)*$")
+                .requestMatchers(EndpointRequest.to(InfoEndpoint.class))
                 .antMatchers(HttpMethod.POST, "/api/v2/user/*/password/reset")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/reset")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/enable");
@@ -83,6 +87,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/oauth/token").permitAll()
                 .regexMatchers("^((?!/api/).)*$").permitAll()
+                .requestMatchers(EndpointRequest.to(InfoEndpoint.class)).permitAll()
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAuthority(Permissions.ACTUATOR_VIEW.name())
                 .anyRequest().authenticated();
     }
 

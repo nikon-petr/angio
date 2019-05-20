@@ -78,7 +78,6 @@ spring:
     autoconfigure:
         exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 
-
 logging:
     level:
         root: WARN
@@ -91,6 +90,16 @@ logging:
         org.hibernate.type: INFO
         org.hibernate.cache: INFO
         io.swagger.models.parameters.AbstractSerializableParameter: ERROR
+
+management:
+    endpoints:
+        web:
+            base-path: /api/v2/actuator
+            exposure:
+                include: "*"
+            cors:
+                allowed-origins: "*"
+                allowed-methods: GET,POST
 
 angiobackend:
     app:
