@@ -200,6 +200,12 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
 
+        if (currentUser.getOrganization() == null) {
+            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
+        } else {
+            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
+        }
+
         log.trace("filterAnalysesByQueryString() - map sorting fields");
         Pageable mappedPageRequest = mapSortingFields(pageable);
 

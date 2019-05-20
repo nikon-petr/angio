@@ -12,6 +12,7 @@ import com.angio.angiobackend.api.analyse.entity.Vessel_;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
 import com.angio.angiobackend.api.common.embeddable.FullName_;
+import com.angio.angiobackend.api.organization.entity.Organization_;
 import com.angio.angiobackend.api.patient.entity.Patient_;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.entities.User_;
@@ -174,6 +175,41 @@ public class AnalyseSpecification {
                         .get(AdditionalInfo_.diagnostician)
                         .get(User_.fullName)
                         .get(FullName_.patronymic)), substringPattern(patronymic).toUpperCase());
+            }
+            return null;
+        };
+    }
+
+    /**
+     * Find analyses by diagnostician id.
+     *
+     * @param id diagnostician id
+     * @return specification
+     */
+    public Specification<Analyse> diagnosticianId(UUID id) {
+        return (root, query, cb) -> {
+            if (id != null) {
+                return cb.equal(root.get(Analyse_.additionalInfo)
+                        .get(AdditionalInfo_.diagnostician)
+                        .get(User_.id), id);
+            }
+            return null;
+        };
+    }
+
+    /**
+     * Find analyses by organization id.
+     *
+     * @param id organization id
+     * @return specification
+     */
+    public Specification<Analyse> organizationId(Long id) {
+        return (root, query, cb) -> {
+            if (id != null) {
+                return cb.equal(root.get(Analyse_.additionalInfo)
+                        .get(AdditionalInfo_.diagnostician)
+                        .get(User_.organization)
+                        .get(Organization_.id), id);
             }
             return null;
         };

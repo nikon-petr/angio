@@ -35,8 +35,8 @@ export class UserLocalStorageService {
         ls.set('email', userInfo.email);
         ls.set('firstname', userInfo.fullName.firstname);
         ls.set('lastname', userInfo.fullName.lastname);
-        ls.set('patronymic', userInfo.fullName.patronymic);
-        ls.set('organizationName', userInfo.organizationName);
+        ls.set('patronymic', userInfo.fullName.patronymic || null);
+        ls.set('organizationName', userInfo.organizationName || null);
         ls.set('permissions', userInfo.permissions);
     }
 
