@@ -104,7 +104,7 @@ angiobackend:
 
         ui:
             user-activation-form-path: /activation?userId={id}
-            user-resetting-form-path: /user/{id}/password/reset
+            user-resetting-form-path: /reset?userId={id}
 
         image-upload-extensions:
             - bmp
