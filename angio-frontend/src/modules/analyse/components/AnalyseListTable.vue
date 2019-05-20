@@ -27,8 +27,6 @@
                         v-bind:original-image-url="props.item.originalImage.url"
                         v-bind:has-permissions="hasPermissions"
                         v-bind:delete-analyse="deleteAnalyse"
-                        v-bind:print-analyse-report="printAnalyseReport"
-                        v-bind:download-analyse-archive="downloadAnalyseArchive"
                 ></AnalyseListTablePreview>
             </template>
             <template v-slot:items="props">
@@ -116,12 +114,6 @@
 
         @Prop()
         public readonly deleteAnalyse!: (id: number) => Promise<void>;
-
-        @Prop()
-        public readonly printAnalyseReport!: (id: number) => Promise<void>;
-
-        @Prop()
-        public readonly downloadAnalyseArchive!: (id: number) => Promise<void>;
 
         public expand: boolean = false;
 

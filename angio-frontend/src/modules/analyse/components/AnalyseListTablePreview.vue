@@ -56,77 +56,26 @@
                             pa-0
                             ma-0
                     >
-                        <v-img
+                        <AnalyseListTablePreviewImage
                                 v-bind:src="originalImageUrl"
-                                class="elevation-2"
-                                max-height="250px"
-                                max-width="250px"
-                                aspect-ratio="1"
-                                ma-0
-                                pa-0
-                        >
-                            <template v-slot:placeholder>
-                                <v-layout
-                                        fill-height
-                                        align-center
-                                        justify-center
-                                        ma-0
-                                        pa-0
-                                >
-                                    <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                                </v-layout>
-                            </template>
-                        </v-img>
+                        ></AnalyseListTablePreviewImage>
                     </v-layout>
                 </v-flex>
                 <v-flex xs12>
-                    <v-divider class="py-1"></v-divider>
-                    <v-btn
+                    <v-divider class="pb-1"></v-divider>
+                    <DeleteAnalyseButton
                             v-if="hasPermissions(['ANALYSE_REMOVE'])"
-                            v-bind:loading="deleteLoading"
-                            v-on:click="deleteAnalyseSafely"
-                            class="ma-0"
-                            color="error"
-                            ripple
-                            icon
-                            flat
-                    >
-                        <v-icon>delete</v-icon>
-                    </v-btn>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                    v-if="status.type === 'SUCCESS'"
-                                    v-bind:loading="printAnalyseReportLoading"
-                                    v-on:click="onPrintAnalyseReport()"
-                                    v-on="on"
-                                    class="ma-0"
-                                    ripple
-                                    icon
-                                    flat
-                            >
-                                <v-icon>print</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>{{ $t('analyse.component.analyseListTablePreview.button.print.tooltip') }}</span>
-                    </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                    v-if="status.type === 'SUCCESS'"
-                                    v-bind:loading="downloadAnalyseArchiveLoading"
-                                    v-on:click="onDownloadAnalyseArchive()"
-                                    v-on="on"
-                                    class="ma-0"
-                                    ripple
-                                    icon
-                                    flat
-                            >
-                                <v-icon>archive</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>{{ $t('analyse.component.analyseListTablePreview.button.downloadZip.tooltip') }}</span>
-                    </v-tooltip>
+                            v-bind:analyse-id="id"
+                            v-bind:delete-analyse="deleteAnalyse"
+                    ></DeleteAnalyseButton>
+                    <PrintAnalyseButton
+                            v-if="status.type === 'SUCCESS'"
+                            v-bind:analyse-id="id"
+                    ></PrintAnalyseButton>
+                    <DownloadArchiveAnalyseButton
+                            v-if="status.type === 'SUCCESS'"
+                            v-bind:analyse-id="id"
+                    ></DownloadArchiveAnalyseButton>
                     <v-btn
                             v-if="status.type === 'SUCCESS'"
                             v-bind:to="`/analyse/${id}`"
@@ -149,9 +98,14 @@
     import FullName from '@/modules/common/models/fullName';
     import {AnalyseStatus} from '@/modules/analyse/models/analyse';
     import {UserPermission} from '@/modules/user/store/userState';
-    import {ConfirmType} from '@/modules/analyse/helpers/confirm';
+    import PrintAnalyseButton from '@/modules/analyse/components/PrintAnalyseButton.vue';
+    import DownloadArchiveAnalyseButton from '@/modules/analyse/components/DownloadArchiveAnalyseButton.vue';
+    import DeleteAnalyseButton from '@/modules/analyse/components/DeleteAnalyseButton.vue';
+    import AnalyseListTablePreviewImage from '@/modules/analyse/components/AnalyseListTablePreviewImage.vue';
 
-    @Component
+    @Component({
+        components: {AnalyseListTablePreviewImage, DeleteAnalyseButton, DownloadArchiveAnalyseButton, PrintAnalyseButton}
+    })
     export default class AnalyseListTablePreview extends Vue {
 
         @Prop()
@@ -183,41 +137,6 @@
 
         @Prop()
         public readonly deleteAnalyse!: (id: number) => Promise<void>;
-
-        @Prop()
-        public readonly printAnalyseReport!: (id: number) => Promise<void>;
-
-        @Prop()
-        public readonly downloadAnalyseArchive!: (id: number) => Promise<void>;
-
-        public deleteLoading: boolean = false;
-
-        public printAnalyseReportLoading: boolean = false;
-
-        public downloadAnalyseArchiveLoading: boolean = false;
-
-        public async deleteAnalyseSafely() {
-            const title = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.title').toString();
-            const text = this.$t('analyse.component.analyseListTablePreview.button.delete.confirm.text', [this.id]).toString();
-            if(await this.$confirm(title, ConfirmType.DELETE, text)) {
-                this.deleteLoading = true;
-                this.$logger.debug(`delete analyse #${this.id}`);
-                this.deleteAnalyse(this.id)
-                    .finally(() => this.deleteLoading = false);
-            }
-        }
-
-        public onPrintAnalyseReport() {
-            this.printAnalyseReportLoading = true;
-            this.printAnalyseReport(this.id)
-                .finally(() => this.printAnalyseReportLoading = false);
-        }
-
-        public onDownloadAnalyseArchive() {
-            this.downloadAnalyseArchiveLoading = true;
-            this.downloadAnalyseArchive(this.id)
-                .finally(() => this.downloadAnalyseArchiveLoading = false);
-        }
 
         public fullName(name: FullName): string {
             const patronymic: string = name.patronymic ? name.patronymic : '';

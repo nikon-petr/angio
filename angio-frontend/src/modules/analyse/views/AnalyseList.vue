@@ -23,17 +23,15 @@
                     v-bind:search="analyseFilter.search"
                     v-bind:set-starred-analyse="setStarredAnalyse"
                     v-bind:delete-analyse="deleteAnalyse"
-                    v-bind:print-analyse-report="printAnalyseReport"
-                    v-bind:download-analyse-archive="downloadAnalyseArchive"
             ></AnalyseListTable>
         </v-flex>
 
         <v-flex xs12>
-            <AnalyseListTablePagination
+            <AnalyseListPagination
                     v-bind:page.sync="page"
                     v-bind:rows-per-page="rowsPerPage"
                     v-bind:total-items="totalItems"
-            ></AnalyseListTablePagination>
+            ></AnalyseListPagination>
         </v-flex>
     </StackLayout>
 </template>
@@ -50,11 +48,11 @@
     import StackLayout from '@/modules/common/components/StackLayout.vue';
     import {AnalyseApiService} from '@/modules/analyse/services/analyseApiService';
     import {UserGetter} from '@/modules/user/store/userStore';
-    import AnalyseListTablePagination from '@/modules/analyse/components/AnalyseListTablePagination.vue';
     import {Dictionary} from 'vue-router/types/router';
+    import AnalyseListPagination from '@/modules/analyse/components/AnalyseListPagination.vue';
 
     @Component({
-        components: {AnalyseListTablePagination, StackLayout, AnalyseListTable, BaseSubheader, AnalyseListFilter},
+        components: {AnalyseListPagination, StackLayout, AnalyseListTable, BaseSubheader, AnalyseListFilter},
     })
     export default class AnalyseList extends Vue {
 
@@ -163,14 +161,6 @@
                 this.getAnalysePage();
                 resolve();
             });
-        }
-
-        public printAnalyseReport(id: number): Promise<void> {
-            return AnalyseApiService.printAnalyseReport(id);
-        }
-
-        public downloadAnalyseArchive(id: number): Promise<void> {
-            return AnalyseApiService.downloadArchive(id);
         }
 
         public created() {

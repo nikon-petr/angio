@@ -147,7 +147,6 @@
     import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator';
     import {AnalyseFilterModel, AnalyseStatusType} from '@/modules/analyse/models/analyse';
     import PeriodDatePicker from '@/modules/common/components/PeriodDatePicker.vue';
-    import {AnalyseStatusRepresentation} from '@/modules/analyse/helpers/representation';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
     import AnalyseListFilterChipsList from '@/modules/analyse/components/AnalyseListFilterChipsList.vue';
     import {Dictionary} from 'vue-router/types/router';
@@ -167,7 +166,7 @@
         @Prop()
         public readonly fetching!: boolean;
 
-        public statuses: AnalyseStatusRepresentation[] = [
+        public statuses = [
             {value: AnalyseStatusType.CREATED, text: 'analyse.component.analyseListFilter.status.CREATED'},
             {value: AnalyseStatusType.SUCCESS, text: 'analyse.component.analyseListFilter.status.SUCCESS'},
             {value: AnalyseStatusType.IN_PROGRESS, text: 'analyse.component.analyseListFilter.status.IN_PROGRESS'},
@@ -185,7 +184,8 @@
             return {
                 analyseFilterModel: {
                     search: this.$route.query && this.$route.query.search ? this.$route.query.search as string : undefined,
-                    statuses: this.$route.query && this.$route.query.statuses ? this.$route.query.statuses as AnalyseStatusType[] : [],
+                    statuses: this.$route.query && this.$route.query.statuses ?
+                        (Array.isArray(this.$route.query.statuses) ? this.$route.query.statuses as AnalyseStatusType[] : [this.$route.query.statuses]) : [],
                     startDate: this.$route.query && this.$route.query.startDate ? this.$moment(this.$route.query.startDate, 'YYYY-MM-DD').toDate() : undefined,
                     endDate: this.$route.query && this.$route.query.endDate ? this.$moment(this.$route.query.endDate, 'YYYY-MM-DD').toDate() : undefined,
                     singleDate: this.$route.query && this.$route.query.singleDate ? this.$moment(this.$route.query.singleDate, 'YYYY-MM-DD').toDate() : undefined,

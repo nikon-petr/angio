@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="text-xs-center">
+    <div v-if="totalPages > 0" class="text-xs-center">
         <v-pagination
                 v-bind:value="pagination.page"
                 v-bind:length="totalPages"
@@ -17,7 +17,7 @@
     import Pagination from '@/modules/common/helpers/pagination';
 
     @Component
-    export default class AnalyseListTablePagination extends Vue {
+    export default class AnalyseListPagination extends Vue {
 
         @Prop()
         public readonly page!: number;
