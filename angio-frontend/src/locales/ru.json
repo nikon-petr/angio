@@ -190,11 +190,64 @@
           "reset": "Восстановить",
           "submit": "Войти"
         }
+      },
+      "activation": {
+        "activationFormStep": {
+          "title": "Активация",
+          "button": {
+            "send": "Отправить"
+          },
+          "error": "Ошибка активации",
+          "enablingCode": {
+            "field": "Код активации",
+            "validation": {
+              "NotEmpty": "Код активации не должен быть пустым"
+            }
+          },
+          "fullName": {
+            "firstname": {
+              "field": "Имя",
+              "validation": {
+                "NotEmpty": "Имя не должно быть пустым"
+              }
+            },
+            "lastname": {
+              "field": "Фамилия",
+              "validation": {
+                "NotEmpty": "Фамилия не должна быть пустой"
+              }
+            },
+            "patronymic": {
+              "field": "Отчество"
+            }
+          },
+          "newPassword": {
+            "field": "Пароль",
+            "validation": {
+              "NotEmpty": "Пароль не должен быть пустым",
+              "MinLength": "Минимальная длина пароля 8 символов",
+              "DoesNotMatch": "Пароли не совпадают"
+            }
+          },
+          "newPasswordRepeat": {
+            "field": "Повторите пароль"
+          }
+        },
+        "activationSuccessStep": {
+          "title": "Активация завершена!",
+          "content": "Поздравляем, активация аккаунта прошла успешно. Для входа в систему, пожалуйста, нажмите кнопку \"Войти\".",
+          "button": {
+            "login": "Войти"
+          }
+        }
       }
     },
     "view": {
       "login": {
         "title": "Авторизация"
+      },
+      "activation": {
+        "title": "Активация"
       },
       "403": {
         "title": "Доступ запрещен",

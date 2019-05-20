@@ -190,11 +190,64 @@
           "reset": "Reset",
           "submit": "Log In"
         }
+      },
+      "activation": {
+        "activationFormStep": {
+          "title": "Activation",
+          "button": {
+            "send": "Send"
+          },
+          "error": "Activation error",
+          "enablingCode": {
+            "field": "Activation code",
+            "validation": {
+              "NotEmpty": "Activation code must not be empty"
+            }
+          },
+          "fullName": {
+            "firstname": {
+              "field": "Name",
+              "validation": {
+                "NotEmpty": "Name must not be empty"
+              }
+            },
+            "lastname": {
+              "field": "Surname",
+              "validation": {
+                "NotEmpty": "Surname must not be empty"
+              }
+            },
+            "patronymic": {
+              "field": "Patronymic"
+            }
+          },
+          "newPassword": {
+            "field": "Password",
+            "validation": {
+              "NotEmpty": "Password must not be empty",
+              "MinLength": "The minimum password length is 8 characters",
+              "DoesNotMatch": "Passwords do not match"
+            }
+          },
+          "newPasswordRepeat": {
+            "field": "Confirm password"
+          }
+        },
+        "activationSuccessStep": {
+          "title": "Activation completed!",
+          "content": "Congratulations, account activation was successful. To login, please click on the \"Log In\" button.",
+          "button": {
+            "login": "Log In"
+          }
+        }
       }
     },
     "view": {
       "login": {
         "title": "Authorization"
+      },
+      "activation": {
+        "title": "Activation"
       },
       "403": {
         "title": "Access denied",

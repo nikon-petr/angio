@@ -28,3 +28,38 @@ export interface UserCredentialsModel {
 export interface RefreshTokenModel {
     access_token: string;
 }
+
+export interface UserActivationModel {
+    fullName: FullName;
+    enablingCode: string;
+    newPassword: string;
+}
+
+export interface Organization {
+    id: number;
+    name: string;
+}
+
+export interface Role {
+    id: number;
+    name: string;
+    description: string;
+    permissions: Permission[];
+}
+
+export interface Permission {
+    id: number;
+    name: string;
+    description: string;
+}
+
+export interface UserDetailsModel {
+    id: string;
+    email: string;
+    fullName: FullName;
+    locked: boolean;
+    enabled: boolean;
+    organization: Organization;
+    roles: Role[];
+    ownedRolesToManage: Role[];
+}
