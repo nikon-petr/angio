@@ -240,6 +240,20 @@
             "login": "Log In"
           }
         }
+      },
+      "resetPassword": {
+        "title": "Restore access",
+        "content": "For restore access, you must reset the password. To do this, enter your email address.",
+        "email": {
+          "field": "Email",
+          "validation": {
+            "NotEmpty": "Email should not be empty"
+          }
+        },
+        "button": {
+          "submit": "Reset"
+        },
+        "error": "Password reset error"
       }
     },
     "view": {
@@ -248,6 +262,9 @@
       },
       "activation": {
         "title": "Activation"
+      },
+      "resetPassword": {
+        "title": "Restore access"
       },
       "403": {
         "title": "Access denied",

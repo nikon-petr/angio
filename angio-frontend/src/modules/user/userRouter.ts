@@ -3,6 +3,7 @@ import Login from '@/modules/user/views/Login.vue';
 import Forbidden from '@/modules/user/views/403.vue';
 import {AuthPredicate} from '@/modules/common/helpers/authPredicate';
 import AccountActivation from '@/modules/user/views/AccountActivation.vue';
+import ResetPassword from '@/modules/user/views/ResetPassword.vue';
 
 export const userRouterConfig: RouteConfig[] = [
     {
@@ -16,6 +17,11 @@ export const userRouterConfig: RouteConfig[] = [
         component: AccountActivation,
         meta: {title: 'user.view.activation.title', auth: AuthPredicate.isAnonymous()},
         props: (route) => ({ userId: route.query.userId })
+    },
+    {
+        path: '/user/reset',
+        component: ResetPassword,
+        meta: {title: 'user.view.resetPassword.title', auth: AuthPredicate.isAnonymous()}
     },
     {path: '/403', component: Forbidden, meta: {title: 'user.view.403.title', auth: AuthPredicate.permitAll()}},
 ];

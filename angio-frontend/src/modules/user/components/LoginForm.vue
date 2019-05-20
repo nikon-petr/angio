@@ -41,7 +41,7 @@
                                 required
                         ></v-text-field>
                         <BuiltInErrorMessage
-                                v-bind:error-messages="errorMessages.map(message => $t(message))"
+                                v-bind:error-messages="mapErrorMessages"
                         ></BuiltInErrorMessage>
                     </v-form>
                 </template>
@@ -101,6 +101,10 @@
             username: '',
             password: '',
         };
+
+        get mapErrorMessages() {
+            return this.errorMessages.map(message => this.$t(message))
+        }
 
         @throttle(1000)
         public submitForm() {

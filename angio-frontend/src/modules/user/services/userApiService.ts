@@ -49,4 +49,9 @@ export class UserApiService {
         log.debug(`create activate request with data: ${JSON.stringify(model)}`);
         return axios.post<UserDetailsModel>(`/user/${userId}/enable`, model);
     }
+
+    public static resetPassword(email: string): AxiosPromise<void> {
+        log.debug(`reset current user password request with email: ${email}`);
+        return axios.post(`/user/${email}/password/reset`);
+    }
 }
