@@ -1,8 +1,10 @@
 package com.angio.angiobackend.api.user.service;
 
+import com.angio.angiobackend.api.common.dto.Response;
 import com.angio.angiobackend.api.user.dto.EnableUserDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
+import com.angio.angiobackend.api.user.dto.RegisterUserDto;
 import com.angio.angiobackend.api.user.dto.ResetUserDto;
 import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
@@ -37,6 +39,9 @@ public interface UserService {
 
     @Transactional
     List<NewUserDto> createUsers(List<NewUserDto> dtos);
+
+    @Transactional
+    Response registerUser(RegisterUserDto dto);
 
     @Transactional
     UserDetailsDto getUserById(UUID id);

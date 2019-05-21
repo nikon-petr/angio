@@ -3,6 +3,7 @@ package com.angio.angiobackend.api.user.service.impl;
 import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.dto.AbstractEmailDto;
+import com.angio.angiobackend.api.common.dto.Response;
 import com.angio.angiobackend.api.common.exception.OperationException;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.angio.angiobackend.api.common.mapper.FullNameMapper;
@@ -17,6 +18,7 @@ import com.angio.angiobackend.api.security.repository.RoleRepository;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
 import com.angio.angiobackend.api.user.dto.EnableUserDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
+import com.angio.angiobackend.api.user.dto.RegisterUserDto;
 import com.angio.angiobackend.api.user.dto.ResetUserDto;
 import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
@@ -33,6 +35,7 @@ import com.angio.angiobackend.api.user.mapper.UserMapper;
 import com.angio.angiobackend.api.user.repositories.SettingsRepository;
 import com.angio.angiobackend.api.user.repositories.UserRepository;
 import com.angio.angiobackend.api.user.service.UserService;
+import com.angio.angiobackend.init.Roles;
 import com.angio.angiobackend.util.PasswordUtils;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -53,8 +56,11 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -199,6 +205,55 @@ public class UserServiceImpl implements UserService {
 
         log.trace("createUsers() - end");
         return userMapper.toNewUserDtos(new ArrayList<>(passwordsAndCreatedUsers.values()));
+    }
+
+    /**
+     * Register new user with role SINGLE_DOCTOR and no organization set.
+     *
+     * @param dto registration data
+     * @return success response
+     */
+    @Override
+    @Transactional
+    public Response registerUser(RegisterUserDto dto) {
+        log.trace("registerUser() - start");
+
+        log.trace("registerUser() - checking email is unique");
+        checkEmailUnique(dto.getEmail());
+
+        log.trace("createUsers() - fetch SINGLE_DOCTOR role");
+        Role doctorRole = roleRepository.findByName(Roles.SINGLE_DOCTOR.name())
+                .orElseThrow(RuntimeException::new);
+
+        log.trace("createUsers() - generate password");
+        String password = PasswordUtils.generateNumberPassword(6);
+
+        User newUser = transactionTemplate.execute((status) -> {
+            User userToSave = userRepository.save(new User()
+                    .setEmail(dto.getEmail())
+                    .setEnabled(false)
+                    .setLocked(false)
+                    .setRoles(Collections.singleton(doctorRole))
+                    .setOrganization(null)
+                    .setPassword(passwordEncoder.encode(password)));
+
+            log.trace("createUsers() - create user settings");
+            settingsRepository.save(settingsMapper.toNewEntity(props.getUserDefaultSettings()).setUser(userToSave));
+
+            return userToSave;
+        });
+
+        log.trace("createUsers() - send registration email");
+        NewNotificationDto notification = new NewNotificationDto()
+                .setDate(new Date())
+                .setType(NotificationType.INFO)
+                .setTemplateName("registration.ftl")
+                .setSubject(new SubjectDto("Регистрация в Angio"))
+                .setDataModel(prepareRegistrationEmail(password, newUser));
+        emailNotificationService.notifyUser(newUser.getId(), notification);
+
+        log.trace("createUsers() - end");
+        return Response.success(null);
     }
 
     /**
@@ -449,6 +504,14 @@ public class UserServiceImpl implements UserService {
                     msa.getMessage("errors.api.user.emailNotUnique", new Object[]{existingUsers.stream()
                             .map(User::getEmail)
                             .collect(Collectors.toList())}));
+        }
+    }
+
+    private void checkEmailUnique(String email) {
+        Optional<User> existingUsers = userRepository.findByEmail(email);
+        if (existingUsers.isPresent()) {
+            throw new OperationException(
+                    msa.getMessage("errors.api.user.emailNotUnique", new Object[]{email}));
         }
     }
 

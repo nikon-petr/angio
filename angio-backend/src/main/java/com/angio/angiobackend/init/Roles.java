@@ -26,6 +26,25 @@ public enum  Roles {
             Permissions.PUSH_NOTIFICATION_RECEIVE
     }, "Врач диагност"),
 
+    SINGLE_DOCTOR(new Permissions[]{
+            Permissions.ANALYSE_CREATE,
+            Permissions.ANALYSE_VIEW,
+            Permissions.ANALYSE_EDIT,
+            Permissions.ANALYSE_EXECUTE_ACTION,
+            Permissions.ANALYSE_REMOVE,
+
+            Permissions.PATIENT_CREATE,
+            Permissions.PATIENT_VIEW,
+            Permissions.PATIENT_EDIT,
+            Permissions.PATIENT_REMOVE,
+
+            Permissions.IMAGE_UPLOAD,
+
+            Permissions.TOKEN_REVOKE,
+
+            Permissions.PUSH_NOTIFICATION_RECEIVE
+    }, "Врач диагност (без организации)"),
+
     ADMIN(new Permissions[]{
             Permissions.ANALYSE_PURGE_DELETED,
 

@@ -4,6 +4,7 @@ import com.angio.angiobackend.api.common.dto.Response;
 import com.angio.angiobackend.api.user.dto.ChangePasswordDto;
 import com.angio.angiobackend.api.user.dto.EnableUserDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
+import com.angio.angiobackend.api.user.dto.RegisterUserDto;
 import com.angio.angiobackend.api.user.dto.ResetUserDto;
 import com.angio.angiobackend.api.user.dto.SettingsDto;
 import com.angio.angiobackend.api.user.dto.UpdateUserDto;
@@ -41,6 +42,12 @@ public class UserResource {
     @PostMapping
     public List<NewUserDto> createUsers(@RequestBody @Validated List<NewUserDto> dtos) {
         return userService.createUsers(dtos);
+    }
+
+    @ApiOperation("Register user")
+    @PostMapping("/register")
+    public Response registerUser(@RequestBody @Validated RegisterUserDto dto) {
+        return userService.registerUser(dto);
     }
 
     @ApiOperation("Get user by id")

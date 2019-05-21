@@ -71,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         format("%s/index.html", props.getFrontendDistPath()))
                 .regexMatchers("^((?!/api/|/oauth/token).)*$")
                 .requestMatchers(EndpointRequest.to(InfoEndpoint.class))
+                .antMatchers(HttpMethod.POST, "/api/v2/user/register")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/*/password/reset")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/reset")
                 .antMatchers(HttpMethod.POST, "/api/v2/user/{id}/enable");
