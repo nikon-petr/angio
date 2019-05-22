@@ -7,9 +7,13 @@ import com.angio.angiobackend.api.patient.entity.Patient;
 import com.angio.angiobackend.api.patient.mapper.PatientMapper;
 import com.angio.angiobackend.api.patient.repository.PatientRepository;
 import com.angio.angiobackend.api.patient.service.PatientService;
+import com.angio.angiobackend.api.patient.specification.PatientSpecification;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,7 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
+    private final PatientSpecification patientSpecification;
     private final DynamicLocaleMessageSourceAccessor msa;
 
     /**
@@ -44,13 +49,35 @@ public class PatientServiceImpl implements PatientService {
     }
 
     /**
+     * Filter patients by query string matching any one or more fields.
+     *
+     * @param search query string
+     * @param pageable page request
+     * @return page of filtered analyses
+     */
+    @Override
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('PATIENT_VIEW')")
+    public Page<PatientDto> filterPatientsByQueryString(String search, Pageable pageable) {
+
+        log.trace("filterPatientsByQueryString() - start");
+        Specification<Patient> specs = patientSpecification.getAnalyseInfoFilter(search);
+
+        log.trace("filterPatientsByQueryString() - filter patients");
+        Page<Patient> patientEntityPage = patientRepository.findAll(specs, pageable);
+
+        log.trace("filterPatientsByQueryString() - map and return patient page");
+        return patientEntityPage.map(patientMapper::toDto);
+    }
+
+    /**
      * Find patient by id and return entity object or throw {@link ResourceNotFoundException}.
      *
      * @param id patient id
      * @return patient entity
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     @PreAuthorize("hasAuthority('PATIENT_VIEW')")
     public Patient getPatientEntityById(@NonNull Long id) {
         log.trace("getPatientByPolicy() - start: id={}", id);
