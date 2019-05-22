@@ -234,9 +234,21 @@ public class AnalyseServiceImpl implements AnalyseService {
     public DetailedAnalyseDto getAnalyseById(@NonNull Long id) {
         log.trace("getAnalyseById() - start");
         log.info("getAnalyseById() - analyse to get: id={}", id);
-        return analyseMapper.toExtendedDto(analyseRepository.findOne(analyseSpecification.analyseId(id)
+
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll()))
+                .and(analyseSpecification.fetchAll());
+
+        log.debug("getAnalyseById() - get starred user");
+        User currentUser = userService.getUserFromContext();
+
+        if (currentUser.getOrganization() == null) {
+            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
+        } else {
+            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
+        }
+
+        return analyseMapper.toExtendedDto(analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id}))));
     }
@@ -252,11 +264,22 @@ public class AnalyseServiceImpl implements AnalyseService {
     @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
     public AnalyseReportDto getAnalyseReport(@NonNull Long id) {
 
-        Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll()))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
+                .and(analyseSpecification.fetchAll());
+
+        log.debug("getAnalyseReport() - get starred user");
+        User currentUser = userService.getUserFromContext();
+
+        if (currentUser.getOrganization() == null) {
+            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
+        } else {
+            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
+        }
+
+        Analyse analyse = analyseRepository.findOne(specs)
+        .orElseThrow(() -> new ResourceNotFoundException(
+                msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
         if (!analyse.getStatus().getType().equals(AnalyseStatusType.SUCCESS)) {
             throw new ReportException(msa.getMessage("errors.api.analyse.invalidStatusForReport", new Object[] {id}));
@@ -289,9 +312,21 @@ public class AnalyseServiceImpl implements AnalyseService {
     @PreAuthorize("hasAuthority('ANALYSE_REMOVE')")
     public DetailedAnalyseDto deleteAnalyse(@NonNull Long id) {
         log.trace("deleteAnalyse() - start");
-        Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll()))
+                .and(analyseSpecification.fetchAll());
+
+
+        log.debug("deleteAnalyse() - get starred user");
+        User currentUser = userService.getUserFromContext();
+
+        if (currentUser.getOrganization() == null) {
+            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
+        } else {
+            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
+        }
+
+        Analyse analyse = analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
@@ -337,10 +372,21 @@ public class AnalyseServiceImpl implements AnalyseService {
     public DetailedAnalyseDto updateAnalyseAdditionalInfo(@NonNull Long id, @NonNull AdditionalInfoDto dto) {
         log.trace("updateAnalyseAdditionalInfo() - start");
 
-        log.trace("updateAnalyseAdditionalInfo() - search analyse info entity with id:", id);
-        Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll()))
+                .and(analyseSpecification.fetchAll());
+
+        log.debug("updateAnalyseAdditionalInfo() - get starred user");
+        User currentUser = userService.getUserFromContext();
+
+        if (currentUser.getOrganization() == null) {
+            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
+        } else {
+            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
+        }
+
+        log.trace("updateAnalyseAdditionalInfo() - search analyse info entity with id:", id);
+        Analyse analyse = analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
@@ -361,8 +407,21 @@ public class AnalyseServiceImpl implements AnalyseService {
     @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
     public StarredAnalyseDto starAnalyse(@NonNull Long id, @NonNull StarredAnalyseDto starredAnalyse) {
 
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll());
+
+        log.debug("starAnalyse() - get starred user");
+        User currentUser = userService.getUserFromContext();
+
+        if (currentUser.getOrganization() == null) {
+            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
+        } else {
+            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
+        }
+
         log.debug("starAnalyse() - start: id {}", id);
-        Analyse analyse = analyseRepository.findById(id)
+        Analyse analyse = analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
@@ -382,16 +441,27 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Transactional
     @PreAuthorize("hasAuthority('ANALYSE_EDIT')")
     public DetailedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId) {
-        log.trace("deleteAnalyse() - start");
+        log.trace("deleteGeometricAnalyseVessel() - start");
 
-        log.trace("deleteAnalyse() - find analyse: id={}", analyseId);
-        Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(analyseId)
+        Specification<Analyse> specs = analyseSpecification.analyseId(analyseId)
                 .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll()))
+                .and(analyseSpecification.fetchAll());
+
+        log.debug("deleteGeometricAnalyseVessel() - get starred user");
+        User currentUser = userService.getUserFromContext();
+
+        if (currentUser.getOrganization() == null) {
+            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
+        } else {
+            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
+        }
+
+        log.trace("deleteGeometricAnalyseVessel() - find analyse: id={}", analyseId);
+        Analyse analyse = analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {analyseId})));
 
-        log.trace("deleteAnalyse() - delete vessel", analyseId);
+        log.trace("deleteGeometricAnalyseVessel() - delete vessel");
         boolean result = analyse.getGeometricAnalyse().getVessels().removeIf(e -> e.getId().equals(vesselId));
 
         if (!result) {
@@ -400,7 +470,7 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         analyse = analyseRepository.save(analyse);
 
-        log.trace("deleteAnalyse() - end");
+        log.trace("deleteGeometricAnalyseVessel() - end");
         return analyseMapper.toExtendedDto(analyse);
     }
 
