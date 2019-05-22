@@ -7,9 +7,13 @@ import com.angio.angiobackend.api.organization.entity.Organization;
 import com.angio.angiobackend.api.organization.mapper.OrganizationMapper;
 import com.angio.angiobackend.api.organization.repository.OrganizationRepository;
 import com.angio.angiobackend.api.organization.service.OrganizationService;
+import com.angio.angiobackend.api.organization.specification.OrganizationSpecification;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
     private final OrganizationMapper organizationMapper;
+    private final OrganizationSpecification organizationSpecification;
     private final DynamicLocaleMessageSourceAccessor msa;
 
     @Override
@@ -39,12 +44,27 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     @PreAuthorize("hasAuthority('ORGANIZATION_VIEW')")
     public OrganizationDto getOrganizationId(@NonNull Long id) {
         return organizationMapper.toDto(organizationRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 msa.getMessage("errors.api.organization.notFound", new Object[] {id}))));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('ORGANIZATION_VIEW')")
+    public Page<OrganizationDto> filterOrganizationsByQueryString(String search, Pageable pageable) {
+
+        log.trace("filterPatientsByQueryString() - start");
+        Specification<Organization> specs = organizationSpecification.getOrganizationFilter(search);
+
+        log.trace("filterPatientsByQueryString() - filter patients");
+        Page<Organization> patientEntityPage = organizationRepository.findAll(specs, pageable);
+
+        log.trace("filterPatientsByQueryString() - map and return patient page");
+        return patientEntityPage.map(organizationMapper::toDto);
     }
 }

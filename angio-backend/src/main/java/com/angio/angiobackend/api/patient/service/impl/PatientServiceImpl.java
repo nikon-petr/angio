@@ -61,7 +61,7 @@ public class PatientServiceImpl implements PatientService {
     public Page<PatientDto> filterPatientsByQueryString(String search, Pageable pageable) {
 
         log.trace("filterPatientsByQueryString() - start");
-        Specification<Patient> specs = patientSpecification.getAnalyseInfoFilter(search);
+        Specification<Patient> specs = patientSpecification.getPatientFilter(search);
 
         log.trace("filterPatientsByQueryString() - filter patients");
         Page<Patient> patientEntityPage = patientRepository.findAll(specs, pageable);

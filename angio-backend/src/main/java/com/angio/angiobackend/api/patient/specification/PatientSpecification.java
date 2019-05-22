@@ -8,16 +8,11 @@ import com.angio.angiobackend.api.patient.entity.Patient_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-/**
- * PatientSpecification.
- *
- * @author Nikon_Petrunin
- */
 @Component
 public class PatientSpecification {
 
     /**
-     * Find analyse by id.
+     * Find patient by id.
      *
      * @param id id
      * @return specification
@@ -85,7 +80,7 @@ public class PatientSpecification {
      * @param queryString query string
      * @return specification
      */
-    public Specification<Patient> getAnalyseInfoFilter(String queryString) {
+    public Specification<Patient> getPatientFilter(String queryString) {
         return patientId(parseLong(queryString))
                 .or(patientFirstname(queryString))
                 .or(patientLastname(queryString))
