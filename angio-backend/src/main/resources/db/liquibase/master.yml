@@ -50,6 +50,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/017_add_organizations_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/018_remove_redundant_patient_attributes.yml
 
 # always in the end of file
 - include:

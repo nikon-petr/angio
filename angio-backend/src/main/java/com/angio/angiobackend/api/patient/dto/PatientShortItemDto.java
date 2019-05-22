@@ -13,7 +13,4 @@ public class PatientShortItemDto {
 
     @ApiModelProperty(name = "Patient full name")
     private FullNameDto fullName;
-
-    @ApiModelProperty(name = "Patient policy")
-    private String policy;
 }

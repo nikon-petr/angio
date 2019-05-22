@@ -2,18 +2,14 @@
 <p>
     <b>Анализ номер №${data.id}</b><br/>
     <b>Дата анализа:</b> ${data.analyseDate?string["dd.MM.yyyy"]}<br/>
-    <b>Диагност:</b> ${data.additionalInfo.diagnostician.fullName.lastname} ${data.additionalInfo.diagnostician.fullName.firstname} ${data.additionalInfo.diagnostician.fullName.patronymic}<br/>
-    <b>Описание:</b> ${data.additionalInfo.fullDescription}<br/>
+    <b>Диагност:</b> ${data.additionalInfo.diagnostician.fullName.lastname} ${data.additionalInfo.diagnostician.fullName.firstname} ${data.additionalInfo.diagnostician.fullName.patronymic!""}<br/>
+    <b>Описание:</b> ${data.additionalInfo.fullDescription!"_________________________"}<br/>
     <b>Тип:</b> ${data.additionalInfo.type.description}<br/>
-    <b>Комментарий:</b> ${data.additionalInfo.comment}<br/>
+    <b>Комментарий:</b> ${data.additionalInfo.comment!"_________________________"}<br/>
     <br/>
-    <b>Пациент:</b> ${data.patient.fullName.lastname} ${data.patient.fullName.firstname} ${data.patient.fullName.patronymic}<br/>
+    <b>Пациент:</b> ${data.patient.fullName.lastname} ${data.patient.fullName.firstname} ${data.patient.fullName.patronymic!""}<br/>
     <b>Дата рождения:</b> ${data.patient.bday?string["dd.MM.yyyy"]}<br/>
-    <b>Телефон:</b> ${data.patient.phone}<br/>
-    <b>Полис:</b> ${data.patient.policy}<br/>
-    <b>Электронная почта:</b> ${data.patient.email}<br/>
-    <b>Место жительства:</b> ${data.patient.locationAddress}<br/>
-    <b>Место работы/учебы:</b> ${data.patient.workAddress}<br/>
+    <b>Адрес:</b> ${data.patient.locationAddress!"_________________________"}<br/>
 </p>
 <h2>Геометрическая характеристика сосудистой системы</h2>
 <table border="0" cellpadding="4pt" width="100%" align="center">
@@ -99,4 +95,9 @@
     </tr>
 </table>
 <h2>Заключение</h2>
-<p>${data.additionalInfo.conclusion}</p>
+<#if data.additionalInfo.conclusion??>
+    <p>${data.additionalInfo.conclusion}</p>
+<#else>
+    <p>_____________________________________________________________________________________________________________________________</p>
+</#if>
+

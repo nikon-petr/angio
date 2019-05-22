@@ -38,12 +38,6 @@ public class PatientResource {
         return patientService.getPatientById(id);
     }
 
-    @ApiOperation("Get patient by policy")
-    @GetMapping
-    public PatientDto getPatientByPolicy(@RequestParam String policy) {
-        return patientService.getPatientByPolicy(policy);
-    }
-
     @ApiOperation("Update one or more patient fields")
     @PatchMapping
     public PatientDto updatePatient(@RequestBody @Validated PatientDto dto, Long id) {

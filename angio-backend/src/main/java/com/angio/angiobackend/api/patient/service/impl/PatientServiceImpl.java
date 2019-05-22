@@ -44,22 +44,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     /**
-     * Find patient by policy number or throw {@link ResourceNotFoundException}.
-     *
-     * @param policy policy number
-     * @return patient data
-     */
-    @Override
-    @Transactional(readOnly = true)
-    @PreAuthorize("hasAuthority('PATIENT_VIEW')")
-    public PatientDto getPatientByPolicy(@NonNull String policy) {
-        log.trace("getPatientByPolicy() - start: policy={}", policy);
-        return patientMapper.toDto(patientRepository.findByPolicy(policy)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        msa.getMessage("errors.api.patient.policy.notFound", new String[] {policy}))));
-    }
-
-    /**
      * Find patient by id and return entity object or throw {@link ResourceNotFoundException}.
      *
      * @param id patient id

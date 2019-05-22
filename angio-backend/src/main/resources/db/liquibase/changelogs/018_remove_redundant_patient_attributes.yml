@@ -1,0 +1,38 @@
+databaseChangeLog:
+- changeSet:
+    id: 018
+    author: nikon-petr
+    changes:
+    - dropColumn:
+        tableName: patients
+        columnName: email
+    - dropColumn:
+        tableName: patients
+        columnName: phone
+    - dropColumn:
+        tableName: patients
+        columnName: policy
+    - dropColumn:
+        tableName: patients
+        columnName: work_address
+    - renameColumn:
+        tableName: patients
+        oldColumnName: location_address
+        newColumnName: address
+
+    - dropColumn:
+        tableName: patients_aud
+        columnName: email
+    - dropColumn:
+        tableName: patients_aud
+        columnName: phone
+    - dropColumn:
+        tableName: patients_aud
+        columnName: policy
+    - dropColumn:
+        tableName: patients_aud
+        columnName: work_address
+    - renameColumn:
+        tableName: patients_aud
+        oldColumnName: location_address
+        newColumnName: address

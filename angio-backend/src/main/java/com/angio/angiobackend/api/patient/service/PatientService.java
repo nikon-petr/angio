@@ -10,9 +10,6 @@ public interface PatientService {
     @Transactional
     PatientDto createPatient(@NonNull PatientDto dto);
 
-    @Transactional(readOnly = true)
-    PatientDto getPatientByPolicy(@NonNull String policy);
-
     Patient getPatientEntityById(@NonNull Long id);
 
     @Transactional(readOnly = true)

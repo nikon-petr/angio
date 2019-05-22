@@ -74,7 +74,8 @@ public class InitialSecurityDataLoader implements ApplicationListener<ContextRef
         log.debug("onApplicationEvent() - attach roles to users");
         User rootUser = userRepository.findByEmail("root@example.com").get();
         User adminUser = userRepository.findByEmail("admin@example.com").get();
-        User doctorUser = userRepository.findByEmail("doctor@example.com").get();
+        User sgmuExampleDoctorUser = userRepository.findByEmail("sgmu.doctor@example.com").get();
+        User singleDoctorUser = userRepository.findByEmail("single.doctor@example.com").get();
 
         log.debug("onApplicationEvent() - attach manged roles to user");
         rootUser.getOwnedRolesToManage().addAll(extractRoleEntitiesFor(allRoles, Roles.values()));
@@ -86,11 +87,14 @@ public class InitialSecurityDataLoader implements ApplicationListener<ContextRef
                 .add(allRoles.get(Roles.ROOT));
         adminUser.getRoles()
                 .add(allRoles.get(Roles.ADMIN));
-        doctorUser.getRoles()
+        sgmuExampleDoctorUser.getRoles()
                 .add(allRoles.get(Roles.DOCTOR));
+        singleDoctorUser.getRoles()
+                .add(allRoles.get(Roles.SINGLE_DOCTOR));
 
         userRepository.save(adminUser);
-        userRepository.save(doctorUser);
+        userRepository.save(sgmuExampleDoctorUser);
+        userRepository.save(singleDoctorUser);
 
         alreadySetup = true;
         log.debug("onApplicationEvent() - end");

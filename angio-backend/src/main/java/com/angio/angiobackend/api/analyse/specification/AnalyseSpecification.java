@@ -270,23 +270,6 @@ public class AnalyseSpecification {
     }
 
     /**
-     * Find analyses by policy number substring.
-     *
-     * @param policy policy number
-     * @return specification
-     */
-    public Specification<Analyse> patientPolicy(String policy) {
-        return (root, query, cb) -> {
-            if (policy != null) {
-                return cb.like(root.get(Analyse_.additionalInfo)
-                        .get(AdditionalInfo_.patient)
-                        .get(Patient_.policy), substringPattern(policy));
-            }
-            return null;
-        };
-    }
-
-    /**
      * Find analyses which have given status.
      *
      * @param statuses statuses
@@ -426,8 +409,7 @@ public class AnalyseSpecification {
                 .or(userInfoPatronymic(queryString))
                 .or(patientFirstname(queryString))
                 .or(patientLastname(queryString))
-                .or(patientPatronymic(queryString))
-                .or(patientPolicy(queryString));
+                .or(patientPatronymic(queryString));
     }
 
     private Long parseLong(String number) {

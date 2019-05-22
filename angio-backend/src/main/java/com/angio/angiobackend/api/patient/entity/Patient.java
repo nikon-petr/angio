@@ -2,7 +2,6 @@ package com.angio.angiobackend.api.patient.entity;
 
 import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.common.embeddable.FullName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -43,23 +42,11 @@ public class Patient {
     @Embedded
     private FullName fullName;
 
-    @Column(name = "email", nullable = false, length = 100)
-    private String email;
-
-    @Column(name = "phone", nullable = false, length = 11)
-    private String phone;
-
     @Column(name = "bday", nullable = false)
     private Date bday;
 
-    @Column(name = "location_address", nullable = false, length = 100)
-    private String locationAddress;
-
-    @Column(name = "work_address", nullable = false, length = 100)
-    private String workAddress;
-
-    @Column(name = "policy", length = 16)
-    private String policy;
+    @Column(name = "address", nullable = false, length = 100)
+    private String address;
 
     @NotAudited
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "additionalInfo.patient")
