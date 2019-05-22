@@ -25,6 +25,7 @@ import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
+import com.angio.angiobackend.api.user.dto.UserShortItemDto;
 import com.angio.angiobackend.api.user.dto.email.RegistrationEmailDto;
 import com.angio.angiobackend.api.user.dto.email.ResetPasswordDto;
 import com.angio.angiobackend.api.user.dto.push.GreetingPushDto;
@@ -35,12 +36,16 @@ import com.angio.angiobackend.api.user.mapper.UserMapper;
 import com.angio.angiobackend.api.user.repositories.SettingsRepository;
 import com.angio.angiobackend.api.user.repositories.UserRepository;
 import com.angio.angiobackend.api.user.service.UserService;
+import com.angio.angiobackend.api.user.specification.UserSpecification;
 import com.angio.angiobackend.init.Roles;
 import com.angio.angiobackend.util.PasswordUtils;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -84,6 +89,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final SettingsMapper settingsMapper;
     private final FullNameMapper fullNameMapper;
+    private final UserSpecification userSpecification;
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final AngioBackendProperties props;
     private final DynamicLocaleMessageSourceAccessor msa;
@@ -205,6 +211,40 @@ public class UserServiceImpl implements UserService {
 
         log.trace("createUsers() - end");
         return userMapper.toNewUserDtos(new ArrayList<>(passwordsAndCreatedUsers.values()));
+    }
+
+    /**
+     * Filter users by query string matching any one or more fields.
+     *
+     * @param search query string
+     * @param enabled user enabled
+     * @param locked user locked
+     * @param organizationId organization id
+     * @param pageable page request
+     * @return page of filtered users
+     */
+    @Override
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasAuthority('USER_VIEW')")
+    public Page<UserShortItemDto> filterUsersByQueryString(
+            String search,
+            Boolean enabled,
+            Boolean locked,
+            Long organizationId,
+            Pageable pageable) {
+        log.trace("filterUsersByQueryString() - start");
+
+        log.trace("filterUsersByQueryString() - build user specification");
+        Specification<User> specs = userSpecification.getUserFilter(search)
+                .and(userSpecification.userEnabled(enabled))
+                .and(userSpecification.userLocked(locked))
+                .and(userSpecification.userOrganizationId(organizationId));
+
+        log.trace("filterUsersByQueryString() - filter user");
+        Page<User> analyseInfoEntityPage = userRepository.findAll(specs, pageable);
+
+        log.trace("filterUsersByQueryString() - map and return user page");
+        return analyseInfoEntityPage.map(userMapper::toShortItemDto);
     }
 
     /**

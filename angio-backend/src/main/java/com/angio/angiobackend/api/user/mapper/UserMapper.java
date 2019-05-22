@@ -9,6 +9,7 @@ import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.NewUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserDto;
+import com.angio.angiobackend.api.user.dto.UserShortItemDto;
 import com.angio.angiobackend.api.user.entities.User;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InheritInverseConfiguration;
@@ -51,6 +52,8 @@ public interface UserMapper {
     void updateEntity(UpdateUserDto dto, @MappingTarget User entity);
 
     UserDetailsDto toDetailedDto(User entity);
+
+    UserShortItemDto toShortItemDto(User entity);
 
     @Mapping(target = "organizationName", source = "organization.name")
     @Mapping(target = "permissions", qualifiedByName = "toStringPermission")

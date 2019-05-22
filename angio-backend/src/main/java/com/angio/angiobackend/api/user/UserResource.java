@@ -11,12 +11,18 @@ import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
+import com.angio.angiobackend.api.user.dto.UserShortItemDto;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.user.validation.group.EnableUser;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,7 +30,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.UUID;
@@ -42,6 +50,22 @@ public class UserResource {
     @PostMapping
     public List<NewUserDto> createUsers(@RequestBody @Validated List<NewUserDto> dtos) {
         return userService.createUsers(dtos);
+    }
+
+    @ApiOperation(value = "Filter users by query string")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query"),
+            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query"),
+            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+                    value = "format: property,asc|desc")})
+    @GetMapping
+    public Page<UserShortItemDto> filterUsers(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "enabled", required = false) Boolean enabled,
+            @RequestParam(value = "locked", required = false) Boolean locked,
+            @RequestParam(value = "organizationId", required = false) Long organizationId,
+            @ApiIgnore @PageableDefault Pageable pageable) {
+        return userService.filterUsersByQueryString(search, enabled, locked, organizationId, pageable);
     }
 
     @ApiOperation("Register user")
