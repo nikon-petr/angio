@@ -197,14 +197,9 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .and(analyseSpecification.analysePeriod(startDate, endDate))
                 .and(analyseSpecification.inStatus(statuses))
                 .and(analyseSpecification.starred(currentUser, isStarred))
+                .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
-
-        if (currentUser.getOrganization() == null) {
-            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
-        } else {
-            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
-        }
 
         log.trace("filterAnalysesByQueryString() - map sorting fields");
         Pageable mappedPageRequest = mapSortingFields(pageable);
@@ -235,18 +230,13 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("getAnalyseById() - start");
         log.info("getAnalyseById() - analyse to get: id={}", id);
 
-        Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll());
-
         log.debug("getAnalyseById() - get starred user");
         User currentUser = userService.getUserFromContext();
 
-        if (currentUser.getOrganization() == null) {
-            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
-        } else {
-            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
-        }
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
+                .and(analyseSpecification.ownedBy(currentUser))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll());
 
         return analyseMapper.toExtendedDto(analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -264,18 +254,13 @@ public class AnalyseServiceImpl implements AnalyseService {
     @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
     public AnalyseReportDto getAnalyseReport(@NonNull Long id) {
 
-        Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll());
-
         log.debug("getAnalyseReport() - get starred user");
         User currentUser = userService.getUserFromContext();
 
-        if (currentUser.getOrganization() == null) {
-            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
-        } else {
-            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
-        }
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
+                .and(analyseSpecification.ownedBy(currentUser))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll());
 
         Analyse analyse = analyseRepository.findOne(specs)
         .orElseThrow(() -> new ResourceNotFoundException(
@@ -311,20 +296,15 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Transactional
     @PreAuthorize("hasAuthority('ANALYSE_REMOVE')")
     public DetailedAnalyseDto deleteAnalyse(@NonNull Long id) {
-        log.trace("deleteAnalyse() - start");
-        Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll());
-
 
         log.debug("deleteAnalyse() - get starred user");
         User currentUser = userService.getUserFromContext();
 
-        if (currentUser.getOrganization() == null) {
-            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
-        } else {
-            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
-        }
+        log.trace("deleteAnalyse() - start");
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
+                .and(analyseSpecification.ownedBy(currentUser))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll());
 
         Analyse analyse = analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -372,20 +352,16 @@ public class AnalyseServiceImpl implements AnalyseService {
     public DetailedAnalyseDto updateAnalyseAdditionalInfo(@NonNull Long id, @NonNull AdditionalInfoDto dto) {
         log.trace("updateAnalyseAdditionalInfo() - start");
 
-        Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll());
-
         log.debug("updateAnalyseAdditionalInfo() - get starred user");
         User currentUser = userService.getUserFromContext();
 
-        if (currentUser.getOrganization() == null) {
-            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
-        } else {
-            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
-        }
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
+                .and(analyseSpecification.ownedBy(currentUser))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll());
 
-        log.trace("updateAnalyseAdditionalInfo() - search analyse info entity with id:", id);
+
+        log.trace("updateAnalyseAdditionalInfo() - search analyse info entity with id: {}", id);
         Analyse analyse = analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
@@ -407,18 +383,13 @@ public class AnalyseServiceImpl implements AnalyseService {
     @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
     public StarredAnalyseDto starAnalyse(@NonNull Long id, @NonNull StarredAnalyseDto starredAnalyse) {
 
-        Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll());
-
         log.debug("starAnalyse() - get starred user");
         User currentUser = userService.getUserFromContext();
 
-        if (currentUser.getOrganization() == null) {
-            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
-        } else {
-            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
-        }
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
+                .and(analyseSpecification.ownedBy(currentUser))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll());
 
         log.debug("starAnalyse() - start: id {}", id);
         Analyse analyse = analyseRepository.findOne(specs)
@@ -443,18 +414,13 @@ public class AnalyseServiceImpl implements AnalyseService {
     public DetailedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId) {
         log.trace("deleteGeometricAnalyseVessel() - start");
 
-        Specification<Analyse> specs = analyseSpecification.analyseId(analyseId)
-                .and(analyseSpecification.notDeleted())
-                .and(analyseSpecification.fetchAll());
-
         log.debug("deleteGeometricAnalyseVessel() - get starred user");
         User currentUser = userService.getUserFromContext();
 
-        if (currentUser.getOrganization() == null) {
-            specs = specs.and(analyseSpecification.diagnosticianId(currentUser.getId()));
-        } else {
-            specs = specs.and(analyseSpecification.organizationId(currentUser.getOrganization().getId()));
-        }
+        Specification<Analyse> specs = analyseSpecification.analyseId(analyseId)
+                .and(analyseSpecification.ownedBy(currentUser))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll());
 
         log.trace("deleteGeometricAnalyseVessel() - find analyse: id={}", analyseId);
         Analyse analyse = analyseRepository.findOne(specs)

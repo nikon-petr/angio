@@ -18,12 +18,10 @@ public class PatientSpecification {
      * @return specification
      */
     public Specification<Patient> patientId(Long id) {
-        return (root, query, cb) -> {
-            if (id != null) {
-                return cb.equal(root.get(Patient_.id), id);
-            }
-            return null;
-        };
+        if (id != null) {
+            return (root, query, cb) -> cb.equal(root.get(Patient_.id), id);
+        }
+        return null;
     }
 
     /**
@@ -33,13 +31,12 @@ public class PatientSpecification {
      * @return specification
      */
     public Specification<Patient> patientFirstname(String firstname) {
-        return (root, query, cb) -> {
-            if (firstname != null) {
-                return cb.like(cb.upper(root.get(Patient_.fullName)
-                        .get(FullName_.firstname)), substringPattern(firstname).toUpperCase());
-            }
-            return null;
-        };
+        if (firstname != null) {
+            return (root, query, cb) ->
+                    cb.like(cb.upper(root.get(Patient_.fullName)
+                            .get(FullName_.firstname)), substringPattern(firstname).toUpperCase());
+        }
+        return null;
     }
 
     /**
@@ -49,13 +46,12 @@ public class PatientSpecification {
      * @return specification
      */
     public Specification<Patient> patientLastname(String lastname) {
-        return (root, query, cb) -> {
-            if (lastname != null) {
-                return cb.like(cb.upper(root.get(Patient_.fullName)
-                        .get(FullName_.lastname)), substringPattern(lastname).toUpperCase());
-            }
-            return null;
-        };
+        if (lastname != null) {
+            return (root, query, cb) ->
+                    cb.like(cb.upper(root.get(Patient_.fullName)
+                            .get(FullName_.lastname)), substringPattern(lastname).toUpperCase());
+        }
+        return null;
     }
 
     /**
@@ -65,13 +61,12 @@ public class PatientSpecification {
      * @return specification
      */
     public Specification<Patient> patientPatronymic(String patronymic) {
-        return (root, query, cb) -> {
-            if (patronymic != null) {
-                return cb.like(cb.upper(root.get(Patient_.fullName)
-                        .get(FullName_.patronymic)), substringPattern(patronymic).toUpperCase());
-            }
-            return null;
-        };
+        if (patronymic != null) {
+            return (root, query, cb) ->
+                    cb.like(cb.upper(root.get(Patient_.fullName)
+                            .get(FullName_.patronymic)), substringPattern(patronymic).toUpperCase());
+        }
+        return null;
     }
 
     /**
@@ -81,7 +76,7 @@ public class PatientSpecification {
      * @return specification
      */
     public Specification<Patient> getPatientFilter(String queryString) {
-        return patientId(parseLong(queryString))
+        return Specification.where(patientId(parseLong(queryString)))
                 .or(patientFirstname(queryString))
                 .or(patientLastname(queryString))
                 .or(patientPatronymic(queryString));

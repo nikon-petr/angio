@@ -19,12 +19,10 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> userId(Long id) {
-        return (root, query, cb) -> {
-            if (id != null) {
-                return cb.equal(root.get(User_.id), id);
-            }
-            return null;
-        };
+        if (id != null) {
+            return (root, query, cb) -> cb.equal(root.get(User_.id), id);
+        }
+        return null;
     }
 
     /**
@@ -34,12 +32,12 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> userEmail(String email) {
-        return (root, query, cb) -> {
-            if (email != null) {
-                return cb.like(cb.upper(root.get(User_.email)), substringPattern(email).toUpperCase());
-            }
-            return null;
-        };
+        if (email != null) {
+            return (root, query, cb) ->
+                    cb.like(cb.upper(root.get(User_.email)), substringPattern(email).toUpperCase());
+        }
+        ;
+        return null;
     }
 
     /**
@@ -49,13 +47,12 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> userFirstname(String firstname) {
-        return (root, query, cb) -> {
-            if (firstname != null) {
-                return cb.like(cb.upper(root.get(User_.fullName)
-                        .get(FullName_.firstname)), substringPattern(firstname).toUpperCase());
-            }
-            return null;
-        };
+        if (firstname != null) {
+            return (root, query, cb) ->
+                    cb.like(cb.upper(root.get(User_.fullName)
+                            .get(FullName_.firstname)), substringPattern(firstname).toUpperCase());
+        }
+        return null;
     }
 
     /**
@@ -65,13 +62,12 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> userLastname(String lastname) {
-        return (root, query, cb) -> {
-            if (lastname != null) {
-                return cb.like(cb.upper(root.get(User_.fullName)
-                        .get(FullName_.lastname)), substringPattern(lastname).toUpperCase());
-            }
-            return null;
-        };
+        if (lastname != null) {
+            return (root, query, cb) ->
+                    cb.like(cb.upper(root.get(User_.fullName)
+                            .get(FullName_.lastname)), substringPattern(lastname).toUpperCase());
+        }
+        return null;
     }
 
     /**
@@ -81,13 +77,12 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> userPatronymic(String patronymic) {
-        return (root, query, cb) -> {
-            if (patronymic != null) {
-                return cb.like(cb.upper(root.get(User_.fullName)
-                        .get(FullName_.patronymic)), substringPattern(patronymic).toUpperCase());
-            }
-            return null;
-        };
+        if (patronymic != null) {
+            return (root, query, cb) ->
+                    cb.like(cb.upper(root.get(User_.fullName)
+                            .get(FullName_.patronymic)), substringPattern(patronymic).toUpperCase());
+        }
+        return null;
     }
 
     /**
@@ -97,12 +92,10 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> userEnabled(Boolean enabled) {
-        return (root, query, cb) -> {
-            if (enabled != null) {
-                return cb.equal(root.get(User_.enabled), enabled);
-            }
-            return null;
-        };
+        if (enabled != null) {
+            return (root, query, cb) -> cb.equal(root.get(User_.enabled), enabled);
+        }
+        return null;
     }
 
     /**
@@ -112,12 +105,10 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> userLocked(Boolean locked) {
-        return (root, query, cb) -> {
-            if (locked != null) {
-                return cb.equal(root.get(User_.locked), locked);
-            }
-            return null;
-        };
+        if (locked != null) {
+            return (root, query, cb) -> cb.equal(root.get(User_.locked), locked);
+        }
+        return null;
     }
 
     /**
@@ -127,12 +118,11 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> userOrganizationId(Long organizationId) {
-        return (root, query, cb) -> {
-            if (organizationId != null) {
-                return cb.equal(root.get(User_.organization).get(Organization_.id), organizationId);
-            }
-            return null;
-        };
+        if (organizationId != null) {
+            return (root, query, cb) ->
+                    cb.equal(root.get(User_.organization).get(Organization_.id), organizationId);
+        }
+        return null;
     }
 
     /**
@@ -142,13 +132,12 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> userOrganizationName(String organization) {
-        return (root, query, cb) -> {
-            if (organization != null) {
-                return cb.like(cb.upper(root.get(User_.organization)
-                        .get(Organization_.name)), substringPattern(organization).toUpperCase());
-            }
-            return null;
-        };
+        if (organization != null) {
+            return (root, query, cb) ->
+                    cb.like(cb.upper(root.get(User_.organization)
+                            .get(Organization_.name)), substringPattern(organization).toUpperCase());
+        }
+        return null;
     }
 
     /**
@@ -158,7 +147,7 @@ public class UserSpecification {
      * @return specification
      */
     public Specification<User> getUserFilter(String queryString) {
-        return userId(parseLong(queryString))
+        return Specification.where(userId(parseLong(queryString)))
                 .or(userEmail(queryString))
                 .or(userFirstname(queryString))
                 .or(userLastname(queryString))

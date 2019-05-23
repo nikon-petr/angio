@@ -47,7 +47,7 @@ public class OrganizationSpecification {
      * @return specification
      */
     public Specification<Organization> getOrganizationFilter(String queryString) {
-        return organizationId(parseLong(queryString))
+        return Specification.where(organizationId(parseLong(queryString)))
                 .or(organizationName(queryString));
     }
 

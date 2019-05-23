@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Fetch;
+import javax.persistence.criteria.Predicate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -302,7 +303,7 @@ public class AnalyseSpecification {
     /**
      * Find analyses by onlyStarred condition. Find all if {@code onlyStarred} parameter is {@code null}.
      *
-     * @param user user
+     * @param user        user
      * @param onlyStarred only starred condition
      * @return specification
      */
@@ -395,13 +396,25 @@ public class AnalyseSpecification {
     }
 
     /**
+     * Find analyses owned by user
+     *
+     * @param user user
+     * @return specification
+     */
+    public Specification<Analyse> ownedBy(User user) {
+        Long organizationId = user.getOrganization() != null ? user.getOrganization().getId() : null;
+        return Specification.where(organizationId(organizationId))
+                .or(diagnosticianId(user.getId()));
+    }
+
+    /**
      * Find entities by query substring in analyse fields.
      *
      * @param queryString query string
      * @return specification
      */
     public Specification<Analyse> getAnalyseInfoFilter(String queryString) {
-        return name(queryString)
+        return Specification.where(name(queryString))
                 .or(analyseId(parseLong(queryString)))
                 .or(shortDescription(queryString))
                 .or(userInfoFirstname(queryString))
