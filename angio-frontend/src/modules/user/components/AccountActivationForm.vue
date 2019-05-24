@@ -12,6 +12,7 @@
                                 v-model="form.enablingCode"
                                 v-bind:label="$t('user.component.activation.activationFormStep.enablingCode.field')"
                                 v-bind:rules="[v => !!v || $t('user.component.activation.activationFormStep.enablingCode.validation.NotEmpty')]"
+                                v-bind:disabled="fetching"
                                 type="text"
                                 name="enablingCode"
                                 prepend-inner-icon="new_releases"
@@ -23,6 +24,7 @@
                                 v-model="form.fullName.firstname"
                                 v-bind:label="$t('user.component.activation.activationFormStep.fullName.firstname.field')"
                                 v-bind:rules="[v => !!v || $t('user.component.activation.activationFormStep.fullName.firstname.validation.NotEmpty')]"
+                                v-bind:disabled="fetching"
                                 type="text"
                                 name="firstname"
                                 prepend-inner-icon="person"
@@ -35,6 +37,7 @@
                                 v-model="form.fullName.lastname"
                                 v-bind:label="$t('user.component.activation.activationFormStep.fullName.lastname.field')"
                                 v-bind:rules="[v => !!v || $t('user.component.activation.activationFormStep.fullName.lastname.validation.NotEmpty')]"
+                                v-bind:disabled="fetching"
                                 type="text"
                                 name="lastname"
                                 prepend-inner-icon="person"
@@ -46,6 +49,7 @@
                         <v-text-field
                                 v-model="form.fullName.patronymic"
                                 v-bind:label="$t('user.component.activation.activationFormStep.fullName.patronymic.field')"
+                                v-bind:disabled="fetching"
                                 type="text"
                                 name="patronymic"
                                 prepend-inner-icon="person"
@@ -59,6 +63,7 @@
                                 v-bind:rules="[v => !!v || $t('user.component.activation.activationFormStep.newPassword.validation.NotEmpty'),
                                     v => v.length >= 8 || $t('user.component.activation.activationFormStep.newPassword.validation.MinLength'),
                                     form.newPassword === newPasswordRepeat || $t('user.component.activation.activationFormStep.newPassword.validation.DoesNotMatch')]"
+                                v-bind:disabled="fetching"
                                 type="password"
                                 name="password"
                                 prepend-inner-icon="lock"
@@ -73,6 +78,7 @@
                                 v-bind:rules="[v => !!v || $t('user.component.activation.activationFormStep.newPassword.validation.NotEmpty'),
                                     v => v.length >= 8 || $t('user.component.activation.activationFormStep.newPassword.validation.MinLength'),
                                     form.newPassword === newPasswordRepeat || $t('user.component.activation.activationFormStep.newPassword.validation.DoesNotMatch')]"
+                                v-bind:disabled="fetching"
                                 type="password"
                                 name="password"
                                 prepend-inner-icon="lock"
