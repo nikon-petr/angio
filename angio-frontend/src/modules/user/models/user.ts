@@ -63,3 +63,8 @@ export interface UserDetailsModel {
     roles: Role[];
     ownedRolesToManage: Role[];
 }
+
+export interface UserResetAccountModel {
+    resetCode: string;
+    newPassword: string;
+}

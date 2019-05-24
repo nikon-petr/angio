@@ -1,49 +1,49 @@
 <template>
     <CentredLayout>
         <v-flex xs12 sm6 md5 lg4 xl3>
-            <ResetPasswordForm
+            <ResetAccountForm
                     v-on:send-form="sendForm"
                     v-bind:fetching="fetching"
-                    v-bind:step="step"
                     v-bind:error-messages="errorMessages"
-            ></ResetPasswordForm>
+            ></ResetAccountForm>
         </v-flex>
     </CentredLayout>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
     import CentredLayout from '@/modules/common/components/CentredLayout.vue';
-    import {UserApiService} from '@/modules/user/services/userApiService';
-    import ResetPasswordForm from '@/modules/user/components/ResetPasswordForm.vue';
+    import ResetAccountForm from '@/modules/user/components/ResetAccountForm.vue';
     import {throttle} from 'helpful-decorators';
+    import {UserApiService} from '@/modules/user/services/userApiService';
+    import {UserResetAccountModel} from '@/modules/user/models/user';
 
     @Component({
         components: {
-            ResetPasswordForm,
+            ResetAccountForm,
             CentredLayout,
         },
     })
-    export default class ResetPassword extends Vue {
+    export default class ResetAccount extends Vue {
+
+        @Prop()
+        public readonly userId!: string;
 
         public fetching: boolean = false;
-
-        public step: number = 1;
 
         public errorMessages: string[] = [];
 
         @throttle(1000)
-        public sendForm(email: string) {
+        public sendForm(model: UserResetAccountModel) {
             this.fetching = true;
             this.errorMessages = [];
             UserApiService
-                .resetPassword(email)
+                .resetAccount(this.userId, model)
                 .then((response) => {
-                    this.step = 2;
+                    this.$router.push({path: '/login'});
                 })
                 .catch((error) => {
-                    this.step = 1;
-                    this.errorMessages = ['user.component.resetPassword.resetPasswordStep.error'];
+                    this.errorMessages = ['user.component.resetAccount.error'];
                     this.$logger.error(error)
                 })
                 .finally(() => this.fetching = false)

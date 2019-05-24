@@ -242,18 +242,50 @@
         }
       },
       "resetPassword": {
-        "title": "Restore access",
-        "content": "For restore access, you must reset the password. To do this, enter your email address.",
-        "email": {
-          "field": "Email",
+        "resetPasswordStep": {
+          "title": "Restore access",
+          "email": {
+            "field": "Email",
+            "hint": "For restore access, you must reset the password. To do this, enter your email address.",
+            "validation": {
+              "NotEmpty": "Email should not be empty"
+            }
+          },
+          "button": {
+            "submit": "Reset"
+          },
+          "error": "Password reset error"
+        },
+        "resetPasswordSuccessStep": {
+          "title": "Password reset!",
+          "content": "For further action follow the instructions sent to your email."
+        }
+      },
+      "resetAccount": {
+        "title": "Account recovery",
+        "button": {
+          "submit": "Recovery"
+        },
+        "resetCode": {
+          "field": "Recovery code",
+          "hint": "Enter recovery code from email",
           "validation": {
-            "NotEmpty": "Email should not be empty"
+            "NotEmpty": "Recovery code should not be empty"
           }
         },
-        "button": {
-          "submit": "Reset"
+        "newPassword": {
+          "field": "Password",
+          "hint": "Create a new password",
+          "validation": {
+            "NotEmpty": "Password must not be empty",
+            "MinLength": "The minimum password length is 8 characters",
+            "DoesNotMatch": "Passwords do not match"
+          }
         },
-        "error": "Password reset error"
+        "newPasswordRepeat": {
+          "field": "Confirm password"
+        },
+        "error": "Access recovery error"
       }
     },
     "view": {
@@ -265,6 +297,9 @@
       },
       "resetPassword": {
         "title": "Restore access"
+      },
+      "resetAccount": {
+        "title": "Account recovery"
       },
       "403": {
         "title": "Access denied",

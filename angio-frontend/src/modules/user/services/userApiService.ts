@@ -8,6 +8,7 @@ import {
     UserCredentialsModel,
     UserDetailsModel,
     UserInfoModel,
+    UserResetAccountModel,
     UserSettingsModel,
 } from '@/modules/user/models/user';
 import {Response} from '@/modules/common/models/response';
@@ -53,5 +54,10 @@ export class UserApiService {
     public static resetPassword(email: string): AxiosPromise<void> {
         log.debug(`reset current user password request with email: ${email}`);
         return axios.post(`/user/${email}/password/reset`);
+    }
+
+    public static resetAccount(userId: string, model: UserResetAccountModel): AxiosPromise<void> {
+        log.debug(`reset current user account request with data: ${JSON.stringify(model)}`);
+        return axios.post(`/user/${userId}/reset`, model);
     }
 }
