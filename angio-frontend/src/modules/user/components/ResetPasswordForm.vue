@@ -87,7 +87,7 @@
         public readonly step!: number;
 
         @Prop()
-        public readonly errorMessages: string[];
+        public readonly errorMessages!: string[];
 
         public Step = ResetPasswordState;
 
