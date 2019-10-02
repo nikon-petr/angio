@@ -5,6 +5,7 @@ import {AuthPredicate} from '@/modules/common/helpers/authPredicate';
 import AccountActivation from '@/modules/user/views/AccountActivation.vue';
 import ResetPassword from '@/modules/user/views/ResetPassword.vue';
 import ResetAccount from '@/modules/user/views/ResetAccount.vue';
+import Registration from '@/modules/user/views/Registration.vue';
 
 export const userRouterConfig: RouteConfig[] = [
     {
@@ -12,6 +13,11 @@ export const userRouterConfig: RouteConfig[] = [
         component: Login,
         meta: {title: 'user.view.login.title', auth: AuthPredicate.isAnonymous()},
         props: (route) => ({ next: route.query.next })
+    },
+    {
+        path: '/register',
+        component: Registration,
+        meta: {title:'user.view.registration.title', auth: AuthPredicate.isAnonymous()}
     },
     {
         path: '/activation',

@@ -8,6 +8,7 @@ import {
     UserCredentialsModel,
     UserDetailsModel,
     UserInfoModel,
+    UserRegisterModel,
     UserResetAccountModel,
     UserSettingsModel,
 } from '@/modules/user/models/user';
@@ -59,5 +60,10 @@ export class UserApiService {
     public static resetAccount(userId: string, model: UserResetAccountModel): AxiosPromise<void> {
         log.debug(`reset current user account request with data: ${JSON.stringify(model)}`);
         return axios.post(`/user/${userId}/reset`, model);
+    }
+
+    public static register(model: UserRegisterModel): AxiosPromise<void> {
+        log.debug(`register new user with email: ${JSON.stringify(model)}`);
+        return axios.post(`/user/register`, model)
     }
 }

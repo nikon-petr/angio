@@ -191,6 +191,20 @@
           "submit": "Log In"
         }
       },
+      "registrationForm": {
+        "title": "Registration",
+        "email": {
+          "field": "Email",
+          "hint": "Enter the email address that will be used for authorization",
+          "validation": {
+            "NotEmpty": "Email should not be empty"
+          }
+        },
+        "button": {
+          "register": "Sign Up"
+        },
+        "error": "An error occurred while registering a new user"
+      },
       "activation": {
         "activationFormStep": {
           "title": "Activation",
@@ -291,6 +305,9 @@
     "view": {
       "login": {
         "title": "Authorization"
+      },
+      "registration": {
+        "title": "Registration"
       },
       "activation": {
         "title": "Activation"
