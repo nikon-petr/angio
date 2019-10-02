@@ -12,6 +12,7 @@
                             v-on:submit.prevent="submit"
                             ref="form"
                             id="reset-password-form"
+                            data-test-id="resetPassword__form"
                     >
                         <v-text-field
                                 v-model="email"
@@ -19,6 +20,7 @@
                                 v-bind:rules="[v => !!v || $t('user.component.resetPassword.resetPasswordStep.email.validation.NotEmpty')]"
                                 v-bind:disabled="fetching"
                                 v-bind:hint="$t('user.component.resetPassword.resetPasswordStep.email.hint')"
+                                data-test-id="email__input"
                                 persistent-hint
                                 type="text"
                                 name="email"
@@ -54,6 +56,7 @@
                     v-if="step === Step.FORM"
                     v-bind:disabled="!valid"
                     v-bind:loading="fetching"
+                    data-test-id="submit__button"
                     form="reset-password-form"
                     type="submit"
                     color="success"

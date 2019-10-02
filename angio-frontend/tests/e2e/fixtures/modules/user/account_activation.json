@@ -1,0 +1,70 @@
+{
+  "status" : "SUCCESS",
+  "date" : "2019-10-02T17:24:08Z",
+  "data" : {
+    "id" : "33d3b50e-fe19-43ed-878c-a60a1ebcd0bd",
+    "email" : "test@example.com",
+    "fullName" : {
+      "firstname" : "Name",
+      "lastname" : "Lastname",
+      "patronymic" : "Patronymic"
+    },
+    "locked" : false,
+    "enabled" : true,
+    "roles" : [ {
+      "id" : 2,
+      "name" : "SINGLE_DOCTOR",
+      "description" : "Врач диагност (без организации)",
+      "permissions" : [ {
+        "id" : 9,
+        "name" : "PATIENT_REMOVE",
+        "description" : "Удаление пациентов"
+      }, {
+        "id" : 6,
+        "name" : "PATIENT_CREATE",
+        "description" : "Создание пациентов"
+      }, {
+        "id" : 8,
+        "name" : "PATIENT_EDIT",
+        "description" : "Изменение пациентов"
+      }, {
+        "id" : 1,
+        "name" : "ANALYSE_CREATE",
+        "description" : "Создание анализа"
+      }, {
+        "id" : 3,
+        "name" : "ANALYSE_EDIT",
+        "description" : "Изменение анализа"
+      }, {
+        "id" : 10,
+        "name" : "IMAGE_UPLOAD",
+        "description" : "Загрузка изображений в систему"
+      }, {
+        "id" : 4,
+        "name" : "ANALYSE_EXECUTE_ACTION",
+        "description" : "Изменение анализа"
+      }, {
+        "id" : 5,
+        "name" : "ANALYSE_REMOVE",
+        "description" : "Удаление анализа"
+      }, {
+        "id" : 7,
+        "name" : "PATIENT_VIEW",
+        "description" : "Просмотр данных пациентов"
+      }, {
+        "id" : 12,
+        "name" : "PUSH_NOTIFICATION_RECEIVE",
+        "description" : "Получение собственных push-уведомлений"
+      }, {
+        "id" : 2,
+        "name" : "ANALYSE_VIEW",
+        "description" : "Просмотр анализа"
+      }, {
+        "id" : 11,
+        "name" : "TOKEN_REVOKE",
+        "description" : "Отзыв собственных refresh токенов"
+      } ]
+    } ],
+    "ownedRolesToManage" : [ ]
+  }
+}

@@ -7,12 +7,19 @@
                     <v-spacer></v-spacer>
                 </v-card-title>
                 <v-card-text>
-                    <v-form v-model="valid" ref="form" v-on:submit.prevent="submit" id="activation-form">
+                    <v-form
+                            v-model="valid"
+                            v-on:submit.prevent="submit"
+                            ref="form"
+                            id="activation-form"
+                            data-test-id="accountActivation__form"
+                    >
                         <v-text-field
                                 v-model="form.enablingCode"
                                 v-bind:label="$t('user.component.activation.activationFormStep.enablingCode.field')"
                                 v-bind:rules="[v => !!v || $t('user.component.activation.activationFormStep.enablingCode.validation.NotEmpty')]"
                                 v-bind:disabled="fetching"
+                                data-test-id="enablingCode_input"
                                 type="text"
                                 name="enablingCode"
                                 prepend-inner-icon="new_releases"
@@ -25,6 +32,7 @@
                                 v-bind:label="$t('user.component.activation.activationFormStep.fullName.firstname.field')"
                                 v-bind:rules="[v => !!v || $t('user.component.activation.activationFormStep.fullName.firstname.validation.NotEmpty')]"
                                 v-bind:disabled="fetching"
+                                data-test-id="firstname_input"
                                 type="text"
                                 name="firstname"
                                 prepend-inner-icon="person"
@@ -38,6 +46,7 @@
                                 v-bind:label="$t('user.component.activation.activationFormStep.fullName.lastname.field')"
                                 v-bind:rules="[v => !!v || $t('user.component.activation.activationFormStep.fullName.lastname.validation.NotEmpty')]"
                                 v-bind:disabled="fetching"
+                                data-test-id="lastname_input"
                                 type="text"
                                 name="lastname"
                                 prepend-inner-icon="person"
@@ -50,6 +59,7 @@
                                 v-model="form.fullName.patronymic"
                                 v-bind:label="$t('user.component.activation.activationFormStep.fullName.patronymic.field')"
                                 v-bind:disabled="fetching"
+                                data-test-id="patronymic_input"
                                 type="text"
                                 name="patronymic"
                                 prepend-inner-icon="person"
@@ -64,6 +74,7 @@
                                     v => v.length >= 8 || $t('user.component.activation.activationFormStep.newPassword.validation.MinLength'),
                                     form.newPassword === newPasswordRepeat || $t('user.component.activation.activationFormStep.newPassword.validation.DoesNotMatch')]"
                                 v-bind:disabled="fetching"
+                                data-test-id="newPassword_input"
                                 type="password"
                                 name="password"
                                 prepend-inner-icon="lock"
@@ -79,6 +90,7 @@
                                     v => v.length >= 8 || $t('user.component.activation.activationFormStep.newPassword.validation.MinLength'),
                                     form.newPassword === newPasswordRepeat || $t('user.component.activation.activationFormStep.newPassword.validation.DoesNotMatch')]"
                                 v-bind:disabled="fetching"
+                                data-test-id="newPasswordRepeat_input"
                                 type="password"
                                 name="password"
                                 prepend-inner-icon="lock"
@@ -114,6 +126,7 @@
                     v-if="step === Step.FORM"
                     v-bind:disabled="!valid"
                     v-bind:loading="fetching"
+                    data-test-id="submit__button"
                     form="activation-form"
                     type="submit"
                     color="primary"
@@ -124,6 +137,7 @@
             </v-btn>
             <v-btn
                     v-if="step === Step.SUCCESS_PAGE"
+                    data-test-id="login__button"
                     to="/login"
                     color="success"
                     flat

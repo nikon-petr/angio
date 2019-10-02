@@ -4,6 +4,7 @@
             <v-form
                     v-model="valid"
                     v-on:submit.prevent="submit"
+                    data-test-id="resetAccount__form"
                     ref="form"
                     id="reset-account-form"
             >
@@ -13,6 +14,7 @@
                         v-bind:rules="[v => !!v || $t('user.component.resetAccount.resetCode.validation.NotEmpty')]"
                         v-bind:disabled="fetching"
                         v-bind:hint="$t('user.component.resetAccount.resetCode.hint')"
+                        data-test-id="resetCode__input"
                         persistent-hint
                         type="text"
                         name="resetCode"
@@ -29,6 +31,7 @@
                                     form.newPassword === newPasswordRepeat || $t('user.component.resetAccount.newPassword.validation.DoesNotMatch')]"
                         v-bind:disabled="fetching"
                         v-bind:hint="$t('user.component.resetAccount.newPassword.hint')"
+                        data-test-id="newPassword__input"
                         persistent-hint
                         type="password"
                         name="password"
@@ -45,6 +48,7 @@
                                     v => v.length >= 8 || $t('user.component.resetAccount.newPassword.validation.MinLength'),
                                     form.newPassword === newPasswordRepeat || $t('user.component.resetAccount.newPassword.validation.DoesNotMatch')]"
                         v-bind:disabled="fetching"
+                        data-test-id="newPasswordRepeat__input"
                         type="password"
                         name="password"
                         prepend-inner-icon="lock"
@@ -63,6 +67,7 @@
             <v-btn
                     v-bind:disabled="!valid"
                     v-bind:loading="fetching"
+                    data-test-id="submit__button"
                     form="reset-account-form"
                     type="submit"
                     color="success"
