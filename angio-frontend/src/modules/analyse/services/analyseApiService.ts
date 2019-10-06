@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from 'axios';
 import root from 'loglevel';
 import {Response} from '@/modules/common/models/response';
-import AnalyseItem, {AnalyseFilterModel, AnalyseStarred} from '@/modules/analyse/models/analyse';
+import AnalyseItem, {Analyse, AnalyseFilterModel, AnalyseStarred} from '@/modules/analyse/models/analyse';
 import Page from '@/modules/common/models/page';
 import printJS from 'print-js';
 
@@ -61,5 +61,10 @@ export class AnalyseApiService {
                     reject();
                 })
         }))
+    }
+
+    public static getAnalyseById(id: number): AxiosPromise<Response<Analyse>> {
+        log.debug(`create getAnalyseById request with id ${id}`);
+        return axios.get(`/analyse/${id}`);
     }
 }

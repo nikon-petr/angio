@@ -49,3 +49,23 @@ export interface AnalyseFilterModel {
 export interface AnalyseStarred {
     starred: boolean;
 }
+
+interface Diagnostician {
+    username: string;
+    fullName: FullName;
+}
+
+interface AnalyseAdditionalInfo {
+    name: string;
+    patientId: number;
+    diagnostician: Diagnostician;
+    shortDescription: string;
+    fullDescription: string;
+    type: string;
+    comment: string;
+    conclusion: string;
+}
+
+export interface Analyse {
+    additionalInfo: AnalyseAdditionalInfo;
+}
