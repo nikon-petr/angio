@@ -68,3 +68,7 @@ export interface UserResetAccountModel {
     resetCode: string;
     newPassword: string;
 }
+
+export interface EmailModel {
+    email: string;
+}

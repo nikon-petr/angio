@@ -5,7 +5,7 @@ describe('Login', () => {
         cy.server();
         cy.route('POST', `${Cypress.env('CYPRESS_API_BASE_URL')}/oauth/token`, 'fixture:modules/user/doctor_login.json');
         cy.route('GET', `${Cypress.env('CYPRESS_API_BASE_URL')}/api/v2/user/me`, 'fixture:modules/user/doctor_me.json');
-        cy.route('GET', `${Cypress.env('CYPRESS_API_BASE_URL')}/api/v2/notification/push`, 'fixture:modules/notification/empty_push.json');
+        cy.route('GET', `${Cypress.env('CYPRESS_API_BASE_URL')}/api/v2/notification/push`, 'fixture:modules/common/success.json');
 
         cy.visit('/login');
         cy.location('pathname').should('eq', '/login');

@@ -1,12 +1,11 @@
 <template>
     <CentredLayout>
         <v-flex xs12 sm6 md5 lg4 xl3>
-            <ResetPasswordForm
+            <RegistrationForm
                     v-on:send-form="sendForm"
                     v-bind:fetching="fetching"
-                    v-bind:step="step"
                     v-bind:error-messages="errorMessages"
-            ></ResetPasswordForm>
+            ></RegistrationForm>
         </v-flex>
     </CentredLayout>
 </template>
@@ -14,22 +13,20 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import CentredLayout from '@/modules/common/components/CentredLayout.vue';
-    import {UserApiService} from '@/modules/user/services/userApiService';
-    import ResetPasswordForm from '@/modules/user/components/ResetPasswordForm.vue';
     import {throttle} from 'helpful-decorators';
+    import RegistrationForm from '@/modules/user/components/RegistrationForm.vue';
+    import {UserApiService} from '@/modules/user/services/userApiService';
     import {EmailModel} from '@/modules/user/models/user';
 
     @Component({
         components: {
-            ResetPasswordForm,
+            RegistrationForm,
             CentredLayout,
         },
     })
-    export default class ResetPassword extends Vue {
+    export default class Registration extends Vue {
 
         public fetching: boolean = false;
-
-        public step: number = 1;
 
         public errorMessages: string[] = [];
 
@@ -38,13 +35,12 @@
             this.fetching = true;
             this.errorMessages = [];
             UserApiService
-                .resetPassword(model)
+                .register(model)
                 .then((response) => {
-                    this.step = 2;
+                    this.$router.push({path: '/login'});
                 })
                 .catch((error) => {
-                    this.step = 1;
-                    this.errorMessages = ['user.component.resetPassword.resetPasswordStep.error'];
+                    this.errorMessages = ['user.component.registrationForm.error'];
                     this.$logger.error(error)
                 })
                 .finally(() => this.fetching = false)
