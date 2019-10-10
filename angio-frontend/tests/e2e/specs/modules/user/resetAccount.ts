@@ -1,9 +1,9 @@
-describe('Login', () => {
+describe('Reset account', () => {
 
     it('Reset password (success)', () => {
 
         cy.server();
-        cy.route('POST', `${Cypress.env('CYPRESS_API_BASE_URL')}/api/v2/user/undefined/reset`, 'fixture:modules/user/reset_account.json');
+        cy.route('POST', `${Cypress.env('CYPRESS_API_BASE_URL')}/api/v2/user/undefined/reset`, 'fixture:modules/common/success.json');
 
         cy.visit('/reset');
         cy.location('pathname').should('eq', '/reset');

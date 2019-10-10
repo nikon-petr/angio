@@ -1,4 +1,4 @@
-describe('Login', () => {
+describe('Account activation', () => {
 
     it('Account activation (success)', () => {
 
@@ -8,17 +8,17 @@ describe('Login', () => {
         cy.visit('/activation');
         cy.location('pathname').should('eq', '/activation');
 
-        cy.get('[data-test-id="enablingCode_input"]')
+        cy.get('[data-test-id="enablingCode__input"]')
             .type('123456');
-        cy.get('[data-test-id="firstname_input"]')
+        cy.get('[data-test-id="firstname__input"]')
             .type('Name');
-        cy.get('[data-test-id="lastname_input"]')
+        cy.get('[data-test-id="lastname__input"]')
             .type('Lastname');
-        cy.get('[data-test-id="patronymic_input"]')
+        cy.get('[data-test-id="patronymic__input"]')
             .type('Patronymic');
-        cy.get('[data-test-id="newPassword_input"]')
+        cy.get('[data-test-id="newPassword__input"]')
             .type('q1w2e3r4');
-        cy.get('[data-test-id="newPasswordRepeat_input"]')
+        cy.get('[data-test-id="newPasswordRepeat__input"]')
             .type('q1w2e3r4');
 
         cy.get('[data-test-id="submit__button"]')
@@ -44,17 +44,17 @@ describe('Login', () => {
         cy.visit('/activation');
         cy.location('pathname').should('eq', '/activation');
 
-        cy.get('[data-test-id="enablingCode_input"]')
+        cy.get('[data-test-id="enablingCode__input"]')
             .type('123456');
-        cy.get('[data-test-id="firstname_input"]')
+        cy.get('[data-test-id="firstname__input"]')
             .type('Name');
-        cy.get('[data-test-id="lastname_input"]')
+        cy.get('[data-test-id="lastname__input"]')
             .type('Lastname');
-        cy.get('[data-test-id="patronymic_input"]')
+        cy.get('[data-test-id="patronymic__input"]')
             .type('Patronymic');
-        cy.get('[data-test-id="newPassword_input"]')
+        cy.get('[data-test-id="newPassword__input"]')
             .type('q1w2e3r4');
-        cy.get('[data-test-id="newPasswordRepeat_input"]')
+        cy.get('[data-test-id="newPasswordRepeat__input"]')
             .type('q1w2e3r4');
 
         cy.get('[data-test-id="submit__button"]')
