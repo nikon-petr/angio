@@ -15,8 +15,8 @@
     import CentredLayout from '@/modules/common/components/CentredLayout.vue';
     import {throttle} from 'helpful-decorators';
     import RegistrationForm from '@/modules/user/components/RegistrationForm.vue';
-    import {UserRegisterModel} from "@/modules/user/models/user";
     import {UserApiService} from '@/modules/user/services/userApiService';
+    import {EmailModel} from '@/modules/user/models/user';
 
     @Component({
         components: {
@@ -31,7 +31,7 @@
         public errorMessages: string[] = [];
 
         @throttle(1000)
-        public sendForm(model: UserRegisterModel) {
+        public sendForm(model: EmailModel) {
             this.fetching = true;
             this.errorMessages = [];
             UserApiService

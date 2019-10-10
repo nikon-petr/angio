@@ -34,7 +34,3 @@
         public readonly authUser!: (form: UserCredentialsModel) => Promise<void>;
     }
 </script>
-
-<style scoped>
-
-</style>

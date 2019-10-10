@@ -69,6 +69,6 @@ export interface UserResetAccountModel {
     newPassword: string;
 }
 
-export interface UserRegisterModel {
+export interface EmailModel {
     email: string;
 }

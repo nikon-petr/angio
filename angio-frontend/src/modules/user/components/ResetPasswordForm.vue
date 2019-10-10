@@ -14,9 +14,10 @@
                             id="reset-password-form"
                     >
                         <v-text-field
-                                v-model="email"
+                                v-model="form.email"
                                 v-bind:label="$t('user.component.resetPassword.resetPasswordStep.email.field')"
-                                v-bind:rules="[v => !!v || $t('user.component.resetPassword.resetPasswordStep.email.validation.NotEmpty')]"
+                                v-bind:rules="[v => !!v || $t('user.component.resetPassword.resetPasswordStep.email.validation.NotEmpty'),
+                                    v => v.match(this.emailPattern) || $t('common.validation.IncorrectEmailFormat')]"
                                 v-bind:disabled="fetching"
                                 v-bind:hint="$t('user.component.resetPassword.resetPasswordStep.email.hint')"
                                 persistent-hint
@@ -71,6 +72,8 @@
     import BaseSingleFormContainer from '@/modules/common/components/BaseSingleFormContainer.vue';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
     import BuiltInErrorMessage from '@/modules/common/components/BuiltInErrorMessage.vue';
+    import {EmailModel} from '@/modules/user/models/user';
+    import RegexUtils from '@/utils/regexUtils';
 
     @Component({
         components: {
@@ -93,7 +96,11 @@
 
         public valid: boolean = false;
 
-        public email: string = '';
+        public emailPattern = RegexUtils.EMAIL_PATTERN;
+
+        public form: EmailModel = {
+            email: ''
+        };
 
         get mapErrorMessages() {
             return this.errorMessages.map(message => this.$t(message))
@@ -101,7 +108,7 @@
 
         @Emit(CommonEvent.SEND_FORM)
         public submit() {
-            return this.email;
+            return this.form;
         }
     }
 

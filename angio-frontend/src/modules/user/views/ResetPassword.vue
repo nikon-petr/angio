@@ -17,6 +17,7 @@
     import {UserApiService} from '@/modules/user/services/userApiService';
     import ResetPasswordForm from '@/modules/user/components/ResetPasswordForm.vue';
     import {throttle} from 'helpful-decorators';
+    import {EmailModel} from '@/modules/user/models/user';
 
     @Component({
         components: {
@@ -33,11 +34,11 @@
         public errorMessages: string[] = [];
 
         @throttle(1000)
-        public sendForm(email: string) {
+        public sendForm(model: EmailModel) {
             this.fetching = true;
             this.errorMessages = [];
             UserApiService
-                .resetPassword(email)
+                .resetPassword(model)
                 .then((response) => {
                     this.step = 2;
                 })

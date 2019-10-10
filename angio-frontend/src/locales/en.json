@@ -158,6 +158,9 @@
           "cancel": "Cancel"
         }
       }
+    },
+    "validation": {
+      "IncorrectEmailFormat": "Invalid email address format"
     }
   },
   "user": {

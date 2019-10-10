@@ -2,13 +2,13 @@ import axios, {AxiosPromise} from 'axios';
 import qs from 'querystring';
 import root from 'loglevel';
 import {
+    EmailModel,
     RefreshTokenModel,
     UserActivationModel,
     UserAuthModel,
     UserCredentialsModel,
     UserDetailsModel,
     UserInfoModel,
-    UserRegisterModel,
     UserResetAccountModel,
     UserSettingsModel,
 } from '@/modules/user/models/user';
@@ -52,9 +52,9 @@ export class UserApiService {
         return axios.post<UserDetailsModel>(`/user/${userId}/enable`, model);
     }
 
-    public static resetPassword(email: string): AxiosPromise<void> {
-        log.debug(`reset current user password request with email: ${email}`);
-        return axios.post(`/user/${email}/password/reset`);
+    public static resetPassword(model: EmailModel): AxiosPromise<void> {
+        log.debug(`reset current user password request with email: ${model.email}`);
+        return axios.post(`/user/${model.email}/password/reset`);
     }
 
     public static resetAccount(userId: string, model: UserResetAccountModel): AxiosPromise<void> {
@@ -62,7 +62,7 @@ export class UserApiService {
         return axios.post(`/user/${userId}/reset`, model);
     }
 
-    public static register(model: UserRegisterModel): AxiosPromise<void> {
+    public static register(model: EmailModel): AxiosPromise<void> {
         log.debug(`register new user with email: ${JSON.stringify(model)}`);
         return axios.post(`/user/register`, model)
     }

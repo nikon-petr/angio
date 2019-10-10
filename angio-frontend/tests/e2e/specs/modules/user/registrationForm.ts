@@ -3,7 +3,7 @@ describe('Registration', () => {
     it('Registration (success)', () => {
 
         cy.server();
-        cy.route('POST', `${Cypress.env('CYPRESS_API_BASE_URL')}/api/v2/user/register`, 'fixture:modules/user/registration.json');
+        cy.route('POST', `${Cypress.env('CYPRESS_API_BASE_URL')}/api/v2/user/register`, 'fixture:modules/common/success.json');
 
         cy.visit('/register');
         cy.location('pathname').should('eq', '/register');

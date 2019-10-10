@@ -13,7 +13,8 @@
                         <v-text-field
                                 v-model="form.username"
                                 v-bind:label="$t('user.component.loginForm.username.field')"
-                                v-bind:rules="[v => !!v || $t('user.component.loginForm.username.validation.NotEmpty')]"
+                                v-bind:rules="[v => !!v || $t('user.component.loginForm.username.validation.NotEmpty'),
+                                    v => v.match(this.emailPattern) || $t('common.validation.IncorrectEmailFormat')]"
                                 v-bind:disabled="fetching"
                                 data-test-id="username__input"
                                 type="text"
@@ -74,11 +75,12 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
     import {throttle} from 'helpful-decorators';
     import {UserCredentialsModel} from '@/modules/user/models/user';
     import BaseSingleFormContainer from '@/modules/common/components/BaseSingleFormContainer.vue';
     import BuiltInErrorMessage from '@/modules/common/components/BuiltInErrorMessage.vue';
+    import RegexUtils from '@/utils/regexUtils';
 
     @Component({
         components: {BuiltInErrorMessage, BaseSingleFormContainer}
@@ -97,6 +99,9 @@
         public errorMessages: string[] = [];
 
         public valid: boolean = false;
+
+        public emailPattern = RegexUtils.EMAIL_PATTERN;
+
         public form: UserCredentialsModel = {
             username: '',
             password: '',

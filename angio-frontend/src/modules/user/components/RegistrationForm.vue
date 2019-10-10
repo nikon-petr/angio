@@ -11,7 +11,8 @@
                 <v-text-field
                         v-model="form.email"
                         v-bind:label="$t('user.component.registrationForm.email.field')"
-                        v-bind:rules="[v => !!v || $t('user.component.registrationForm.email.validation.NotEmpty')]"
+                        v-bind:rules="[v => !!v || $t('user.component.registrationForm.email.validation.NotEmpty'),
+                            v => v.match(this.emailPattern) || $t('common.validation.IncorrectEmailFormat')]"
                         v-bind:disabled="fetching"
                         v-bind:hint="$t('user.component.registrationForm.email.hint')"
                         data-test-id="email__input"
@@ -52,7 +53,8 @@
     import BaseSingleFormContainer from '@/modules/common/components/BaseSingleFormContainer.vue';
     import BuiltInErrorMessage from '@/modules/common/components/BuiltInErrorMessage.vue';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
-    import {UserRegisterModel} from '@/modules/user/models/user';
+    import {EmailModel} from '@/modules/user/models/user';
+    import RegexUtils from '@/utils/regexUtils';
 
     @Component({
         components: {
@@ -68,9 +70,11 @@
         @Prop()
         public readonly errorMessages: string[];
 
+        public emailPattern = RegexUtils.EMAIL_PATTERN;
+
         public valid: boolean = false;
 
-        public form: UserRegisterModel = {
+        public form: EmailModel = {
             email: ''
         };
 
