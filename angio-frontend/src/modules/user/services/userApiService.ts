@@ -2,6 +2,7 @@ import axios, {AxiosPromise} from 'axios';
 import qs from 'querystring';
 import root from 'loglevel';
 import {
+    ChangePasswordModel,
     EmailModel,
     RefreshTokenModel,
     UserActivationModel,
@@ -47,9 +48,19 @@ export class UserApiService {
         return axios.get<Response<UserSettingsModel>>('/user/me/settings');
     }
 
+    public static patchSettings(userSettings: UserSettingsModel): AxiosPromise<Response<UserSettingsModel>> {
+        log.debug('create patchSettings request');
+        return axios.patch<Response<UserSettingsModel>>('/user/me/settings', userSettings);
+    }
+
     public static activate(userId: string, model: UserActivationModel): AxiosPromise<UserDetailsModel> {
         log.debug(`create activate request with data: ${JSON.stringify(model)}`);
         return axios.post<UserDetailsModel>(`/user/${userId}/enable`, model);
+    }
+
+    public static changePassword(model: ChangePasswordModel): AxiosPromise<void> {
+        log.debug(`change current user password`);
+        return axios.post(`/user/me/password`, model);
     }
 
     public static resetPassword(model: EmailModel): AxiosPromise<void> {
