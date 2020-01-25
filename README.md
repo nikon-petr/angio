@@ -56,7 +56,8 @@ Test-users credentials:
 | --- | --- | --- |
 |root@example.com|q1w2e3|ROOT (all permissions)|
 |admin@example.com|q1w2e3|ADMIN|
-|doctor@example.com|q1w2e3|DOCTOR|
+|sgmu.doctor@example.com|q1w2e3|DOCTOR|
+|single.doctor@example.com|q1w2e3|SINGLE_DOCTOR|
 
 ### Remote debug ports
 
