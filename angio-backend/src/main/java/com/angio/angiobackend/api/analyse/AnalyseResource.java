@@ -143,6 +143,12 @@ public class AnalyseResource {
         return analyseService.updateAnalyseAdditionalInfo(id, additionalInfo);
     }
 
+    @ApiOperation("Get starred property for analyse for current user")
+    @GetMapping("/{id}/starred")
+    public StarredAnalyseDto getStarredAnalyse(@PathVariable Long id) {
+        return analyseService.getStarredAnalyse(id);
+    }
+
     @ApiOperation("Change starred property of analyse for current user")
     @PostMapping("/{id}/starred")
     public StarredAnalyseDto starAnalyse(@PathVariable Long id,

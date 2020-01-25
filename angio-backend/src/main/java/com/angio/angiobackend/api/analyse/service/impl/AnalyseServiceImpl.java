@@ -381,6 +381,28 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
+    public StarredAnalyseDto getStarredAnalyse(@NonNull Long id) {
+
+        log.debug("getStarredAnalyse() - get starred user");
+        User currentUser = userService.getUserFromContext();
+
+        Specification<Analyse> specs = analyseSpecification.analyseId(id)
+                .and(analyseSpecification.ownedBy(currentUser))
+                .and(analyseSpecification.notDeleted())
+                .and(analyseSpecification.fetchAll());
+
+        log.debug("getStarredAnalyse() - start: id {}", id);
+        Analyse analyse = analyseRepository.findOne(specs)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
+
+
+        return new StarredAnalyseDto().setStarred(analyse.getUsersStarredThis().contains(currentUser));
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
     public StarredAnalyseDto starAnalyse(@NonNull Long id, @NonNull StarredAnalyseDto starredAnalyse) {
 
         log.debug("starAnalyse() - get starred user");

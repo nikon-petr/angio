@@ -52,6 +52,9 @@ public interface AnalyseService {
     DetailedAnalyseDto updateAnalyseAdditionalInfo(@NonNull Long id, @NonNull AdditionalInfoDto dto);
 
     @Transactional
+    StarredAnalyseDto getStarredAnalyse(@NonNull Long id);
+
+    @Transactional
     StarredAnalyseDto starAnalyse(@NonNull Long id, @NonNull StarredAnalyseDto starredAnalyse);
 
     @Transactional
