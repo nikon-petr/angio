@@ -4,8 +4,7 @@ import com.angio.angiobackend.api.common.dto.Response;
 import com.angio.angiobackend.api.notification.dto.NewNotificationDto;
 import com.angio.angiobackend.api.notification.dto.PushNotificationDto;
 import com.angio.angiobackend.api.notification.service.impl.PushNotificationService;
-import com.angio.angiobackend.api.user.service.UserService;
-import freemarker.template.TemplateException;
+import com.angio.angiobackend.api.user.service.CurrentUserResolver;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,14 +29,13 @@ import java.util.UUID;
 @RequestMapping(path = "/api/v2/notification")
 public class NotificationResource {
 
-    private final UserService userService;
     private final PushNotificationService pushNotificationService;
 
     @ApiOperation("Get all current user notifications")
     @GetMapping("/push")
     @PreAuthorize("hasAuthority('PUSH_NOTIFICATION_RECEIVE')")
     public List<PushNotificationDto> getPushNotifications() {
-        return pushNotificationService.getPushNotifications(userService.getUserIdFromContext());
+        return pushNotificationService.getPushNotifications(CurrentUserResolver.getCurrentUserUuid());
     }
 
     @ApiOperation("Mark notifications as read by ids")
@@ -55,7 +51,7 @@ public class NotificationResource {
     @PreAuthorize("hasAuthority('PUSH_NOTIFICATION_RECEIVE')")
     public DeferredResult<PushNotificationDto> getNotifications() {
         DeferredResult<PushNotificationDto> response = new DeferredResult<>();
-        pushNotificationService.addResponse(userService.getUserIdFromContext(), response);
+        pushNotificationService.addResponse(CurrentUserResolver.getCurrentUserUuid(), response);
         return response;
     }
 

@@ -19,6 +19,7 @@ import org.hibernate.envers.NotAudited;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -64,6 +65,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Audited
+@Cacheable
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {

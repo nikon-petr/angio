@@ -16,6 +16,8 @@ import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +52,7 @@ public class PushNotificationService implements NotificationService<UUID> {
     @Async
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "notification.list", key = "#id")
     public void notifyUser(@NonNull UUID id, @NonNull AbstractNotification notification) {
 
         User user = userRepository.findById(id)
@@ -81,6 +84,7 @@ public class PushNotificationService implements NotificationService<UUID> {
     @Async
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "notification.list", allEntries = true)
     public void notifyUsers(@NonNull Collection<UUID> ids, @NonNull AbstractNotification notification) {
 
         List<User> users = userRepository.findAllById(ids);
@@ -115,6 +119,7 @@ public class PushNotificationService implements NotificationService<UUID> {
     @Async
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "notification.list", allEntries = true)
     public void notifyAllUsers(@NonNull AbstractNotification notification) {
 
         log.debug("notifyAllUsers() - start: notification={}", notification);
@@ -148,6 +153,7 @@ public class PushNotificationService implements NotificationService<UUID> {
      * @return notification list
      */
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "notification.list")
     public List<PushNotificationDto> getPushNotifications(UUID userId) {
         return pushNotificationMapper.toDtos(pushNotificationRepository.findAllByUser(userId));
     }

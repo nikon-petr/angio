@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +28,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Audited
+@Cacheable
 @Entity
 @Table(name = "settings")
 public class Settings {

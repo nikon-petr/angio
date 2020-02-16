@@ -1,13 +1,8 @@
 package com.angio.angiobackend.api.security.service;
 
-import lombok.NonNull;
-import org.springframework.transaction.annotation.Transactional;
-
 public interface SecurityService {
 
-    @Transactional
-    String revoke(@NonNull String tokenId);
+    String revoke(String tokenId);
 
-    @Transactional
-    String removeToken(@NonNull String tokenId);
+    String removeToken(String tokenId);
 }

@@ -35,6 +35,7 @@ import com.angio.angiobackend.api.user.mapper.SettingsMapper;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
 import com.angio.angiobackend.api.user.repositories.SettingsRepository;
 import com.angio.angiobackend.api.user.repositories.UserRepository;
+import com.angio.angiobackend.api.user.service.CurrentUserResolver;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.user.specification.UserSpecification;
 import com.angio.angiobackend.init.Roles;
@@ -48,10 +49,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -61,17 +60,15 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
-@Service("userService")
+@Service
 public class UserServiceImpl implements UserService {
 
     private final TransactionTemplate transactionTemplate;
@@ -82,6 +79,7 @@ public class UserServiceImpl implements UserService {
     @Qualifier("pushNotificationService")
     private final NotificationService<UUID> pushNotificationService;
 
+    private final CurrentUserResolver currentUserResolver;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SettingsRepository settingsRepository;
@@ -116,33 +114,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.user.userWithEmailNotFound", new Object[] {email})));
-    }
-
-    /**
-     * Get user from security context and find it in database.
-     *
-     * @return user entity
-     */
-    @Override
-    @Transactional(readOnly = true)
-    @PreAuthorize("isAuthenticated()")
-    public User getUserFromContext() {
-        String uuid = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.debug("getUserFromContext() - start id: {}", uuid);
-        return userRepository.findById(UUID.fromString(uuid))
-                .orElseThrow(() -> new UnauthorizedUserException(
-                        msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {uuid})));
-    }
-
-    /**
-     * Get user id from context.
-     *
-     * @return user uuid
-     */
-    @Override
-    @PreAuthorize("isAuthenticated()")
-    public UUID getUserIdFromContext() {
-        return UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     /**
@@ -318,7 +289,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public UserDto getCurrentUser() {
-        return userMapper.toUserDto(getUserFromContext());
+        return userMapper.toUserDto(currentUserResolver.getCurrentUser());
     }
 
     /**
@@ -333,7 +304,7 @@ public class UserServiceImpl implements UserService {
     public UserDetailsDto updateUser(@NonNull UpdateUserDto dto) {
 
         log.trace("updateUser() - start");
-        User user = getUserFromContext();
+        User user = currentUserResolver.getCurrentUser();
 
         log.trace("updateUser() - merge dto to entity");
         userMapper.updateEntity(dto, user);
@@ -352,7 +323,7 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("isAuthenticated()")
     public SettingsDto getSettings() {
         log.debug("getSettings() - start");
-        return settingsMapper.toDto(getUserFromContext().getSettings());
+        return settingsMapper.toDto(currentUserResolver.getCurrentUser().getSettings());
     }
 
     /**
@@ -367,7 +338,7 @@ public class UserServiceImpl implements UserService {
     public SettingsDto updateSettings(@NonNull SettingsDto dto) {
 
         log.debug("updateSettings() - start");
-        Settings settings = getUserFromContext().getSettings();
+        Settings settings = currentUserResolver.getCurrentUser().getSettings();
 
         log.debug("updateSettings() - map updating settings to entity");
         settingsMapper.toEntity(dto, settings);
@@ -385,10 +356,12 @@ public class UserServiceImpl implements UserService {
      * @return current user settings
      */
     @Override
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
     public SettingsDto resetSettingsToDefault() {
 
         log.debug("resetSettingsToDefault() - start, set defaults");
-        Settings settings = getUserFromContext().getSettings()
+        Settings settings = currentUserResolver.getCurrentUser().getSettings()
                 .setDarkThemeEnabled(props.getUserDefaultSettings().getDarkThemeEnabled());
 
         log.debug("resetSettingsToDefault() - save updated settings");
@@ -410,7 +383,7 @@ public class UserServiceImpl implements UserService {
     public UserDetailsDto changePassword(@NonNull ChangePasswordDto dto) {
 
         log.trace("changePassword() - start");
-        User user = getUserFromContext();
+        User user = currentUserResolver.getCurrentUser();
 
         log.trace("changePassword() - check old password");
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
@@ -589,7 +562,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkAllowedRoles(List<Role> roles) {
-        User creator = getUserFromContext();
+        User creator = currentUserResolver.getCurrentUser();
 
         if (!creator.getOwnedRolesToManage().containsAll(roles)) {
             List<Long> ownedRolesIds = creator.getOwnedRolesToManage().stream()

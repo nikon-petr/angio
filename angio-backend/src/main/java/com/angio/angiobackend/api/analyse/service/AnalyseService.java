@@ -8,24 +8,17 @@ import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
-import com.angio.angiobackend.api.common.dto.Response;
-import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 public interface AnalyseService {
 
-    @Transactional
-    DetailedAnalyseDto createAnalyse(@NonNull DetailedAnalyseDto dto);
+    DetailedAnalyseDto createAnalyse(DetailedAnalyseDto dto);
 
-    @Transactional
-    void saveExecutedAnalyse(@NonNull AnalyseJmsDto dto);
+    void saveExecutedAnalyse(AnalyseJmsDto dto);
 
-    @Transactional(readOnly = true)
     Page<AnalyseShortItemDto> filterAnalysesByQueryString(
             String search,
             Date singleDate,
@@ -35,34 +28,23 @@ public interface AnalyseService {
             Boolean isStarred,
             Pageable pageable);
 
-    @Transactional(readOnly = true)
-    DetailedAnalyseDto getAnalyseById(@NonNull Long id);
+    DetailedAnalyseDto getAnalyseById(Long id);
 
-    @Transactional(readOnly = true)
-    @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
-    AnalyseReportDto getAnalyseReport(@NonNull Long id);
+    AnalyseReportDto getAnalyseReport(Long id);
 
-    @Transactional
-    DetailedAnalyseDto deleteAnalyse(@NonNull Long id);
+    DetailedAnalyseDto deleteAnalyse(Long id);
 
-    @Transactional
-    DetailedAnalyseDto executeAction(@NonNull Long id, @NonNull AnalyseActions action);
+    DetailedAnalyseDto executeAction(Long id, AnalyseActions action);
 
-    @Transactional
-    DetailedAnalyseDto updateAnalyseAdditionalInfo(@NonNull Long id, @NonNull AdditionalInfoDto dto);
+    DetailedAnalyseDto updateAnalyseAdditionalInfo(Long id, AdditionalInfoDto dto);
 
-    @Transactional
-    StarredAnalyseDto getStarredAnalyse(@NonNull Long id);
+    StarredAnalyseDto getStarredAnalyse(Long id);
 
-    @Transactional
-    StarredAnalyseDto starAnalyse(@NonNull Long id, @NonNull StarredAnalyseDto starredAnalyse);
+    StarredAnalyseDto starAnalyse(Long id, StarredAnalyseDto starredAnalyse);
 
-    @Transactional
-    DetailedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId);
+    DetailedAnalyseDto deleteGeometricAnalyseVessel(Long analyseId, Long vesselId);
 
-    @Transactional
     byte[] createArchive(DetailedAnalyseDto dto);
 
-    @Transactional
     int purgeAnalysesInStatusDeleted();
 }

@@ -29,10 +29,9 @@ import com.angio.angiobackend.api.notification.service.NotificationService;
 import com.angio.angiobackend.api.notification.type.NotificationType;
 import com.angio.angiobackend.api.notification.type.Subjects;
 import com.angio.angiobackend.api.patient.service.PatientService;
-import com.angio.angiobackend.api.user.entities.User;
-import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import com.angio.angiobackend.api.user.entities.User;
+import com.angio.angiobackend.api.user.service.CurrentUserResolver;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +77,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     private final NotificationService<UUID> pushNotificationService;
 
     private final PatientService patientService;
-    private final UserService userService;
+    private final CurrentUserResolver currentUserResolver;
     private final AnalyseToExecuteSender analyseToExecuteSender;
     private final AngioBackendProperties props;
     private final DynamicLocaleMessageSourceAccessor msa;
@@ -107,7 +106,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         entity.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getAdditionalInfo().getPatientId()));
 
         log.trace("createAnalyse() - save diagnostician data");
-        entity.getAdditionalInfo().setDiagnostician(userService.getUserFromContext());
+        entity.getAdditionalInfo().setDiagnostician(currentUserResolver.getCurrentUser());
 
         log.trace("createAnalyse() - set analyse date");
         entity.setAnalyseDate(new Date());
@@ -189,7 +188,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("filterAnalysesByQueryString() - start");
 
         log.debug("filterAnalysesByQueryString() - get starred user");
-        User currentUser = userService.getUserFromContext();
+        User currentUser = currentUserResolver.getCurrentUser();
 
         log.trace("filterAnalysesByQueryString() - build analyse info specification");
         Specification<Analyse> specs = analyseSpecification.getAnalyseInfoFilter(search)
@@ -231,7 +230,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.info("getAnalyseById() - analyse to get: id={}", id);
 
         log.debug("getAnalyseById() - get starred user");
-        User currentUser = userService.getUserFromContext();
+        User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.ownedBy(currentUser))
@@ -255,7 +254,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     public AnalyseReportDto getAnalyseReport(@NonNull Long id) {
 
         log.debug("getAnalyseReport() - get starred user");
-        User currentUser = userService.getUserFromContext();
+        User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.ownedBy(currentUser))
@@ -298,7 +297,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     public DetailedAnalyseDto deleteAnalyse(@NonNull Long id) {
 
         log.debug("deleteAnalyse() - get starred user");
-        User currentUser = userService.getUserFromContext();
+        User currentUser = currentUserResolver.getCurrentUser();
 
         log.trace("deleteAnalyse() - start");
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
@@ -353,7 +352,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("updateAnalyseAdditionalInfo() - start");
 
         log.debug("updateAnalyseAdditionalInfo() - get starred user");
-        User currentUser = userService.getUserFromContext();
+        User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.ownedBy(currentUser))
@@ -384,7 +383,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     public StarredAnalyseDto getStarredAnalyse(@NonNull Long id) {
 
         log.debug("getStarredAnalyse() - get starred user");
-        User currentUser = userService.getUserFromContext();
+        User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.ownedBy(currentUser))
@@ -406,7 +405,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     public StarredAnalyseDto starAnalyse(@NonNull Long id, @NonNull StarredAnalyseDto starredAnalyse) {
 
         log.debug("starAnalyse() - get starred user");
-        User currentUser = userService.getUserFromContext();
+        User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.ownedBy(currentUser))
@@ -420,9 +419,9 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.debug("starAnalyse() - star analyse and save");
         if (starredAnalyse.getStarred() != null && starredAnalyse.getStarred()) {
-            analyse.addUserStarredThis(userService.getUserFromContext());
+            analyse.addUserStarredThis(currentUserResolver.getCurrentUser());
         } else if (starredAnalyse.getStarred() != null && !starredAnalyse.getStarred()) {
-            analyse.removeUserStarredThis(userService.getUserFromContext());
+            analyse.removeUserStarredThis(currentUserResolver.getCurrentUser());
         }
 
         analyseRepository.save(analyse);
@@ -437,7 +436,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.trace("deleteGeometricAnalyseVessel() - start");
 
         log.debug("deleteGeometricAnalyseVessel() - get starred user");
-        User currentUser = userService.getUserFromContext();
+        User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(analyseId)
                 .and(analyseSpecification.ownedBy(currentUser))

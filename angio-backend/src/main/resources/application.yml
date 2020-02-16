@@ -8,19 +8,20 @@ spring:
     jpa:
         hibernate:
             ddl-auto: validate
-            cache:
-                use-second-level-cache: true
-                region:
-                    factory-class: org.hibernate.cache.ehcache.EhCacheRegionFactory
         open-in-view: false
         properties:
             hibernate:
                 generate_statistics: true
-                format_sql: false
+                format_sql: true
+                cache:
+                    use_query_cache: true
+                    use_second_level_cache: true
+                    region:
+                        factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
             javax:
                 persistence:
-                    sharedcache:
-                        mode: enable_selective
+                    sharedCache:
+                        mode: ENABLE_SELECTIVE
 
 
     servlet:
@@ -85,6 +86,7 @@ logging:
         org.springframework.web: INFO
         org.springframework.security: INFO
         org.springframework.transaction: INFO
+        org.springframework.cache: INFO
         org.hibernate.stat: INFO
         org.hibernate.SQL: DEBUG
         org.hibernate.type: INFO
