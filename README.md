@@ -21,9 +21,15 @@ Application for the analysis of retinal angiograms
 * frontend
   * vue
   * vue-router
-  * vue-auth
   * vue-axios
-  * vuetify  
+  * vuetify
+  * vue-notification
+  * vue-bus
+  * vue-i18n
+  * vue-pure-lightbox
+  * vue-filepond
+  * loglevel
+  * moment
 
 ### Run
 
