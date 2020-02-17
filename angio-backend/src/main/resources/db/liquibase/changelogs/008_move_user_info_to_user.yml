@@ -1,0 +1,25 @@
+databaseChangeLog:
+- changeSet:
+    id: 008_1
+    author: nikon-petr
+    changes:
+    - addColumn:
+        tableName: users
+        columns:
+        - column:
+            name: firstname
+            type: VARCHAR(30)
+        - column:
+            name: lastname
+            type: VARCHAR(30)
+        - column:
+            name: patronymic
+            type: VARCHAR(30)
+        - column:
+            name: locked
+            type: BOOLEAN
+            constraints:
+                nullable: false
+    - dropTable:
+        tableName: users_info
+        cascadeConstraints: true

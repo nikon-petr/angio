@@ -93,16 +93,17 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
-
 # next.js build output
 .next
 
-# ANGIO
-server/src/main/resources/static/images/analyses/*.png
-server/src/main/resources/static/images/analyses/*.bmp
-server/src/main/resources/static/images/analyses/*.jpg
+# ANGIO-BACKEND
+angio-backend/src/main/resources/static/dist/*
+angio-backend/src/main/resources/static/uploads/*
+angio-backend/src/main/resources/static/email/*
 
-!server/lib/*.jar
+# ANALYSE-EXECUTOR
+!analyse-executor/lib/*.jar
+analyse-executor/src/main/resources/static/uploads
 
+# ALWAYS KEEP ".gitkeep" FILE
+!.gitkeep

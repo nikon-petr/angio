@@ -1,0 +1,25 @@
+databaseChangeLog:
+- changeSet:
+      id: 004_1
+      author: nikon-petr
+      changes:
+      - createTable:
+            tableName: uploads
+            columns:
+            - column:
+                  autoIncrement: true
+                  constraints:
+                      primaryKey: true
+                  name: id
+                  type: BIGSERIAL
+            - column:
+                  constraints:
+                      nullable: false
+                  name: type
+                  type: INT
+                  defaultValueNumeric: 1
+            - column:
+                  constraints:
+                      nullable: false
+                  name: uri
+                  type: VARCHAR(400)

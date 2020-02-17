@@ -1,0 +1,13 @@
+databaseChangeLog:
+- changeSet:
+    id: load_organizations_1
+    author: nikon-petr
+    runOnChange: true
+    changes:
+
+    # load settings data
+    - loadData:
+        tableName: organizations
+        encoding: UTF-8
+        file: db/csv/organizations.csv
+        quotchar: "'"

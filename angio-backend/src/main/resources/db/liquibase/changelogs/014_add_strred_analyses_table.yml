@@ -1,0 +1,22 @@
+databaseChangeLog:
+- changeSet:
+    id: 014
+    author: nikon-petr
+    changes:
+    - createTable:
+        tableName: starred_analyses
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: users_starred_fk
+                references: users(id)
+            name: user_id
+            type: UUID
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: analyses_starred_fk
+                references: analyses(id)
+            name: analyse_id
+            type: BIGINT

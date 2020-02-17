@@ -6,37 +6,66 @@ Application for the analysis of retinal angiograms
 
 * data base
   * PostgreSQL
-* server
+* backend and analyse-executor
   * Spring Boot
   * Spring Data JPA
-  * Spring Security
-  * JWT
-* client
+  * Hibernate Envers
+  * Liquibase
+  * Spring OAuth Security
+  * Spring JMS
+  * Freemarker
+  * Swagger
+  * Mapstruct
+  * Lombok
+  * Log4j2
+* frontend
   * vue
   * vue-router
-  * vue-auth
   * vue-axios
   * vuetify
+  * vue-notification
+  * vue-bus
+  * vue-i18n
+  * vue-pure-lightbox
+  * vue-filepond
+  * loglevel
+  * moment
 
 ### Run
 
 For startup you need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/install/)
 
 Clone repository
-```
+```bash
 git clone https://github.com/nikon-petr/angio
 ```
 
 Go to project folder
-```
+```bash
 cd angio
 ```
 
 Build, create and start by
+```bash
+./start-helper.sh dev # startup without angio-backend service
 ```
-docker-compose up
+or
+```bash
+./start-helper.sh prod # startup all services
 ```
 
-### Debug
+Backend rest api documentation: http://localhost:8080/swagger-ui.html
 
-Remote debugging is available on port 8000
+Test-users credentials:
+
+|Login|Password|Roles|
+| --- | --- | --- |
+|root@example.com|q1w2e3|ROOT (all permissions)|
+|admin@example.com|q1w2e3|ADMIN|
+|sgmu.doctor@example.com|q1w2e3|DOCTOR|
+|single.doctor@example.com|q1w2e3|SINGLE_DOCTOR|
+
+### Remote debug ports
+
+* angio-backend
+  * 8000

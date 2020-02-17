@@ -1,0 +1,8 @@
+{
+  "chromeWebSecurity": false,
+
+  "pluginsFile": "tests/e2e/plugins/index.js",
+  "env": {
+    "CYPRESS_API_BASE_URL": "http://localhost"
+  }
+}

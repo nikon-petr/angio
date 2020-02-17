@@ -1,0 +1,138 @@
+server:
+    port: 8080
+    error:
+        whitelabel:
+            enabled: false
+
+spring:
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        open-in-view: false
+        properties:
+            hibernate:
+                generate_statistics: true
+                format_sql: true
+                cache:
+                    use_query_cache: true
+                    use_second_level_cache: true
+                    region:
+                        factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+            javax:
+                persistence:
+                    sharedCache:
+                        mode: ENABLE_SELECTIVE
+
+
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+
+
+    jackson:
+        serialization:
+            indent_output: true
+        default-property-inclusion: non_null
+        time-zone: Europe/Samara
+        date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+
+    artemis:
+        mode: native
+        host: localhost
+        port: 61616
+        user: angio_app
+        password: q1w2e3
+
+    datasource:
+        url: jdbc:postgresql://localhost:5432/angio_app_db
+        username: angio_app
+        password: q1w2e3
+        driver-class-name: org.postgresql.Driver
+
+    mail:
+        host: smtp.mail.ru
+        port: 465
+        username: angiovision.team@mail.ru
+        password: q1w2e3r4%
+        protocol: smtp
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+                    ssl:
+                        enable: true
+                        trust: smtp.mail.ru
+
+    liquibase:
+        change-log: classpath:db/liquibase/master.yml
+
+    mvc:
+        throw-exception-if-no-handler-found: true
+        async:
+            request-timeout: -1
+        favicon:
+            enabled: false
+
+    autoconfigure:
+        exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+
+logging:
+    level:
+        root: WARN
+        com.angio.angiobackend: DEBUG
+        org.springframework.web: INFO
+        org.springframework.security: INFO
+        org.springframework.transaction: INFO
+        org.springframework.cache: INFO
+        org.hibernate.stat: INFO
+        org.hibernate.SQL: DEBUG
+        org.hibernate.type: INFO
+        org.hibernate.cache: INFO
+        io.swagger.models.parameters.AbstractSerializableParameter: ERROR
+
+management:
+    endpoints:
+        web:
+            base-path: /api/v2/actuator
+            exposure:
+                include: "*"
+            cors:
+                allowed-origins: "*"
+                allowed-methods: GET,POST
+
+angiobackend:
+    app:
+        base-url: http://localhost:8080
+        upload-path: /static/uploads/
+        frontend-dist-path: /
+
+        sent-email-directory: angio-backend/src/main/resources/static/email
+        upload-directory: angio-backend/src/main/resources/static/uploads/
+        frontend-dist-directory: angio-backend/src/main/resources/static/dist/
+
+        ui:
+            user-activation-form-path: /activation?userId={id}
+            user-resetting-form-path: /reset?userId={id}
+
+        image-upload-extensions:
+            - bmp
+            - png
+        document-upload-extensions:
+            - pdf
+
+        jms:
+            analyse-to-execute-queue: queue.analyse.toExecute
+            analyse-results-queue: queue.analyse.results
+
+        scheduling:
+            # every day at 3:00
+            purge-analyses-period: 0 0 3 * * *
+            # every day at 3:00
+            purge-images-period: 0 0 3 * * *
+
+        user-default-settings:
+            dark-theme-enabled: true
+            locale: ru

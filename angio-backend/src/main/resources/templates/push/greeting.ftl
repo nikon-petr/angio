@@ -1,0 +1,1 @@
+${data.firstname} ${data.lastname}, приветствуем Вас в Angio!

@@ -1,0 +1,17 @@
+databaseChangeLog:
+- changeSet:
+    id: 016
+    author: nikon-petr
+    changes:
+    - addColumn:
+        tableName: settings
+        columns:
+        - column:
+            name: locale
+            type: VARCHAR(7)
+    - addColumn:
+        tableName: settings_aud
+        columns:
+        - column:
+            name: locale
+            type: VARCHAR(7)

@@ -1,0 +1,176 @@
+databaseChangeLog:
+- changeSet:
+    id: 007_1
+    author: nikon-petr
+    changes:
+    - dropColumn:
+        tableName: users
+        columnName: last_password_reset_date
+    - dropColumn:
+        tableName: users_info
+        columnName: modified_date
+    - dropTable:
+        tableName: tokens
+        cascadeConstraints: true
+
+- changeSet:
+    id: 007_2
+    author: nikon-petr
+    changes:
+
+    - dropForeignKeyConstraint:
+        baseTableName: analyses
+        constraintName: fk_analyses_info_users
+    - dropColumn:
+        tableName: analyses
+        columnName: username
+    - addColumn:
+        tableName: analyses
+        columns:
+        - column:
+            name: user_id
+            type: UUID
+
+    - dropForeignKeyConstraint:
+        baseTableName: users_info
+        constraintName: fk_users_info_users
+    - dropColumn:
+        tableName: users_info
+        columnName: username
+    - addColumn:
+        tableName: users_info
+        columns:
+        - column:
+            name: user_id
+            type: UUID
+
+    # authority -> roles
+    - renameTable:
+        oldTableName: authorities
+        newTableName: roles
+    - dropForeignKeyConstraint:
+        baseTableName: roles
+        constraintName: fk_authorities_users
+    - dropColumn:
+        tableName: roles
+        columnName: username
+    - renameColumn:
+        tableName: roles
+        oldColumnName: authority
+        newColumnName: name
+
+    - dropPrimaryKey:
+        constraintName: users_pkey
+        tableName: users
+    - renameColumn:
+        tableName: users
+        oldColumnName: username
+        newColumnName: email
+    - addColumn:
+        tableName: users
+        columns:
+        - column:
+            name: id
+            type: UUID
+            defaultValueComputed: uuid_generate_v1()
+            constraints:
+                primaryKey: true
+                primaryKeyName: token_pkey
+
+    - addForeignKeyConstraint:
+        constraintName: fk_analyses_user
+        baseTableName: analyses
+        baseColumnNames: user_id
+        referencedTableName: users
+        referencedColumnNames: id
+    - addForeignKeyConstraint:
+        constraintName: fk_users_info_user
+        baseTableName: users_info
+        baseColumnNames: user_id
+        referencedTableName: users
+        referencedColumnNames: id
+
+    - createTable:
+        tableName: tokens
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: token_pkey
+            name: id
+            type: UUID
+        - column:
+            name: issued_at
+            type: TIMESTAMP
+            constraints:
+                nullable: false
+        - column:
+            name: expires_in
+            type: TIMESTAMP
+            constraints:
+                nullable: false
+        - column:
+            name: user_id
+            type: UUID
+            constraints:
+                nullable: false
+                foreignKeyName: token_user_fk
+                references: users(id)
+
+    # + permissions
+    - createTable:
+        tableName: permissions
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+                nullable: false
+            name: name
+            type: VARCHAR(40)
+        - column:
+            constraints:
+                nullable: false
+            name: description
+            type: VARCHAR(100)
+
+    # many to many
+    - createTable:
+        tableName: users_roles
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: users_roles_fk
+                references: users(id)
+            name: user_id
+            type: UUID
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: roles_users_fk
+                references: roles(id)
+            name: role_id
+            type: BIGINT
+
+    - createTable:
+        tableName: roles_permissions
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: permissions_roles_fk
+                references: roles(id)
+            name: role_id
+            type: BIGINT
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: roles_permissions_fk
+                references: permissions(id)
+            name: permission_id
+            type: BIGINT

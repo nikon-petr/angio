@@ -1,0 +1,41 @@
+databaseChangeLog:
+- changeSet:
+    id: 003_1
+    author: nikon-petr
+    changes:
+    - addColumn:
+        tableName: users_info
+        schemaName: public
+        columns:
+        - column:
+            name: patronymic
+            type: varchar(30)
+    - update:
+        schemaName: public
+        tableName: users_info
+        where: info_id=1
+        columns:
+        - column:
+            name: patronymic
+            value: Admin
+    - update:
+          schemaName: public
+          tableName: users_info
+          where: info_id=2
+          columns:
+          - column:
+                name: patronymic
+                value: Admin
+    - update:
+          schemaName: public
+          tableName: users_info
+          where: info_id=3
+          columns:
+          - column:
+                name: patronymic
+                value: Олегович
+    - addNotNullConstraint:
+        schemaName: public
+        tableName: users_info
+        columnDataType: varchar(30)
+        columnName: patronymic

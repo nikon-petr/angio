@@ -1,0 +1,35 @@
+databaseChangeLog:
+- changeSet:
+    id: 013
+    author: nikon-petr
+    changes:
+    - createTable:
+        tableName: push_notifications
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+            name: id
+            type: UUID
+            defaultValueComputed: uuid_generate_v1()
+        - column:
+            name: user_id
+            type: UUID
+            constraints:
+                foreignKeyName: notifications_users_fk
+                references: users(id)
+        - column:
+            name: date
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: type
+            type: INT
+        - column:
+            name: body
+            type: TEXT
+        - column:
+            name: read
+            type: BOOLEAN
+        - column:
+            name: subject
+            type: VARCHAR(25)

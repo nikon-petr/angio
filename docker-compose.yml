@@ -2,9 +2,9 @@ version: "2"
 
 services:
     db:
-        image: postgres:10
+        image: amd64/postgres:10-alpine
         volumes:
-            - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+            - ./postgres:/docker-entrypoint-initdb.d
         expose:
             - "5432"
         ports:
@@ -12,16 +12,34 @@ services:
         environment:
             - POSTGRES_PASSWORD=DO$od~lBd}8L
 
-    server:
-        build: ./server
+    artemis:
+        image: vromero/activemq-artemis:2.6.3-alpine
         volumes:
-            - ~/.m2:/root/.m2:rw # Maven repository files
-            - ./server:/server
+            - ./artemis/:/var/lib/artemis/etc-override/
+        expose:
+            - "61616"
         ports:
-            - 8000:8000 # Port for remote debug
-            - 80:80
-        command: mvn clean spring-boot:run
-        working_dir: /server
+            - 8161:8161
+            - 61616:61616
+        environment:
+            - ARTEMIS_USERNAME=angio_app
+            - ARTEMIS_PASSWORD=q1w2e3
+
+    analyse-executor:
+        image: analyse-executor:latest
+        build:
+            context: ./
+            dockerfile: ./analyse-executor/src/main/docker/Dockerfile
+        volumes:
+            - static-content:/opt/analyse-executor/static
+        tty: true
         depends_on:
             - db
-  
+            - artemis
+
+volumes:
+    static-content:
+        driver_opts:
+            type: none
+            device: ${PWD}/angio-backend/src/main/resources/static
+            o: bind

@@ -1,0 +1,59 @@
+databaseChangeLog:
+- changeSet:
+    id: 017
+    author: nikon-petr
+    changes:
+
+    - createTable:
+        tableName: organizations
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: name
+            type: VARCHAR(175)
+
+    - createTable:
+        tableName: organizations_aud
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+                primaryKey: true
+                nullable: false
+                foreignKeyName: analyses_aud_revinfo_fk
+                references: revinfo(rev)
+            name: rev
+            type: INT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: name
+            type: VARCHAR(175)
+
+    - addColumn:
+        tableName: users
+        columns:
+        - column:
+            constraints:
+                foreignKeyName: users_organization_fk
+                references: organizations(id)
+            name: organization_id
+            type: BIGINT
+
+    - addColumn:
+        tableName: users_aud
+        columns:
+        - column:
+            name: organization_id
+            type: BIGINT

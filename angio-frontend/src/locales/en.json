@@ -1,0 +1,429 @@
+{
+  "$vuetify": {
+    "dataIterator": {
+      "rowsPerPageText": "Items per page:",
+      "rowsPerPageAll": "All",
+      "pageText": "{0}-{1} of {2}",
+      "noResultsText": "No matching records found",
+      "nextPage": "Next page",
+      "prevPage": "Previous page"
+    },
+    "dataTable": {
+      "rowsPerPageText": "Rows per page:"
+    },
+    "noDataText": "No data available",
+    "carousel": {
+      "prev": "Previous",
+      "next": "Next"
+    }
+  },
+  "common": {
+    "appName": "AngioVision",
+    "view": {
+      "404": {
+        "title": "Page not found",
+        "description": "Sorry, page not found"
+      },
+      "500": {
+        "title": "Error",
+        "description": "Sorry, the server is down"
+      },
+      "about": {
+        "title": "About",
+        "app": "Application",
+        "repository": "Repository",
+        "developers": "Developers",
+        "nikon": "Nikon Petrunin",
+        "artem": "Artem Karkavin"
+      },
+      "landing": {
+        "title": "Home",
+        "subheader": "Home",
+        "content": {
+          "main": {
+            "title": "Basic information:",
+            "content": "AngioVision - web-based software for processing angiograms to determine the quantitative parameters of the retina. The main goal is to provide the diagnostician with a quantitative diagnosis."
+          },
+          "abilities": {
+            "title": "Abilities:",
+            "content": [
+              "Quantitative determination of the loaded angiogram;",
+              "Saving analysis results in .pdf format;",
+              "Filter for quick search and convenient structuring of information about processed angiograms."
+            ]
+          },
+          "analyses": {
+            "title": "Ongoing analyzes:",
+            "content": [
+              "Avascular area analysis;",
+              "Determination of the geometric characteristics of the vascular system of the retina;",
+              "Determination of the presence of ischemic zones and their characteristics."
+            ]
+          },
+          "parameters": {
+            "title": "Determined quantitative parameters:",
+            "content": [
+              "The density of the vessels around the optic disc;",
+              "Avascular area;",
+              "Vessel area;",
+              "Degree of tortuosity;",
+              "Degree of branching;",
+              "The presence and area of ischemic zones."
+            ]
+          },
+          "work": {
+            "title": "Work with software:",
+            "content": [
+              "Download angiogram. Sample snapshot:",
+              "Filling out basic patient and disease information;",
+              "Run analysis;",
+              "Obtaining analysis results for further work (saving results / editing indicators)."
+            ]
+          },
+          "specifications": {
+            "title": "Main technical characteristics:",
+            "content": [
+              "The number of determined quantitative parameters: 7;",
+              "Single shot processing time: 120 - 240 с;",
+              "Image format for download to the analysis: .bmp."
+            ]
+          }
+        }
+      }
+    },
+    "component": {
+      "error": {
+        "linkName": "Home"
+      },
+      "theDrawer": {
+        "link": {
+          "newAnalyse": {
+            "name": "Add new analyse",
+            "tooltip": "Add new analyse"
+          },
+          "search": {
+            "name": "Analyses",
+            "tooltip": "Search analyses"
+          },
+          "dashboard": {
+            "name": "Dashboard",
+            "tooltip": "Admin dashboard"
+          },
+          "users": {
+            "name": "Users",
+            "tooltip": "Users"
+          },
+          "organizations": {
+            "name": "Organization",
+            "tooltip": "Organization"
+          },
+          "newNotification": {
+            "name": "New notification",
+            "tooltip": "Send new notification"
+          },
+          "help": {
+            "name": "Help",
+            "tooltip": "Help"
+          },
+          "about": {
+            "name": "About",
+            "tooltip": "About"
+          }
+        }
+      },
+      "theHeader": {
+      },
+      "theFooter": {
+        "button": {
+          "home": "Home",
+          "about": "About",
+          "help": "Help"
+        }
+      },
+      "singleDatePicker": {
+        "placeholder": "dd.mm.yyyy",
+        "button": {
+          "cancel": "Cancel",
+          "ok": "Ок"
+        }
+      },
+      "periodDatePicker": {
+        "startDate": "Start date",
+        "endDate": "End date",
+        "singleDate": "Date"
+      },
+      "confirmDialog": {
+        "button": {
+          "yes": "Yes",
+          "cancel": "Cancel"
+        }
+      }
+    },
+    "validation": {
+      "IncorrectEmailFormat": "Invalid email address format"
+    }
+  },
+  "user": {
+    "component": {
+      "userMenuActions": {
+        "button": {
+          "settings": "Settings",
+          "logout": "Log out"
+        }
+      },
+      "userMenuAvatar": {
+        "organizationPlaceholder": "No organization"
+      },
+      "loginForm": {
+        "title": "Authorization",
+        "username": {
+          "field": "Email",
+          "validation": {
+            "NotEmpty": "Email should not be empty"
+          }
+        },
+        "password": {
+          "field": "Password",
+          "validation": {
+            "NotEmpty": "Password should not be empty",
+            "Unauthorized": "Login or password are wrong"
+          }
+        },
+        "button": {
+          "reset": "Reset",
+          "submit": "Log In"
+        }
+      },
+      "registrationForm": {
+        "title": "Registration",
+        "email": {
+          "field": "Email",
+          "hint": "Enter the email address that will be used for authorization",
+          "validation": {
+            "NotEmpty": "Email should not be empty"
+          }
+        },
+        "button": {
+          "register": "Sign Up"
+        },
+        "error": "An error occurred while registering a new user"
+      },
+      "activation": {
+        "activationFormStep": {
+          "title": "Activation",
+          "button": {
+            "send": "Send"
+          },
+          "error": "Activation error",
+          "enablingCode": {
+            "field": "Activation code",
+            "validation": {
+              "NotEmpty": "Activation code must not be empty"
+            }
+          },
+          "fullName": {
+            "firstname": {
+              "field": "Name",
+              "validation": {
+                "NotEmpty": "Name must not be empty"
+              }
+            },
+            "lastname": {
+              "field": "Surname",
+              "validation": {
+                "NotEmpty": "Surname must not be empty"
+              }
+            },
+            "patronymic": {
+              "field": "Patronymic"
+            }
+          },
+          "newPassword": {
+            "field": "Password",
+            "validation": {
+              "NotEmpty": "Password must not be empty",
+              "MinLength": "The minimum password length is 8 characters",
+              "DoesNotMatch": "Passwords do not match"
+            }
+          },
+          "newPasswordRepeat": {
+            "field": "Confirm password"
+          }
+        },
+        "activationSuccessStep": {
+          "title": "Activation completed!",
+          "content": "Congratulations, account activation was successful. To login, please click on the \"Log In\" button.",
+          "button": {
+            "login": "Log In"
+          }
+        }
+      },
+      "resetPassword": {
+        "resetPasswordStep": {
+          "title": "Restore access",
+          "email": {
+            "field": "Email",
+            "hint": "For restore access, you must reset the password. To do this, enter your email address.",
+            "validation": {
+              "NotEmpty": "Email should not be empty"
+            }
+          },
+          "button": {
+            "submit": "Reset"
+          },
+          "error": "Password reset error"
+        },
+        "resetPasswordSuccessStep": {
+          "title": "Password reset!",
+          "content": "For further action follow the instructions sent to your email."
+        }
+      },
+      "resetAccount": {
+        "title": "Account recovery",
+        "button": {
+          "submit": "Recovery"
+        },
+        "resetCode": {
+          "field": "Recovery code",
+          "hint": "Enter recovery code from email",
+          "validation": {
+            "NotEmpty": "Recovery code should not be empty"
+          }
+        },
+        "newPassword": {
+          "field": "Password",
+          "hint": "Create a new password",
+          "validation": {
+            "NotEmpty": "Password must not be empty",
+            "MinLength": "The minimum password length is 8 characters",
+            "DoesNotMatch": "Passwords do not match"
+          }
+        },
+        "newPasswordRepeat": {
+          "field": "Confirm password"
+        },
+        "error": "Access recovery error"
+      }
+    },
+    "view": {
+      "login": {
+        "title": "Authorization"
+      },
+      "registration": {
+        "title": "Registration"
+      },
+      "activation": {
+        "title": "Activation"
+      },
+      "resetPassword": {
+        "title": "Restore access"
+      },
+      "resetAccount": {
+        "title": "Account recovery"
+      },
+      "403": {
+        "title": "Access denied",
+        "description": "Sorry, access denied"
+      }
+    }
+  },
+  "notification": {
+    "component": {
+      "noNotificationsMessage": {
+        "body": "No notifications yet"
+      },
+      "notificationScroller": {
+        "subheader": "Notifications"
+      }
+    }
+  },
+  "analyse": {
+    "model": {
+      "analyseType": {
+        "PRIMARY": "Primary",
+        "SUBSEQUENT": "Subsequent"
+      },
+      "status": {
+        "CREATED": "Created",
+        "IN_PROGRESS": "In progress",
+        "SUCCESS": "Successed",
+        "FAILED": "Failed"
+      }
+    },
+    "component": {
+      "analyseListFilter": {
+        "field": {
+          "search": {
+            "button": {
+              "advancedSearch": {
+                "tooltip": "Advanced Search"
+              }
+            }
+          }
+        },
+        "status": {
+          "CREATED": "Created",
+          "IN_PROGRESS": "In progress",
+          "SUCCESS": "Successed",
+          "FAILED": "Failed"
+        },
+        "chips": {
+          "search": "Search: {0}",
+          "statuses": "Status: {0}",
+          "singleDate": "Date: {0}",
+          "datePeriod": "From {0} to {1}",
+          "isStarred": "Starred"
+        },
+        "search": "Search analyses",
+        "statusField": "Status",
+        "period": "Period",
+        "starred": "Starred analyses",
+        "statusWithoutMatches": "The search has not given any results"
+      },
+      "analyseListTablePreview": {
+        "field": {
+          "diagnostician": "Diagnostician: ",
+          "patient": "Patient: ",
+          "name": "Name: ",
+          "shortDescription": "Short description: ",
+          "analyseType": "Analyse Type: ",
+          "statusType": "Status: ",
+          "statusExtension": "Status extension: "
+        },
+        "button": {
+          "delete": {
+            "confirm": {
+              "title": "Delete analyse",
+              "text": "Are you sure you want to delete analyse #{0}?"
+            }
+          },
+          "details": {
+            "name": "Details"
+          },
+          "print": {
+            "tooltip": "Print report"
+          },
+          "downloadZip": {
+            "tooltip": "Download archive"
+          }
+        }
+      },
+      "analyseListTable": {
+        "column": {
+          "id": "#",
+          "name": "Name",
+          "date": "Date",
+          "patient": "Patient",
+          "diagnostician": "Diagnostician",
+          "statusType": "Status"
+        }
+      }
+    },
+    "view": {
+      "analyseList": {
+        "title": "Search analyses",
+        "subheader": "List of analyses"
+      }
+    }
+  }
+}

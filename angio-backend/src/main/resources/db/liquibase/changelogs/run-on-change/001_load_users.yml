@@ -1,0 +1,14 @@
+databaseChangeLog:
+- changeSet:
+    id: load_users_1
+    author: nikon-petr
+    runOnChange: true
+    changes:
+
+    # load user data
+    - loadUpdateData:
+        tableName: users
+        primaryKey: id
+        encoding: UTF-8
+        file: db/csv/users.csv
+        quotchar: "'"

@@ -1,0 +1,22 @@
+databaseChangeLog:
+- changeSet:
+    id: 010
+    author: nikon-petr
+    changes:
+    - createTable:
+        tableName: owners_roles
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: users_roles_fk
+                references: users(id)
+            name: owner_id
+            type: UUID
+        - column:
+            constraints:
+                primaryKey: true
+                foreignKeyName: roles_users_fk
+                references: roles(id)
+            name: role_id
+            type: BIGINT

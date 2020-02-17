@@ -1,0 +1,69 @@
+databaseChangeLog:
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/001_initial_migration.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/002_generate_schema.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/003_add_patronymic_to_user_info.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/004_add_uploads_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/005_add_upload_ref_to_analyse_tables.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/006_refactor_analyse_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/007_refactor_security.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/008_move_user_info_to_user.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/009_add_audit_tables.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/010_add_owners_roles_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/011_add_unique_constraints.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/012_add_role_permission_description.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/013_add_notification_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/014_add_strred_analyses_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/015_add_settings_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/016_add_locale_column_to_settings_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/017_add_organizations_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/018_remove_redundant_patient_attributes.yml
+
+# always in the end of file
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/run-on-change/004_load_organizations.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/run-on-change/001_load_users.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/run-on-change/002_load_patients.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/run-on-change/003_load_users_settings.yml
