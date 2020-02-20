@@ -1,7 +1,12 @@
 import axios, {AxiosPromise} from 'axios';
 import root from 'loglevel';
 import {Response} from '@/modules/common/models/response';
-import AnalyseItem, {Analyse, AnalyseFilterModel, AnalyseStarred} from '@/modules/analyse/models/analyse';
+import AnalyseItem, {
+    Analyse,
+    AnalyseAdditionalInfo,
+    AnalyseFilterModel,
+    AnalyseStarred,
+} from '@/modules/analyse/models/analyse';
 import Page from '@/modules/common/models/page';
 import printJS from 'print-js';
 
@@ -18,9 +23,19 @@ export class AnalyseApiService {
         return axios.post<Response<AnalyseStarred>>(`/analyse/${id}/starred`, {starred})
     }
 
+    public static getAnalyseStarred(id: number): AxiosPromise<Response<AnalyseStarred>> {
+        log.debug(`create getAnalyseStarred request for analyse id=${id}`);
+        return axios.get<Response<AnalyseStarred>>(`/analyse/${id}/starred`)
+    }
+
     public static deleteAnalyse(id: number): AxiosPromise<Response<any>> {
         log.debug(`create deleteAnalyse request for analyse id=${id}`);
         return axios.delete(`/analyse/${id}`);
+    }
+
+    public static deleteVessel(analyseId: number, vesselId: number): AxiosPromise<Response<any>> {
+        log.debug(`create deleteVessel request for analyse id=${analyseId} and vessel id = ${vesselId}`);
+        return axios.delete(`/analyse/${analyseId}/geometric/vessel/${vesselId}`);
     }
 
     public static printAnalyseReport(id: number): Promise<void> {
@@ -66,5 +81,10 @@ export class AnalyseApiService {
     public static getAnalyseById(id: number): AxiosPromise<Response<Analyse>> {
         log.debug(`create getAnalyseById request with id ${id}`);
         return axios.get(`/analyse/${id}`);
+    }
+
+    public static editAnalyseAdditionalInfo(id: number, analyseAdditionalInfo: AnalyseAdditionalInfo): AxiosPromise<Response<Analyse>> {
+        log.debug(`edit analyse additional info request with id ${id}`);
+        return axios.patch(`/analyse/${id}/additional-info`, analyseAdditionalInfo);
     }
 }

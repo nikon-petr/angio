@@ -2,8 +2,8 @@
     <v-img
             v-bind:src="src"
             class="elevation-2"
-            max-height="250px"
-            max-width="250px"
+            v-bind:max-height="maxSize"
+            v-bind:max-width="maxSize"
             aspect-ratio="1"
             ma-0
             pa-0
@@ -26,9 +26,12 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
 
     @Component
-    export default class AnalyseListTablePreviewImage extends Vue {
+    export default class AnalysePreviewImage extends Vue {
 
         @Prop()
         public readonly src!: string;
+
+        @Prop()
+        public readonly maxSize!: number;
     }
 </script>

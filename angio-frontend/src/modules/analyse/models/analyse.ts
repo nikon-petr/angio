@@ -55,7 +55,7 @@ interface Diagnostician {
     fullName: FullName;
 }
 
-interface AnalyseAdditionalInfo {
+export interface AnalyseAdditionalInfo {
     name: string;
     patientId: number;
     diagnostician: Diagnostician;
@@ -67,5 +67,57 @@ interface AnalyseAdditionalInfo {
 }
 
 export interface Analyse {
-    additionalInfo: AnalyseAdditionalInfo;
+    id: number,
+    starred: boolean,
+    analyseDate: Date,
+    originalImage: StaticFile;
+    additionalInfo: AnalyseAdditionalInfo,
+    geometricAnalyse: GeometricAnalyse,
+    bloodFlowAnalyse: BloodFlowAnalyse;
+}
+
+export interface GeometricAnalyse {
+    binarizedImage: StaticFile,
+    skeletonizedImage: StaticFile,
+    vessels: Vessel[];
+}
+
+export interface Vessel {
+    id: number,
+    vesselImage: StaticFile,
+    mainVesselImage: StaticFile,
+    tortuosityDegree: number,
+    countOfBranches: number,
+    branchingDegree: number,
+    area: number,
+    areaPercent: number;
+}
+
+export interface BloodFlowAnalyse {
+    ischemiaImage: StaticFile,
+    ischemias: Ischemia[],
+    macula: Macula,
+    densityImage: StaticFile,
+    densities: Density[];
+}
+
+export interface Ischemia {
+    id: number,
+    area: number,
+    zoneNumber: number,
+    x: number,
+    y: number;
+}
+
+export interface Macula {
+    area: number,
+    radius: number,
+    x: number,
+    y: number;
+}
+
+export interface Density {
+    id: number,
+    sectorNumber: number,
+    density: number;
 }

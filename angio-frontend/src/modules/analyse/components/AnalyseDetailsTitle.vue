@@ -1,7 +1,7 @@
 <template>
     <v-layout row>
         <v-flex xs11>
-            <span class=" headline">{{ name }}</span><br>
+            <span class="display-1">{{ name }}</span><br>
             <span class="font-weight-bold subtitle-1 text--secondary text--darken-4">{{ formatSubtitle() }}</span>
         </v-flex>
         <v-flex xs1 class="text-xs-right">

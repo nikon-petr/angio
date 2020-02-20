@@ -417,6 +417,126 @@
           "diagnostician": "Diagnostician",
           "statusType": "Status"
         }
+      },
+      "details": {
+        "additionalInfo": {
+          "originalImage": "Original image",
+          "info": {
+            "title": "Disease information",
+            "diagnostician": "Diagnostician:",
+            "analyseDate": "Analyse date:",
+            "type": "Analyse type:",
+            "shortDescription": "Short description:",
+            "fullDescription": "Full description:",
+            "comment": "Comment:",
+            "conclusion": "Conclusion:"
+          }
+        },
+        "editForm": {
+          "title": "Analyse editing",
+          "error": "An error occurred while editing the analyse",
+          "analyseType": {
+            "field": "Analyse type"
+          },
+          "name": {
+            "field": "Name",
+            "validation": {
+              "NotEmpty": "Name should not be empty",
+              "MinLength": "The minimum name length is 5 characters"
+            }
+          },
+          "shortDescription": {
+            "field": "Short description",
+            "validation": {
+              "NotEmpty": "Short description should not be empty",
+              "MinLength": "The minimum short description length is 5 characters"
+            }
+          },
+          "fullDescription": {
+            "field": "Full description"
+          },
+          "conclusion": {
+            "field": "Conclusion"
+          },
+          "comment": {
+            "field": "Comment"
+          }
+        },
+        "analyseTabs": {
+          "geometricAnalyse": {
+            "tabName": "Geometric characteristic of the vascular system",
+            "images": {
+              "title": "Processed Images",
+              "data": {
+                "original": "Original image",
+                "binarized": "Binarized image",
+                "skeleton": "Skeletonized image"
+              }
+            },
+            "separatedVessels": {
+              "title": "Analysis of the vascular system of the eye for individual vessels",
+              "table": {
+                "vesselNum": "№",
+                "vesselImage": "Vessel",
+                "mainVesselImage": "Main",
+                "countOfBranches": "Branches",
+                "tortuosityDegree": "Tortuosity",
+                "branchingDegree": "Branching",
+                "area": "S (px)",
+                "areaPercent": "S (%)",
+                "actions": "Actions",
+                "info": "{0} - {1} of {2}",
+                "noData": "No vessels were detected",
+                "button": {
+                  "deleteVessel": {
+                    "title": "Delete vessel",
+                    "text": "Do you really want to remove the vessel?"
+                  }
+                }
+              }
+            },
+            "commonVessels": {
+              "title": "The results of the analysis of the vascular system of the eye for individual vessels",
+              "table": {
+                "vesselsCount": "Amount of vessels",
+                "branchesCount": "Amount of branches",
+                "avgTortuosity": "Average tortuosity",
+                "avgBranching": "Average branching",
+                "commonSInPx": "Total S (px)",
+                "commonSInPercent": "Total S (%)"
+              }
+            }
+          },
+          "ischemiaAndMacula": {
+            "tabName": "Ischemic zones and macula",
+            "macula": {
+              "title": "Macula",
+              "info": {
+                "area": "S of macula: {0}",
+                "radius": "R of macula: {0}",
+                "center": "Center of macula: {0} ; {1}"
+              }
+            },
+            "ischemia": {
+              "title": "Ischemic zones",
+              "table": {
+                "sectorNum": "№ of zone",
+                "area": "S (px)",
+                "x": "x (px)",
+                "y": "y (px)",
+                "info": "{0} - {1} of {2}",
+                "noData": "No ischemic zones found"
+              }
+            }
+          },
+          "density": {
+            "tabName": "Density of capillaries in the macula",
+            "table": {
+              "sectorNum": "№ sector",
+              "density": "Density (px)"
+            }
+          }
+        }
       }
     },
     "view": {
