@@ -45,8 +45,8 @@
                             <template slot="items" slot-scope="props">
                                 <td>{{ props.item.zoneNumber }}</td>
                                 <td class="text-xs-center">{{ props.item.area }}</td>
-                                <td class="text-xs-center">{{ Math.round(props.item.x * 100) / 100 }}</td>
-                                <td class="text-xs-center">{{ Math.round(props.item.y * 100) / 100 }}</td>
+                                <td class="text-xs-center">{{ props.item.x | round() }}</td>
+                                <td class="text-xs-center">{{ props.item.y | round() }}</td>
                             </template>
                             <template slot="pageText" slot-scope="props" >
                                 {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.table.info',

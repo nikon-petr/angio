@@ -51,7 +51,7 @@
 
         public isShowed: boolean = false;
 
-        public editedData!: AnalyseAdditionalInfo;
+        public editedData: AnalyseAdditionalInfo = this.fillEditedDataByDefaultValues();
 
         public onOpen() {
             this.editedData = this.fillEditedDataByDefaultValues();

@@ -27,17 +27,17 @@
                                     </span>
                                 </div>
                             </div>
-                            <div v-if="analyse.additionalInfo.diagnostician && analyse.additionalInfo.diagnostician.fullName">
+                            <div v-if="isDiagnosticianInfoEnabled()">
                                 <span class="font-weight-medium text--secondary">
                                     {{ $t('analyse.component.details.additionalInfo.info.diagnostician') }}
                                 </span>
                             </div>
-                            <div v-if="analyse.additionalInfo.diagnostician && analyse.additionalInfo.diagnostician.fullName">
+                            <div v-if="isDiagnosticianInfoEnabled()">
                                 <span class="font-weight-medium subtitle-1">
                                     {{ fullName(analyse.additionalInfo.diagnostician.fullName) }}
                                 </span>
                             </div>
-                            <div v-if="analyse.additionalInfo.diagnostician && analyse.additionalInfo.diagnostician.fullName && analyse.analyseDate"><br/></div>
+                            <div v-if="isAnalyseDateInfoEnabled()"><br/></div>
                             <div v-if="analyse.analyseDate">
                                 <span class="font-weight-medium text--secondary">
                                     {{ $t('analyse.component.details.additionalInfo.info.analyseDate') }}
@@ -48,7 +48,7 @@
                                     {{ analyse.analyseDate | moment('DD.MM.YYYY hh:MM') }}
                                 </span>
                             </div>
-                            <div v-if="analyse.analyseDate || (analyse.additionalInfo.diagnostician && analyse.additionalInfo.diagnostician.fullName)"><br/></div>
+                            <div v-if="isAnalyseTypeInfoEnabled()"><br/></div>
                             <div>
                                 <span class="font-weight-medium text--secondary">
                                     {{ $t('analyse.component.details.additionalInfo.info.type') }}
@@ -116,6 +116,7 @@
     import {Analyse} from '@/modules/analyse/models/analyse';
     import AnalyseListTablePreviewImage from '@/modules/analyse/components/AnalysePreviewImage.vue';
     import FullName from '@/modules/common/models/fullName';
+    import StringUtils from '@/utils/stringUtils';
 
     @Component({
         components: {AnalyseListTablePreviewImage}
@@ -126,16 +127,28 @@
         public analyse!: Analyse;
 
         public fullName(name: FullName): string {
-            const patronymic: string = name.patronymic ? name.patronymic : '';
-            return `${name.lastname} ${name.firstname} ${patronymic}`;
+            return StringUtils.fullName(name);
         }
 
         public isNotEmpty(data?: string): boolean {
-            if (data) {
-                return data.length > 0;
-            } else {
-                return false;
-            }
+            return StringUtils.isNotEmpty(data);
+        }
+
+        public isDiagnosticianInfoEnabled(): boolean {
+            return this.analyse.additionalInfo.diagnostician != null
+                && this.analyse.additionalInfo.diagnostician.fullName != null;
+        }
+
+        public isAnalyseDateInfoEnabled(): boolean {
+            return this.analyse.additionalInfo.diagnostician != null
+                && this.analyse.additionalInfo.diagnostician.fullName != null
+                && this.analyse.analyseDate != null;
+        }
+
+        public isAnalyseTypeInfoEnabled(): boolean {
+            return (this.analyse.analyseDate != null
+                || (this.analyse.additionalInfo.diagnostician != null
+                    && this.analyse.additionalInfo.diagnostician.fullName != null));
         }
     }
 </script>

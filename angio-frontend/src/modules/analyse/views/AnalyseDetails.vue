@@ -88,19 +88,24 @@
             this.fetching = true;
             AnalyseApiService.getAnalyseById(this.analyseId)
                 .then((analyseRes) => {
-                    AnalyseApiService.getAnalyseStarred(this.analyseId)
-                        .then((starredRes) => {
-                            this.analyse = analyseRes.data.data;
-                            this.analyse.starred = starredRes.data.data.starred;
-                            this.starred = starredRes.data.data.starred;
+                    this.analyse = analyseRes.data.data;
 
-                            PatientApiService.getPatientById(this.analyse.additionalInfo.patientId)
-                                .then((res) => {
-                                    this.patient = res.data.data;
-                                    this.setDocumentTitle();
+                    PatientApiService.getPatientById(this.analyse.additionalInfo.patientId)
+                        .then((res) => {
+                            this.patient = res.data.data;
+
+                            AnalyseApiService.getAnalyseStarred(this.analyseId)
+                                .then((starredRes) => {
+                                    if (this.analyse != undefined) {
+                                        this.analyse.starred = starredRes.data.data.starred;
+                                        this.starred = starredRes.data.data.starred;
+                                    }
                                 })
                                 .catch((error) => this.$logger.error(error))
-                                .finally(() => this.fetching = false)
+                                .finally(() => {
+                                    this.fetching = false;
+                                    this.setDocumentTitle();
+                                })
                         })
                         .catch((error) => this.$logger.error(error))
                 })

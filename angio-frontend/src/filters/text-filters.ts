@@ -24,3 +24,11 @@ export function placeholder(value: string, placeholderStr: string) {
         return value;
     }
 }
+
+/**
+ * Calculate number value in representation format.
+ * @param value
+ */
+export function round(value: number): string {
+    return (Math.round(value * 100) / 100).toString();
+}

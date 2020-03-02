@@ -21,7 +21,7 @@
                         </template>
                         <template slot="items" slot-scope="props">
                             <td>{{ props.item.sectorNumber }}</td>
-                            <td class="text-xs-center">{{ Math.round(props.item.density  * 100) / 100 }}</td>
+                            <td class="text-xs-center">{{ props.item.density | round() }}</td>
                         </template>
                     </v-data-table>
                 </v-flex>
