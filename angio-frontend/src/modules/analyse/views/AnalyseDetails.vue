@@ -87,29 +87,29 @@
         public created() {
             this.fetching = true;
             AnalyseApiService.getAnalyseById(this.analyseId)
-                .then((analyseRes) => {
+                .then(async (analyseRes) => {
                     this.analyse = analyseRes.data.data;
 
-                    PatientApiService.getPatientById(this.analyse.additionalInfo.patientId)
+                    await PatientApiService.getPatientById(this.analyse.additionalInfo.patientId)
                         .then((res) => {
                             this.patient = res.data.data;
-
-                            AnalyseApiService.getAnalyseStarred(this.analyseId)
-                                .then((starredRes) => {
-                                    if (this.analyse != undefined) {
-                                        this.analyse.starred = starredRes.data.data.starred;
-                                        this.starred = starredRes.data.data.starred;
-                                    }
-                                })
-                                .catch((error) => this.$logger.error(error))
-                                .finally(() => {
-                                    this.fetching = false;
-                                    this.setDocumentTitle();
-                                })
                         })
-                        .catch((error) => this.$logger.error(error))
+                        .catch((error) => this.$logger.error(error));
+
+                    await AnalyseApiService.getAnalyseStarred(this.analyseId)
+                        .then((starredRes) => {
+                            if (this.analyse != undefined) {
+                                this.analyse.starred = starredRes.data.data.starred;
+                                this.starred = starredRes.data.data.starred;
+                            }
+                        })
+                        .catch((error) => this.$logger.error(error));
                 })
                 .catch((error) => this.$logger.error(error))
+                .finally(() => {
+                    this.fetching = false;
+                    this.setDocumentTitle();
+                });
         }
 
         public setDocumentTitle() {
