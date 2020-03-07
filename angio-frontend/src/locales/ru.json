@@ -417,6 +417,126 @@
           "diagnostician": "Диагност",
           "statusType": "Статус"
         }
+      },
+      "details": {
+        "additionalInfo": {
+          "originalImage": "Оригинальный снимок",
+          "info": {
+            "title": "Информация о болезни",
+            "diagnostician": "Диагност:",
+            "analyseDate": "Дата проведения анализа:",
+            "type": "Тип анализа:",
+            "shortDescription": "Краткое описание:",
+            "fullDescription": "Подробное описание:",
+            "comment": "Комментарий:",
+            "conclusion": "Заключение:"
+          }
+        },
+        "editForm": {
+          "title": "Редактирование анализа",
+          "error": "Возникла ошибка при редактировании анализа",
+          "analyseType": {
+            "field": "Тип анализа"
+          },
+          "name": {
+            "field": "Название",
+            "validation": {
+              "NotEmpty": "Название не должно быть пустым",
+              "MinLength": "Минимальная длина названия 5 символов"
+            }
+          },
+          "shortDescription": {
+            "field": "Краткое описание",
+            "validation": {
+              "NotEmpty": "Краткое описание не должно быть пустым",
+              "MinLength": "Минимальная длина краткого описания 5 символов"
+            }
+          },
+          "fullDescription": {
+            "field": "Полное описание"
+          },
+          "conclusion": {
+            "field": "Заключение"
+          },
+          "comment": {
+            "field": "Комментарий"
+          }
+        },
+        "analyseTabs": {
+          "geometricAnalyse": {
+            "tabName": "Геометрическая характеристика СС",
+            "images": {
+              "title": "Обработанные изображения",
+              "data": {
+                "original": "Оригинальное изображение",
+                "binarized": "Бинаризованное изображение",
+                "skeleton": "Скелетизованное изображение"
+              }
+            },
+            "separatedVessels": {
+              "title": "Анализ сосудистой системы глаза по отдельным сосудам",
+              "table": {
+                "vesselNum": "№",
+                "vesselImage": "Сосуд",
+                "mainVesselImage": "Русло",
+                "countOfBranches": "Ветви",
+                "tortuosityDegree": "Извилистость",
+                "branchingDegree": "Ветвистость",
+                "area": "S (px)",
+                "areaPercent": "S (%)",
+                "actions": "Действия",
+                "info": "Строки {0} - {1} из {2}",
+                "noData": "Сосуды не были обнаружены",
+                "button": {
+                  "deleteVessel": {
+                    "title": "Удалить сосуд",
+                    "text": "Вы действительно хотите удалить сосуд?"
+                  }
+                }
+              }
+            },
+            "commonVessels": {
+              "title": "Результаты анализа сосудистой системы глаза по отдельным сосудам",
+              "table": {
+                "vesselsCount": "Количество сосудов",
+                "branchesCount": "Количество ветвей",
+                "avgTortuosity": "Средняя извилистость",
+                "avgBranching": "Средняя ветвистость",
+                "commonSInPx": "Общая S (px)",
+                "commonSInPercent": "Общая S (%)"
+              }
+            }
+          },
+          "ischemiaAndMacula": {
+            "tabName": "Ишемические зоны и макула",
+            "macula": {
+              "title": "Макула",
+              "info": {
+                "area": "Площадь макулы: {0}",
+                "radius": "Радиус макулы: {0}",
+                "center": "Центр макулы: {0} ; {1}"
+              }
+            },
+            "ischemia": {
+              "title": "Ишемические зоны",
+              "table": {
+                "sectorNum": "№ зоны",
+                "area": "Площадь (px)",
+                "x": "x (px)",
+                "y": "y (px)",
+                "info": "Строки {0} - {1} из {2}",
+                "noData": "Ишемических зон не найдено"
+              }
+            }
+          },
+          "density": {
+            "tabName": "Плотность капилляров в области макулы",
+            "table": {
+              "sectorNum": "№ сектора",
+              "density": "Плотность (px)"
+            }
+          }
+        }
       }
     },
     "view": {

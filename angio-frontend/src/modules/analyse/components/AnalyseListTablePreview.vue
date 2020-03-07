@@ -58,6 +58,7 @@
                     >
                         <AnalyseListTablePreviewImage
                                 v-bind:src="originalImageUrl"
+                                v-bind:max-size="250"
                         ></AnalyseListTablePreviewImage>
                     </v-layout>
                 </v-flex>
@@ -101,7 +102,8 @@
     import PrintAnalyseButton from '@/modules/analyse/components/PrintAnalyseButton.vue';
     import DownloadArchiveAnalyseButton from '@/modules/analyse/components/DownloadArchiveAnalyseButton.vue';
     import DeleteAnalyseButton from '@/modules/analyse/components/DeleteAnalyseButton.vue';
-    import AnalyseListTablePreviewImage from '@/modules/analyse/components/AnalyseListTablePreviewImage.vue';
+    import AnalyseListTablePreviewImage from '@/modules/analyse/components/AnalysePreviewImage.vue';
+    import StringUtils from '@/utils/stringUtils';
 
     @Component({
         components: {AnalyseListTablePreviewImage, DeleteAnalyseButton, DownloadArchiveAnalyseButton, PrintAnalyseButton}
@@ -139,8 +141,7 @@
         public readonly deleteAnalyse!: (id: number) => Promise<void>;
 
         public fullName(name: FullName): string {
-            const patronymic: string = name.patronymic ? name.patronymic : '';
-            return `${name.lastname} ${name.firstname} ${patronymic}`;
+            return StringUtils.fullName(name);
         }
     }
 </script>
