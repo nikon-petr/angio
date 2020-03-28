@@ -1,10 +1,11 @@
 package com.angio.angiobackend.config;
 
+import com.angio.angiobackend.AngioBackendProperties;
+import com.angio.angiobackend.api.security.repository.TokenRepository;
+import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.config.security.AngioTokenEnhancer;
 import com.angio.angiobackend.config.security.JwtJdbcTokenStore;
 import com.angio.angiobackend.config.security.RefreshTokenFilter;
-import com.angio.angiobackend.api.security.repository.TokenRepository;
-import com.angio.angiobackend.api.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -30,15 +31,11 @@ import java.util.Arrays;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    public static final String CLIENT_ID = "angio-web-client";
-    public static final String CLIENT_SECRET = "angio-client-secret";
     public static final String GRANT_TYPE_PASSWORD = "password";
     public static final String REFRESH_TOKEN = "refresh_token";
     public static final String SCOPE_TRUST = "trust";
-    public static final String SIGNING_KEY = "signing key";
-    public static final Integer ACCESS_TOKEN_VALIDITY_SECONDS = 15 * 60;
-    public static final Integer REFRESH_TOKEN_VALIDITY_SECONDS = 7 * 24 * 60 * 60;
 
+    private final AngioBackendProperties props;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
     private final UserService userService;
@@ -47,12 +44,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
 
         configurer.inMemory()
-                .withClient(CLIENT_ID)
-                .secret("{noop}" + CLIENT_SECRET)
+                .withClient(props.getOauth().getClientId())
+                .secret("{noop}" + props.getOauth().getClientSecret())
                 .authorizedGrantTypes(GRANT_TYPE_PASSWORD, REFRESH_TOKEN)
                 .scopes(SCOPE_TRUST)
-                .accessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_SECONDS)
-                .refreshTokenValiditySeconds(REFRESH_TOKEN_VALIDITY_SECONDS);
+                .accessTokenValiditySeconds((int) props.getOauth().getAccessTokenValidityDuration().getSeconds())
+                .refreshTokenValiditySeconds((int) props.getOauth().getRefreshTokenValidityDuration().getSeconds());
     }
 
     @Override
@@ -74,7 +71,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(SIGNING_KEY);
+        converter.setSigningKey(props.getOauth().getSigningKey());
         return converter;
     }
 

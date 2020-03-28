@@ -42,7 +42,7 @@ public class NotificationResource {
     @PostMapping("/push/read")
     @PreAuthorize("hasAuthority('PUSH_NOTIFICATION_RECEIVE')")
     public Response getReadNotifications(@RequestBody List<UUID> ids) {
-        pushNotificationService.readNotifications(ids);
+        pushNotificationService.readNotifications(CurrentUserResolver.getCurrentUserUuid(), ids);
         return Response.success(null);
     }
 

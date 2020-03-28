@@ -50,6 +50,7 @@
     import {UserGetter} from '@/modules/user/store/userStore';
     import {Dictionary} from 'vue-router/types/router';
     import AnalyseListPagination from '@/modules/analyse/components/AnalyseListPagination.vue';
+    import {Subject, SubjectName} from "@/modules/notification/store/notificationState";
 
     @Component({
         components: {AnalyseListPagination, StackLayout, AnalyseListTable, BaseSubheader, AnalyseListFilter},
@@ -185,6 +186,12 @@
                     query: {...this.$route.query, ...sortQuery}
                 });
             }
+
+            this.$bus.on(SubjectName.ANALYSE, this.getAnalysePage);
+        }
+
+        public beforeDestroy() {
+            this.$bus.off(SubjectName.ANALYSE, this.getAnalysePage);
         }
     }
 </script>

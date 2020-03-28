@@ -12,6 +12,10 @@ export interface Notification {
     read: boolean;
 }
 
+export interface Subject {
+    name: SubjectName
+}
+
 export enum NotificationType {
     SUCCESS = 'SUCCESS',
     INFO = 'INFO',
@@ -19,7 +23,7 @@ export enum NotificationType {
     ERROR = 'ERROR'
 }
 
-export enum Subject {
+export enum SubjectName {
     COMMON = 'COMMON',
     USER = 'USER',
     ANALYSE = 'ANALYSE'

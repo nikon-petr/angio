@@ -53,6 +53,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/018_remove_redundant_patient_attributes.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/019_drop_default_value_for_notification_table.yml
 
 # always in the end of file
 - include:

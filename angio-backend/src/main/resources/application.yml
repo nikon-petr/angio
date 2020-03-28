@@ -124,6 +124,13 @@ angiobackend:
         document-upload-extensions:
             - pdf
 
+        oauth:
+            accessTokenValidityDuration: 15m
+            refreshTokenValidityDuration: 2d
+            signingKey: angio-web-client
+            clientId: angio-web-client
+            clientSecret: angio-client-secret
+
         jms:
             analyse-to-execute-queue: queue.analyse.toExecute
             analyse-results-queue: queue.analyse.results

@@ -1,0 +1,9 @@
+databaseChangeLog:
+- changeSet:
+    id: 019
+    author: nikon-petr
+    changes:
+    - dropDefaultValue:
+        columnDataType:  UUID
+        columnName:  id
+        tableName:  push_notifications

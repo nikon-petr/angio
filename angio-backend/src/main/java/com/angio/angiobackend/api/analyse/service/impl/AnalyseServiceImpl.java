@@ -146,17 +146,16 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         if (dto.getBloodFlowAnalyse() == null && dto.getGeometricAnalyse() == null) {
             entity.getStatus().setType(AnalyseStatusType.FAILED);
-            sendAnalyseFailedNotification(entity);
         } else {
             analyseMapper.updateAnalyseResult(dto, entity);
             entity.getStatus().setType(AnalyseStatusType.SUCCESS);
-            sendAnalyseSuccessNotification(entity);
         }
 
         log.debug("saveExecutedAnalyse() - save analyse info entity");
         entity = analyseRepository.save(entity);
         log.info("saveExecutedAnalyse() - saved analyse execution result {}", entity);
 
+        sendAnalyseSuccessNotification(entity);
         log.debug("saveExecutedAnalyse() - map saved analyse info entity to dto");
         log.debug("saveExecutedAnalyse() - end");
     }
