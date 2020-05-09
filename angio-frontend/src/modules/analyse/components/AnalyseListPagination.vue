@@ -4,6 +4,7 @@
                 v-bind:value="pagination.page"
                 v-bind:length="totalPages"
                 v-bind:total-visible="7"
+                v-bind:disabled="disabled"
                 v-on:input="updatePagination"
                 prev-icon="arrow_left"
                 next-icon="arrow_right"
@@ -27,6 +28,9 @@
 
         @Prop()
         public readonly totalItems!: number;
+
+        @Prop()
+        public readonly disabled!: boolean;
 
         get totalPages() {
             if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) {

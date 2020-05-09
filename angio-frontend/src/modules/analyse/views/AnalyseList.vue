@@ -31,6 +31,7 @@
                     v-bind:page.sync="page"
                     v-bind:rows-per-page="rowsPerPage"
                     v-bind:total-items="totalItems"
+                    v-bind:disabled="false"
             ></AnalyseListPagination>
         </v-flex>
     </StackLayout>

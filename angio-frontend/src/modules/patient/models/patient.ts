@@ -6,3 +6,9 @@ export interface Patient {
     bday: Date;
     address: string;
 }
+
+export interface PatientRequest {
+    fullName: FullName;
+    bday: Date;
+    address: string;
+}

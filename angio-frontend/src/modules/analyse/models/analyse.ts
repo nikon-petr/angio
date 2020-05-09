@@ -121,3 +121,23 @@ export interface Density {
     sectorNumber: number,
     density: number;
 }
+
+export enum FormStepAnalyseType {
+    GEOMETRIC,
+    PROFILE
+}
+
+export enum FormStepAnalyseParameter {
+    TORTUOSITY_AND_BRANCHING,
+    ISCHEMIA_AND_MACULA,
+    DENSITY
+}
+
+export interface AnalyseFullData {
+    additionalInfo: AnalyseAdditionalInfo,
+    originalImage: OriginalImage
+}
+
+export interface OriginalImage {
+    id: number
+}
