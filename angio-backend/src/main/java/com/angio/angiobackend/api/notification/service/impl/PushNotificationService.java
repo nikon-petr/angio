@@ -35,6 +35,7 @@ import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -73,7 +74,7 @@ public class PushNotificationService implements NotificationService<UUID> {
                 .setUser(user);
 
         log.debug("notifyUser() - send notification");
-        notificationEntity.setRead(sendNotification(user.getId(), notification, notificationId, notificationBody, notificationDate));
+        sendNotification(user.getId(), notification, notificationId, notificationBody, notificationDate);
 
         log.debug("notifyUser() - save notification to db");
         pushNotificationRepository.save(notificationEntity);
@@ -105,7 +106,7 @@ public class PushNotificationService implements NotificationService<UUID> {
                     .setUser(user);
 
             log.debug("notifyUsers() - send notification");
-            notificationEntity.setRead(sendNotification(user.getId(), notification, notificationId, notificationBody, notificationDate));
+            sendNotification(user.getId(), notification, notificationId, notificationBody, notificationDate);
 
             notificationEntities.add(notificationEntity);
         }
@@ -165,12 +166,16 @@ public class PushNotificationService implements NotificationService<UUID> {
      */
     @Transactional
     public void readNotifications(List<UUID> ids) {
+        log.debug("readNotifications() - start");
         List<PushNotification> notificationsToRead = pushNotificationRepository.findAllById(ids);
 
+        log.debug("readNotifications() - read notifications: {}",
+                notificationsToRead.stream().map(PushNotification::getId).collect(Collectors.toList()));
         for (PushNotification notification : notificationsToRead) {
             notification.setRead(true);
         }
 
+        log.debug("readNotifications() - end");
         pushNotificationRepository.saveAll(notificationsToRead);
     }
 
@@ -184,11 +189,11 @@ public class PushNotificationService implements NotificationService<UUID> {
         log.debug("removeUnusableResponse() - end");
     }
 
-    private boolean sendNotification(UUID id, AbstractNotification notification, UUID notificationId, String notificationBody, Date date) {
+    private void sendNotification(UUID id, AbstractNotification notification, UUID notificationId, String notificationBody, Date date) {
         Queue<DeferredResult<PushNotificationDto>> deferredResults = deferredResultPool.getOrDefault(id, null);
 
         if (deferredResults == null || deferredResults.isEmpty()) {
-            return false;
+            return;
         }
 
         log.debug("notifyUser() - notify by connections={}", deferredResults);
@@ -209,12 +214,10 @@ public class PushNotificationService implements NotificationService<UUID> {
                     .setType(notification.getType())
                     .setBody(notificationBody)
                     .setSubject(notification.getSubject())
-                    .setRead(true);
+                    .setRead(false);
 
             deferredResult.setResult(pushNotificationDto);
         }
-
-        return true;
     }
 
     private String processPushNotificationBody(Object dataModel, String templateName) {

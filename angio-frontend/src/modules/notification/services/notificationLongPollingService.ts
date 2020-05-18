@@ -35,7 +35,9 @@ export default class NotificationLongPollingService {
             .then((watchResponse) => {
 
                 log.debug(`get new notification: ${JSON.stringify(watchResponse.data.data)}`);
-                store.dispatch(NotificationMutation.ADD_NOTIFICATION, watchResponse.data.data);
+                NotificationApiService.readNotification([watchResponse.data.data.id]);
+                watchResponse.data.data.read = true;
+                store.commit(NotificationMutation.ADD_NOTIFICATION, watchResponse.data.data);
                 Vue.notify({data: watchResponse.data.data});
                 NotificationSoundService.getInstance().playNewNotificationSound();
 
