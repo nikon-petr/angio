@@ -10,7 +10,7 @@ public class RevisionListener implements org.hibernate.envers.RevisionListener {
 
     public void newRevision(final Object revisionInfo) {
 
-        log.trace("newRevision() - start");
+        log.debug("newRevision() - start");
         RevisionEntity auditedRevisionEntity = (RevisionEntity) revisionInfo;
         UUID auditorUuid = null;
 
@@ -18,9 +18,9 @@ public class RevisionListener implements org.hibernate.envers.RevisionListener {
             auditorUuid = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
         }
 
-        log.trace("newRevision() - inject auditor_id: {}", auditorUuid);
+        log.debug("newRevision() - inject auditor_id: {}", auditorUuid);
         auditedRevisionEntity.setAuditorId(auditorUuid);
 
-        log.trace("newRevision() - end");
+        log.debug("newRevision() - end");
     }
 }

@@ -22,24 +22,24 @@ public class AnalyseListener {
     @JmsListener(destination = "${analyseexecutor.app.jms.analyse-to-execute-queue}")
     public void receiveAnalyseToExecute(AnalyseDto analyse) throws IOException, MWException, SQLException {
 
-        log.trace("receiveAnalyseToExecute() - start, analyse received to execute: " + analyse);
+        log.debug("receiveAnalyseToExecute() - start, analyse received to execute: " + analyse);
 
         try {
-            log.trace("receiveAnalyseToExecute() - execute analyse");
+            log.debug("receiveAnalyseToExecute() - execute analyse");
             analyse = analyseExecutorService.executeAnalyse(analyse);
-            log.trace("receiveAnalyseToExecute() - execution success");
+            log.debug("receiveAnalyseToExecute() - execution success");
         } catch (Exception e) {
-            log.trace("receiveAnalyseToExecute() - execution failed");
+            log.debug("receiveAnalyseToExecute() - execution failed");
             log.warn("Execution failed", e);
             analyse
                     .setBloodFlowAnalyse(null)
                     .setGeometricAnalyse(null);
         }
 
-        log.trace("receiveAnalyseToExecute() - send result: ", analyse);
+        log.debug("receiveAnalyseToExecute() - send result: ", analyse);
         analyseSender.sendAnalyseResult(analyse);
 
 
-        log.trace("receiveAnalyseToExecute() - end");
+        log.debug("receiveAnalyseToExecute() - end");
     }
 }

@@ -18,40 +18,40 @@ public class FileUtil {
 
     public static String saveImage(@NonNull BufferedImage image, @NonNull String format, @NonNull String uploadFolder) throws IOException {
 
-        log.trace("saveImage() - start");
+        log.debug("saveImage() - start");
 
         String imageName = generateHashedNameForFile(format);
         File file = new File(uploadFolder, imageName);
 
-        log.trace("saveImage() - save file with path: {}", file.getAbsolutePath());
+        log.debug("saveImage() - save file with path: {}", file.getAbsolutePath());
         ImageIO.write(image, format, file);
 
-        log.trace("saveImage() - end");
+        log.debug("saveImage() - end");
         return file.getName();
     }
 
     public static String generateHashedNameForFile(String format) {
 
-        log.trace("generateHashedNameForFile() - start");
+        log.debug("generateHashedNameForFile() - start");
         String filename = generateFileNameWithTimeAndRandom();
 
-        log.trace("generateHashedNameForFile() - hash file name");
+        log.debug("generateHashedNameForFile() - hash file name");
         String fileExtension = String.format(".%s", format);
         filename = HashUtil.hash(filename) + fileExtension;
 
-        log.trace("generateHashedNameForFile() - generated name: {}", filename);
-        log.trace("generateHashedNameForFile() - end", filename);
+        log.debug("generateHashedNameForFile() - generated name: {}", filename);
+        log.debug("generateHashedNameForFile() - end", filename);
         return filename;
     }
 
     public static String generateFileNameWithTimeAndRandom() {
-        log.trace("generateFileNameWithTimeAndRandom() - start");
+        log.debug("generateFileNameWithTimeAndRandom() - start");
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyyHH:mm:ss.SSS");
 
         String result = formatter.format(new Date()) + new Random().nextInt();
 
-        log.trace("generateFileNameWithTimeAndRandom() - result: {}", result);
-        log.trace("generateFileNameWithTimeAndRandom() - end");
+        log.debug("generateFileNameWithTimeAndRandom() - result: {}", result);
+        log.debug("generateFileNameWithTimeAndRandom() - end");
         return result;
     }
 }

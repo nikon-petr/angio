@@ -45,19 +45,19 @@ public class UploadServiceImpl implements UploadService {
     @PreAuthorize("hasAuthority('IMAGE_UPLOAD')")
     public StaticFileDto uploadImage(@NonNull MultipartFile file) throws IOException {
 
-        log.trace("uploadImage() - start");
-        log.trace("uploadImage() - save image to file system");
+        log.debug("uploadImage() - start");
+        log.debug("uploadImage() - save image to file system");
         validateFile(file);
         String savedFilename = FileUtils.saveFile(file, props.getUploadDirectory());
 
-        log.trace("uploadImage() - save image data to database");
+        log.debug("uploadImage() - save image data to database");
         StaticFile savedImage = uploadRepository.save(new StaticFile(null, FileType.IMAGE, savedFilename));
 
-        log.trace("uploadImage() - map image data");
+        log.debug("uploadImage() - map image data");
         StaticFileDto savedStaticFileDto = uploadMapper.toExternalDto(savedImage);
 
-        log.trace("uploadImage() - result: {}", savedStaticFileDto);
-        log.trace("uploadImage() - end");
+        log.debug("uploadImage() - result: {}", savedStaticFileDto);
+        log.debug("uploadImage() - end");
         return savedStaticFileDto;
     }
 
@@ -74,19 +74,19 @@ public class UploadServiceImpl implements UploadService {
     @PreAuthorize("hasAuthority('DOCUMENT_UPLOAD')")
     public StaticFileDto uploadDocument(@NonNull MultipartFile file) throws IOException {
 
-        log.trace("uploadDocument() - start");
-        log.trace("uploadDocument() - save document to file system");
+        log.debug("uploadDocument() - start");
+        log.debug("uploadDocument() - save document to file system");
         validateFile(file);
         String savedFilename = FileUtils.saveFile(file, props.getUploadDirectory());
 
-        log.trace("uploadDocument() - save document data to database");
+        log.debug("uploadDocument() - save document data to database");
         StaticFile savedImage = uploadRepository.save(new StaticFile(null, FileType.DOCUMENT, savedFilename));
 
-        log.trace("uploadDocument() - map document data");
+        log.debug("uploadDocument() - map document data");
         StaticFileDto savedStaticFileDto = uploadMapper.toExternalDto(savedImage);
 
-        log.trace("uploadDocument() - result: {}", savedStaticFileDto);
-        log.trace("uploadDocument() - end");
+        log.debug("uploadDocument() - result: {}", savedStaticFileDto);
+        log.debug("uploadDocument() - end");
         return savedStaticFileDto;
     }
 
@@ -98,10 +98,10 @@ public class UploadServiceImpl implements UploadService {
     @Override
     @Transactional
     public int purgeUnusedImages() {
-        log.trace("purgeUnusedImages() - start");
+        log.debug("purgeUnusedImages() - start");
         List<StaticFile> unlinkedImages = uploadRepository.getUnlinkedImages();
 
-        log.trace("purgeUnusedImages() - ids to delete: {}", unlinkedImages.stream().mapToLong(StaticFile::getId).toArray());
+        log.debug("purgeUnusedImages() - ids to delete: {}", unlinkedImages.stream().mapToLong(StaticFile::getId).toArray());
         if (unlinkedImages.size() > 0) {
             for (StaticFile image : unlinkedImages) {
                 FileUtils.deleteFile(image.getFilename(), props.getUploadDirectory());
@@ -110,7 +110,7 @@ public class UploadServiceImpl implements UploadService {
             uploadRepository.deleteInBatch(unlinkedImages);
         }
 
-        log.trace("purgeUnusedImages() - end");
+        log.debug("purgeUnusedImages() - end");
         return unlinkedImages.size();
     }
 

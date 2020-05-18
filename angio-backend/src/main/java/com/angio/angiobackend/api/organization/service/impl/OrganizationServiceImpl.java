@@ -58,13 +58,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     @PreAuthorize("hasAuthority('ORGANIZATION_VIEW')")
     public Page<OrganizationDto> filterOrganizationsByQueryString(String search, Pageable pageable) {
 
-        log.trace("filterPatientsByQueryString() - start");
+        log.debug("filterPatientsByQueryString() - start");
         Specification<Organization> specs = organizationSpecification.getOrganizationFilter(search);
 
-        log.trace("filterPatientsByQueryString() - filter patients");
+        log.debug("filterPatientsByQueryString() - filter patients");
         Page<Organization> patientEntityPage = organizationRepository.findAll(specs, pageable);
 
-        log.trace("filterPatientsByQueryString() - map and return patient page");
+        log.debug("filterPatientsByQueryString() - map and return patient page");
         return patientEntityPage.map(organizationMapper::toDto);
     }
 }

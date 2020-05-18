@@ -92,9 +92,9 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Transactional
     @PreAuthorize("hasAuthority('ANALYSE_CREATE')")
     public DetailedAnalyseDto createAnalyse(@NonNull DetailedAnalyseDto dto) {
-        log.trace("createAnalyse() - start - analyse to create: {}", dto);
+        log.debug("createAnalyse() - start - analyse to create: {}", dto);
 
-        log.trace("createAnalyse() - map analyse info dto to entity");
+        log.debug("createAnalyse() - map analyse info dto to entity");
         Analyse entity = analyseMapper.toNewEntity(dto);
 
         entity.setOriginalImage(uploadRepository.findById(dto.getOriginalImage().getId())
@@ -102,32 +102,32 @@ public class AnalyseServiceImpl implements AnalyseService {
                         msa.getMessage("errors.api.analyse.originalImage.notFound",
                                 new Object[] {dto.getOriginalImage().getId()}))));
 
-        log.trace("createAnalyse() - save patient data");
+        log.debug("createAnalyse() - save patient data");
         entity.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getAdditionalInfo().getPatientId()));
 
-        log.trace("createAnalyse() - save diagnostician data");
+        log.debug("createAnalyse() - save diagnostician data");
         entity.getAdditionalInfo().setDiagnostician(currentUserResolver.getCurrentUser());
 
-        log.trace("createAnalyse() - set analyse date");
+        log.debug("createAnalyse() - set analyse date");
         entity.setAnalyseDate(new Date());
 
-        log.trace("createAnalyse() - set analyse status to CREATED");
+        log.debug("createAnalyse() - set analyse status to CREATED");
         entity.setStatus(AnalyseStatus.of(AnalyseStatusType.CREATED));
 
-        log.trace("createAnalyse() - save analyse info entity");
+        log.debug("createAnalyse() - save analyse info entity");
         entity = analyseRepository.save(entity);
 
         AnalyseJmsDto saved = analyseMapper.toAnalyseDto(entity);
-        log.trace("createAnalyse() - map saved analyse to dto");
+        log.debug("createAnalyse() - map saved analyse to dto");
 
         log.info("createAnalyse() - send analyse to execute: {}", saved);
         sendAnalyseToExecution(saved, entity);
 
-        log.trace("createAnalyse() - map saved analyse without result");
+        log.debug("createAnalyse() - map saved analyse without result");
         DetailedAnalyseDto savedResult = analyseMapper.toExtendedDto(entity);
         savedResult.setGeometricAnalyse(null);
         savedResult.setBloodFlowAnalyse(null);
-        log.trace("createAnalyse() - end");
+        log.debug("createAnalyse() - end");
         return savedResult;
     }
 
@@ -139,9 +139,9 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Override
     @Transactional
     public void saveExecutedAnalyse(@NonNull AnalyseJmsDto dto) {
-        log.trace("saveExecutedAnalyse() - start - analyse to save: {}", dto);
+        log.debug("saveExecutedAnalyse() - start - analyse to save: {}", dto);
 
-        log.trace("saveExecutedAnalyse() - map analyse info dto to entity");
+        log.debug("saveExecutedAnalyse() - map analyse info dto to entity");
         Analyse entity = analyseRepository.getOne(dto.getId());
 
         if (dto.getBloodFlowAnalyse() == null && dto.getGeometricAnalyse() == null) {
@@ -153,12 +153,12 @@ public class AnalyseServiceImpl implements AnalyseService {
             sendAnalyseSuccessNotification(entity);
         }
 
-        log.trace("saveExecutedAnalyse() - save analyse info entity");
+        log.debug("saveExecutedAnalyse() - save analyse info entity");
         entity = analyseRepository.save(entity);
         log.info("saveExecutedAnalyse() - saved analyse execution result {}", entity);
 
-        log.trace("saveExecutedAnalyse() - map saved analyse info entity to dto");
-        log.trace("saveExecutedAnalyse() - end");
+        log.debug("saveExecutedAnalyse() - map saved analyse info entity to dto");
+        log.debug("saveExecutedAnalyse() - end");
     }
 
     /**
@@ -185,12 +185,12 @@ public class AnalyseServiceImpl implements AnalyseService {
             Boolean isStarred,
             Pageable pageable) {
 
-        log.trace("filterAnalysesByQueryString() - start");
+        log.debug("filterAnalysesByQueryString() - start");
 
         log.debug("filterAnalysesByQueryString() - get starred user");
         User currentUser = currentUserResolver.getCurrentUser();
 
-        log.trace("filterAnalysesByQueryString() - build analyse info specification");
+        log.debug("filterAnalysesByQueryString() - build analyse info specification");
         Specification<Analyse> specs = analyseSpecification.getAnalyseInfoFilter(search)
                 .and(analyseSpecification.analyseDate(singleDate))
                 .and(analyseSpecification.analysePeriod(startDate, endDate))
@@ -200,15 +200,15 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
 
-        log.trace("filterAnalysesByQueryString() - map sorting fields");
+        log.debug("filterAnalysesByQueryString() - map sorting fields");
         Pageable mappedPageRequest = mapSortingFields(pageable);
 
-        log.trace("filterAnalysesByQueryString() - filter analyse info");
+        log.debug("filterAnalysesByQueryString() - filter analyse info");
         Page<Analyse> analyseInfoEntityPage = analyseRepository.findAll(specs, mappedPageRequest);
 
         Set<Analyse> analyses = currentUser.getStarredAnalyses();
 
-        log.trace("filterAnalysesByQueryString() - map and return analyse page");
+        log.debug("filterAnalysesByQueryString() - map and return analyse page");
         return analyseInfoEntityPage.map(analyse -> {
             AnalyseShortItemDto dto = analyseMapper.toShortItemDto(analyse);
             dto.setStarred(analyses.contains(analyse));
@@ -226,7 +226,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Transactional(readOnly = true)
     @PreAuthorize("hasAuthority('ANALYSE_VIEW')")
     public DetailedAnalyseDto getAnalyseById(@NonNull Long id) {
-        log.trace("getAnalyseById() - start");
+        log.debug("getAnalyseById() - start");
         log.info("getAnalyseById() - analyse to get: id={}", id);
 
         log.debug("getAnalyseById() - get starred user");
@@ -299,7 +299,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.debug("deleteAnalyse() - get starred user");
         User currentUser = currentUserResolver.getCurrentUser();
 
-        log.trace("deleteAnalyse() - start");
+        log.debug("deleteAnalyse() - start");
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
                 .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
@@ -313,10 +313,10 @@ public class AnalyseServiceImpl implements AnalyseService {
         analyse.getStatus().setType(AnalyseStatusType.DELETED);
         analyse.getStatus().setExtension(msa.getMessage("analyse.status.extension.deletedByUser", new Object[] {id}));
 
-        log.trace("deleteAnalyse() - save updated analyse status");
+        log.debug("deleteAnalyse() - save updated analyse status");
         analyse = analyseRepository.save(analyse);
 
-        log.trace("deleteAnalyse() - end");
+        log.debug("deleteAnalyse() - end");
         return analyseMapper.toExtendedDto(analyse);
     }
 
@@ -349,7 +349,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Transactional
     @PreAuthorize("hasAuthority('ANALYSE_EDIT')")
     public DetailedAnalyseDto updateAnalyseAdditionalInfo(@NonNull Long id, @NonNull AdditionalInfoDto dto) {
-        log.trace("updateAnalyseAdditionalInfo() - start");
+        log.debug("updateAnalyseAdditionalInfo() - start");
 
         log.debug("updateAnalyseAdditionalInfo() - get starred user");
         User currentUser = currentUserResolver.getCurrentUser();
@@ -360,7 +360,7 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .and(analyseSpecification.fetchAll());
 
 
-        log.trace("updateAnalyseAdditionalInfo() - search analyse info entity with id: {}", id);
+        log.debug("updateAnalyseAdditionalInfo() - search analyse info entity with id: {}", id);
         Analyse analyse = analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
@@ -369,11 +369,11 @@ public class AnalyseServiceImpl implements AnalyseService {
         additionalInfoMapper.updateEntity(dto, analyse.getAdditionalInfo());
 
         if (dto.getPatientId() != null) {
-            log.trace("updateAnalyseAdditionalInfo() - update patient id");
+            log.debug("updateAnalyseAdditionalInfo() - update patient id");
             analyse.getAdditionalInfo().setPatient(patientService.getPatientEntityById(dto.getPatientId()));
         }
 
-        log.trace("updateAnalyseAdditionalInfo() - end - save updated analyse info entity");
+        log.debug("updateAnalyseAdditionalInfo() - end - save updated analyse info entity");
         return analyseMapper.toExtendedDto(analyseRepository.save(analyse));
     }
 
@@ -433,7 +433,7 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Transactional
     @PreAuthorize("hasAuthority('ANALYSE_EDIT')")
     public DetailedAnalyseDto deleteGeometricAnalyseVessel(@NonNull Long analyseId, @NonNull Long vesselId) {
-        log.trace("deleteGeometricAnalyseVessel() - start");
+        log.debug("deleteGeometricAnalyseVessel() - start");
 
         log.debug("deleteGeometricAnalyseVessel() - get starred user");
         User currentUser = currentUserResolver.getCurrentUser();
@@ -443,12 +443,12 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
 
-        log.trace("deleteGeometricAnalyseVessel() - find analyse: id={}", analyseId);
+        log.debug("deleteGeometricAnalyseVessel() - find analyse: id={}", analyseId);
         Analyse analyse = analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {analyseId})));
 
-        log.trace("deleteGeometricAnalyseVessel() - delete vessel");
+        log.debug("deleteGeometricAnalyseVessel() - delete vessel");
         boolean result = analyse.getGeometricAnalyse().getVessels().removeIf(e -> e.getId().equals(vesselId));
 
         if (!result) {
@@ -457,13 +457,13 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         analyse = analyseRepository.save(analyse);
 
-        log.trace("deleteGeometricAnalyseVessel() - end");
+        log.debug("deleteGeometricAnalyseVessel() - end");
         return analyseMapper.toExtendedDto(analyse);
     }
 
     @Override
     public byte[] createArchive(DetailedAnalyseDto dto) {
-        log.trace("createArchive() - start");
+        log.debug("createArchive() - start");
 
         Map<String, File> images = new HashMap<>();
         String originalImageName = format("originalImage.%s", FilenameUtils.getExtension(dto.getOriginalImage().getFilename()));
@@ -508,20 +508,20 @@ public class AnalyseServiceImpl implements AnalyseService {
     @Override
     @Transactional
     public int purgeAnalysesInStatusDeleted() {
-        log.trace("purgeAnalysesInStatusDeleted() - start");
+        log.debug("purgeAnalysesInStatusDeleted() - start");
         List<Analyse> inStatusDeleted = analyseRepository.findAll(analyseSpecification.inStatus(AnalyseStatusType.DELETED));
 
-        log.trace("purgeAnalysesInStatusDeleted() - ids to delete: {}", inStatusDeleted.stream().mapToLong(Analyse::getId).toArray());
+        log.debug("purgeAnalysesInStatusDeleted() - ids to delete: {}", inStatusDeleted.stream().mapToLong(Analyse::getId).toArray());
         if (inStatusDeleted.size() > 0) {
             analyseRepository.deleteInBatch(inStatusDeleted);
         }
 
-        log.trace("purgeAnalysesInStatusDeleted() - end");
+        log.debug("purgeAnalysesInStatusDeleted() - end");
         return inStatusDeleted.size();
     }
 
     private Pageable mapSortingFields(Pageable pageable) {
-        log.trace("mapSortingFields() - start mapping for: {}", pageable);
+        log.debug("mapSortingFields() - start mapping for: {}", pageable);
         Map<String, String> dtoSortingFields = new HashMap<>();
         dtoSortingFields.put("patient", "patient.lastname");
         dtoSortingFields.put("policy", "patient.policy");
@@ -544,7 +544,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         }
 
         PageRequest result = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(orders));
-        log.trace("mapSortingFields() - mapping result: {}", result);
+        log.debug("mapSortingFields() - mapping result: {}", result);
         return result;
     }
 
@@ -556,29 +556,29 @@ public class AnalyseServiceImpl implements AnalyseService {
      */
     private DetailedAnalyseDto sendAnalyseToExecution(Long id) {
 
-        log.trace("sendAnalyseToExecution() - start");
+        log.debug("sendAnalyseToExecution() - start");
         Analyse analyse = analyseRepository.findOne(analyseSpecification.analyseId(id)
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll()))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.analyse.notFound", new Object[] {id})));
 
-        log.trace("sendAnalyseToExecution() - check analyse status");
+        log.debug("sendAnalyseToExecution() - check analyse status");
         if (analyse.getStatus().getType() != AnalyseStatusType.FAILED) {
             throw new IllegalArgumentException(msa.getMessage("errors.api.analyse.alreadyExecuted", new Object[] {id}));
         }
 
         AnalyseJmsDto dto = analyseMapper.toAnalyseDto(analyse);
-        log.trace("sendAnalyseToExecution() - map saved analyse to dto");
+        log.debug("sendAnalyseToExecution() - map saved analyse to dto");
 
         log.info("sendAnalyseToExecution() - send analyse to execute: {}", dto);
         sendAnalyseToExecution(dto, analyse);
 
-        log.trace("sendAnalyseToExecution() - map saved analyse without result");
+        log.debug("sendAnalyseToExecution() - map saved analyse without result");
         DetailedAnalyseDto savedResult = analyseMapper.toExtendedDto(analyse);
         savedResult.setGeometricAnalyse(null);
         savedResult.setBloodFlowAnalyse(null);
-        log.trace("sendAnalyseToExecution() - end");
+        log.debug("sendAnalyseToExecution() - end");
         return savedResult;
     }
 

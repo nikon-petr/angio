@@ -31,15 +31,15 @@ public class FileUtils {
      */
     public static String saveImage(@NonNull BufferedImage image, @NonNull String format, @NonNull String uploadFolder) throws IOException {
 
-        log.trace("saveImage() - start");
+        log.debug("saveImage() - start");
 
         String imageName = generateHashedNameForFile(format);
         File file = new File(uploadFolder, imageName);
 
-        log.trace("saveImage() - save file with path: {}", file.getAbsolutePath());
+        log.debug("saveImage() - save file with path: {}", file.getAbsolutePath());
         ImageIO.write(image, format, file);
 
-        log.trace("saveImage() - end");
+        log.debug("saveImage() - end");
         return file.getName();
     }
 
@@ -52,21 +52,21 @@ public class FileUtils {
      * @throws IOException throwing when io exception occurred
      */
     public static String saveFile(@NonNull MultipartFile file, @NonNull String uploadFolder) throws IOException {
-        log.trace("saveFile() - start");
+        log.debug("saveFile() - start");
 
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String filename = generateHashedNameForFile(extension);
 
         File localFile = new File(uploadFolder, filename);
         org.apache.commons.io.FileUtils.writeByteArrayToFile(localFile, file.getBytes());
-        log.trace("saveFile() - save file with path: {}", localFile.getAbsolutePath());
+        log.debug("saveFile() - save file with path: {}", localFile.getAbsolutePath());
 
-        log.trace("saveFile() - end");
+        log.debug("saveFile() - end");
         return localFile.getName();
     }
 
     public static boolean deleteFile(@NonNull String filename, @NonNull String uploadFolder) {
-        log.trace("deleteFile() - start");
+        log.debug("deleteFile() - start");
 
         File file = new File(uploadFolder, filename);
 
@@ -81,15 +81,15 @@ public class FileUtils {
      */
     public static String generateHashedNameForFile(String format) {
 
-        log.trace("generateHashedNameForFile() - start");
+        log.debug("generateHashedNameForFile() - start");
         String filename = generateFileNameWithTimeAndRandom();
 
-        log.trace("generateHashedNameForFile() - hash file name");
+        log.debug("generateHashedNameForFile() - hash file name");
         String fileExtension = String.format(".%s", format);
         filename = HashUtils.hash(filename) + fileExtension;
 
-        log.trace("generateHashedNameForFile() - generated name: {}", filename);
-        log.trace("generateHashedNameForFile() - end", filename);
+        log.debug("generateHashedNameForFile() - generated name: {}", filename);
+        log.debug("generateHashedNameForFile() - end", filename);
         return filename;
     }
 
@@ -99,13 +99,13 @@ public class FileUtils {
      * @return result
      */
     public static String generateFileNameWithTimeAndRandom() {
-        log.trace("generateFileNameWithTimeAndRandom() - start");
+        log.debug("generateFileNameWithTimeAndRandom() - start");
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyyHH:mm:ss.SSS");
 
         String result = formatter.format(new Date()) + random.nextInt();
 
-        log.trace("generateFileNameWithTimeAndRandom() - result: {}", result);
-        log.trace("generateFileNameWithTimeAndRandom() - end");
+        log.debug("generateFileNameWithTimeAndRandom() - result: {}", result);
+        log.debug("generateFileNameWithTimeAndRandom() - end");
         return result;
     }
 }

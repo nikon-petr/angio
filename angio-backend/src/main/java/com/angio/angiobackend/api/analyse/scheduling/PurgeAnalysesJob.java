@@ -22,9 +22,9 @@ public class PurgeAnalysesJob implements Job {
     @Transactional
     @Scheduled(cron = "${angiobackend.app.scheduling.purge-analyses-period}")
     public void execute() {
-        log.trace("execute() - start");
+        log.debug("execute() - start");
         log.info("execute() - purge deleted analyses");
         analyseService.purgeAnalysesInStatusDeleted();
-        log.trace("execute() - end");
+        log.debug("execute() - end");
     }
 }

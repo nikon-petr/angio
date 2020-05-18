@@ -16,7 +16,7 @@ public class HashUtil {
 
     public static String hash(@NonNull String source) {
 
-        log.trace("hash() - start");
+        log.debug("hash() - start");
         MessageDigest digest = null;
         try {
             digest = getInstance("MD5");
@@ -24,12 +24,12 @@ public class HashUtil {
             e.printStackTrace();
         }
 
-        log.trace("hash() - update digest");
+        log.debug("hash() - update digest");
         digest.update(source.getBytes(), 0, source.length());
 
         String result = new BigInteger(1, digest.digest()).toString(16);
 
-        log.trace("hash() - result: {}", result);
+        log.debug("hash() - result: {}", result);
         return result;
     }
 }

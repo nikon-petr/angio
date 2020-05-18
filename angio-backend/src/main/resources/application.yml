@@ -77,7 +77,8 @@ spring:
             enabled: false
 
     autoconfigure:
-        exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+        exclude:
+            - org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 
 logging:
     level:

@@ -22,6 +22,12 @@ public class AnalyseJmsDto implements Serializable {
     private Long id;
 
     /**
+     * Analyse status
+     */
+    @ApiModelProperty(value = "Analyse status")
+    private AnalyseStatusDto analyseStatus;
+
+    /**
      * Analyse original image
      */
     @ApiModelProperty("Analyse original image")

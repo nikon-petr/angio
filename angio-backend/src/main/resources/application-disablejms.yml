@@ -1,0 +1,5 @@
+spring:
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jms.artemis.ArtemisAutoConfiguration
+            - org.springframework.boot.actuate.autoconfigure.jms.JmsHealthIndicatorAutoConfiguration

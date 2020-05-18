@@ -38,13 +38,13 @@ public class PatientServiceImpl implements PatientService {
     @Transactional
     @PreAuthorize("hasAuthority('PATIENT_CREATE')")
     public PatientDto createPatient(@NonNull PatientDto dto) {
-        log.trace("getPatientByPolicy() - start: patient={}", dto);
+        log.debug("getPatientByPolicy() - start: patient={}", dto);
         Patient entity = patientMapper.toEntity(dto);
 
-        log.trace("getPatientByPolicy() - save patient to db");
+        log.debug("getPatientByPolicy() - save patient to db");
         entity = patientRepository.save(entity);
 
-        log.trace("getPatientByPolicy() - end");
+        log.debug("getPatientByPolicy() - end");
         return patientMapper.toDto(entity);
     }
 
@@ -60,13 +60,13 @@ public class PatientServiceImpl implements PatientService {
     @PreAuthorize("hasAuthority('PATIENT_VIEW')")
     public Page<PatientDto> filterPatientsByQueryString(String search, Pageable pageable) {
 
-        log.trace("filterPatientsByQueryString() - start");
+        log.debug("filterPatientsByQueryString() - start");
         Specification<Patient> specs = patientSpecification.getPatientFilter(search);
 
-        log.trace("filterPatientsByQueryString() - filter patients");
+        log.debug("filterPatientsByQueryString() - filter patients");
         Page<Patient> patientEntityPage = patientRepository.findAll(specs, pageable);
 
-        log.trace("filterPatientsByQueryString() - map and return patient page");
+        log.debug("filterPatientsByQueryString() - map and return patient page");
         return patientEntityPage.map(patientMapper::toDto);
     }
 
@@ -80,7 +80,7 @@ public class PatientServiceImpl implements PatientService {
     @Transactional(readOnly = true)
     @PreAuthorize("hasAuthority('PATIENT_VIEW')")
     public Patient getPatientEntityById(@NonNull Long id) {
-        log.trace("getPatientByPolicy() - start: id={}", id);
+        log.debug("getPatientByPolicy() - start: id={}", id);
         return patientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         msa.getMessage("errors.api.patient.notFound", new Object[] {id})));
@@ -109,10 +109,10 @@ public class PatientServiceImpl implements PatientService {
     @Transactional
     @PreAuthorize("hasAuthority('PATIENT_EDIT')")
     public Patient saveOrUpdatePatient(@NonNull PatientDto dto) {
-        log.trace("saveOrUpdatePatient() - start");
+        log.debug("saveOrUpdatePatient() - start");
         Patient patientFromDb = null;
 
-        log.trace("saveOrUpdatePatient() - find patient by id");
+        log.debug("saveOrUpdatePatient() - find patient by id");
         if (dto.getId() != null) {
             patientFromDb = patientRepository.findById(dto.getId()).orElse(null);
         }
@@ -120,21 +120,21 @@ public class PatientServiceImpl implements PatientService {
         Patient patient;
         if (patientFromDb == null) {
 
-            log.trace("saveOrUpdatePatient() - map patient request to new entity");
+            log.debug("saveOrUpdatePatient() - map patient request to new entity");
             patient = patientMapper.toEntity(dto);
 
-            log.trace("saveOrUpdatePatient() - create new patient entity: {}", patient);
+            log.debug("saveOrUpdatePatient() - create new patient entity: {}", patient);
             patient = patientRepository.save(patient);
         } else {
 
-            log.trace("saveOrUpdatePatient() - map patient request for update entity");
+            log.debug("saveOrUpdatePatient() - map patient request for update entity");
             patientMapper.toEntity(dto, patientFromDb);
 
-            log.trace("saveOrUpdatePatient() - save updated patient entity: {}", patientFromDb);
+            log.debug("saveOrUpdatePatient() - save updated patient entity: {}", patientFromDb);
             patient = patientRepository.save(patientFromDb);
         }
 
-        log.trace("saveOrUpdatePatient() - end");
+        log.debug("saveOrUpdatePatient() - end");
         return patient;
     }
 
@@ -149,16 +149,16 @@ public class PatientServiceImpl implements PatientService {
     @Transactional
     @PreAuthorize("hasAuthority('PATIENT_EDIT')")
     public PatientDto updatePatient(@NonNull PatientDto dto, @NonNull Long id) {
-        log.trace("updatePatient() - start: patient={}", dto);
+        log.debug("updatePatient() - start: patient={}", dto);
         Patient entity = getPatientEntityById(id);
 
-        log.trace("updatePatient() - map patient dto to entity");
+        log.debug("updatePatient() - map patient dto to entity");
         patientMapper.toEntity(dto, entity);
 
-        log.trace("updatePatient() - save patient to db");
+        log.debug("updatePatient() - save patient to db");
         entity = patientRepository.save(entity);
 
-        log.trace("updatePatient() - end");
+        log.debug("updatePatient() - end");
         return patientMapper.toDto(entity);
     }
 }

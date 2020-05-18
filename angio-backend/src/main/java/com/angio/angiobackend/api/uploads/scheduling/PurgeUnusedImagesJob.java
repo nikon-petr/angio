@@ -23,9 +23,9 @@ public class PurgeUnusedImagesJob implements Job {
     @Transactional
     @Scheduled(cron = "${angiobackend.app.scheduling.purge-images-period}")
     public void execute() {
-        log.trace("execute() - start");
+        log.debug("execute() - start");
         log.info("execute() - purge unused images");
         uploadService.purgeUnusedImages();
-        log.trace("execute() - end");
+        log.debug("execute() - end");
     }
 }

@@ -47,9 +47,12 @@ cd angio
 
 Build, create and start by
 ```bash
+./start-helper.sh db-only # start only postgres for backend development
+```
+```bash
 ./start-helper.sh dev # startup without angio-backend service
 ```
-or
+for development or
 ```bash
 ./start-helper.sh prod # startup all services
 ```
@@ -64,6 +67,11 @@ Test-users credentials:
 |admin@example.com|q1w2e3|ADMIN|
 |sgmu.doctor@example.com|q1w2e3|DOCTOR|
 |single.doctor@example.com|q1w2e3|SINGLE_DOCTOR|
+
+To clean static files after local dev run:
+```bash
+./clear-uploads-and-emails.sh # go to project root directory before run
+```
 
 ### Remote debug ports
 

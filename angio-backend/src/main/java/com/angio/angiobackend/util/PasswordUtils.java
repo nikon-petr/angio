@@ -24,18 +24,18 @@ public class PasswordUtils {
      */
     public static String generateNumberPassword(int length) {
 
-        log.trace("generateNumberPassword() - start generating password with length={}", length);
+        log.debug("generateNumberPassword() - start generating password with length={}", length);
         List<Character> charList = getRandomNumbers(length).collect(Collectors.toList());
 
-        log.trace("generateNumberPassword() - char list: {}", charList);
+        log.debug("generateNumberPassword() - char list: {}", charList);
         Collections.shuffle(charList);
         String password = charList.stream()
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
 
-        log.trace("generateNumberPassword() - result: {}", password);
+        log.debug("generateNumberPassword() - result: {}", password);
 
-        log.trace("generateNumberPassword() - end");
+        log.debug("generateNumberPassword() - end");
         return password;
     }
 

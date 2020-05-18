@@ -128,25 +128,25 @@ public class UserServiceImpl implements UserService {
 
         Map<String, User> passwordsAndCreatedUsers = transactionTemplate.execute((status) -> {
 
-            log.trace("createUsers() - start");
+            log.debug("createUsers() - start");
             if (dtos.size() == 0) {
-                log.trace("createUsers() - empty user list");
+                log.debug("createUsers() - empty user list");
                 return Collections.emptyMap();
             }
 
-            log.trace("createUsers() - checking all requested email is unique");
+            log.debug("createUsers() - checking all requested email is unique");
             checkEmailUnique(dtos);
 
-            log.trace("createUsers() - fetch needed roles");
+            log.debug("createUsers() - fetch needed roles");
             List<Role> newUserRoles = findRolesForUsers(dtos);
 
-            log.trace("createUsers() - fetch needed organizations");
+            log.debug("createUsers() - fetch needed organizations");
             List<Organization> newUserOrganizations = findOrganizationsForUsers(dtos);
 
-            log.trace("createUsers() - checking that creator is owner of requested roles");
+            log.debug("createUsers() - checking that creator is owner of requested roles");
             checkAllowedRoles(newUserRoles);
 
-            log.trace("createUsers() - generate passwords and save users");
+            log.debug("createUsers() - generate passwords and save users");
             Map<String, User> passwordsAndNewUsers = dtos.stream()
                     .map(dto -> new AbstractMap.SimpleEntry<>(PasswordUtils.generateNumberPassword(6), new User()
                             .setEmail(dto.getEmail())
@@ -169,7 +169,7 @@ public class UserServiceImpl implements UserService {
             return passwordsAndNewUsers;
         });
 
-        log.trace("createUsers() - notify created users by email");
+        log.debug("createUsers() - notify created users by email");
         for (Map.Entry<String, User> entry : passwordsAndCreatedUsers.entrySet()) {
             NewNotificationDto notification = new NewNotificationDto()
                     .setDate(new Date())
@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
             emailNotificationService.notifyUser(entry.getValue().getId(), notification);
         }
 
-        log.trace("createUsers() - end");
+        log.debug("createUsers() - end");
         return userMapper.toNewUserDtos(new ArrayList<>(passwordsAndCreatedUsers.values()));
     }
 
@@ -203,18 +203,18 @@ public class UserServiceImpl implements UserService {
             Boolean locked,
             Long organizationId,
             Pageable pageable) {
-        log.trace("filterUsersByQueryString() - start");
+        log.debug("filterUsersByQueryString() - start");
 
-        log.trace("filterUsersByQueryString() - build user specification");
+        log.debug("filterUsersByQueryString() - build user specification");
         Specification<User> specs = userSpecification.getUserFilter(search)
                 .and(userSpecification.userEnabled(enabled))
                 .and(userSpecification.userLocked(locked))
                 .and(userSpecification.userOrganizationId(organizationId));
 
-        log.trace("filterUsersByQueryString() - filter user");
+        log.debug("filterUsersByQueryString() - filter user");
         Page<User> analyseInfoEntityPage = userRepository.findAll(specs, pageable);
 
-        log.trace("filterUsersByQueryString() - map and return user page");
+        log.debug("filterUsersByQueryString() - map and return user page");
         return analyseInfoEntityPage.map(userMapper::toShortItemDto);
     }
 
@@ -227,16 +227,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Response registerUser(RegisterUserDto dto) {
-        log.trace("registerUser() - start");
+        log.debug("registerUser() - start");
 
-        log.trace("registerUser() - checking email is unique");
+        log.debug("registerUser() - checking email is unique");
         checkEmailUnique(dto.getEmail());
 
-        log.trace("createUsers() - fetch SINGLE_DOCTOR role");
+        log.debug("createUsers() - fetch SINGLE_DOCTOR role");
         Role doctorRole = roleRepository.findByName(Roles.SINGLE_DOCTOR.name())
                 .orElseThrow(RuntimeException::new);
 
-        log.trace("createUsers() - generate password");
+        log.debug("createUsers() - generate password");
         String password = PasswordUtils.generateNumberPassword(6);
 
         User newUser = transactionTemplate.execute((status) -> {
@@ -248,13 +248,13 @@ public class UserServiceImpl implements UserService {
                     .setOrganization(null)
                     .setPassword(passwordEncoder.encode(password)));
 
-            log.trace("createUsers() - create user settings");
+            log.debug("createUsers() - create user settings");
             settingsRepository.save(settingsMapper.toNewEntity(props.getUserDefaultSettings()).setUser(userToSave));
 
             return userToSave;
         });
 
-        log.trace("createUsers() - send registration email");
+        log.debug("createUsers() - send registration email");
         NewNotificationDto notification = new NewNotificationDto()
                 .setDate(new Date())
                 .setType(NotificationType.INFO)
@@ -263,7 +263,7 @@ public class UserServiceImpl implements UserService {
                 .setDataModel(prepareRegistrationEmail(password, newUser));
         emailNotificationService.notifyUser(newUser.getId(), notification);
 
-        log.trace("createUsers() - end");
+        log.debug("createUsers() - end");
         return Response.success(null);
     }
 
@@ -303,13 +303,13 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("isAuthenticated()")
     public UserDetailsDto updateUser(@NonNull UpdateUserDto dto) {
 
-        log.trace("updateUser() - start");
+        log.debug("updateUser() - start");
         User user = currentUserResolver.getCurrentUser();
 
-        log.trace("updateUser() - merge dto to entity");
+        log.debug("updateUser() - merge dto to entity");
         userMapper.updateEntity(dto, user);
 
-        log.trace("updateUser() - save updated user and return");
+        log.debug("updateUser() - save updated user and return");
         return userMapper.toDetailedDto(userRepository.save(user));
     }
 
@@ -382,19 +382,19 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("isAuthenticated()")
     public UserDetailsDto changePassword(@NonNull ChangePasswordDto dto) {
 
-        log.trace("changePassword() - start");
+        log.debug("changePassword() - start");
         User user = currentUserResolver.getCurrentUser();
 
-        log.trace("changePassword() - check old password");
+        log.debug("changePassword() - check old password");
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Password check failure");
         }
 
-        log.trace("changePassword() - save new password");
+        log.debug("changePassword() - save new password");
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         user = userRepository.save(user);
 
-        log.trace("changePassword() - end");
+        log.debug("changePassword() - end");
         return userMapper.toDetailedDto(user);
     }
 
@@ -497,14 +497,14 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasAuthority('USER_EDIT')")
     public UserDetailsDto changeUserLocked(@NonNull UUID id, @NonNull UserLockedDto dto) {
 
-        log.trace("changeUserLocked() - start, id: {}", id);
+        log.debug("changeUserLocked() - start, id: {}", id);
         User user = findUserEntityByUuid(id);
 
-        log.trace("changePassword() - change and save locked");
+        log.debug("changePassword() - change and save locked");
         user.setLocked(dto.getLocked());
         user = userRepository.save(user);
 
-        log.trace("changePassword() - end");
+        log.debug("changePassword() - end");
         return userMapper.toDetailedDto(user);
     }
 

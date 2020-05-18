@@ -17,10 +17,10 @@ public class AnalyseSender {
 
     public void sendAnalyseResult(AnalyseDto analyse) {
 
-        log.trace("sendAnalyseResult() - start");
-        log.trace("sendAnalyseResult() - payload: {}", analyse);
+        log.debug("sendAnalyseResult() - start");
+        log.debug("sendAnalyseResult() - payload: {}", analyse);
         jmsTemplate.convertAndSend(props.getJms().getAnalyseResultsQueue(), analyse);
 
-        log.trace("sendAnalyseResult() - end");
+        log.debug("sendAnalyseResult() - end");
     }
 }
