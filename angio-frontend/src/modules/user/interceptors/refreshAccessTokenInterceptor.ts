@@ -24,7 +24,8 @@ axios.interceptors.response.use(
         const {config, response: {status}} = error;
         const originalRequest = config;
 
-        if (status == 401 && config.url != '/oauth/token') {
+        log.debug(config.url);
+        if (status == 401 && !config.url.includes('/oauth/token')) {
             if (!isAlreadyFetchingAccessToken) {
                 log.debug('access token expired. start refreshing');
                 isAlreadyFetchingAccessToken = true;
