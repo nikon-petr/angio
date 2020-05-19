@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -34,7 +32,6 @@ import java.util.UUID;
 public class PushNotification {
 
     @Id
-    @GeneratedValue
     @Type(type="pg-uuid")
     private UUID id;
 

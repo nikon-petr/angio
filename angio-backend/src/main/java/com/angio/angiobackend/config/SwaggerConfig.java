@@ -1,10 +1,5 @@
 package com.angio.angiobackend.config;
 
-import static com.angio.angiobackend.AngioApplication.SUPPORTED_LOCALES;
-import static com.angio.angiobackend.config.AuthorizationServerConfig.CLIENT_ID;
-import static com.angio.angiobackend.config.AuthorizationServerConfig.CLIENT_SECRET;
-import static com.angio.angiobackend.config.AuthorizationServerConfig.SCOPE_TRUST;
-
 import com.angio.angiobackend.AngioApplication;
 import com.angio.angiobackend.AngioBackendProperties;
 import lombok.AllArgsConstructor;
@@ -37,6 +32,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.angio.angiobackend.AngioApplication.SUPPORTED_LOCALES;
+import static com.angio.angiobackend.config.AuthorizationServerConfig.SCOPE_TRUST;
 
 @Configuration
 @EnableSwagger2
@@ -145,7 +143,14 @@ public class SwaggerConfig {
 
     @Bean
     public SecurityConfiguration securityInfo() {
-        return new SecurityConfiguration(CLIENT_ID, CLIENT_SECRET, "", "Angio", "", ApiKeyVehicle.HEADER, "Bearer",
+        return new SecurityConfiguration(
+                props.getOauth().getClientId(),
+                props.getOauth().getClientSecret(),
+                "",
+                "Angio",
+                "",
+                ApiKeyVehicle.HEADER,
+                "Bearer",
                 " ");
     }
 

@@ -40,6 +40,7 @@ export default class NotificationLongPollingService {
                 store.commit(NotificationMutation.ADD_NOTIFICATION, watchResponse.data.data);
                 Vue.notify({data: watchResponse.data.data});
                 NotificationSoundService.getInstance().playNewNotificationSound();
+                Vue.bus.emit(watchResponse.data.data.subject.name);
 
                 this._watching = false;
                 if (this._pollingEnabled) {

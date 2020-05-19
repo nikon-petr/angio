@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+
 @Data
 @Component
 @ConfigurationProperties(prefix = "angiobackend.app")
@@ -23,11 +25,22 @@ public class AngioBackendProperties {
 
     private String[] documentUploadExtensions;
 
+    public Oauth oauth;
+
     public Jms jms;
 
     public Scheduling scheduling;
 
     public UserDefaultSettings userDefaultSettings;
+
+    @Data
+    public static class Oauth {
+        private Duration accessTokenValidityDuration;
+        private Duration refreshTokenValidityDuration;
+        private String signingKey;
+        private String clientId;
+        private String clientSecret;
+    }
 
     @Data
     public static class Jms {

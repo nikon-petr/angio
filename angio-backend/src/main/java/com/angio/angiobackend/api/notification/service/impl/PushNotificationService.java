@@ -53,12 +53,12 @@ public class PushNotificationService implements NotificationService<UUID> {
     @Async
     @Override
     @Transactional
-    @CacheEvict(cacheNames = "notification.list", key = "#id")
-    public void notifyUser(@NonNull UUID id, @NonNull AbstractNotification notification) {
+    @CacheEvict(cacheNames = "notification.list", key = "#userId")
+    public void notifyUser(@NonNull UUID userId, @NonNull AbstractNotification notification) {
 
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotificationException(
-                        msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {id})));
+                        msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {userId})));
 
         log.debug("notifyUser() - start: notification={}", notification);
         String notificationBody = processPushNotificationBody(notification.getDataModel(), notification.getTemplateName());
@@ -73,7 +73,7 @@ public class PushNotificationService implements NotificationService<UUID> {
                 .setSubject(notification.getSubject().getName())
                 .setUser(user);
 
-        log.debug("notifyUser() - send notification");
+        log.debug("notifyUser() - send notification, id={}", notificationId);
         sendNotification(user.getId(), notification, notificationId, notificationBody, notificationDate);
 
         log.debug("notifyUser() - save notification to db");
@@ -98,6 +98,7 @@ public class PushNotificationService implements NotificationService<UUID> {
             Date notificationDate = new Date();
             UUID notificationId = UUID.randomUUID();
             PushNotification notificationEntity = new PushNotification()
+                    .setId(notificationId)
                     .setDate(notificationDate)
                     .setType(notification.getType())
                     .setBody(notificationBody)
@@ -154,7 +155,7 @@ public class PushNotificationService implements NotificationService<UUID> {
      * @return notification list
      */
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "notification.list")
+    @Cacheable(cacheNames = "notification.list", key = "#userId")
     public List<PushNotificationDto> getPushNotifications(UUID userId) {
         return pushNotificationMapper.toDtos(pushNotificationRepository.findAllByUser(userId));
     }
@@ -165,7 +166,8 @@ public class PushNotificationService implements NotificationService<UUID> {
      * @param ids notifications id list
      */
     @Transactional
-    public void readNotifications(List<UUID> ids) {
+    @CacheEvict(cacheNames = "notification.list", key = "#userId")
+    public void readNotifications(UUID userId, List<UUID> ids) {
         log.debug("readNotifications() - start");
         List<PushNotification> notificationsToRead = pushNotificationRepository.findAllById(ids);
 

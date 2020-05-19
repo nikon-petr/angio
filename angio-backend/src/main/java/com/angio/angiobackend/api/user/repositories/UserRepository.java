@@ -15,7 +15,6 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificationExecutor<User> {
 
-    @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     @Query("select u from User u left join fetch u.roles r left join fetch u.ownedRolesToManage left join fetch u.organization left join fetch r.permissions where u.id = :id")
     Optional<User> findById(@Param("id") UUID id);
 
