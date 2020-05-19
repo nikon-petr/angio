@@ -39,7 +39,6 @@
                                         data-test-id="name__input"
                                         type="text"
                                         name="name"
-                                        counter
                                         maxlength="75"
                                         browser-autocomplete="off"
                                         required
@@ -53,7 +52,6 @@
                                         data-test-id="shortDescription__input"
                                         type="text"
                                         name="shortDescription"
-                                        counter
                                         maxlength="100"
                                         browser-autocomplete="off"
                                         required
@@ -93,7 +91,6 @@
                                         data-test-id="comment__input"
                                         type="text"
                                         name="comment"
-                                        counter
                                         maxlength="125"
                                         clearable
                                         browser-autocomplete="off"

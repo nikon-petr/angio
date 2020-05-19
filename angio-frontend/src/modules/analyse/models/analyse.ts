@@ -57,7 +57,7 @@ interface Diagnostician {
 
 export interface AnalyseAdditionalInfo {
     name: string;
-    patientId: number;
+    patientId: number | undefined;
     diagnostician: Diagnostician;
     shortDescription: string;
     fullDescription: string;
@@ -67,13 +67,13 @@ export interface AnalyseAdditionalInfo {
 }
 
 export interface Analyse {
-    id: number,
-    starred: boolean,
-    analyseDate: Date,
+    id: number | undefined,
+    starred: boolean | undefined,
+    analyseDate: Date | undefined,
     originalImage: StaticFile;
     additionalInfo: AnalyseAdditionalInfo,
-    geometricAnalyse: GeometricAnalyse,
-    bloodFlowAnalyse: BloodFlowAnalyse;
+    geometricAnalyse: GeometricAnalyse | undefined,
+    bloodFlowAnalyse: BloodFlowAnalyse | undefined;
 }
 
 export interface GeometricAnalyse {
@@ -120,24 +120,4 @@ export interface Density {
     id: number,
     sectorNumber: number,
     density: number;
-}
-
-export enum FormStepAnalyseType {
-    GEOMETRIC,
-    PROFILE
-}
-
-export enum FormStepAnalyseParameter {
-    TORTUOSITY_AND_BRANCHING,
-    ISCHEMIA_AND_MACULA,
-    DENSITY
-}
-
-export interface AnalyseFullData {
-    additionalInfo: AnalyseAdditionalInfo,
-    originalImage: OriginalImage
-}
-
-export interface OriginalImage {
-    id: number
 }

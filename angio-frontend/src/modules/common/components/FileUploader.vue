@@ -111,7 +111,7 @@
         }
 
         @Emit(CommonEvent.CHANGE)
-        public fileUploaded(fileId: string) {
+        public fileUploaded(fileId: string | null) {
             return fileId;
         }
 
@@ -142,6 +142,7 @@
 
         public revert(uniqueFileId: any, load: any, error: any) {
             this.$logger.debug('filepond revert');
+            this.fileUploaded(null);
             load();
         }
 

@@ -5,7 +5,6 @@ import AnalyseItem, {
     Analyse,
     AnalyseAdditionalInfo,
     AnalyseFilterModel,
-    AnalyseFullData,
     AnalyseStarred,
 } from '@/modules/analyse/models/analyse';
 import Page from '@/modules/common/models/page';
@@ -89,8 +88,8 @@ export class AnalyseApiService {
         return axios.patch(`/analyse/${id}/additional-info`, analyseAdditionalInfo);
     }
 
-    public static createAnalyse(analyseFullData: AnalyseFullData): AxiosPromise<Response<Analyse>> {
-        log.debug(`create new analyse: ${JSON.stringify(analyseFullData)}`);
-        return axios.post<Response<Analyse>>(`/analyse`, analyseFullData);
+    public static createAnalyse(analyse: Analyse): AxiosPromise<Response<Analyse>> {
+        log.debug(`create new analyse: ${JSON.stringify(analyse)}`);
+        return axios.post<Response<Analyse>>(`/analyse`, analyse);
     }
 }

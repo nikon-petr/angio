@@ -1,7 +1,12 @@
-import {FormStepAnalyseType} from "../models/analyse";
 <template>
-    <v-stepper v-model="stepCounter" vertical>
-        <v-stepper-step v-bind:complete="stepCounter > 1" step="1">
+    <v-stepper
+            v-model="stepCounter"
+            vertical
+    >
+        <v-stepper-step
+                v-bind:complete="stepCounter > 1"
+                step="1"
+        >
             {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseType.title') }}
             <small>
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseType.subtitle') }}
@@ -10,19 +15,21 @@ import {FormStepAnalyseType} from "../models/analyse";
 
         <v-stepper-content pa-0 step="1">
             <CreateAnalyseFormStepChooseAnalyseType
-                    ref="createAnalyseFormStepChooseAnalyseType"
-                    v-bind:on-form-step-analyse-type-changed="onFormStepAnalyseTypeChanged"
+                    v-on:change="handleChangeAnalyseType"
             ></CreateAnalyseFormStepChooseAnalyseType>
             <v-btn
-                    color="primary"
                     v-on:click="onStepperForward(2)"
-                    v-bind:disabled="!formStepAnalyseTypeNextButtonEnabled"
+                    v-bind:disabled="!formValid[0]"
+                    color="primary"
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.continue') }}
             </v-btn>
         </v-stepper-content>
 
-        <v-stepper-step v-bind:complete="stepCounter > 2" step="2">
+        <v-stepper-step
+                v-bind:complete="stepCounter > 2"
+                step="2"
+        >
             {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.title') }}
             <small>
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.subtitle') }}
@@ -31,23 +38,28 @@ import {FormStepAnalyseType} from "../models/analyse";
 
         <v-stepper-content step="2">
             <CreateAnalyseFormStepChooseAnalyseParameter
-                    ref="createAnalyseFormStepChooseAnalyseParameter"
                     v-bind:form-step-analyse-type="formStepAnalyseType"
-                    v-bind:on-form-step-analyse-parameters-changed="onFormStepAnalyseParametersChanged"
+                    v-on:change="handleChangeAnalyseParameter"
             ></CreateAnalyseFormStepChooseAnalyseParameter>
             <v-btn
-                    color="primary"
                     v-on:click="onStepperForward(3)"
-                    v-bind:disabled="!formStepAnalyseParameterNextButtonEnabled"
+                    v-bind:disabled="!formValid[1]"
+                    color="primary"
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.continue') }}
             </v-btn>
-            <v-btn v-on:click="onStepperBack()" text>
+            <v-btn
+                    v-on:click="onStepperBack()"
+                    text
+            >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
             </v-btn>
         </v-stepper-content>
 
-        <v-stepper-step v-bind:complete="stepCounter > 3" step="3" v-bind::rules="[false]">
+        <v-stepper-step
+                v-bind:complete="stepCounter > 3"
+                step="3"
+        >
             {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepImage.title') }}
             <small>
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepImage.subtitle') }}
@@ -56,22 +68,27 @@ import {FormStepAnalyseType} from "../models/analyse";
 
         <v-stepper-content step="3">
             <CreateAnalyseFormStepUploadImages
-                    v-bind:form-step-analyse-type="formStepAnalyseType"
-                    v-bind:on-form-step-analyse-image-uploaded="onFormStepAnalyseImageUploaded"
+                    v-on:change="handleChangeFileId"
             ></CreateAnalyseFormStepUploadImages>
             <v-btn
-                    color="primary"
                     v-on:click="onStepperForward(4)"
-                    v-bind:disabled="!formStepAnalyseUploadImagesNextButtonEnabled"
+                    v-bind:disabled="!formValid[2]"
+                    color="primary"
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.continue') }}
             </v-btn>
-            <v-btn v-on:click="onStepperBack()" text>
+            <v-btn
+                    v-on:click="onStepperBack()"
+                    text
+            >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
             </v-btn>
         </v-stepper-content>
 
-        <v-stepper-step v-bind:complete="stepCounter > 4" step="4">
+        <v-stepper-step
+                v-bind:complete="stepCounter > 4"
+                step="4"
+        >
             {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepPatient.title') }}
             <small>
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepPatient.subtitle') }}
@@ -80,22 +97,27 @@ import {FormStepAnalyseType} from "../models/analyse";
 
         <v-stepper-content step="4">
             <CreateAnalyseFormStepPatient
-                    ref="createAnalyseFormStepPatient"
-                    v-bind:selected-patient="formStepPatient"
+                    v-on:change="handleChangePatient"
             ></CreateAnalyseFormStepPatient>
             <v-btn
-                    color="primary"
                     v-on:click="onStepperForward(5)"
-                    v-bind:disabled="!formStepPatientButtonEnabled"
+                    v-bind:disabled="!formValid[3]"
+                    color="primary"
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.continue') }}
             </v-btn>
-            <v-btn v-on:click="onStepperBack()" text>
+            <v-btn
+                    v-on:click="onStepperBack()"
+                    text
+            >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
             </v-btn>
         </v-stepper-content>
 
-        <v-stepper-step v-bind:complete="stepCounter > 5" step="5">
+        <v-stepper-step
+                v-bind:complete="stepCounter > 5"
+                step="5"
+        >
             {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepDisease.title') }}
             <small>
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepDisease.subtitle') }}
@@ -104,36 +126,44 @@ import {FormStepAnalyseType} from "../models/analyse";
 
         <v-stepper-content step="5">
             <CreateAnalyseFormStepDisease
-                    v-bind:analyse-additional-info="formStepDisease"
+                    v-on:change="handleChangeDisease"
             ></CreateAnalyseFormStepDisease>
             <v-btn
-                    color="primary"
-                    v-bind:disabled="!formStepFinishButtonEnabled"
                     v-on:click="onStepperFinish()"
+                    v-bind:disabled="!formValid[4]"
+                    color="primary"
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.run') }}
             </v-btn>
-            <v-btn v-on:click="onStepperBack()" text>
+            <v-btn
+                    v-on:click="onStepperBack()"
+                    text
+            >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
             </v-btn>
         </v-stepper-content>
 
         <v-container
+                v-if="fetching"
                 fluid
                 fill-height
                 justify-center
                 align-center
-                v-if="fetching"
         >
-            <v-progress-circular :indeterminate="true" :background-opacity="0" pa-0 ma-0></v-progress-circular>
+            <v-progress-circular
+                    v-bind:indeterminate="true"
+                    v-bind:background-opacity="0"
+                    pa-0
+                    ma-0
+            ></v-progress-circular>
         </v-container>
 
         <v-container
+                v-if="hasErrorMessages"
                 fluid
                 fill-height
                 justify-center
                 align-center
-                v-if="hasErrorMessages"
         >
             <BuiltInErrorMessage
                     v-bind:error-messages="mapErrorMessages"
@@ -143,16 +173,13 @@ import {FormStepAnalyseType} from "../models/analyse";
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Ref, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
     import CreateAnalyseFormStepChooseAnalyseType
         from '@/modules/analyse/components/CreateAnalyseFormStepChooseAnalyseType.vue';
     import {
-        AnalyseAdditionalInfo,
-        AnalyseFullData,
-        AnalyseType,
         FormStepAnalyseParameter,
         FormStepAnalyseType,
-    } from '@/modules/analyse/models/analyse';
+    } from '@/modules/analyse/helpers/formStep';
     import CreateAnalyseFormStepChooseAnalyseParameter
         from '@/modules/analyse/components/CreateAnalyseFormStepChooseAnalyseParameter.vue';
     import CreateAnalyseFormStepUploadImages from '@/modules/analyse/components/CreateAnalyseFormStepUploadImages.vue';
@@ -162,6 +189,8 @@ import {FormStepAnalyseType} from "../models/analyse";
     import {UserState} from '@/modules/user/store/userState';
     import {State} from 'vuex-class';
     import BuiltInErrorMessage from '@/modules/common/components/BuiltInErrorMessage.vue';
+    import {Analyse, AnalyseAdditionalInfo} from '@/modules/analyse/models/analyse';
+    import EventWithValidation from '@/modules/common/models/eventWithValidation';
 
     @Component({
         components: {CreateAnalyseFormStepChooseAnalyseType, CreateAnalyseFormStepChooseAnalyseParameter,
@@ -179,28 +208,17 @@ import {FormStepAnalyseType} from "../models/analyse";
 
         public stepCounter: number = 1;
 
+        public formValid: boolean[] = Array<boolean>(5).fill(false);
+
         // #1 Analyse type
-        public formStepAnalyseTypeNextButtonEnabled = false;
-        @Ref()
-        readonly createAnalyseFormStepChooseAnalyseType!: CreateAnalyseFormStepChooseAnalyseType;
-        public formStepAnalyseType: FormStepAnalyseType = FormStepAnalyseType.GEOMETRIC;
+        public formStepAnalyseType: FormStepAnalyseType | undefined = undefined;
 
         // #2 Analyse parameter
-        public formStepAnalyseParameterNextButtonEnabled = false;
-        @Ref()
-        readonly createAnalyseFormStepChooseAnalyseParameter!: CreateAnalyseFormStepChooseAnalyseParameter;
-        public formStepAnalyseParameters: FormStepAnalyseParameter[] = [];
-
-        // #3 Images
-        public formStepAnalyseUploadImagesNextButtonEnabled = false;
-        public fileId: string | null = null;
+        public formStepAnalyseParameters: FormStepAnalyseParameter[] | undefined = undefined;
 
         // #4 Patient
-        public formStepPatientButtonEnabled = false;
-        @Ref()
-        readonly createAnalyseFormStepPatient!: CreateAnalyseFormStepPatient;
         public formStepPatient: Patient = {
-            id: -1,
+            id: undefined,
             fullName: {
                 firstname: '',
                 lastname: '',
@@ -210,60 +228,81 @@ import {FormStepAnalyseType} from "../models/analyse";
             address: ''
         };
 
-        // #5 Disease
-        public formStepFinishButtonEnabled = false;
-        public formStepDisease: AnalyseAdditionalInfo = {
-            name: '',
-            patientId: -1,
-            diagnostician: {
-                username: '',
-                fullName: {
-                    firstname: '',
-                    lastname: '',
-                    patronymic: ''
-                }
+        // #3 & #5 Image and Disease
+        public analyse: Analyse = {
+            additionalInfo: {
+                name: '',
+                patientId: undefined,
+                diagnostician: {
+                    username: '',
+                    fullName: {
+                        firstname: '',
+                        lastname: '',
+                        patronymic: ''
+                    }
+                },
+                shortDescription: '',
+                fullDescription: '',
+                type: '',
+                comment: '',
+                conclusion: ''
             },
-            shortDescription: '',
-            fullDescription: '',
-            type: '',
-            comment: '',
-            conclusion: ''
+            id: undefined,
+            starred: undefined,
+            analyseDate: undefined,
+            geometricAnalyse: undefined,
+            bloodFlowAnalyse: undefined,
+            originalImage: {
+                filename: undefined,
+                url: undefined,
+                id: undefined
+            }
         };
 
         @Prop()
-        public readonly createAnalyse!: (analyseFullData: AnalyseFullData) => Promise<void>;
-
-        @Prop()
-        public readonly createPatientAndAnalyse!: (patient: Patient, analyseFullData: AnalyseFullData) => Promise<void>;
+        public readonly createAnalyse!: (patient: Patient, analyse: Analyse) => Promise<void>;
 
         // #1 Analyse type
-        public onFormStepAnalyseTypeChanged(formStepAnalyseType: FormStepAnalyseType) {
-            this.formStepAnalyseType = formStepAnalyseType;
-            this.updateNextButtonEnabled(1);
+        public handleChangeAnalyseType(eventPayload: EventWithValidation<FormStepAnalyseType>) {
+            this.formStepAnalyseType = eventPayload.payload;
+            Vue.set(this.formValid, 0, eventPayload.isValid);
         }
 
         // #2 Analyse parameter
-        public onFormStepAnalyseParametersChanged(formStepAnalyseParameters: FormStepAnalyseParameter[]) {
-            this.formStepAnalyseParameters = formStepAnalyseParameters;
-            this.updateNextButtonEnabled(2);
+        public handleChangeAnalyseParameter(eventPayload: EventWithValidation<FormStepAnalyseParameter[]>) {
+            this.formStepAnalyseParameters = eventPayload.payload;
+            Vue.set(this.formValid, 1, eventPayload.isValid);
         }
 
         // #3 Images
-        public onFormStepAnalyseImageUploaded(fileId: string) {
-            this.fileId = fileId;
-            this.updateNextButtonEnabled(3);
+        public handleChangeFileId(eventPayload: EventWithValidation<string>) {
+            if (eventPayload.payload != undefined) {
+                this.analyse.originalImage.id = eventPayload.payload;
+            }
+            Vue.set(this.formValid, 2, eventPayload.isValid);
         }
 
         // #4 Patient
-        @Watch('formStepPatient', {deep: true, immediate: true})
-        public onPatientChange(newVal: Patient | undefined, oldVal: Patient | undefined) {
-            this.updateNextButtonEnabled(4);
+        public handleChangePatient(eventPayload: EventWithValidation<Patient>) {
+            if (eventPayload.payload != undefined) {
+                this.formStepPatient = eventPayload.payload;
+            }
+            Vue.set(this.formValid, 3, eventPayload.isValid);
         }
 
         // #5 Disease
-        @Watch('formStepDisease', {deep: true, immediate: true})
-        public onDiseaseChange(newVal: AnalyseAdditionalInfo | undefined, oldVal: AnalyseAdditionalInfo | undefined) {
-            this.updateNextButtonEnabled(5);
+        public handleChangeDisease(eventPayload: EventWithValidation<AnalyseAdditionalInfo>) {
+            if (eventPayload.payload != undefined) {
+                this.analyse.additionalInfo = eventPayload.payload;
+            }
+            Vue.set(this.formValid, 4, eventPayload.isValid);
+        }
+
+        public data() {
+            return {
+                formStepAnalyseType: undefined,
+                formStepAnalyseParameters: undefined
+            }
         }
 
         public onStepperForward(stepTo: number) {
@@ -281,160 +320,35 @@ import {FormStepAnalyseType} from "../models/analyse";
             this.fetching = true;
             this.errorMessages = [];
 
-            this.formStepDisease.diagnostician.username = this.user.info.email ? this.user.info.email : '';
-            this.formStepDisease.diagnostician.fullName = this.user.info.fullName;
-
-            if (this.formStepDisease.type == this.getAnalyseTypeName(AnalyseType.PRIMARY.toString())) {
-                this.formStepDisease.type = AnalyseType.PRIMARY.toString();
-            } else if (this.formStepDisease.type == this.getAnalyseTypeName(AnalyseType.SUBSEQUENT.toString())) {
-                this.formStepDisease.type = AnalyseType.SUBSEQUENT.toString();
-            }
-
-            let analyseFullData = {
-                additionalInfo: this.formStepDisease,
-                originalImage: {
-                    id: this.fileId ? Number(this.fileId) : 0
-                }
-            };
-
-            // Fix only for english version of site
-            if (analyseFullData.additionalInfo.type == "Первичный") {
-                analyseFullData.additionalInfo.type = AnalyseType.PRIMARY;
-            } else if (analyseFullData.additionalInfo.type == "Последующий") {
-                analyseFullData.additionalInfo.type = AnalyseType.SUBSEQUENT;
-            }
-
-            if (this.formStepPatient.id == -1) {
-                console.log(`stepper 1`);
-                this.createPatientAndAnalyse(this.formStepPatient, analyseFullData)
-                    .then(() => {
-                        console.log(`stepper then 1 success`);
-                        this.fetching = false;
-                        this.errorMessages = [];
-                        this.clearAllData();
-                        this.navigateToListAnalyse();
-                    })
-                    .catch((error) => {
-                        console.log(`stepper then 1 error`);
-                        this.errorMessages = ['analyse.component.createAnalyseFormDialog.stepper.error.unknown'];
-                        this.$logger.error(error);
-                        this.stepCounter = 5;
-                        this.fetching = false
-                    })
-            } else {
-                analyseFullData.additionalInfo.patientId = this.formStepPatient.id;
-                console.log(`stepper 2`);
-                this.createAnalyse(analyseFullData)
-                    .then((response) => {
-                        console.log(`stepper then 2 success`);
-                        this.fetching = false;
-                        this.errorMessages = [];
-                        this.clearAllData();
-                        this.navigateToListAnalyse();
-                    })
-                    .catch((error) => {
-                        console.log(`stepper then 2 error`);
-                        this.errorMessages = ['analyse.component.createAnalyseFormDialog.stepper.error.unknown'];
-                        this.$logger.error(error);
-                        this.stepCounter = 5;
-                        this.fetching = false;
-                    })
-            }
-        }
-
-        public updateNextButtonEnabled(step: number) {
-            switch (step) {
-                case 1:
-                    this.formStepAnalyseTypeNextButtonEnabled = this.formStepAnalyseType != undefined;
-                    break;
-                case 2:
-                    this.formStepAnalyseParameterNextButtonEnabled = this.formStepAnalyseParameters.length != 0;
-                    break;
-                case 3:
-                    this.formStepAnalyseUploadImagesNextButtonEnabled = this.fileId != null;
-                    break;
-                case 4:
-                    if (this.formStepPatient.id != -1) {
-                        this.formStepPatientButtonEnabled = true;
-                    } else {
-                        this.formStepPatientButtonEnabled = this.isPatientFieldsValid();
-                    }
-                    break;
-                case 5:
-                    this.formStepFinishButtonEnabled = this.isDiseaseFieldsFalid();
-                    break;
-            }
-        }
-
-        public isPatientFieldsValid(): boolean {
-            if (this.formStepPatient.bday == undefined || this.formStepPatient.bday > new Date()) {
-                return false;
-            }
-
-            if (this.formStepPatient.address == undefined || this.formStepPatient.address.length < 3 || this.formStepPatient.address.length > 100) {
-                return false;
-            }
-
-            if (this.formStepPatient.fullName == undefined || this.formStepPatient.fullName.firstname == undefined || this.formStepPatient.fullName.firstname.length < 1 || this.formStepPatient.fullName.firstname.length > 30) {
-                return false;
-            }
-
-            if (this.formStepPatient.fullName.lastname == undefined || this.formStepPatient.fullName.lastname.length < 1 || this.formStepPatient.fullName.lastname.length > 30) {
-                return false;
-            }
-
-            return true;
-        }
-
-        public isDiseaseFieldsFalid(): boolean {
-            if (this.formStepDisease == undefined) {
-                return false;
-            }
-
-            if (this.formStepDisease.type == undefined || this.formStepDisease.type == '') {
-                return false;
-            }
-
-            if (this.formStepDisease.name == undefined || this.formStepDisease.name.length < 5 || this.formStepDisease.name.length > 75) {
-                return false;
-            }
-
-            if (this.formStepDisease.shortDescription == undefined || this.formStepDisease.shortDescription.length < 5 || this.formStepDisease.shortDescription.length > 100) {
-                return false;
-            }
-
-            return true;
-        }
-
-        public getAnalyseTypeName(type: string): string {
-            return this.$t('analyse.model.analyseType.' + type).toString()
+            this.createAnalyse(this.formStepPatient, this.analyse)
+                .then(() => {
+                    this.fetching = false;
+                    this.errorMessages = [];
+                    this.clearAllData();
+                    this.navigateToListAnalyse();
+                })
+                .catch((error) => {
+                    this.errorMessages = ['analyse.component.createAnalyseFormDialog.stepper.error.unknown'];
+                    this.$logger.error(error);
+                    this.stepCounter = 5;
+                    this.fetching = false
+                });
         }
 
         public clearAllData() {
             this.stepCounter = 1;
 
+            this.formValid = Array<boolean>(5).fill(false);
+
             // #1 Analyse type
-            this.formStepAnalyseTypeNextButtonEnabled = false;
-            this.formStepAnalyseType = FormStepAnalyseType.GEOMETRIC;
-            // @ts-ignore
-            this.createAnalyseFormStepChooseAnalyseType.resetAll();
+            this.formStepAnalyseType = undefined;
 
             // #2 Analyse parameter
-            this.formStepAnalyseParameterNextButtonEnabled = false;
-            this.formStepAnalyseParameters = [];
-            // @ts-ignore
-            this.createAnalyseFormStepChooseAnalyseParameter.resetAll();
-
-            // #3 Images
-            this.formStepAnalyseUploadImagesNextButtonEnabled = false;
-            this.fileId = null;
+            this.formStepAnalyseParameters = undefined;
 
             // #4 Patient
-            this.formStepPatientButtonEnabled = false;
-            // @ts-ignore
-            this.createAnalyseFormStepPatient.resetAll();
             this.formStepPatient = {
-                id: -1,
+                id: undefined,
                 fullName: {
                     firstname: '',
                     lastname: '',
@@ -444,24 +358,35 @@ import {FormStepAnalyseType} from "../models/analyse";
                 address: ''
             };
 
-            // #5 Disease
-            this.formStepFinishButtonEnabled = false;
-            this.formStepDisease = {
-                name: '',
-                patientId: -1,
-                diagnostician: {
-                    username: '',
-                    fullName: {
-                        firstname: '',
-                        lastname: '',
-                        patronymic: ''
-                    }
+            // #3 & #5 Image and Disease
+            this.analyse = {
+                additionalInfo: {
+                    name: '',
+                    patientId: undefined,
+                    diagnostician: {
+                        username: '',
+                        fullName: {
+                            firstname: '',
+                            lastname: '',
+                            patronymic: ''
+                        }
+                    },
+                    shortDescription: '',
+                    fullDescription: '',
+                    type: '',
+                    comment: '',
+                    conclusion: ''
                 },
-                shortDescription: '',
-                fullDescription: '',
-                type: '',
-                comment: '',
-                conclusion: ''
+                id: undefined,
+                starred: undefined,
+                analyseDate: undefined,
+                geometricAnalyse: undefined,
+                bloodFlowAnalyse: undefined,
+                originalImage: {
+                    filename: undefined,
+                    url: undefined,
+                    id: undefined
+                }
             };
         }
 

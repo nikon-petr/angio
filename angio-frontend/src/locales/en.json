@@ -713,7 +713,7 @@
                 "bday": {
                   "field": "Date of birth",
                   "validation": {
-                    "Illegal": "Date of birth should not be later today"
+                    "BDayShouldNotBeFuture": "Date of birth should not be later today"
                   }
                 }
               }

@@ -1,32 +1,35 @@
 <template>
-    <div>
+    <div class="pl-3">
         <v-checkbox
-                hide-details
-                v-model="formStepAnalyseParameters"
+                v-on:change="onFormStepAnalyseTypeChanged"
                 v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.data.geometric.tortuosityAndBranching')"
+                v-model="formStepAnalyseParameters"
+                v-if="isFormStepAnalyseTypeGeometric()"
+                hide-details
                 value="TORTUOSITY_AND_BRANCHING"
-                v-if="isFormStepAnalyseTypeGeometric()"
         ></v-checkbox>
         <v-checkbox
-                hide-details
-                v-model="formStepAnalyseParameters"
+                v-on:change="onFormStepAnalyseTypeChanged"
                 v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.data.geometric.ishemiaAndMacula')"
-                value="ISCHEMIA_AND_MACULA"
+                v-model="formStepAnalyseParameters"
                 v-if="isFormStepAnalyseTypeGeometric()"
+                hide-details
+                value="ISCHEMIA_AND_MACULA"
         ></v-checkbox>
         <v-checkbox
-                hide-details
-                v-model="formStepAnalyseParameters"
+                v-on:change="onFormStepAnalyseTypeChanged"
                 v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.data.geometric.density')"
-                value="DENSITY"
+                v-model="formStepAnalyseParameters"
                 v-if="isFormStepAnalyseTypeGeometric()"
+                hide-details
+                value="DENSITY"
                 class="mb-4"
         ></v-checkbox>
         <v-layout
+                v-if="isFormStepAnalyseTypeProfile()"
                 row
                 wrap
                 align-center
-                v-if="isFormStepAnalyseTypeProfile()"
                 class="mb-3"
         >
             <v-flex>
@@ -39,19 +42,18 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-    import {FormStepAnalyseParameter, FormStepAnalyseType} from '@/modules/analyse/models/analyse';
+    import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
+    import {FormStepAnalyseParameter, FormStepAnalyseType} from '@/modules/analyse/helpers/formStep';
+    import {CommonEvent} from '@/modules/common/helpers/commonEvent';
+    import EventWithValidation from '@/modules/common/models/eventWithValidation';
 
     @Component({})
     export default class CreateAnalyseFormStepChooseAnalyseParameter extends Vue {
 
         @Prop()
-        public readonly formStepAnalyseType!: number;
+        public readonly formStepAnalyseType!: FormStepAnalyseType | undefined;
 
-        @Prop()
-        public readonly onFormStepAnalyseParametersChanged!: (formStepAnalyseParameters: FormStepAnalyseParameter[]) => void;
-
-        public formStepAnalyseParameters: string[] = [];
+        public formStepAnalyseParameters: FormStepAnalyseParameter[] = [];
 
         public isFormStepAnalyseTypeGeometric(): boolean {
             return this.formStepAnalyseType == FormStepAnalyseType.GEOMETRIC;
@@ -61,24 +63,25 @@
             return this.formStepAnalyseType == FormStepAnalyseType.PROFILE;
         }
 
-        @Watch('formStepAnalyseParameters')
-        public onFormStepAnalyseTypeChangedWatcher(newVal: string[], oldVal: string[]) {
-            this.onFormStepAnalyseParametersChanged(
-                newVal.map((p) => {
-                    switch (p) {
-                        case "TORTUOSITY_AND_BRANCHING":
-                            return FormStepAnalyseParameter.TORTUOSITY_AND_BRANCHING;
-                        case "ISCHEMIA_AND_MACULA":
-                            return FormStepAnalyseParameter.ISCHEMIA_AND_MACULA;
-                        default:
-                            return FormStepAnalyseParameter.DENSITY;
-                    }
-                })
-            );
-        }
+        @Emit(CommonEvent.CHANGE)
+        public onFormStepAnalyseTypeChanged(value: string): EventWithValidation<FormStepAnalyseParameter[]> {
+            if (value.toString().length != 0) {
+                this.formStepAnalyseParameters = value.toString().split(',').map(el => el as FormStepAnalyseParameter);
+            } else {
+                this.formStepAnalyseParameters = [];
+            }
 
-        public resetAll() {
-            this.formStepAnalyseParameters = [];
+            if (this.formStepAnalyseType == FormStepAnalyseType.GEOMETRIC) {
+                return {
+                    isValid: this.formStepAnalyseParameters.length > 0,
+                    payload: this.formStepAnalyseParameters
+                };
+            } else {
+                return {
+                    isValid: false,
+                    payload: []
+                };
+            }
         }
     }
 </script>

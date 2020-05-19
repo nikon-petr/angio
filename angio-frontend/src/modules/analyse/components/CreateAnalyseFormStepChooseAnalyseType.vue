@@ -1,5 +1,10 @@
 <template>
-    <v-radio-group v-model="formStepAnalyseType" column>
+    <v-radio-group
+            v-on:change="onFormStepAnalyseTypeChanged"
+            v-bind:value="formStepAnalyseType"
+            column
+            class="pl-3"
+    >
         <v-radio
                 v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseType.data.geometric')"
                 value="GEOMETRIC"
@@ -12,28 +17,29 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-    import {FormStepAnalyseType} from '@/modules/analyse/models/analyse';
+    import {Component, Emit, Vue} from 'vue-property-decorator';
+    import {FormStepAnalyseType} from '@/modules/analyse/helpers/formStep';
+    import {CommonEvent} from '@/modules/common/helpers/commonEvent';
+    import EventWithValidation from '@/modules/common/models/eventWithValidation';
 
     @Component({})
     export default class CreateAnalyseFormStepChooseAnalyseType extends Vue {
 
-        public formStepAnalyseType: string = "";
+        public formStepAnalyseType: FormStepAnalyseType | undefined;
 
-        @Prop()
-        public readonly onFormStepAnalyseTypeChanged!: (formStepAnalyseType: FormStepAnalyseType) => void;
-
-        @Watch('formStepAnalyseType')
-        public onFormStepAnalyseTypeChangedWatcher(newVal: string, oldVal: string) {
-            if (newVal == "GEOMETRIC") {
-                this.onFormStepAnalyseTypeChanged(FormStepAnalyseType.GEOMETRIC);
-            } else if (newVal == "PROFILE") {
-                this.onFormStepAnalyseTypeChanged(FormStepAnalyseType.PROFILE);
+        @Emit(CommonEvent.CHANGE)
+        public onFormStepAnalyseTypeChanged(value: string): EventWithValidation<FormStepAnalyseType> {
+            this.formStepAnalyseType = value as FormStepAnalyseType;
+            return {
+                isValid: this.formStepAnalyseType != undefined,
+                payload: this.formStepAnalyseType
             }
         }
 
-        public resetAll() {
-            this.formStepAnalyseType = "";
+        public data() {
+            return {
+                formStepAnalyseType: undefined
+            }
         }
     }
 </script>
