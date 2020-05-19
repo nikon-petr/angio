@@ -297,6 +297,33 @@
           }
         }
       },
+      "changePassword": {
+        "title": "Change password",
+        "oldPassword": {
+          "field": "Old password",
+          "validation": {
+            "NotEmpty": "Old password should not be empty"
+          }
+        },
+        "newPassword": {
+          "field": "New password",
+          "validation": {
+            "NotEmpty": "New password should not be empty",
+            "MinLength": "New Password minimal length is 8 symbols",
+            "Equal": "New and old password should not be equal"
+          }
+        },
+        "confirmPassword": {
+          "field": "Password confirmation",
+          "validation": {
+            "NotEmpty": "Password should not be empty",
+            "NotEqual": "Passwords not equal"
+          }
+        },
+        "button": {
+          "change": "Change"
+        }
+      },
       "resetPassword": {
         "resetPasswordStep": {
           "title": "Restore access",
@@ -342,6 +369,25 @@
           "field": "Confirm password"
         },
         "error": "Access recovery error"
+      },
+      "personalInfo": {
+        "title": "Personal Information",
+        "email": "E-mail",
+        "lastName": "Last Name",
+        "firstName": "First Name",
+        "patronymic": "Patronymic",
+        "organization": "Organization"
+      },
+      "securitySettings": {
+        "title": "Security",
+        "id": "ID",
+        "password": "Password",
+        "changePasswordLink": "change password"
+      },
+      "personalization": {
+        "title": "Personalization",
+        "darkTheme": "Dark Theme",
+        "localization": "Interface Language - "
       }
     },
     "view": {
@@ -354,11 +400,18 @@
       "activation": {
         "title": "Activation"
       },
+      "changePassword": {
+        "title": "Change password"
+      },
       "resetPassword": {
         "title": "Restore access"
       },
       "resetAccount": {
         "title": "Account recovery"
+      },
+      "settings": {
+        "title": "Settings",
+        "subheader": "Settings"
       },
       "403": {
         "title": "Access denied",

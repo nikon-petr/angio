@@ -68,7 +68,7 @@
         public readonly fetching!: boolean;
 
         @Prop()
-        public readonly errorMessages: string[];
+        public readonly errorMessages!: string[];
 
         public emailPattern = RegexUtils.EMAIL_PATTERN;
 

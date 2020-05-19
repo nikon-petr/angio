@@ -297,6 +297,33 @@
           }
         }
       },
+      "changePassword": {
+        "title": "Изменить пароль",
+        "oldPassword": {
+          "field": "Старый пароль",
+          "validation": {
+            "NotEmpty": "Введите старый пароль"
+          }
+        },
+        "newPassword": {
+          "field": "Новый пароль",
+          "validation": {
+            "NotEmpty": "Пароль не может быть пустым",
+            "MinLength": "Пароль должен быть не короче 8 символов",
+            "Equal": "Новый и старый пароли не должны совпадать"
+          }
+        },
+        "confirmPassword": {
+          "field": "Подтверждение пароля",
+          "validation": {
+            "NotEmpty": "Пароль не может быть пустым",
+            "NotEqual": "Пароли не совпадают"
+          }
+        },
+        "button": {
+          "change": "Сменить пароль"
+        }
+      },
       "resetPassword": {
         "resetPasswordStep": {
           "title": "Восстановление доступа",
@@ -342,6 +369,25 @@
           "field": "Повторите пароль"
         },
         "error": "Ошибка восстановления доступа"
+      },
+      "personalInfo": {
+        "title": "Персональные данные",
+        "email": "Электронная почта",
+        "lastName": "Фамилия",
+        "firstName": "Имя",
+        "patronymic": "Отчество",
+        "organization": "Организация"
+      },
+      "securitySettings": {
+        "title": "Безопасность",
+        "id": "ID",
+        "password": "Пароль",
+        "changePasswordLink": "изменпить пароль"
+      },
+      "personalization": {
+        "title": "Персонализация",
+        "darkTheme": "Темная тема",
+        "localization": "Язык интерфейса - "
       }
     },
     "view": {
@@ -354,11 +400,18 @@
       "activation": {
         "title": "Активация"
       },
+      "changePassword": {
+        "title": "Изменение пароля"
+      },
       "resetPassword": {
         "title": "Восстановление доступа"
       },
       "resetAccount": {
         "title": "Восстановление аккаунта"
+      },
+      "settings":{
+        "title": "Настройки",
+        "subheader": "Настройки"
       },
       "403": {
         "title": "Доступ запрещен",

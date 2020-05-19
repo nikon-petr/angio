@@ -72,3 +72,8 @@ export interface UserResetAccountModel {
 export interface EmailModel {
     email: string;
 }
+
+export interface ChangePasswordModel {
+    oldPassword: string;
+    newPassword: string;
+}
