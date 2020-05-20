@@ -50,11 +50,11 @@
         </v-flex>
 
         <v-flex class="pt-2" xs12>
-            <AnalyseListPagination
+            <BasePagination
                     v-bind:page.sync="page"
                     v-bind:rows-per-page="rowsPerPage"
                     v-bind:total-items="totalItems"
-            ></AnalyseListPagination>
+            ></BasePagination>
         </v-flex>
 
         <v-flex class="pt-2 mb-2" xs12>
@@ -81,9 +81,10 @@
     import SingleDatePicker from '@/modules/common/components/SingleDatePicker.vue';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
     import EventWithValidation from '@/modules/common/models/eventWithValidation';
+    import BasePagination from '@/modules/common/components/BasePagination.vue';
 
     @Component({
-        components: {AnalyseListPagination, SingleDatePicker}
+        components: {BasePagination, SingleDatePicker}
     })
     export default class CreateAnalyseFormStepPatientExisting extends Vue {
 

@@ -1,5 +1,6 @@
 import {Locale, UserAuth, UserInfo, UserPermission, UserSettings} from '@/modules/user/store/userState';
 import FullName from '@/modules/common/models/fullName';
+import {Organization} from '@/modules/organization/models/organization';
 
 export interface UserInfoModel extends UserInfo {
     id: string;
@@ -20,6 +21,12 @@ export interface UserSettingsModel extends UserSettings {
     locale: Locale;
 }
 
+export interface NewUserModel{
+    email: string;
+    organizationName: string;
+    roleIds: number[]
+}
+
 export interface UserCredentialsModel {
     username: string;
     password: string;
@@ -33,11 +40,6 @@ export interface UserActivationModel {
     fullName: FullName;
     enablingCode: string;
     newPassword: string;
-}
-
-export interface Organization {
-    id: number;
-    name: string;
 }
 
 export interface Role {
@@ -76,4 +78,15 @@ export interface EmailModel {
 export interface ChangePasswordModel {
     oldPassword: string;
     newPassword: string;
+}
+
+export interface UserFilterModel {
+    search?: string;
+    enabled?: string;
+    locked?: string;
+    organizationId?: number;
+}
+
+export interface UserLockedModel {
+    locked: boolean;
 }

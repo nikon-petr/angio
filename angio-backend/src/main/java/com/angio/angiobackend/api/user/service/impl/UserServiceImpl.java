@@ -197,7 +197,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     @PreAuthorize("hasAuthority('USER_VIEW')")
-    public Page<UserShortItemDto> filterUsersByQueryString(
+    public Page<UserDetailsDto> filterUsersByQueryString(
             String search,
             Boolean enabled,
             Boolean locked,
@@ -215,7 +215,7 @@ public class UserServiceImpl implements UserService {
         Page<User> analyseInfoEntityPage = userRepository.findAll(specs, pageable);
 
         log.debug("filterUsersByQueryString() - map and return user page");
-        return analyseInfoEntityPage.map(userMapper::toShortItemDto);
+        return analyseInfoEntityPage.map(userMapper::toDetailedDto);
     }
 
     /**

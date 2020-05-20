@@ -1,4 +1,5 @@
 export enum CommonEvent {
+    SUBMIT = 'submit',
     CHANGE = 'change',
     INPUT = 'input',
     UPDATE = 'update',

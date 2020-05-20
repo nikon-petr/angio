@@ -19,6 +19,14 @@
   },
   "common": {
     "appName": "AngioVision",
+    "helper": {
+      "i18n": {
+        "formatBoolean": {
+          "true": "Yes",
+          "false": "No"
+        }
+      }
+    },
     "view": {
       "404": {
         "title": "Page not found",
@@ -388,6 +396,72 @@
         "title": "Personalization",
         "darkTheme": "Dark Theme",
         "localization": "Interface Language - "
+      },
+      "userListFilter": {
+        "search": "Search",
+        "field": {
+          "search": {
+            "label": "Search",
+            "tooltip": "Search user"
+          },
+          "enabled": {
+            "label": "User activated"
+          },
+          "locked": {
+            "label": "User blocked"
+          },
+          "organization": {
+            "label": "Organization"
+          }
+        }
+      },
+      "userListTable": {
+        "column": {
+          "id": "ID",
+          "fullName": "Full Name",
+          "email": "E-mail",
+          "organizationName": "Organization"
+        },
+        "value": {
+          "undefined": {
+            "organizationName": "No organization"
+          }
+        }
+      },
+      "userListTableDetails": {
+        "field": {
+          "fullName": "Full name: ",
+          "email": "E-mail: ",
+          "enabled": "User activated: ",
+          "locked": "User locked: ",
+          "roles": "User role:  | User roles: ",
+          "ownedRolesToManage": "User owned role:  | User owned roles: "
+        },
+        "button": {
+          "roles": {
+            "name": "Edit roles"
+          }
+        }
+      },
+      "lockUserButton": {
+        "lock": {
+          "confirm": {
+            "lockTitle": "Lock user",
+            "unlockTitle": "Unlock user",
+            "lockText": "Are you sure you want to lock the user?",
+            "unlockText": "Are you sure you want to unlock the user?"
+          }
+        }
+      },
+      "roleEditorForm": {
+        "title": "Edit roles",
+        "cancel": "Cancel",
+        "submit": "Save",
+        "validation": {
+          "Empty": "Role list can not be empty",
+          "NoChanges": "Role list is not changed"
+        },
+        "error": "An error occurred while editing user role list"
       }
     },
     "view": {
@@ -412,6 +486,10 @@
       "settings": {
         "title": "Settings",
         "subheader": "Settings"
+      },
+      "userManager":{
+        "title": "User",
+        "subheader": "Users"
       },
       "403": {
         "title": "Access denied",

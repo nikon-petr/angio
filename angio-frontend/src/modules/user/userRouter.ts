@@ -8,6 +8,8 @@ import ResetAccount from '@/modules/user/views/ResetAccount.vue';
 import Settings from '@/modules/user/views/Settings.vue';
 import Registration from '@/modules/user/views/Registration.vue';
 import ChangePassword from "@/modules/user/views/ChangePassword.vue";
+import UserManager from '@/modules/user/views/UserManager.vue';
+import {UserPermission} from '@/modules/user/store/userState';
 
 export const userRouterConfig: RouteConfig[] = [
     {
@@ -47,6 +49,17 @@ export const userRouterConfig: RouteConfig[] = [
         path: '/user/password',
         component: ChangePassword,
         meta: {title: 'user.view.changePassword.title', auth: AuthPredicate.isAuthenticated()}
+    },
+    {
+        path: '/user',
+        component: UserManager,
+        meta: {
+            title: 'user.view.userManager.title',
+            auth: AuthPredicate.hasPermissions([
+                UserPermission.USER_CREATE,
+                UserPermission.USER_VIEW,
+                UserPermission.USER_EDIT
+            ])}
     },
     {path: '/403', component: Forbidden, meta: {title: 'user.view.403.title', auth: AuthPredicate.permitAll()}},
 ];

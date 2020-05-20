@@ -24,7 +24,6 @@
 
 <script lang="ts">
     import {Component, Emit, Vue, Watch} from 'vue-property-decorator';
-    import AnalyseListPagination from '@/modules/analyse/components/AnalyseListPagination.vue';
     import {Locale} from '@/modules/user/store/userState';
     import {State} from 'vuex-class';
     import SingleDatePicker from '@/modules/common/components/SingleDatePicker.vue';
@@ -37,8 +36,7 @@
 
     @Component({
         components: {
-            CreateAnalyseFormStepPatientNew,
-            CreateAnalyseFormStepPatientExisting, AnalyseListPagination, SingleDatePicker}
+            CreateAnalyseFormStepPatientNew, CreateAnalyseFormStepPatientExisting, SingleDatePicker}
     })
     export default class CreateAnalyseFormStepPatient extends Vue {
 
