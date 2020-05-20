@@ -5,6 +5,7 @@
                     v-bind:date="startDate"
                     v-bind:locale="locale"
                     v-bind:label="$t('common.component.periodDatePicker.startDate')"
+                    v-bind:hide-details="true"
                     v-on:change="(e) => $emit('update:start-date', e)"
             ></SingleDatePicker>
         </v-flex>
@@ -13,6 +14,7 @@
                     v-bind:date="endDate"
                     v-bind:locale="locale"
                     v-bind:label="$t('common.component.periodDatePicker.endDate')"
+                    v-bind:hide-details="true"
                     v-on:change="(e) => $emit('update:end-date', e)"
             ></SingleDatePicker>
         </v-flex>
@@ -21,6 +23,7 @@
                     v-bind:date="singleDate"
                     v-bind:locale="locale"
                     v-bind:label="$t('common.component.periodDatePicker.singleDate')"
+                    v-bind:hide-details="true"
                     v-on:change="(e) => $emit('update:single-date', e)"
             ></SingleDatePicker>
         </v-flex>

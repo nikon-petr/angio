@@ -141,7 +141,7 @@
             AnalyseApiService
                 .setAnalyseStarred(id, starred)
                 .then((response) => {
-                    console.log("Result of set analyse starred: " + response.data.data.starred);
+                    this.$logger.debug("Result of set analyse starred: " + response.data.data.starred);
                 })
                 .catch((error) => this.$logger.error(error));
         }
@@ -153,7 +153,7 @@
                     .then((response) => {
                         this.analyse = response.data.data;
                         this.analyse.starred = response.data.data.starred;
-                        console.log("Result of editing analyse additional info: " + response.data.data.additionalInfo);
+                        this.$logger.debug("Result of editing analyse additional info: " + response.data.data.additionalInfo);
                     });
                     resolve();
             });

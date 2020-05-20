@@ -1,5 +1,5 @@
 export default interface StaticFile {
-    id: string
-    filename: string;
-    url: string;
+    id: string | undefined;
+    filename: string | undefined;
+    url: string | undefined;
 }

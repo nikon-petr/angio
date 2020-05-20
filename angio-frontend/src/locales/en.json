@@ -629,6 +629,132 @@
             }
           }
         }
+      },
+      "createAnalyseFormDialog": {
+        "title": "New analyse creating",
+        "stepper": {
+          "continue": "Continue",
+          "back": "Back",
+          "run": "Start",
+          "stepChooseAnalyseType": {
+            "title": "Analyse type",
+            "subtitle": "Select a type of analysis for further work",
+            "data": {
+              "geometric": "Analysis of the geometric characteristics of the ocular fundus vascular system",
+              "profile": "Retinal profile analysis"
+            }
+          },
+          "stepChooseAnalyseParameter": {
+            "title": "Quantitative parameters",
+            "subtitle": "Select computer-assisted quantification",
+            "data": {
+              "geometric": {
+                "tortuosityAndBranching": "The geometric characteristic of the vascular system",
+                "ishemiaAndMacula": "Ischemic zones and macula",
+                "density": "Density of capillaries in the macula"
+              },
+              "profile": {
+                "inDevelopment": "Retinal profile analysis under development"
+              }
+            }
+          },
+          "stepImage": {
+            "title": "Images",
+            "subtitle": "Select images for computer analysis",
+            "data": {
+              "content1": "To analyze the geometric characteristics of the vascular system of the eye day, it is necessary to upload one image that satisfies the following conditions:",
+              "content2": "- Color or black and white;",
+              "content3": "- The macula should be in the center of the picture;",
+              "content4": "- The picture should have a pronounced vascular system."
+            }
+          },
+          "stepPatient": {
+            "title": "Patient information",
+            "subtitle": "Fill out basic patient information",
+            "data": {
+              "switch": "Download patient from database",
+              "searchTitle": "Search for patients in the database",
+              "searchField": "Search",
+              "table": {
+                "noDataText": "No patients found",
+                "add": "Add",
+                "headers": {
+                  "lastname": "Lastname",
+                  "firstname": "Firstname",
+                  "patronymic": "Patronymic",
+                  "bday": "Date of birth",
+                  "address": "Address",
+                  "actions": "Actions"
+                }
+              },
+              "form": {
+                "selectedPatientInfo": "Patient:",
+                "lastname": {
+                  "field": "Lastname",
+                  "validation": {
+                    "NotEmpty": "Lastname should not be empty"
+                  }
+                },
+                "firstname": {
+                  "field": "Firstname",
+                  "validation": {
+                    "NotEmpty": "Firstname should not be empty"
+                  }
+                },
+                "patronymic": {
+                  "field": "Patronymic"
+                },
+                "address": {
+                  "field": "Address",
+                  "validation": {
+                    "NotEmpty": "Address should not be empty"
+                  }
+                },
+                "bday": {
+                  "field": "Date of birth",
+                  "validation": {
+                    "BDayShouldNotBeFuture": "Date of birth should not be later today"
+                  }
+                }
+              }
+            }
+          },
+          "stepDisease": {
+            "title": "Disease information",
+            "subtitle": "Fill out basic disease information",
+            "data": {
+              "analyseType": {
+                "field": "Analyse type"
+              },
+              "name": {
+                "field": "Name",
+                "validation": {
+                  "NotEmpty": "Name should not be empty",
+                  "MinLength": "The minimum name length is 5 characters"
+                }
+              },
+              "shortDescription": {
+                "field": "Short description",
+                "validation": {
+                  "NotEmpty": "Short description should not be empty",
+                  "MinLength": "The minimum short description length is 5 characters"
+                }
+              },
+              "fullDescription": {
+                "field": "Full description"
+              },
+              "conclusion": {
+                "field": "Conclusion"
+              },
+              "comment": {
+                "field": "Comment"
+              }
+            }
+          },
+          "error": {
+            "unknown": "Error creating new analyse"
+          }
+        }
       }
     },
     "view": {

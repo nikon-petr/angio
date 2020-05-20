@@ -36,7 +36,6 @@
                                 type="text"
                                 name="firstname"
                                 prepend-inner-icon="person"
-                                counter
                                 maxlength="30"
                                 outline
                                 required
@@ -50,7 +49,6 @@
                                 type="text"
                                 name="lastname"
                                 prepend-inner-icon="person"
-                                counter
                                 maxlength="30"
                                 outline
                                 required
@@ -63,7 +61,6 @@
                                 type="text"
                                 name="patronymic"
                                 prepend-inner-icon="person"
-                                counter
                                 maxlength="30"
                                 outline
                         ></v-text-field>
@@ -78,7 +75,6 @@
                                 type="password"
                                 name="password"
                                 prepend-inner-icon="lock"
-                                counter
                                 maxlength="120"
                                 outline
                                 required
@@ -94,7 +90,6 @@
                                 type="password"
                                 name="password"
                                 prepend-inner-icon="lock"
-                                counter
                                 maxlength="120"
                                 outline
                                 required

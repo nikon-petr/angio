@@ -57,7 +57,7 @@ interface Diagnostician {
 
 export interface AnalyseAdditionalInfo {
     name: string;
-    patientId: number;
+    patientId: number | undefined;
     diagnostician: Diagnostician;
     shortDescription: string;
     fullDescription: string;
@@ -67,13 +67,13 @@ export interface AnalyseAdditionalInfo {
 }
 
 export interface Analyse {
-    id: number,
-    starred: boolean,
-    analyseDate: Date,
+    id: number | undefined,
+    starred: boolean | undefined,
+    analyseDate: Date | undefined,
     originalImage: StaticFile;
     additionalInfo: AnalyseAdditionalInfo,
-    geometricAnalyse: GeometricAnalyse,
-    bloodFlowAnalyse: BloodFlowAnalyse;
+    geometricAnalyse: GeometricAnalyse | undefined,
+    bloodFlowAnalyse: BloodFlowAnalyse | undefined;
 }
 
 export interface GeometricAnalyse {

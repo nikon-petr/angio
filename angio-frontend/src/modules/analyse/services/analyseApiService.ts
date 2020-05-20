@@ -87,4 +87,9 @@ export class AnalyseApiService {
         log.debug(`edit analyse additional info request with id ${id}`);
         return axios.patch(`/analyse/${id}/additional-info`, analyseAdditionalInfo);
     }
+
+    public static createAnalyse(analyse: Analyse): AxiosPromise<Response<Analyse>> {
+        log.debug(`create new analyse: ${JSON.stringify(analyse)}`);
+        return axios.post<Response<Analyse>>(`/analyse`, analyse);
+    }
 }

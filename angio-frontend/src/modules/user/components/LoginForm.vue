@@ -20,7 +20,6 @@
                                 type="text"
                                 name="username"
                                 prepend-inner-icon="person"
-                                counter
                                 maxlength="120"
                                 browser-autocomplete="off"
                                 outline
@@ -36,7 +35,6 @@
                                 id="password"
                                 name="password"
                                 prepend-inner-icon="lock"
-                                counter
                                 maxlength="120"
                                 outline
                                 required

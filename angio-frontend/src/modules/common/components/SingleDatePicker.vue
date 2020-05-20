@@ -10,14 +10,17 @@
     >
         <template v-slot:activator="{ on }">
             <v-text-field
+                    v-on="on"
                     v-model="formattedDate"
                     v-bind:label="label"
                     v-bind:placeholder="$t('common.component.singleDatePicker.placeholder')"
-                    v-on="on"
+                    v-bind:required="required"
+                    v-bind:rules="rules"
+                    v-bind:disabled="disabled"
+                    v-bind:hide-details="hideDetails"
+                    v-bind:clearable="clearable"
                     prepend-inner-icon="event"
                     readonly
-                    clearable
-                    hide-details
                     outline
             ></v-text-field>
         </template>
@@ -34,8 +37,8 @@
                 {{ $t('common.component.singleDatePicker.button.cancel') }}
             </v-btn>
             <v-btn
-                    v-bind:disabled="!dateString"
                     v-on:click="$refs.dialog.save(dateString)"
+                    v-bind:disabled="!dateString"
                     color="success"
                     round
                     flat
@@ -47,7 +50,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Model, Prop, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Model, Prop, Vue} from 'vue-property-decorator';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
 
     @Component
@@ -58,6 +61,21 @@
 
         @Prop()
         public readonly label!: string;
+
+        @Prop({default: false})
+        public readonly required!: boolean;
+
+        @Prop({default: false})
+        public readonly hideDetails!: boolean;
+
+        @Prop({default: true})
+        public readonly clearable!: boolean;
+
+        @Prop({default: () => []})
+        public readonly rules!: any[];
+
+        @Prop({default: false})
+        public readonly disabled!: boolean;
 
         @Model(CommonEvent.CHANGE)
         public readonly date?: Date;

@@ -36,7 +36,6 @@
                         type="password"
                         name="password"
                         prepend-inner-icon="lock"
-                        counter
                         maxlength="120"
                         outline
                         required
@@ -52,7 +51,6 @@
                         type="password"
                         name="password"
                         prepend-inner-icon="lock"
-                        counter
                         maxlength="120"
                         outline
                         required

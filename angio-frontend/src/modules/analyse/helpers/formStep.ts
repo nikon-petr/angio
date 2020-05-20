@@ -1,0 +1,10 @@
+export enum FormStepAnalyseType {
+    GEOMETRIC = 'GEOMETRIC',
+    PROFILE = 'PROFILE'
+}
+
+export enum FormStepAnalyseParameter {
+    TORTUOSITY_AND_BRANCHING = 'TORTUOSITY_AND_BRANCHING',
+    ISCHEMIA_AND_MACULA = 'ISCHEMIA_AND_MACULA',
+    DENSITY = 'DENSITY'
+}
