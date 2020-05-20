@@ -635,6 +635,9 @@
       "analyseList": {
         "title": "Поиск анализов",
         "subheader": "Список анализов"
+      },
+      "analyseNew": {
+        "title": "Новый анализ"
       }
     }
   }

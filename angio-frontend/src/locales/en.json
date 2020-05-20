@@ -635,6 +635,9 @@
       "analyseList": {
         "title": "Search analyses",
         "subheader": "List of analyses"
+      },
+      "analyseNew": {
+        "title": "New analyse"
       }
     }
   }

@@ -13,7 +13,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/analyse/new" ripple v-on="on" active-class="accent--text">
+                        <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/analyse/new" ripple>
                             <v-list-tile-action>
                                 <v-icon>add</v-icon>
                             </v-list-tile-action>
@@ -33,7 +33,13 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/analyse" ripple v-on="on" active-class="accent--text">
+                        <v-list-tile
+                                v-on="on"
+                                v-bind:class="$route.name === 'analyse-list' && 'accent--text'"
+                                to="/analyse"
+                                ripple
+                                active-class=""
+                        >
                             <v-list-tile-action>
                                 <v-icon>search</v-icon>
                             </v-list-tile-action>
@@ -53,7 +59,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/dashboard" ripple v-on="on" active-class="accent--text">
+                        <v-list-tile v-on="on" to="/dashboard" active-class="accent--text" ripple>
                             <v-list-tile-action>
                                 <v-icon>dashboard</v-icon>
                             </v-list-tile-action>
@@ -71,7 +77,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/user" ripple v-on="on" active-class="accent--text">
+                        <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/user" ripple>
                             <v-list-tile-action>
                                 <v-icon>group</v-icon>
                             </v-list-tile-action>
@@ -89,7 +95,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/organization" ripple v-on="on" active-class="accent--text">
+                        <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/organization" ripple>
                             <v-list-tile-action>
                                 <v-icon>domain</v-icon>
                             </v-list-tile-action>
@@ -107,7 +113,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/notification/new" ripple v-on="on" active-class="accent--text">
+                        <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/notification/new" ripple>
                             <v-list-tile-action>
                                 <v-icon>add_alert</v-icon>
                             </v-list-tile-action>
@@ -125,7 +131,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/help" ripple v-on="on" active-class="accent--text">
+                        <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/help" ripple>
                             <v-list-tile-action>
                                 <v-icon>help_outline</v-icon>
                             </v-list-tile-action>
@@ -138,7 +144,7 @@
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
-                        <v-list-tile to="/about" ripple v-on="on" active-class="accent--text">
+                        <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/about" ripple>
                             <v-list-tile-action>
                                 <v-icon>info_outline</v-icon>
                             </v-list-tile-action>
@@ -166,6 +172,8 @@
         components: {PreAuthorize}
     })
     export default class TheDrawer extends Vue {
+
+        public readonly ACTIVE_CLASS = 'accent--text';
 
         public readonly dashboardPermissions: UserPermission[] = [
             UserPermission.USER_VIEW,
