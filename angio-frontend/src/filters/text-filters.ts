@@ -4,6 +4,10 @@
  * @param length length to truncate
  * @param ending string to place in the end
  */
+import FullName from "@/modules/common/models/fullName";
+import StringUtils from "@/utils/stringUtils";
+import i18nHelper from "@/modules/common/helpers/i18nHelper";
+
 export function truncate(value: string, length: number, ending: string = '...'): string | undefined {
     if (!value) {
         return;
@@ -31,4 +35,28 @@ export function placeholder(value: string, placeholderStr: string) {
  */
 export function round(value: number): string {
     return (Math.round(value * 100) / 100).toString();
+}
+
+/**
+ * Format full name.
+ * @param fullName object
+ */
+export function fullName(fullName: FullName): string {
+    return StringUtils.fullName(fullName);
+}
+
+/**
+ * Format compact full name.
+ * @param fullName object
+ */
+export function compactFullName(fullName: FullName): string {
+    return StringUtils.compactFullName(fullName);
+}
+
+/**
+ * Format boolean to yes/no.
+ * @param value boolean value
+ */
+export function formatBoolean(value: boolean): string {
+    return i18nHelper.formatBoolean(value);
 }

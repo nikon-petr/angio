@@ -11,7 +11,6 @@ import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
-import com.angio.angiobackend.api.user.dto.UserShortItemDto;
 import com.angio.angiobackend.api.user.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +26,7 @@ public interface UserService {
 
     List<NewUserDto> createUsers(List<NewUserDto> dtos);
 
-    Page<UserShortItemDto> filterUsersByQueryString(
+    Page<UserDetailsDto> filterUsersByQueryString(
             String search,
             Boolean enabled,
             Boolean locked,

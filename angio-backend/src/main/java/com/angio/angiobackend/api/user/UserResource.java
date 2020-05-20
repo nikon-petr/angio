@@ -11,7 +11,6 @@ import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
-import com.angio.angiobackend.api.user.dto.UserShortItemDto;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.api.user.validation.group.EnableUser;
 import io.swagger.annotations.Api;
@@ -59,7 +58,7 @@ public class UserResource {
             @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
                     value = "format: property,asc|desc")})
     @GetMapping
-    public Page<UserShortItemDto> filterUsers(
+    public Page<UserDetailsDto> filterUsers(
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "enabled", required = false) Boolean enabled,
             @RequestParam(value = "locked", required = false) Boolean locked,

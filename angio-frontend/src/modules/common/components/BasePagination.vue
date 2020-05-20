@@ -18,7 +18,7 @@
     import Pagination from '@/modules/common/helpers/pagination';
 
     @Component
-    export default class AnalyseListPagination extends Vue {
+    export default class BasePagination extends Vue {
 
         @Prop()
         public readonly page!: number;

@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PermissionMapper {
 
@@ -16,4 +18,6 @@ public interface PermissionMapper {
     default String toString(Permission entity) {
         return entity.getName();
     }
+
+    List<PermissionDto> toPermissionDto(List<Permission> permissions);
 }

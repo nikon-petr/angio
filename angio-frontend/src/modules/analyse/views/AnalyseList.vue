@@ -27,12 +27,12 @@
         </v-flex>
 
         <v-flex xs12>
-            <AnalyseListPagination
+            <BasePagination
                     v-bind:page.sync="page"
                     v-bind:rows-per-page="rowsPerPage"
                     v-bind:total-items="totalItems"
                     v-bind:disabled="false"
-            ></AnalyseListPagination>
+            ></BasePagination>
         </v-flex>
     </StackLayout>
 </template>
@@ -50,11 +50,11 @@
     import {AnalyseApiService} from '@/modules/analyse/services/analyseApiService';
     import {UserGetter} from '@/modules/user/store/userStore';
     import {Dictionary} from 'vue-router/types/router';
-    import AnalyseListPagination from '@/modules/analyse/components/AnalyseListPagination.vue';
-    import {Subject, SubjectName} from "@/modules/notification/store/notificationState";
+    import BasePagination from '@/modules/common/components/BasePagination.vue';
+    import {Subject, SubjectName} from '@/modules/notification/store/notificationState';
 
     @Component({
-        components: {AnalyseListPagination, StackLayout, AnalyseListTable, BaseSubheader, AnalyseListFilter},
+        components: {BasePagination, StackLayout, AnalyseListTable, BaseSubheader, AnalyseListFilter},
     })
     export default class AnalyseList extends Vue {
 

@@ -1,0 +1,196 @@
+<template>
+    <StackLayout>
+        <v-flex xs10 align-self-center>
+            <BaseSubheader
+                    v-bind:value="$t('user.view.userManager.subheader')"
+            ></BaseSubheader>
+        </v-flex>
+        <v-flex xs2 class="text-xs-right" pr-1>
+            <AddUserFrom
+                    ref="addUserForm"
+                    v-bind:roles-dictionary="rolesDictionary"
+                    v-bind:organizations-dictionary="organizationsDictionary"
+                    v-bind:owned-roles-to-manage="currentUser && currentUser.ownedRolesToManage"
+            ></AddUserFrom>
+            <v-btn
+                    v-on:click="openAddUserForm"
+                    color="success"
+                    small
+                    dark
+                    fab
+            >
+                <v-icon dark>add</v-icon>
+            </v-btn>
+        </v-flex>
+
+        <v-flex xs12>
+            <UserListFilter
+                    v-on:submit="fetchFilteredUsers"
+                    v-bind.sync="filter"
+                    v-bind:fetching="usersFetching"
+                    v-bind:organizations-dictionary="organizationsDictionary"
+                    v-bind:organizations-fetch="dictionaryFetching"
+            ></UserListFilter>
+        </v-flex>
+
+        <v-flex xs12>
+            <UserListTable
+                    v-bind:lock-user="lockUser"
+                    v-bind:users="users"
+                    v-bind:sort.sync="sort"
+                    v-bind:total-items="totalItems"
+                    v-bind:search="filter.search"
+                    v-bind:roles-dictionary="rolesDictionary"
+                    v-bind:owned-roles-to-manage="currentUser && currentUser.ownedRolesToManage"
+            ></UserListTable>
+        </v-flex>
+
+        <v-flex xs12>
+            <BasePagination
+                    v-bind:page.sync="page"
+                    v-bind:rows-per-page="rowsPerPage"
+                    v-bind:total-items="totalItems"
+            ></BasePagination>
+        </v-flex>
+    </StackLayout>
+</template>
+
+<script lang="ts">
+    import {State} from 'vuex-class';
+    import {Component, Vue, Prop, Watch, Ref} from 'vue-property-decorator';
+    import StackLayout from '@/modules/common/components/StackLayout.vue';
+    import BaseSubheader from '@/modules/common/components/BaseSubheader.vue';
+    import UserListFilter from '@/modules/user/components/UserListFilter.vue';
+    import {Organization} from '@/modules/organization/models/organization';
+    import {OrganizationApiService} from '@/modules/organization/services/organizationApiService';
+    import {Role, UserDetailsModel, UserFilterModel} from '@/modules/user/models/user';
+    import {UserApiService} from '@/modules/user/services/userApiService';
+    import UserListTable from '@/modules/user/components/UserListTable.vue';
+    import BasePagination from '@/modules/common/components/BasePagination.vue';
+    import AddUserFrom from '@/modules/user/components/AddUserFrom.vue';
+
+    @Component({
+        components: {AddUserFrom, BasePagination, UserListTable, UserListFilter, StackLayout, BaseSubheader}
+    })
+    export default class UserManager extends Vue {
+
+        public static readonly ROWS_PER_PAGE = 10;
+
+        @Ref('addUserForm')
+        public addUserForm!: AddUserFrom;
+
+        @State((state) => state.user.info.id)
+        public currentUserId!: string;
+
+        // begin dicts
+        public currentUser!: UserDetailsModel;
+
+        public rolesDictionary!: Role[];
+
+        public organizationsDictionary: Organization[] = [];
+
+        public dictionaryFetching: boolean = false;
+        // end dicts
+
+        public filter!: UserFilterModel;
+
+
+        public users: UserDetailsModel[] = [];
+
+        public usersFetching: boolean = false;
+
+        public sort?: string;
+
+        public page: number = 1;
+
+        public rowsPerPage: number = UserManager.ROWS_PER_PAGE;
+
+        public totalItems: number = 0;
+
+        @Watch('page')
+        public onPaginationChange() {
+            this.fetchFilteredUsers()
+        }
+
+        @Watch('sort')
+        public onSortChange() {
+            this.fetchFilteredUsers()
+        }
+
+        public fetchFilteredUsers() {
+            this.usersFetching = true;
+            UserApiService.getUserFilter(this.filter, this.rowsPerPage, this.page - 1, this.sort)
+                .then(response => {
+                    this.users = response.data.data.content;
+                    this.totalItems = response.data.data.totalElements;
+                })
+                .catch(error => {
+                    this.$logger.error(error);
+                })
+                .finally(() => this.usersFetching = false)
+
+        }
+
+        public openAddUserForm() {
+            // @ts-ignore
+            this.addUserForm.open();
+        }
+
+        public async fetchDictionaries() {
+            this.dictionaryFetching = true;
+            await OrganizationApiService.getOrganizationsFilter(Number.MAX_SAFE_INTEGER)
+                .then(response => {
+                    this.organizationsDictionary = response.data.data.content
+                })
+                .catch(error => this.$logger.error(error));
+            await UserApiService.getAllRoles()
+                .then(response => {
+                    this.rolesDictionary = response.data.data
+                })
+                .catch(error => this.$logger.debug(error));
+            await UserApiService.getUserById(this.currentUserId)
+                .then(response => {
+                    this.currentUser = response.data.data
+                })
+                .catch(error => this.$logger.debug(error));
+        }
+
+        public lockUser(userId: string, locked: boolean) {
+            return new Promise(async (resolve, reject) => {
+                await UserApiService.postLocked(userId, locked)
+                    .then(response => {
+                        let user = this.users.find(user => user && user.id == userId);
+                        if (user) {
+                            user.locked = response.data.data.locked;
+                        }
+                        resolve();
+                    })
+                    .catch(error => {
+                        this.$logger.error(error);
+                        reject();
+                    })
+            });
+        }
+
+        public data() {
+            return {
+                currentUser: undefined,
+                rolesDictionary: undefined,
+                organizationsDictionary: undefined,
+                filter: {
+                    search: undefined,
+                    enabled: undefined,
+                    locked: undefined,
+                    organizationId: undefined
+                },
+                sort: undefined
+            }
+        }
+
+        public mounted() {
+            this.fetchFilteredUsers();
+            this.fetchDictionaries()
+                .finally(() => this.dictionaryFetching = false);
+        }
+    }
+</script>

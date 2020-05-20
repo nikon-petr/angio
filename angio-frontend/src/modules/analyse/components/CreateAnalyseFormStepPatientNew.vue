@@ -76,7 +76,6 @@
 <script lang="ts">
     import {Component, Emit, Vue, Watch} from 'vue-property-decorator';
     import {Patient} from '@/modules/patient/models/patient';
-    import AnalyseListPagination from '@/modules/analyse/components/AnalyseListPagination.vue';
     import {Locale} from '@/modules/user/store/userState';
     import {State} from 'vuex-class';
     import SingleDatePicker from '@/modules/common/components/SingleDatePicker.vue';
@@ -84,7 +83,7 @@
     import EventWithValidation from '@/modules/common/models/eventWithValidation';
 
     @Component({
-        components: {AnalyseListPagination, SingleDatePicker}
+        components: {SingleDatePicker}
     })
     export default class CreateAnalyseFormStepPatient extends Vue {
 

@@ -2,7 +2,7 @@
     <div>
         <v-data-table
                 v-bind:headers="adoptedHeaders"
-                v-bind:items="analysePageContent"
+                v-bind:items="users"
                 v-bind:expand="expand"
                 v-bind:pagination.sync="pagination"
                 v-bind:total-items="totalItems"
@@ -61,12 +61,12 @@
                     </td>
                     <td v-if="!$vuetify.breakpoint.smAndDown" class="text-xs-left" >
                         <text-highlight v-bind:queries="searchForHighlight">
-                            {{ compactName(props.item.patient.fullName) }}
+                            {{ props.item.patient.fullName | compactFullName() }}
                         </text-highlight>
                     </td>
                     <td v-if="!$vuetify.breakpoint.mdAndDown" class="text-xs-left" >
                         <text-highlight v-bind:queries="searchForHighlight">
-                            {{ compactName(props.item.diagnostician) }}
+                            {{ props.item.diagnostician | compactFullName() }}
                         </text-highlight>
                     </td>
                     <td class="text-xs-center">
@@ -84,7 +84,6 @@
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
     import {SortingDirection} from '@/modules/common/models/page';
     import AnalyseItem, {AnalyseStatusType} from '@/modules/analyse/models/analyse';
-    import FullName from '@/modules/common/models/fullName';
     import {UserPermission} from '@/modules/user/store/userState';
     import AnalyseListTablePreview from '@/modules/analyse/components/AnalyseListTablePreview.vue';
     import Pagination from '@/modules/common/helpers/pagination';
@@ -192,12 +191,6 @@
         @Emit('update:sort')
         public updatePagination(sort: string | undefined) {
             return sort;
-        }
-
-        public compactName(name: FullName): string {
-            const firstname: string = name.firstname ? name.firstname.substr(0, 1) : '';
-            const patronymic: string = name.patronymic ? name.patronymic.substr(0, 1) : '';
-            return `${name.lastname}\u00A0${firstname}.${patronymic}.`;
         }
 
         public mapSortingForApi(sortBy: string | null, descending: boolean | null): string | undefined {
