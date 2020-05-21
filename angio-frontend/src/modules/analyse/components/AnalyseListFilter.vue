@@ -21,7 +21,7 @@
                             origin="center center"
                             transition="scale-transition"
                             nudge-right="104"
-                            nudge-bottom="96"
+                            nudge-bottom="119"
                             offset-y
                             offset-x
                             bottom
