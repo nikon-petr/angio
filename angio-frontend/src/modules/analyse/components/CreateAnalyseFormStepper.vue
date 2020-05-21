@@ -1,6 +1,7 @@
 <template>
     <v-stepper
             v-model="stepCounter"
+            style="webkit-box-shadow: 0px 0px 0px 0px; box-shadow: 0px 0px 0px 0px;"
             vertical
     >
         <v-stepper-step
