@@ -21,6 +21,7 @@
                             v-on:open-role-editor="openRoleEditor"
                             v-bind:lock-user="lockUser"
                             v-bind:user="props.item"
+                            v-bind:show-editor-buttons="showEditorButtons"
                     ></UserListTableDetails>
                 </div>
             </template>
@@ -77,6 +78,9 @@
 
         @Ref('roleEditorForm')
         public roleEditorForm!: RoleEditorForm;
+
+        @Prop()
+        public readonly showEditorButtons!: boolean;
 
         @Prop()
         public rolesDictionary!: Role[];

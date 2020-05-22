@@ -37,7 +37,7 @@
     "vue-pure-lightbox": "^2.1.8",
     "vue-router": "^3.0.1",
     "vue-text-highlight": "^2.0.6",
-    "vuetify": "^1.5.5",
+    "vuetify": "^1.5.24",
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.2"
   },

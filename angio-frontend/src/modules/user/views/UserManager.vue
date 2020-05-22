@@ -4,7 +4,7 @@
             <BaseSubheader
                     v-on:append-button-click="openAddUserForm"
                     v-bind:value="$t('user.view.userManager.subheader')"
-                    v-bind:is-button-enabled="true"
+                    v-bind:is-button-enabled="hasPermissions(['USER_CREATE'])"
             ></BaseSubheader>
         </v-flex>
 
@@ -27,6 +27,7 @@
                     v-bind:search="filter.search"
                     v-bind:roles-dictionary="rolesDictionary"
                     v-bind:owned-roles-to-manage="currentUser && currentUser.ownedRolesToManage"
+                    v-bind:show-editor-buttons="hasPermissions(['USER_EDIT'])"
             ></UserListTable>
         </v-flex>
 
@@ -50,7 +51,7 @@
 </template>
 
 <script lang="ts">
-    import {State} from 'vuex-class';
+    import {Getter, State} from 'vuex-class';
     import {Component, Vue, Prop, Watch, Ref} from 'vue-property-decorator';
     import StackLayout from '@/modules/common/components/StackLayout.vue';
     import BaseSubheader from '@/modules/common/components/BaseSubheader.vue';
@@ -62,6 +63,8 @@
     import UserListTable from '@/modules/user/components/UserListTable.vue';
     import BasePagination from '@/modules/common/components/BasePagination.vue';
     import AddUserFrom from '@/modules/user/components/AddUserFrom.vue';
+    import {UserPermission} from '@/modules/user/store/userState';
+    import {UserGetter} from '@/modules/user/store/userStore';
 
     @Component({
         components: {AddUserFrom, BasePagination, UserListTable, UserListFilter, StackLayout, BaseSubheader}
@@ -75,6 +78,9 @@
 
         @State((state) => state.user.info.id)
         public currentUserId!: string;
+
+        @Getter(UserGetter.HAS_PERMISSIONS)
+        public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;
 
         // begin dicts
         public currentUser!: UserDetailsModel;

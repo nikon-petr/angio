@@ -58,6 +58,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -65,6 +66,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @AllArgsConstructor
@@ -154,6 +156,9 @@ public class UserServiceImpl implements UserService {
                             .setLocked(false)
                             .setRoles(newUserRoles.stream()
                                     .filter(role -> dto.getRoleIds().contains(role.getId()))
+                                    .collect(Collectors.toSet()))
+                            .setOwnedRolesToManage(newUserRoles.stream()
+                                    .filter(role -> dto.getOwnedRoleToManageIds().contains(role.getId()))
                                     .collect(Collectors.toSet()))
                             .setOrganization(newUserOrganizations.stream()
                                     .filter(organization -> organization.getId().equals(dto.getOrganizationId()))
@@ -529,14 +534,19 @@ public class UserServiceImpl implements UserService {
     }
 
     private List<Role> findRolesForUsers(List<NewUserDto> dtos) {
-        List<Long> rolesIds = dtos.stream()
-                .flatMap(dto -> dto.getRoleIds().stream())
+        Stream<Long> rolesIds = dtos.stream()
+                .map(NewUserDto::getRoleIds)
+                .flatMap(Collection::stream);
+        Stream<Long> ownedRolesIds = dtos.stream()
+                .map(NewUserDto::getOwnedRoleToManageIds)
+                .flatMap(Collection::stream);
+        List<Long> allRolesIds = Stream.concat(rolesIds, ownedRolesIds)
                 .distinct()
                 .collect(Collectors.toList());
-        List<Role> roles = roleRepository.findAllById(rolesIds);
+        List<Role> roles = roleRepository.findAllById(allRolesIds);
 
-        if (rolesIds.size() != roles.size()) {
-            rolesIds.removeAll(roles.stream().map(Role::getId).collect(Collectors.toList()));
+        if (allRolesIds.size() != roles.size()) {
+            allRolesIds.removeAll(roles.stream().map(Role::getId).collect(Collectors.toList()));
             throw new OperationException(
                     msa.getMessage("errors.api.user.rolesForUserNotFound", new Object[]{rolesIds}));
         }

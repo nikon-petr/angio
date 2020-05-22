@@ -462,6 +462,38 @@
           "NoChanges": "Role list is not changed"
         },
         "error": "An error occurred while editing user role list"
+      },
+      "addUserFrom": {
+        "title": "Add users",
+        "cancel": "Cancel",
+        "submit": "Save",
+        "add": "Add user",
+        "email": {
+          "field": "E-mail",
+          "validation": {
+            "NotEmpty": "Email should not be empty",
+            "Unique": "Email should be unique"
+          }
+        },
+        "organization": {
+          "field": "Organization",
+          "validation": {
+            "NotEmpty": "Organization should not be empty"
+          }
+        },
+        "roles": {
+          "field": "User roles",
+          "NotEmpty": "Role list can not be empty"
+        },
+        "ownedRoles": {
+          "field": "Roles to manage"
+        }
+      },
+      "addUserFormTableDetails": {
+        "field": {
+          "roles": "User role:  | User roles: ",
+          "ownedRolesToManage": "User owned role:  | User owned roles: "
+        }
       }
     },
     "view": {

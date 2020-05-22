@@ -34,4 +34,7 @@ public class NewUserDto {
     @Size(min = 1)
     @ApiModelProperty(name = "User's role ids")
     private Set<Long> roleIds;
+
+    @ApiModelProperty(name = "User owned roles to manage")
+    private Set<Long> ownedRoleToManageIds;
 }
