@@ -844,5 +844,36 @@
         "title": "New analyse"
       }
     }
+  },
+  "organization": {
+    "component": {
+      "organizationListTable": {
+        "table": {
+          "searchField": "Search",
+          "noDataText": "No organizations found",
+          "headers": {
+            "id": "Id",
+            "name": "Name of organization"
+          }
+        }
+      },
+      "createOrganizationForm": {
+        "title": "Organization creation",
+        "cancel": "Cancel",
+        "submit": "Create",
+        "name": {
+          "field": "Name of organization",
+          "validation": {
+            "NotEmpty": "Name of organization should not be empty"
+          }
+        },
+        "error": "An error occurred while creating the organization"
+      }
+    },
+    "view": {
+      "organizationList": {
+        "title": "List of organizations"
+      }
+    }
   }
 }

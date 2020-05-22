@@ -6,8 +6,8 @@
 
         <v-flex xs2 class="text-xs-right" pr-1>
             <v-btn
-                    v-if="isButtonAddEnabled"
-                    v-on:click="onButtonAddClick"
+                    v-if="isButtonEnabled"
+                    v-on:click="onButtonClick"
                     v-bind:color="color"
                     fab
                     small
@@ -28,7 +28,7 @@
         public readonly value!: string;
 
         @Prop({default: false})
-        public readonly isButtonAddEnabled!: boolean;
+        public readonly isButtonEnabled!: boolean;
 
         @Prop({default: 'accent'})
         public readonly color!: string;
@@ -37,7 +37,7 @@
         public readonly icon!: string;
 
         @Emit('append-button-click')
-        public onButtonAddClick() {
+        public onButtonClick() {
 
         }
     }
