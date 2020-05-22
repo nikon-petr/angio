@@ -12,7 +12,7 @@
                     fab
                     small
             >
-                <v-icon dark>{{ icon }}</v-icon>
+                <v-icon>{{ icon }}</v-icon>
             </v-btn>
         </v-flex>
     </v-layout>

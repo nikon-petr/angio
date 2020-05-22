@@ -2,7 +2,7 @@
     <v-dialog
             v-bind:value="open"
             v-bind:style="{ zIndex: 300 }"
-            v-bind:max-width="450"
+            v-bind:max-width="maxWidth"
             persistent
     >
         <v-card class="elevation-12 pa-3">
@@ -34,5 +34,8 @@
 
         @Prop()
         public readonly open!: boolean;
+
+        @Prop({default: 450})
+        public readonly maxWidth!: number;
     }
 </script>

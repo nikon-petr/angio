@@ -23,8 +23,9 @@ export interface UserSettingsModel extends UserSettings {
 
 export interface NewUserModel{
     email: string;
-    organizationName: string;
-    roleIds: number[]
+    organizationId?: string;
+    roleIds: number[];
+    ownedRoleToManageIds?: number[];
 }
 
 export interface UserCredentialsModel {

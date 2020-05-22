@@ -34,17 +34,31 @@
                             <div>
                                 <span class="font-weight-medium text--secondary">
                                     {{ $tc('user.component.userListTableDetails.field.roles', user.roles.length) }}
-                                </span>{{ formatRoles(user.roles) }}
+                                </span>
+                                <v-chip
+                                        v-for="role in user.roles"
+                                        v-bind:key="role.id"
+                                        small
+                                >
+                                    {{ role.description }}
+                                </v-chip>
                             </div>
                             <div>
                                 <span class="font-weight-medium text--secondary">
                                     {{ $tc('user.component.userListTableDetails.field.ownedRolesToManage', user.roles.length) }}
-                                </span>{{ formatRoles(user.ownedRolesToManage) }}
+                                </span>
+                                <v-chip
+                                        v-for="role in user.ownedRolesToManage"
+                                        v-bind:key="role.id"
+                                        small
+                                >
+                                    {{ role.description }}
+                                </v-chip>
                             </div>
                         </div>
                     </v-layout>
                 </v-flex>
-                <v-flex xs12>
+                <v-flex xs12 v-if="showEditorButtons">
                     <v-divider class="pb-1"></v-divider>
                     <LockUserButton
                             v-bind:lock-user="lockUser"
@@ -79,6 +93,9 @@
     export default class UserListTableDetails extends Vue {
 
         @Prop()
+        public readonly showEditorButtons!: boolean;
+
+        @Prop()
         public readonly lockUser!: (id: string, locked: boolean) => Promise<void>;
 
         @Prop()
@@ -87,10 +104,6 @@
         @Emit('open-role-editor')
         public openRoleEditor() {
             return this.user;
-        }
-
-        public formatRoles(roles: Role[]): string {
-            return roles.map(role => role.description).join(', ');
         }
     }
 </script>
