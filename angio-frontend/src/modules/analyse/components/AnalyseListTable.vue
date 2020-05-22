@@ -2,7 +2,7 @@
     <div>
         <v-data-table
                 v-bind:headers="adoptedHeaders"
-                v-bind:items="users"
+                v-bind:items="analysePageContent"
                 v-bind:expand="expand"
                 v-bind:pagination.sync="pagination"
                 v-bind:total-items="totalItems"
