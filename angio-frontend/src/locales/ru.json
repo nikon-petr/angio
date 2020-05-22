@@ -844,5 +844,36 @@
         "title": "Новый анализ"
       }
     }
+  },
+  "organization": {
+    "component": {
+      "organizationListTable": {
+        "table": {
+          "searchField": "Поиск",
+          "noDataText": "Организации не найдены",
+          "headers": {
+            "id": "Номер",
+            "name": "Наименование организации"
+          }
+        }
+      },
+      "createOrganizationForm": {
+        "title": "Создание организации",
+        "cancel": "Отмена",
+        "submit": "Создать",
+        "name": {
+          "field": "Наименование организации",
+          "validation": {
+            "NotEmpty": "Наименование организации не должно быть пустым"
+          }
+        },
+        "error": "Возникла ошибка при создании организации"
+      }
+    },
+    "view": {
+      "organizationList": {
+        "title": "Список организаций"
+      }
+    }
   }
 }

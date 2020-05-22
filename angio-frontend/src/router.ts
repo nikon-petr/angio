@@ -9,6 +9,7 @@ import NotFound from '@/modules/common/views/404.vue';
 import ServerError from '@/modules/common/views/500.vue';
 import About from '@/modules/common/views/About.vue';
 import {analyseRouterConfig} from '@/modules/analyse/analyseRouter';
+import {organizationRouteConfig} from '@/modules/organization/organizationRoute';
 import {UserGetter} from '@/modules/user/store/userStore';
 import {UserPermission} from '@/modules/user/store/userState';
 import Landing from '@/modules/common/views/Landing.vue';
@@ -26,7 +27,7 @@ let rootRouterConfig: RouteConfig[] = [
     {path: '*', redirect: '/404', meta: {auth: AuthPredicate.permitAll()}},
 ];
 
-rootRouterConfig = rootRouterConfig.concat(userRouterConfig, analyseRouterConfig);
+rootRouterConfig = rootRouterConfig.concat(userRouterConfig, analyseRouterConfig, organizationRouteConfig);
 
 const rootRouter: Router = new Router({
     mode: 'history',

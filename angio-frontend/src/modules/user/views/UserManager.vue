@@ -1,26 +1,11 @@
 <template>
     <StackLayout>
-        <v-flex xs10 align-self-center>
+        <v-flex xs12>
             <BaseSubheader
+                    v-on:append-button-click="openAddUserForm"
                     v-bind:value="$t('user.view.userManager.subheader')"
+                    v-bind:is-button-enabled="true"
             ></BaseSubheader>
-        </v-flex>
-        <v-flex xs2 class="text-xs-right" pr-1>
-            <AddUserFrom
-                    ref="addUserForm"
-                    v-bind:roles-dictionary="rolesDictionary"
-                    v-bind:organizations-dictionary="organizationsDictionary"
-                    v-bind:owned-roles-to-manage="currentUser && currentUser.ownedRolesToManage"
-            ></AddUserFrom>
-            <v-btn
-                    v-on:click="openAddUserForm"
-                    color="success"
-                    small
-                    dark
-                    fab
-            >
-                <v-icon dark>add</v-icon>
-            </v-btn>
         </v-flex>
 
         <v-flex xs12>
@@ -51,6 +36,15 @@
                     v-bind:rows-per-page="rowsPerPage"
                     v-bind:total-items="totalItems"
             ></BasePagination>
+        </v-flex>
+
+        <v-flex xs12>
+            <AddUserFrom
+                    ref="addUserForm"
+                    v-bind:roles-dictionary="rolesDictionary"
+                    v-bind:organizations-dictionary="organizationsDictionary"
+                    v-bind:owned-roles-to-manage="currentUser && currentUser.ownedRolesToManage"
+            ></AddUserFrom>
         </v-flex>
     </StackLayout>
 </template>
