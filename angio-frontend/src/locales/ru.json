@@ -125,13 +125,13 @@
             "name": "Организации",
             "tooltip": "Организации"
           },
+          "roles": {
+            "name": "Роли",
+            "tooltip": "Роли"
+          },
           "newNotification": {
             "name": "Отправть уведомление",
             "tooltip": "Отправть новое уведомление"
-          },
-          "help": {
-            "name": "Справка",
-            "tooltip": "Справка"
           },
           "about": {
             "name": "О приложении",
@@ -142,11 +142,6 @@
       "theHeader": {
       },
       "theFooter": {
-        "button": {
-          "home": "На главную",
-          "about": "О приложении",
-          "help": "Справка"
-        }
       },
       "singleDatePicker": {
         "placeholder": "дд.мм.гггг",

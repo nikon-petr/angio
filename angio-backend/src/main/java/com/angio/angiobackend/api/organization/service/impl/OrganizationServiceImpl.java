@@ -2,6 +2,7 @@ package com.angio.angiobackend.api.organization.service.impl;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
+import com.angio.angiobackend.api.organization.dto.OrganizationLockedDto;
 import com.angio.angiobackend.api.organization.dto.OrganizationDto;
 import com.angio.angiobackend.api.organization.entity.Organization;
 import com.angio.angiobackend.api.organization.mapper.OrganizationMapper;
@@ -17,6 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @AllArgsConstructor
@@ -66,5 +69,24 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         log.debug("filterPatientsByQueryString() - map and return patient page");
         return patientEntityPage.map(organizationMapper::toDto);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('ORGANIZATION_EDIT')")
+    public OrganizationDto changeOrganizationLocked(@NotNull Long id, @NotNull OrganizationLockedDto dto) {
+
+        log.debug("changeOrganizationLocked() - start, id: {}", id);
+        Organization organization = organizationRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                msa.getMessage("errors.api.organization.notFound", new Object[] {id})));
+
+        log.debug("changeOrganizationLocked() - change and save locked: {}", dto.getLocked());
+        organization.setLocked(dto.getLocked());
+        organization = organizationRepository.save(organization);
+
+        log.debug("changeOrganizationLocked() - end");
+        return organizationMapper.toDto(organization);
     }
 }

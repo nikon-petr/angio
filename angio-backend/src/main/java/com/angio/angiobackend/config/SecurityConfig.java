@@ -4,8 +4,10 @@ import static com.angio.angiobackend.config.SwaggerConfig.SWAGGER_SERVICE_PATHS;
 import static java.lang.String.format;
 
 import com.angio.angiobackend.AngioBackendProperties;
+import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.user.service.UserService;
 import com.angio.angiobackend.config.security.AngioAuthProvider;
+import com.angio.angiobackend.config.security.AngioPreAuthenticationChecks;
 import com.angio.angiobackend.init.Permissions;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,10 +39,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final UserService userService;
     private final AngioBackendProperties props;
+    private final DynamicLocaleMessageSourceAccessor msa;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(new AngioAuthProvider(userService));
+        AngioAuthProvider provider = new AngioAuthProvider(userService);
+        provider.setMsa(msa);
+        provider.setPreAuthenticationChecks(new AngioPreAuthenticationChecks(msa));
+        auth.authenticationProvider(provider);
     }
 
     @Bean

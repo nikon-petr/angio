@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.organization;
 
+import com.angio.angiobackend.api.organization.dto.OrganizationLockedDto;
 import com.angio.angiobackend.api.organization.dto.OrganizationDto;
 import com.angio.angiobackend.api.organization.service.OrganizationService;
 import io.swagger.annotations.Api;
@@ -16,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,5 +55,11 @@ public class OrganizationResource {
     @GetMapping("/{id}")
     public OrganizationDto getOrganizationById(@PathVariable Long id) {
         return organizationService.getOrganizationId(id);
+    }
+
+    @ApiModelProperty("Change organization locked property")
+    @PostMapping("/{id}/locked")
+    public OrganizationDto changeOrganizationLocked(@PathVariable Long id, @RequestBody @Validated OrganizationLockedDto dto) {
+        return organizationService.changeOrganizationLocked(id, dto);
     }
 }

@@ -35,6 +35,9 @@ public class Organization {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "locked", nullable = false)
+    private boolean locked;
+
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "organization"

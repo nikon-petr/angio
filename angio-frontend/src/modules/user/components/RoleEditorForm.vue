@@ -93,6 +93,7 @@
             this.reset();
             this.roles = cloneDeep(user.roles);
             this.editedRoleList = cloneDeep(user.roles);
+            this.userId = user.id;
             this.active = true;
         }
 

@@ -11,30 +11,6 @@
                 row
                 wrap
         >
-            <v-btn
-                    to="/"
-                    flat
-                    round
-                    active-class
-            >
-                {{ $t('common.component.theFooter.button.home') }}
-            </v-btn>
-            <v-btn
-                    to="/about"
-                    flat
-                    round
-                    active-class
-            >
-                {{ $t('common.component.theFooter.button.about') }}
-            </v-btn>
-            <v-btn
-                    to="/help"
-                    flat
-                    round
-                    active-class
-            >
-                {{ $t('common.component.theFooter.button.help') }}
-            </v-btn>
             <v-flex
                     py-3
                     text-xs-center

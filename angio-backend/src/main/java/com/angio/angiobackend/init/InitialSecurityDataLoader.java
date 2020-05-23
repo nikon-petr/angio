@@ -128,6 +128,7 @@ public class InitialSecurityDataLoader implements ApplicationListener<ContextRef
             Role newRole = new Role()
                     .setName(role.name())
                     .setDescription(role.getDescription())
+                    .setSystemRole(role.isSystemRole())
                     .setPermissions(new HashSet<>(permissions));
             newRole = roleRepository.save(newRole);
             nullableRole = Optional.of(newRole);

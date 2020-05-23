@@ -142,11 +142,6 @@
       "theHeader": {
       },
       "theFooter": {
-        "button": {
-          "home": "Home",
-          "about": "About",
-          "help": "Help"
-        }
       },
       "singleDatePicker": {
         "placeholder": "dd.mm.yyyy",

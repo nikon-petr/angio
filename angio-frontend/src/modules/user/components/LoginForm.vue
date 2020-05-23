@@ -40,7 +40,7 @@
                                 required
                         ></v-text-field>
                         <BuiltInErrorMessage
-                                v-bind:error-messages="mapErrorMessages"
+                                v-bind:error-messages="errorMessages"
                         ></BuiltInErrorMessage>
                     </v-form>
                 </template>
@@ -105,10 +105,6 @@
             password: '',
         };
 
-        get mapErrorMessages() {
-            return this.errorMessages.map(message => this.$t(message))
-        }
-
         @throttle(1000)
         public submitForm() {
             this.errorMessages = [];
@@ -121,8 +117,13 @@
                     }
                 })
                 .catch((error) => {
-                    if (error.response.status == 400 || error.response.status == 401) {
-                        this.errorMessages = ['user.component.loginForm.password.validation.Unauthorized'];
+                    if (error.response.status == 401) {
+                        this.errorMessages = [
+                            this.$t('user.component.loginForm.password.validation.Unauthorized').toString()
+                        ];
+                    }
+                    if (error.response.status == 400) {
+                        this.errorMessages = [error.response.data.error_description]
                     }
                 });
         }
