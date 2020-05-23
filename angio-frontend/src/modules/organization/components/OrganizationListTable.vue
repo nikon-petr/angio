@@ -41,6 +41,14 @@
                                 {{ props.item.name }}
                             </text-highlight>
                         </td>
+                        <td>
+                            <LockButton
+                                    v-bind:lock="lockOrganization"
+                                    v-bind:locked="props.item.locked"
+                                    v-bind:id="props.item.id.toString()"
+                                    object="organization.component.organizationListTable.object"
+                            ></LockButton>
+                        </td>
                     </template>
                 </v-data-table>
             </v-card>
@@ -65,9 +73,10 @@
     import {OrganizationApiService} from '@/modules/organization/services/organizationApiService';
     import BasePagination from '@/modules/common/components/BasePagination.vue';
     import {Organization} from '@/modules/organization/models/organization';
+    import LockButton from '@/modules/common/components/LockButton.vue';
 
     @Component({
-        components: {BasePagination}
+        components: {LockButton, BasePagination}
     })
     export default class OrganizationListTable extends Vue {
 
@@ -90,8 +99,15 @@
                 text: 'organization.component.organizationListTable.table.headers.name',
                 align: 'left',
                 value: 'name',
-                width: '90%',
+                width: '80%',
                 sortable: true
+            },
+            {
+                text: '',
+                align: 'left',
+                value: 'availability',
+                width: '10%',
+                sortable: false
             }
         ];
 
@@ -140,6 +156,25 @@
                 })
                 .catch((error) => this.$logger.error(error))
                 .finally(() => this.fetching = false);
+        }
+
+        public lockOrganization(id: string, locked: boolean) {
+            return new Promise(async (resolve, reject) => {
+                await OrganizationApiService
+                    .lockOrganization(id, locked)
+                    .then(response => {
+                        let organization = this.organizations
+                            .find(o => o && o.id != undefined && o.id.toString() == id);
+                        if (organization) {
+                            organization.locked = response.data.data.locked;
+                        }
+                        resolve();
+                    })
+                    .catch(error => {
+                        this.$logger.error(error);
+                        reject();
+                    })
+            });
         }
 
         public update() {

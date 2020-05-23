@@ -34,7 +34,7 @@ public class OrganizationResource {
 
     @ApiOperation("Create organization")
     @PostMapping
-    public OrganizationDto createOrganization(@Validated OrganizationDto dto) {
+    public OrganizationDto createOrganization(@RequestBody @Validated OrganizationDto dto) {
         return organizationService.create(dto);
     }
 

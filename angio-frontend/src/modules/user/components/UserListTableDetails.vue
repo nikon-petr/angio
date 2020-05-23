@@ -60,11 +60,12 @@
                 </v-flex>
                 <v-flex xs12 v-if="showEditorButtons">
                     <v-divider class="pb-1"></v-divider>
-                    <LockUserButton
-                            v-bind:lock-user="lockUser"
+                    <LockButton
+                            v-bind:lock="lockUser"
                             v-bind:locked="user.locked"
-                            v-bind:user-id="user.id"
-                    ></LockUserButton>
+                            v-bind:id="user.id"
+                            object="user.component.userListTableDetails.object"
+                    ></LockButton>
                     <v-btn
                             v-on:click="openRoleEditor"
                             class="ma-0"
@@ -83,12 +84,12 @@
 
 <script lang="ts">
     import {Component, Vue, Prop, Emit} from 'vue-property-decorator';
-    import {Role, UserDetailsModel} from '@/modules/user/models/user';
-    import LockUserButton from '@/modules/user/components/LockUserButton.vue';
+    import {UserDetailsModel} from '@/modules/user/models/user';
+    import LockButton from '@/modules/common/components/LockButton.vue';
     import RoleEditorForm from '@/modules/user/components/RoleEditorForm.vue';
 
     @Component({
-        components: {RoleEditorForm, LockUserButton}
+        components: {RoleEditorForm, LockButton}
     })
     export default class UserListTableDetails extends Vue {
 
