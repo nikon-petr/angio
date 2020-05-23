@@ -199,6 +199,16 @@
         "imageValidateSizeLabelImageResolutionTooHigh": "Resolution is too high",
         "imageValidateSizeLabelExpectedMinResolution": "Minimum resolution is {minResolution}",
         "imageValidateSizeLabelExpectedMaxResolution": "Maximum resolution is {maxResolution}"
+      },
+      "lockButton": {
+        "lock": {
+          "confirm": {
+            "lockTitle": "Lock {0}",
+            "unlockTitle": "Unlock {0}",
+            "lockText": "Are you sure you want to lock the {0}?",
+            "unlockText": "Are you sure you want to unlock the {0}?"
+          }
+        }
       }
     },
     "validation": {
@@ -436,17 +446,8 @@
           "roles": {
             "name": "Edit roles"
           }
-        }
-      },
-      "lockUserButton": {
-        "lock": {
-          "confirm": {
-            "lockTitle": "Lock user",
-            "unlockTitle": "Unlock user",
-            "lockText": "Are you sure you want to lock the user?",
-            "unlockText": "Are you sure you want to unlock the user?"
-          }
-        }
+        },
+        "object": "user"
       },
       "roleEditorForm": {
         "title": "Edit roles",
@@ -882,7 +883,8 @@
             "id": "Id",
             "name": "Name of organization"
           }
-        }
+        },
+        "object": "organization"
       },
       "createOrganizationForm": {
         "title": "Organization creation",

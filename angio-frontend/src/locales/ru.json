@@ -199,6 +199,16 @@
         "imageValidateSizeLabelImageResolutionTooHigh": "Разрешение слишком высокое",
         "imageValidateSizeLabelExpectedMinResolution": "Минимальное разрешение {minResolution}",
         "imageValidateSizeLabelExpectedMaxResolution": "Максимальное разрешение {maxResolution}"
+      },
+      "lockButton": {
+        "lock": {
+          "confirm": {
+            "lockTitle": "Заблокировать {0}",
+            "unlockTitle": "Разблокировать {0}",
+            "lockText": "Вы действительно хотите заблокировать {0}?",
+            "unlockText": "Вы действительно хотите разблокировать {0}?"
+          }
+        }
       }
     },
     "validation": {
@@ -436,17 +446,8 @@
           "roles": {
             "name": "Редактировать роли"
           }
-        }
-      },
-      "lockUserButton": {
-        "lock": {
-          "confirm": {
-            "lockTitle": "Блокировка пользователя",
-            "unlockTitle": "Разблокировка пользователя",
-            "lockText": "Вы действительно хотите заблокировать этого пользователя?",
-            "unlockText": "Вы действительно хотите разблокировать этого пользователя?"
-          }
-        }
+        },
+        "object": "пользователя"
       },
       "roleEditorForm": {
         "title": "Редактировать роли",
@@ -882,7 +883,8 @@
             "id": "Номер",
             "name": "Наименование организации"
           }
-        }
+        },
+        "object": "организацию"
       },
       "createOrganizationForm": {
         "title": "Создание организации",
