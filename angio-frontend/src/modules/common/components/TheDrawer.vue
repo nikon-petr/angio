@@ -109,6 +109,24 @@
 
             </PreAuthorize>
 
+            <PreAuthorize v-bind:has-permissions="['ROLE_EDIT']">
+
+                <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                        <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/role" ripple>
+                            <v-list-tile-action>
+                                <v-icon>security</v-icon>
+                            </v-list-tile-action>
+
+                            <v-list-tile-title>{{ $t('common.component.theDrawer.link.roles.name') }}
+                            </v-list-tile-title>
+                        </v-list-tile>
+                    </template>
+                    <span>{{ $t('common.component.theDrawer.link.roles.tooltip') }}</span>
+                </v-tooltip>
+
+            </PreAuthorize>
+
             <PreAuthorize v-bind:has-permissions="['PUSH_NOTIFICATION_SEND']">
 
                 <v-tooltip right>
@@ -123,23 +141,6 @@
                         </v-list-tile>
                     </template>
                     <span>{{ $t('common.component.theDrawer.link.newNotification.tooltip') }}</span>
-                </v-tooltip>
-
-            </PreAuthorize>
-
-            <PreAuthorize is-authenticated>
-
-                <v-tooltip right>
-                    <template v-slot:activator="{ on }">
-                        <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/help" ripple>
-                            <v-list-tile-action>
-                                <v-icon>help_outline</v-icon>
-                            </v-list-tile-action>
-
-                            <v-list-tile-title>{{ $t('common.component.theDrawer.link.help.name') }}</v-list-tile-title>
-                        </v-list-tile>
-                    </template>
-                    <span>{{ $t('common.component.theDrawer.link.help.tooltip') }}</span>
                 </v-tooltip>
 
                 <v-tooltip right>

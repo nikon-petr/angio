@@ -18,8 +18,17 @@ export const deleteAxiosAccessToken = () => {
     delete axios.defaults.headers.common.Authorization;
 };
 
+export const setAxiosLocale = (locale: string) => {
+    log.debug(`set axios locale to ${locale}`);
+    axios.defaults.headers.common['Accept-Language'] = `${locale}-${locale.toUpperCase()}`;
+};
+
 if (!!ls.get('accessToken')) {
     setAxiosAccessToken(ls.get('accessToken'));
+}
+
+if (!!ls.get('locale')) {
+    setAxiosLocale(ls.get('locale'));
 }
 
 const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;

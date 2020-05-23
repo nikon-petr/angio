@@ -56,4 +56,8 @@ public interface UserService {
     UserDetailsDto enableUser(UUID id, EnableUserDto enableUser);
 
     UserDetailsDto changeUserLocked(UUID id, UserLockedDto dto);
+
+    UserDetailsDto changeUserRoles(UUID id, List<Long> roleIds);
+
+    UserDetailsDto changeUserOwnedRoles(UUID id, List<Long> roleIds);
 }

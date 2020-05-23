@@ -8,7 +8,12 @@ import {UserApiService} from '@/modules/user/services/userApiService';
 import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageService';
 import {UserAuthModel} from '@/modules/user/models/user';
 import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
-import {cancelAllRequests, deleteAxiosAccessToken, setAxiosAccessToken} from '@/plugins/axios';
+import {
+    cancelAllRequests,
+    deleteAxiosAccessToken,
+    setAxiosAccessToken,
+    setAxiosLocale
+} from '@/plugins/axios';
 import '@/modules/user/interceptors/refreshAccessTokenInterceptor';
 import {NotificationAction} from '@/modules/notification/store/notificationStore';
 
@@ -87,6 +92,7 @@ export const user = {
             state.settings.darkThemeEnabled = userSettings.darkThemeEnabled;
             state.settings.locale = userSettings.locale;
             UserLocalStorageService.persistUserSetting(userSettings);
+            setAxiosLocale(userSettings.locale);
         },
     },
 

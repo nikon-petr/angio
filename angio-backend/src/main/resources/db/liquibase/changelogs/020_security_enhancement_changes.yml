@@ -1,0 +1,28 @@
+databaseChangeLog:
+- changeSet:
+    id: 020
+    author: nikon-petr
+    changes:
+    - addColumn:
+        tableName: roles
+        columns:
+        - column:
+            name: system_role
+            type: BOOLEAN
+    - addColumn:
+        tableName: organizations
+        columns:
+        - column:
+            name: locked
+            type: BOOLEAN
+    - addColumn:
+        tableName: organizations_aud
+        columns:
+        - column:
+            name: locked
+            type: BOOLEAN
+            defaultValueBoolean: false
+    - dropNotNullConstraint:
+        columnDataType: VARCHAR(30)
+        columnName: name
+        tableName: roles

@@ -24,7 +24,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"users", "permissions"})
+@ToString(exclude = {"users", "permissions", "systemRole"})
 @EqualsAndHashCode(exclude = {"id", "users", "permissions"})
 @Entity
 @Table(name = "roles")
@@ -39,6 +39,9 @@ public class Role {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "system_role")
+    private boolean systemRole;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();

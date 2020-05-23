@@ -7,22 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrganizationDto {
-
-    @ApiModelProperty(name = "Organization id")
-    private Long id;
+public class OrganizationLockedDto {
 
     @NotNull
-    @Size(max = 175)
-    @ApiModelProperty(name = "Organization name")
-    private String name;
-
     @ApiModelProperty(name = "Organization locked")
     private Boolean locked;
 }

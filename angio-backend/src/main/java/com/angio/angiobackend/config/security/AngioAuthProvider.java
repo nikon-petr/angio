@@ -1,8 +1,8 @@
 package com.angio.angiobackend.config.security;
 
+import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.service.UserService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +21,7 @@ public class AngioAuthProvider extends AbstractUserDetailsAuthenticationProvider
     private static final String USER_NOT_FOUND_PASSWORD = "userNotFoundPassword";
 
     private final UserService userService;
+    private DynamicLocaleMessageSourceAccessor msa;
     private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private volatile String userNotFoundEncodedPassword;
 
@@ -41,9 +42,7 @@ public class AngioAuthProvider extends AbstractUserDetailsAuthenticationProvider
         if (authentication.getCredentials() == null) {
             log.debug("Authentication failed: no credentials provided");
 
-            throw new BadCredentialsException(messages.getMessage(
-                    "AbstractUserDetailsAuthenticationProvider.badCredentials",
-                    "Bad credentials"));
+            throw new BadCredentialsException(msa.getMessage("errors.api.security.badCredentials"));
         }
 
         String presentedPassword = authentication.getCredentials().toString();
@@ -51,9 +50,7 @@ public class AngioAuthProvider extends AbstractUserDetailsAuthenticationProvider
         if (!passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
             log.debug("Authentication failed: password does not match stored value");
 
-            throw new BadCredentialsException(messages.getMessage(
-                    "AbstractUserDetailsAuthenticationProvider.badCredentials",
-                    "Bad credentials"));
+            throw new BadCredentialsException(msa.getMessage("errors.api.security.badCredentials"));
         }
     }
 
@@ -91,5 +88,13 @@ public class AngioAuthProvider extends AbstractUserDetailsAuthenticationProvider
             String presentedPassword = authentication.getCredentials().toString();
             this.passwordEncoder.matches(presentedPassword, this.userNotFoundEncodedPassword);
         }
+    }
+
+    public DynamicLocaleMessageSourceAccessor getMsa() {
+        return msa;
+    }
+
+    public void setMsa(DynamicLocaleMessageSourceAccessor msa) {
+        this.msa = msa;
     }
 }

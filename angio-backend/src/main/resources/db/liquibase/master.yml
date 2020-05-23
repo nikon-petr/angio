@@ -56,6 +56,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/019_drop_default_value_for_notification_table.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/020_security_enhancement_changes.yml
 
 # always in the end of file
 - include:

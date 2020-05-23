@@ -141,4 +141,16 @@ public class UserResource {
     public UserDetailsDto changeUserLocked(@PathVariable UUID id, @RequestBody @Validated UserLockedDto dto) {
         return userService.changeUserLocked(id, dto);
     }
+
+    @ApiOperation("Change user role list")
+    @PostMapping("/{id}/role")
+    public UserDetailsDto changeUserRoles(@PathVariable UUID id, @RequestBody List<Long> roleIds) {
+        return userService.changeUserRoles(id, roleIds);
+    }
+
+    @ApiOperation("Change user owned role list")
+    @PostMapping("/{id}/owned-role")
+    public UserDetailsDto changeUserOwnedRoles(@PathVariable UUID id, @RequestBody List<Long> roleIds) {
+        return userService.changeUserOwnedRoles(id, roleIds);
+    }
 }

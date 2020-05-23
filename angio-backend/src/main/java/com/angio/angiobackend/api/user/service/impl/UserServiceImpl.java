@@ -25,7 +25,6 @@ import com.angio.angiobackend.api.user.dto.UpdateUserDto;
 import com.angio.angiobackend.api.user.dto.UserDetailsDto;
 import com.angio.angiobackend.api.user.dto.UserDto;
 import com.angio.angiobackend.api.user.dto.UserLockedDto;
-import com.angio.angiobackend.api.user.dto.UserShortItemDto;
 import com.angio.angiobackend.api.user.dto.email.RegistrationEmailDto;
 import com.angio.angiobackend.api.user.dto.email.ResetPasswordDto;
 import com.angio.angiobackend.api.user.dto.push.GreetingPushDto;
@@ -56,11 +55,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.constraints.NotNull;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -505,11 +506,64 @@ public class UserServiceImpl implements UserService {
         log.debug("changeUserLocked() - start, id: {}", id);
         User user = findUserEntityByUuid(id);
 
-        log.debug("changePassword() - change and save locked");
+        log.debug("changeUserLocked() - change and save locked");
         user.setLocked(dto.getLocked());
         user = userRepository.save(user);
 
-        log.debug("changePassword() - end");
+        log.debug("changeUserLocked() - end");
+        return userMapper.toDetailedDto(user);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('USER_EDIT')")
+    public UserDetailsDto changeUserRoles(@NotNull UUID id, @NotNull List<Long> roleIds) {
+
+        log.debug("changeUserRoles() - start, id: {}", id);
+        log.debug("changeUserRoles() - find user");
+        User user = findUserEntityByUuid(id);
+
+        List<Role> changedRoles = roleRepository.findAllById(roleIds);
+
+        if (changedRoles.size() == 0) {
+            throw new ResourceNotFoundException(
+                    msa.getMessage("errors.api.user.rolesNotFound", new Object[] {roleIds}));
+        }
+
+        log.debug("changeUserRoles() - checking that change requester is owner of requested roles");
+        checkAllowedRoles(changedRoles);
+
+        log.debug("changeUserRoles() - change and save");
+        user.setRoles(new HashSet<>(changedRoles));
+        user = userRepository.save(user);
+
+        log.debug("changeUserRoles() - end");
+        return userMapper.toDetailedDto(user);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('USER_EDIT')")
+    public UserDetailsDto changeUserOwnedRoles(@NotNull UUID id, @NotNull List<Long> roleIds) {
+        log.debug("changeUserOwnedRoles() - start, id: {}", id);
+        log.debug("changeUserOwnedRoles() - find user");
+        User user = findUserEntityByUuid(id);
+
+        List<Role> changedRoles = roleRepository.findAllById(roleIds);
+
+        if (changedRoles.size() == 0) {
+            throw new ResourceNotFoundException(
+                    msa.getMessage("errors.api.user.rolesNotFound", new Object[] {roleIds}));
+        }
+
+        log.debug("changeUserOwnedRoles() - checking that change requester is owner of requested roles");
+        checkAllowedRoles(changedRoles);
+
+        log.debug("changeUserOwnedRoles() - change and save");
+        user.setOwnedRolesToManage(new HashSet<>(changedRoles));
+        user = userRepository.save(user);
+
+        log.debug("changeUserOwnedRoles() - end");
         return userMapper.toDetailedDto(user);
     }
 

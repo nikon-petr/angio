@@ -24,7 +24,7 @@ public enum  Roles {
             Permissions.TOKEN_REVOKE,
 
             Permissions.PUSH_NOTIFICATION_RECEIVE
-    }, "Врач диагност"),
+    }, "Врач диагност", false),
 
     SINGLE_DOCTOR(new Permissions[]{
             Permissions.ANALYSE_CREATE,
@@ -43,7 +43,7 @@ public enum  Roles {
             Permissions.TOKEN_REVOKE,
 
             Permissions.PUSH_NOTIFICATION_RECEIVE
-    }, "Врач диагност (без организации)"),
+    }, "Врач диагност (без организации)", false),
 
     ADMIN(new Permissions[]{
             Permissions.ANALYSE_PURGE_DELETED,
@@ -52,6 +52,11 @@ public enum  Roles {
             Permissions.USER_VIEW,
             Permissions.USER_EDIT,
             Permissions.USER_REMOVE,
+
+            Permissions.ROLE_CREATE,
+            Permissions.ROLE_VIEW,
+            Permissions.ROLE_EDIT,
+            Permissions.ROLE_REMOVE,
 
             Permissions.ORGANIZATION_CREATE,
             Permissions.ORGANIZATION_VIEW,
@@ -68,10 +73,11 @@ public enum  Roles {
 
             Permissions.PUSH_NOTIFICATION_RECEIVE,
             Permissions.PUSH_NOTIFICATION_SEND
-    }, "Администратор системы"),
+    }, "Администратор системы", false),
 
-    ROOT(Permissions.values(), "Супер пользователь системы");
+    ROOT(Permissions.values(), "Супер пользователь системы", true);
 
     private Permissions[] permissions;
     private String description;
+    private boolean systemRole;
 }

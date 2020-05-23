@@ -28,6 +28,11 @@ public enum  Permissions {
     USER_EDIT("Изменение пользователей системы"),
     USER_REMOVE("Удаление пользователй из системы"),
 
+    ROLE_VIEW("Просмотр ролей"),
+    ROLE_CREATE("Создание ролей"),
+    ROLE_EDIT("Редактирование ролей"),
+    ROLE_REMOVE("Удаление ролей"),
+
     ORGANIZATION_VIEW("Просмотр данных организаций"),
     ORGANIZATION_CREATE("Создание организаций"),
     ORGANIZATION_EDIT("Редактирование оорганизаций"),
