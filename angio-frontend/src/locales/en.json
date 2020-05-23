@@ -103,6 +103,10 @@
       "error": {
         "linkName": "Home"
       },
+      "button": {
+        "save": "Save",
+        "cancel": "Cancel"
+      },
       "theDrawer": {
         "link": {
           "newAnalyse": {
@@ -122,16 +126,16 @@
             "tooltip": "Users"
           },
           "organizations": {
-            "name": "Organization",
-            "tooltip": "Organization"
+            "name": "Organizations",
+            "tooltip": "Organizations"
+          },
+          "roles": {
+            "name": "Roles",
+            "tooltip": "Roles"
           },
           "newNotification": {
             "name": "New notification",
             "tooltip": "Send new notification"
-          },
-          "help": {
-            "name": "Help",
-            "tooltip": "Help"
           },
           "about": {
             "name": "About",
@@ -157,6 +161,7 @@
       },
       "confirmDialog": {
         "button": {
+          "back": "Back",
           "yes": "Yes",
           "cancel": "Cancel"
         }
@@ -515,7 +520,7 @@
         "title": "Settings",
         "subheader": "Settings"
       },
-      "userManager":{
+      "userManager": {
         "title": "User",
         "subheader": "Users"
       },
@@ -902,6 +907,71 @@
     "view": {
       "organizationList": {
         "title": "List of organizations"
+      }
+    }
+  },
+  "role": {
+    "component": {
+      "addRoleForm": {
+        "title": "Create role",
+        "field": {
+          "description": "Name",
+          "permissions": "Permissions"
+        },
+        "validation": {
+          "description": {
+            "NotEmpty": "Name should not be empty"
+          },
+          "permissions": {
+            "NotEmpty": "Permission list should not be empty"
+          }
+        }
+      },
+      "editRoleForm": {
+        "title": "Edit role",
+        "field": {
+          "description": "Name",
+          "permissions": "Permissions"
+        },
+        "validation": {
+          "description": {
+            "NotEmpty": "Name should not be empty"
+          },
+          "permissions": {
+            "NotEmpty": "Permission list should not be empty"
+          }
+        }
+      },
+      "roleListTable": {
+        "search": "Search",
+        "table": {
+          "header": {
+            "id": "#",
+            "name": "Name",
+            "systemRole": "System role"
+          }
+        }
+      },
+      "roleListTableDetails": {
+        "permissions": "Permissions: ",
+        "button": {
+          "editRole": "Edit"
+        }
+      }
+    },
+    "view": {
+      "roleList": {
+        "title": "Roles",
+        "delete": {
+          "confirm": {
+            "title": "Deleting role",
+            "text": "Are you sure you want to remove the '{0}' role?"
+          },
+          "error": {
+            "title": "Operation aborted",
+            "text": "Cannot delete the role that belongs to one or more users."
+          }
+        }
       }
     }
   }

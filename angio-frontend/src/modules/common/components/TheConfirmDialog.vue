@@ -29,6 +29,15 @@
             <v-card-actions class="pt-0">
                 <v-spacer></v-spacer>
                 <v-btn
+                        v-if="!isQuestion"
+                        v-on:click.native="agree"
+                        flat
+                        round
+                >
+                    {{ $t('common.component.confirmDialog.button.back') }}
+                </v-btn>
+                <v-btn
+                        v-if="isQuestion"
                         v-on:click.native="cancel"
                         flat
                         round
@@ -36,6 +45,7 @@
                     {{ $t('common.component.confirmDialog.button.cancel') }}
                 </v-btn>
                 <v-btn
+                        v-if="isQuestion"
                         v-on:click.native="agree"
                         color="primary"
                         round
@@ -48,8 +58,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
     import {ConfirmType} from '@/modules/analyse/helpers/confirm';
+    import {Component, Vue} from 'vue-property-decorator';
 
     @Component
     export default class TheConfirmDialog extends Vue {
@@ -73,7 +83,7 @@
                 message: undefined,
                 title: undefined,
                 type: undefined
-            }
+            };
         }
 
         public open(title: string, type: ConfirmType, message?: string): Promise<boolean> {
@@ -88,17 +98,23 @@
         }
 
         public agree() {
-            if (this.resolve) {
-                this.resolve(true);
-                this.dialog = false;
-            }
+            this.dialog = false;
+            setTimeout(() => {
+                if (this.resolve) {
+                    this.resolve(true);
+                    this.$logger.debug(`${TheConfirmDialog.name} respond with ${true}`);
+                }
+            }, 300);
         }
 
         public cancel() {
-            if (this.resolve) {
-                this.resolve(false);
-                this.dialog = false;
-            }
+            this.dialog = false;
+            setTimeout(() => {
+                if (this.resolve) {
+                    this.resolve(false);
+                    this.$logger.debug(`${TheConfirmDialog.name} respond with ${false}`);
+                }
+            }, 300);
         }
 
         get icon(): string | undefined {
@@ -129,6 +145,11 @@
                 case null:
                     return undefined;
             }
+        }
+
+        get isQuestion() {
+            return this.type == ConfirmType.QUESTION
+                || this.type == ConfirmType.DELETE;
         }
     }
 </script>

@@ -36,7 +36,7 @@
                             {{ props.item.id }}
                         </text-highlight>
                     </td>
-                    <td class="text-xs-left" >
+                    <td class="text-xs-left">
                         <text-highlight v-bind:queries="searchForHighlight">
                             {{ props.item.fullName | compactFullName() }}
                         </text-highlight>
@@ -46,7 +46,7 @@
                             {{ props.item.email }}
                         </text-highlight>
                     </td>
-                    <td v-if="!$vuetify.breakpoint.smAndDown"  class="text-xs-left">
+                    <td v-if="!$vuetify.breakpoint.smAndDown" class="text-xs-left">
                         <text-highlight v-bind:queries="searchForHighlight">
                             {{ organizationName(props.item.organization) }}
                         </text-highlight>
@@ -63,13 +63,14 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Emit, Ref} from 'vue-property-decorator';
     import Pagination from '@/modules/common/helpers/pagination';
     import {SortingDirection} from '@/modules/common/models/page';
-    import {Role, UserDetailsModel} from '@/modules/user/models/user';
     import {Organization} from '@/modules/organization/models/organization';
-    import UserListTableDetails from '@/modules/user/components/UserListTableDetails.vue';
+    import {Role} from '@/modules/role/models/role';
     import RoleEditorForm from '@/modules/user/components/RoleEditorForm.vue';
+    import UserListTableDetails from '@/modules/user/components/UserListTableDetails.vue';
+    import {UserDetailsModel} from '@/modules/user/models/user';
+    import {Component, Emit, Prop, Ref, Vue} from 'vue-property-decorator';
 
     @Component({
         components: {RoleEditorForm, UserListTableDetails}
@@ -107,7 +108,12 @@
 
         public headers = [
             {text: 'user.component.userListTable.column.id', value: 'id', class: 'text-uppercase', align: 'left'},
-            {text: 'user.component.userListTable.column.fullName', value: 'fullName', class: 'text-uppercase', align: 'left'},
+            {
+                text: 'user.component.userListTable.column.fullName',
+                value: 'fullName',
+                class: 'text-uppercase',
+                align: 'left'
+            },
             {
                 text: 'user.component.userListTable.column.email',
                 value: 'email',
@@ -139,7 +145,7 @@
                 page: null,
                 totalItems: this.totalItems,
                 rowsPerPage: null
-            }
+            };
         }
 
         set pagination(pagination: Pagination) {

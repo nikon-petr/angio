@@ -162,15 +162,16 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
     import BaseDialogFormContainer from '@/modules/common/components/BaseDialogFormContainer.vue';
     import BuiltInErrorMessage from '@/modules/common/components/BuiltInErrorMessage.vue';
-    import {NewUserModel, Role} from '@/modules/user/models/user';
-    import {UserApiService} from '@/modules/user/services/userApiService';
     import {Organization} from '@/modules/organization/models/organization';
-    import RegexUtils from '@/utils/regexUtils';
+    import {Role} from '@/modules/role/models/role';
     import AddUserFormTableDetails from '@/modules/user/components/AddUserFormTableDetails.vue';
+    import {NewUserModel} from '@/modules/user/models/user';
+    import {UserApiService} from '@/modules/user/services/userApiService';
     import {UserPermission} from '@/modules/user/store/userState';
+    import RegexUtils from '@/utils/regexUtils';
+    import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
 
     @Component({
         components: {AddUserFormTableDetails, BuiltInErrorMessage, BaseDialogFormContainer}
@@ -265,7 +266,7 @@
         }
 
         get mapErrorMessages() {
-            return this.errorMessages ? this.errorMessages.map(message => this.$t(message)) : ''
+            return this.errorMessages ? this.errorMessages.map(message => this.$t(message)) : '';
         }
 
         public getOrganizationName(id: number): string {
@@ -281,7 +282,7 @@
                     roleIds: [],
                     ownedRoleToManageIds: []
                 }
-            }
+            };
         }
     }
 </script>

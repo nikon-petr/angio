@@ -100,6 +100,10 @@
       }
     },
     "component": {
+      "button": {
+        "save": "Сохранить",
+        "cancel": "Отмена"
+      },
       "error": {
         "linkName": "На главную"
       },
@@ -157,6 +161,7 @@
       },
       "confirmDialog": {
         "button": {
+          "back": "Назад",
           "yes": "Да",
           "cancel": "Отменить"
         }
@@ -511,11 +516,11 @@
       "resetAccount": {
         "title": "Восстановление аккаунта"
       },
-      "settings":{
+      "settings": {
         "title": "Настройки",
         "subheader": "Настройки"
       },
-      "userManager":{
+      "userManager": {
         "title": "Ползователи",
         "subheader": "Пользователи"
       },
@@ -902,6 +907,71 @@
     "view": {
       "organizationList": {
         "title": "Список организаций"
+      }
+    }
+  },
+  "role": {
+    "component": {
+      "addRoleForm": {
+        "title": "Создание новой роли",
+        "field": {
+          "description": "Название",
+          "permissions": "Разрешения"
+        },
+        "validation": {
+          "description": {
+            "NotEmpty": "Наименование не должно быть пустым"
+          },
+          "permissions": {
+            "NotEmpty": "Список разрешений не должен быть пустым"
+          }
+        }
+      },
+      "editRoleForm": {
+        "title": "Редактирование роли",
+        "field": {
+          "description": "Название",
+          "permissions": "Разрешения"
+        },
+        "validation": {
+          "description": {
+            "NotEmpty": "Наименование не должно быть пустым"
+          },
+          "permissions": {
+            "NotEmpty": "Список разрешений не должен быть пустым"
+          }
+        }
+      },
+      "roleListTable": {
+        "search": "Поиск",
+        "table": {
+          "header": {
+            "id": "#",
+            "name": "Название",
+            "systemRole": "Системная роль"
+          }
+        }
+      },
+      "roleListTableDetails": {
+        "permissions": "Разрешения: ",
+        "button": {
+          "editRole": "Редактировать"
+        }
+      }
+    },
+    "view": {
+      "roleList": {
+        "title": "Список ролей",
+        "delete": {
+          "confirm": {
+            "title": "Удаление роли",
+            "text": "Вы уверены, что хотите удалить роль {0}?"
+          },
+          "error": {
+            "title": "Операция прервана",
+            "text": "Невозможно удалить роль, которая принадлежит одному или нескольким пользователям."
+          }
+        }
       }
     }
   }

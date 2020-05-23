@@ -15,6 +15,7 @@
                 v-bind:items="items"
                 v-bind:menu-props="{closeOnContentClick: true}"
                 v-bind:prefix="$t('user.component.personalization.localization')"
+                color="accent"
                 hide-details
                 solo
         ></v-select>
@@ -22,11 +23,11 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
     import SettingsSubtitle from '@/modules/user/components/SettingsSubtitle.vue';
+    import {UserSettingsModel} from '@/modules/user/models/user';
+    import {UserApiService} from '@/modules/user/services/userApiService';
     import {Locale, UserSettings} from '@/modules/user/store/userState';
-    import {UserApiService} from "@/modules/user/services/userApiService";
-    import {UserSettingsModel} from "@/modules/user/models/user";
+    import {Component, Prop, Vue} from 'vue-property-decorator';
 
     @Component({
         components: {SettingsSubtitle}
@@ -40,8 +41,8 @@
         public readonly fetchUser!: () => Promise<void>;
 
         public items = [
-            {value: Locale.RU, text: "Русский"},
-            {value: Locale.EN, text: "English"}
+            {value: Locale.RU, text: 'Русский'},
+            {value: Locale.EN, text: 'English'}
         ];
 
         public changeDarkThemeEnabled(value: boolean): void {
@@ -51,9 +52,9 @@
             };
             UserApiService.patchSettings(settings)
                 .then(response => {
-                    this.fetchUser()
+                    this.fetchUser();
                 })
-                .catch(error => this.$logger.error(error))
+                .catch(error => this.$logger.error(error));
         }
 
         public changeLocale(value: Locale): void {
@@ -63,9 +64,9 @@
             };
             UserApiService.patchSettings(settings)
                 .then(response => {
-                    this.fetchUser()
+                    this.fetchUser();
                 })
-                .catch(error => this.$logger.error(error))
+                .catch(error => this.$logger.error(error));
         }
     }
 </script>

@@ -65,10 +65,10 @@ public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
                 .setPermissions(new HashSet<>(permissions));
 
         log.debug("createRole() - save new role");
-        roleRepository.save(newRole);
+        newRole = roleRepository.save(newRole);
 
         log.debug("createRole() - map to dto and return");
-        return null;
+        return roleMapper.toRoleDto(newRole);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
         log.debug("updateRole() - find role in database");
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        msa.getMessage("errors.api.role.roleWithIdNotFound", new Object[] {roleId})));
+                        msa.getMessage("errors.api.role.roleWithIdNotFound", new Object[]{roleId})));
 
         log.debug("updateRole() - check system role");
         if (role.isSystemRole()) {
@@ -90,7 +90,7 @@ public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
             log.debug("updateRole() - find permissions");
             List<Permission> permissions = permissionRepository.findAllById(new HashSet<>(dto.getPermissionIds()));
 
-            log.debug("updateRole() - set new permissions: {}",  dto.getPermissionIds());
+            log.debug("updateRole() - set new permissions: {}", dto.getPermissionIds());
             role.setPermissions(new HashSet<>(permissions));
         }
 
@@ -114,7 +114,7 @@ public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
         log.debug("deleteRole() - find role in database");
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        msa.getMessage("errors.api.role.roleWithIdNotFound", new Object[] {id})));
+                        msa.getMessage("errors.api.role.roleWithIdNotFound", new Object[]{id})));
 
         log.debug("deleteRole() - check system role");
         if (role.isSystemRole()) {
@@ -124,7 +124,7 @@ public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
         log.debug("deleteRole() - check role references");
         if (!CollectionUtils.isEmpty(role.getUsers()) || !CollectionUtils.isEmpty(role.getOwners())) {
             throw new OperationException(
-                    msa.getMessage("errors.api.role.canNotDeleteRoleReferencedByUser", new Object[] {id}));
+                    msa.getMessage("errors.api.role.canNotDeleteRoleReferencedByUser", new Object[]{id}));
         }
 
         log.debug("deleteRole() - delete role");

@@ -1,12 +1,10 @@
-import axios, {AxiosPromise} from 'axios';
-import qs from 'querystring';
-import root from 'loglevel';
+import Page from '@/modules/common/models/page';
+import {Response} from '@/modules/common/models/response';
 import {
     ChangePasswordModel,
     EmailModel,
     NewUserModel,
     RefreshTokenModel,
-    Role,
     UserActivationModel,
     UserAuthModel,
     UserCredentialsModel,
@@ -17,9 +15,10 @@ import {
     UserResetAccountModel,
     UserSettingsModel,
 } from '@/modules/user/models/user';
-import {Response} from '@/modules/common/models/response';
 import {OAUTH_CONFIG} from '@/plugins/axios';
-import Page from '@/modules/common/models/page';
+import axios, {AxiosPromise} from 'axios';
+import root from 'loglevel';
+import qs from 'querystring';
 
 const log = root.getLogger('api/user');
 
@@ -85,7 +84,7 @@ export class UserApiService {
 
     public static register(model: EmailModel): AxiosPromise<void> {
         log.debug(`register new user with email: ${JSON.stringify(model)}`);
-        return axios.post(`/user/register`, model)
+        return axios.post(`/user/register`, model);
     }
 
     public static getUserFilter(filter: UserFilterModel, size?: number, page?: number, sort?: string): AxiosPromise<Response<Page<UserDetailsModel>>> {
@@ -94,18 +93,13 @@ export class UserApiService {
     }
 
     public static postLocked(userId: string, locked: boolean): AxiosPromise<Response<UserLockedModel>> {
-        log.debug(`lock user ${userId}`);
-        return axios.post<Response<UserLockedModel>>(`/user/${userId}/locked`, {locked: locked});
+        log.debug(`change user ${userId} locked to ${locked}`);
+        return axios.post<Response<UserLockedModel>>(`/user/${userId}/locked`, {locked});
     }
 
     public static changeRoles(userId: string, roleIds: number[]): AxiosPromise<Response<UserDetailsModel>> {
         log.debug(`create changeRoles request with data ${userId}`);
         return axios.post<Response<UserDetailsModel>>(`/user/${userId}/role`, roleIds);
-    }
-
-    public static getAllRoles(): AxiosPromise<Response<Array<Role>>> {
-        log.debug('create getAllRoles request');
-        return axios.get<Response<Array<Role>>>('/role');
     }
 
     public static createUsers(users: NewUserModel[]): AxiosPromise<Response<NewUserModel[]>> {

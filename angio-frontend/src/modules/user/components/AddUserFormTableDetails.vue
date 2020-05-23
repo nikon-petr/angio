@@ -45,8 +45,9 @@
 </template>
 
 <script lang="ts">
+    import {Role} from '@/modules/role/models/role';
+    import {NewUserModel} from '@/modules/user/models/user';
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {NewUserModel, Role} from '@/modules/user/models/user';
 
     @Component({})
     export default class AddUserFormTableDetails extends Vue {
