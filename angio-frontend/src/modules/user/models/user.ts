@@ -1,6 +1,7 @@
-import {Locale, UserAuth, UserInfo, UserPermission, UserSettings} from '@/modules/user/store/userState';
 import FullName from '@/modules/common/models/fullName';
 import {Organization} from '@/modules/organization/models/organization';
+import {Role} from '@/modules/role/models/role';
+import {Locale, UserAuth, UserInfo, UserPermission, UserSettings} from '@/modules/user/store/userState';
 
 export interface UserInfoModel extends UserInfo {
     id: string;
@@ -21,7 +22,7 @@ export interface UserSettingsModel extends UserSettings {
     locale: Locale;
 }
 
-export interface NewUserModel{
+export interface NewUserModel {
     email: string;
     organizationId?: string;
     roleIds: number[];
@@ -41,19 +42,6 @@ export interface UserActivationModel {
     fullName: FullName;
     enablingCode: string;
     newPassword: string;
-}
-
-export interface Role {
-    id: number;
-    name: string;
-    description: string;
-    permissions: Permission[];
-}
-
-export interface Permission {
-    id: number;
-    name: string;
-    description: string;
 }
 
 export interface UserDetailsModel {

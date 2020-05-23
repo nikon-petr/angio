@@ -51,20 +51,22 @@
 </template>
 
 <script lang="ts">
-    import {Getter, State} from 'vuex-class';
-    import {Component, Vue, Prop, Watch, Ref} from 'vue-property-decorator';
-    import StackLayout from '@/modules/common/components/StackLayout.vue';
+    import BasePagination from '@/modules/common/components/BasePagination.vue';
     import BaseSubheader from '@/modules/common/components/BaseSubheader.vue';
-    import UserListFilter from '@/modules/user/components/UserListFilter.vue';
+    import StackLayout from '@/modules/common/components/StackLayout.vue';
     import {Organization} from '@/modules/organization/models/organization';
     import {OrganizationApiService} from '@/modules/organization/services/organizationApiService';
-    import {Role, UserDetailsModel, UserFilterModel} from '@/modules/user/models/user';
-    import {UserApiService} from '@/modules/user/services/userApiService';
-    import UserListTable from '@/modules/user/components/UserListTable.vue';
-    import BasePagination from '@/modules/common/components/BasePagination.vue';
+    import {Role} from '@/modules/role/models/role';
+    import {RoleApiService} from '@/modules/role/services/roleApiService';
     import AddUserFrom from '@/modules/user/components/AddUserFrom.vue';
+    import UserListFilter from '@/modules/user/components/UserListFilter.vue';
+    import UserListTable from '@/modules/user/components/UserListTable.vue';
+    import {UserDetailsModel, UserFilterModel} from '@/modules/user/models/user';
+    import {UserApiService} from '@/modules/user/services/userApiService';
     import {UserPermission} from '@/modules/user/store/userState';
     import {UserGetter} from '@/modules/user/store/userStore';
+    import {Component, Ref, Vue, Watch} from 'vue-property-decorator';
+    import {Getter, State} from 'vuex-class';
 
     @Component({
         components: {AddUserFrom, BasePagination, UserListTable, UserListFilter, StackLayout, BaseSubheader}
@@ -94,7 +96,6 @@
 
         public filter!: UserFilterModel;
 
-
         public users: UserDetailsModel[] = [];
 
         public usersFetching: boolean = false;
@@ -109,12 +110,12 @@
 
         @Watch('page')
         public onPaginationChange() {
-            this.fetchFilteredUsers()
+            this.fetchFilteredUsers();
         }
 
         @Watch('sort')
         public onSortChange() {
-            this.fetchFilteredUsers()
+            this.fetchFilteredUsers();
         }
 
         public fetchFilteredUsers() {
@@ -127,7 +128,7 @@
                 .catch(error => {
                     this.$logger.error(error);
                 })
-                .finally(() => this.usersFetching = false)
+                .finally(() => this.usersFetching = false);
 
         }
 
@@ -140,17 +141,17 @@
             this.dictionaryFetching = true;
             await OrganizationApiService.getOrganizationsFilter(Number.MAX_SAFE_INTEGER)
                 .then(response => {
-                    this.organizationsDictionary = response.data.data.content
+                    this.organizationsDictionary = response.data.data.content;
                 })
                 .catch(error => this.$logger.error(error));
-            await UserApiService.getAllRoles()
+            await RoleApiService.getAllRoles()
                 .then(response => {
-                    this.rolesDictionary = response.data.data
+                    this.rolesDictionary = response.data.data;
                 })
                 .catch(error => this.$logger.debug(error));
             await UserApiService.getUserById(this.currentUserId)
                 .then(response => {
-                    this.currentUser = response.data.data
+                    this.currentUser = response.data.data;
                 })
                 .catch(error => this.$logger.debug(error));
         }
@@ -168,7 +169,7 @@
                     .catch(error => {
                         this.$logger.error(error);
                         reject();
-                    })
+                    });
             });
         }
 
@@ -184,7 +185,7 @@
                     organizationId: undefined
                 },
                 sort: undefined
-            }
+            };
         }
 
         public mounted() {

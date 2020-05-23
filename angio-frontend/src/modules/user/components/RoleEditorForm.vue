@@ -50,13 +50,14 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
-    import {cloneDeep} from 'lodash';
-    import {Role, UserDetailsModel} from '@/modules/user/models/user';
-    import {UserApiService} from '@/modules/user/services/userApiService';
-    import {State} from 'vuex-class';
     import BaseDialogFormContainer from '@/modules/common/components/BaseDialogFormContainer.vue';
     import BuiltInErrorMessage from '@/modules/common/components/BuiltInErrorMessage.vue';
+    import {Role} from '@/modules/role/models/role';
+    import {UserDetailsModel} from '@/modules/user/models/user';
+    import {UserApiService} from '@/modules/user/services/userApiService';
+    import {cloneDeep} from 'lodash';
+    import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
+    import {State} from 'vuex-class';
 
     @Component({
         components: {BuiltInErrorMessage, BaseDialogFormContainer}
@@ -131,7 +132,7 @@
         }
 
         get mapErrorMessages() {
-            return this.errorMessages.map(message => this.$t(message))
+            return this.errorMessages.map(message => this.$t(message));
         }
 
         public data() {
@@ -139,7 +140,7 @@
                 userId: undefined,
                 editedRoleList: undefined,
                 roles: undefined
-            }
+            };
         }
     }
 </script>

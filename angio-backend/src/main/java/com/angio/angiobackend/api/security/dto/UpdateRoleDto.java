@@ -17,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 public class UpdateRoleDto {
 
-    @NotNull(groups = NewRole.class)
     @ApiModelProperty(name = "Role id")
     private Long id;
 
