@@ -45,7 +45,9 @@ public enum  Permissions {
     TOKEN_REMOVE("Отзыв токенов любых пользователй"),
 
     PUSH_NOTIFICATION_RECEIVE("Получение собственных push-уведомлений"),
-    PUSH_NOTIFICATION_SEND("Отправка push-уведомлений пользователям");
+    PUSH_NOTIFICATION_SEND("Отправка push-уведомлений пользователям"),
+
+    DASHBOARD_VIEW("Просмотр панели управления");
 
     private String description;
 }
