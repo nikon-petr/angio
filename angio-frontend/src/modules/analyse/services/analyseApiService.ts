@@ -92,4 +92,9 @@ export class AnalyseApiService {
         log.debug(`create new analyse: ${JSON.stringify(analyse)}`);
         return axios.post<Response<Analyse>>(`/analyse`, analyse);
     }
+
+    public static deleteAnalyses(): AxiosPromise<Response<void>> {
+        log.debug('create deleteAnalyses request');
+        return axios.delete('/analyse');
+    }
 }

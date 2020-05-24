@@ -8,6 +8,7 @@ import {notificationRouteConfig} from '@/modules/notification/notificationRouter
 import {organizationRouteConfig} from '@/modules/organization/organizationRoute';
 import {roleRouterConfig} from '@/modules/role/roleRouterConfig';
 import {UserPermission} from '@/modules/user/store/userState';
+import {dashboardRouteConfig} from '@/modules/dashboard/dashboardRoute';
 import {UserGetter} from '@/modules/user/store/userStore';
 import {userRouterConfig} from '@/modules/user/userRouter';
 import i18n from '@/plugins/i18n';
@@ -38,7 +39,8 @@ rootRouterConfig = rootRouterConfig.concat(
     analyseRouterConfig,
     organizationRouteConfig,
     roleRouterConfig,
-    notificationRouteConfig
+    notificationRouteConfig,
+    dashboardRouteConfig
 );
 
 const rootRouter: Router = new Router({

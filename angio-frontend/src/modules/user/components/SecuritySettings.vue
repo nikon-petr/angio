@@ -1,8 +1,8 @@
 <template>
     <div>
-        <SettingsSubtitle icon="security">
+        <SubtitleSeparator icon="security">
             {{ $t('user.component.securitySettings.title') }}
-        </SettingsSubtitle>
+        </SubtitleSeparator>
         <span class="body-2 text--secondary text--darken-4 mr-2">{{ $t('user.component.securitySettings.id') }}:</span>
         <span>{{userInfo.id}}</span><br>
         <span class="body-2 text--secondary text--darken-4 mr-2">{{ $t('user.component.securitySettings.password') }}:</span>
@@ -14,11 +14,11 @@
 
 <script lang="ts">
     import {Component, Vue, Prop} from 'vue-property-decorator';
-    import SettingsSubtitle from '@/modules/user/components/SettingsSubtitle.vue';
+    import SubtitleSeparator from '@/modules/common/components/SubtitleSeparator.vue';
     import {UserInfo} from '@/modules/user/store/userState';
 
     @Component({
-        components: {SettingsSubtitle}
+        components: {SubtitleSeparator}
     })
     export default class SecuritySettings extends Vue {
 

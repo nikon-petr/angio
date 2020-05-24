@@ -1,8 +1,8 @@
 <template>
     <div>
-        <SettingsSubtitle icon="person">
+        <SubtitleSeparator icon="person">
             {{ $t('user.component.personalInfo.title') }}
-        </SettingsSubtitle>
+        </SubtitleSeparator>
         <span class="body-2 text--secondary text--darken-4 mr-2">{{ $t('user.component.personalInfo.lastName') }}:</span>
         <span>{{userInfo.fullName.lastname}}</span><br>
         <span class="body-2 text--secondary text--darken-4 mr-2">{{ $t('user.component.personalInfo.firstName') }}:</span>
@@ -17,12 +17,12 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Emit} from 'vue-property-decorator';
+    import {Component, Vue, Prop} from 'vue-property-decorator';
     import {UserInfo} from '@/modules/user/store/userState';
-    import SettingsSubtitle from '@/modules/user/components/SettingsSubtitle.vue';
+    import SubtitleSeparator from '@/modules/common/components/SubtitleSeparator.vue';
 
     @Component({
-        components: {SettingsSubtitle}
+        components: {SubtitleSeparator}
     })
     export default class PersonalInfo extends Vue {
 

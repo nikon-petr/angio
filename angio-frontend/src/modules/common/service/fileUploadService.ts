@@ -20,4 +20,9 @@ export class FileUploadService {
         };
         return axios.post<Response<StaticFile>>('/upload/image', formData, config);
     }
+
+    public static deleteImages(): AxiosPromise<Response<void>> {
+        log.debug('create deleteImages() request');
+        return axios.delete('/upload/image');
+    }
 }

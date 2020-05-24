@@ -16,7 +16,7 @@
     import {Component, Vue, Prop} from 'vue-property-decorator';
 
     @Component({})
-    export default class SettingsSubtitle extends Vue {
+    export default class SubtitleSeparator extends Vue {
 
         @Prop()
         public readonly icon!: string;
