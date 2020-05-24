@@ -1005,5 +1005,40 @@
         }
       }
     }
+  },
+  "dashboard": {
+    "view": {
+      "dashboard": {
+        "title": "Admin dashboard"
+      }
+    },
+    "component": {
+      "actions": {
+        "title": "Actions",
+        "deleteAnalyses": "Remove all analyses",
+        "deleteFiles": "Remove all files",
+        "dialogDeleteAnalyses": {
+          "title": "Delete analyses",
+          "text": "Are you sure you want to delete the tests??",
+          "error": "An error occurred while deleting analyzes"
+        },
+        "dialogDeleteFiles": {
+          "title": "File cleaning",
+          "text": "Are you sure you want to delete unused files?",
+          "error": "An error occurred while cleaning files"
+        }
+      },
+      "analysesInfo": {
+        "title": "Analyses information",
+        "totalCount": "Total number of analyzes completed",
+        "successCount": "Finished successfully",
+        "failedCount": "Finished with error"
+      },
+      "organizationsAndUsers": {
+        "title": "Information about organizations and users",
+        "organizationsCount": "Number of organizations",
+        "usersCount": "Number of users"
+      }
+    }
   }
 }

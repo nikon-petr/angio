@@ -1,8 +1,8 @@
 <template>
     <div>
-        <SettingsSubtitle icon="format_paint">
+        <SubtitleSeparator icon="format_paint">
             {{ $t('user.component.personalization.title') }}
-        </SettingsSubtitle>
+        </SubtitleSeparator>
         <v-switch
                 v-on:change="changeDarkThemeEnabled"
                 v-bind:input-value="userSettings.darkThemeEnabled"
@@ -23,14 +23,14 @@
 </template>
 
 <script lang="ts">
-    import SettingsSubtitle from '@/modules/user/components/SettingsSubtitle.vue';
+    import SubtitleSeparator from '@/modules/common/components/SubtitleSeparator.vue';
     import {UserSettingsModel} from '@/modules/user/models/user';
     import {UserApiService} from '@/modules/user/services/userApiService';
     import {Locale, UserSettings} from '@/modules/user/store/userState';
     import {Component, Prop, Vue} from 'vue-property-decorator';
 
     @Component({
-        components: {SettingsSubtitle}
+        components: {SubtitleSeparator}
     })
     export default class Personalization extends Vue {
 
