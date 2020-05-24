@@ -8,3 +8,19 @@ export interface NotificationModel extends Notification {
     subject: Subject;
     read: boolean;
 }
+
+export interface NewNotificationModel<T> {
+    date?: Date;
+    type: NotificationType;
+    templateName: Templates;
+    subject: Subject;
+    dataModel: T;
+}
+
+export interface PlainTextDataModel {
+    text: string;
+}
+
+export enum Templates {
+    PLAIN_TEXT = 'plain-text.ftl'
+}

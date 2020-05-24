@@ -43,7 +43,7 @@
                     v-on:click.native="submit"
                     v-bind:disabled="!valid"
                     v-bind:loading="fetching"
-                    form="role-editor-form"
+                    form="create-organization-form"
                     type="submit"
                     color="success"
                     round

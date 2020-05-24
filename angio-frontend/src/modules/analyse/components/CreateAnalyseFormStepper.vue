@@ -22,6 +22,7 @@
                     v-on:click="onStepperForward(2)"
                     v-bind:disabled="!formValid[0]"
                     color="primary"
+                    round
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.continue') }}
             </v-btn>
@@ -43,17 +44,19 @@
                     v-on:change="handleChangeAnalyseParameter"
             ></CreateAnalyseFormStepChooseAnalyseParameter>
             <v-btn
+                    v-on:click="onStepperBack()"
+                    round
+                    flat
+            >
+                {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
+            </v-btn>
+            <v-btn
                     v-on:click="onStepperForward(3)"
                     v-bind:disabled="!formValid[1]"
                     color="primary"
+                    round
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.continue') }}
-            </v-btn>
-            <v-btn
-                    v-on:click="onStepperBack()"
-                    text
-            >
-                {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
             </v-btn>
         </v-stepper-content>
 
@@ -72,17 +75,19 @@
                     v-on:change="handleChangeFileId"
             ></CreateAnalyseFormStepUploadImages>
             <v-btn
+                    v-on:click="onStepperBack()"
+                    round
+                    flat
+            >
+                {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
+            </v-btn>
+            <v-btn
                     v-on:click="onStepperForward(4)"
                     v-bind:disabled="!formValid[2]"
                     color="primary"
+                    round
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.continue') }}
-            </v-btn>
-            <v-btn
-                    v-on:click="onStepperBack()"
-                    text
-            >
-                {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
             </v-btn>
         </v-stepper-content>
 
@@ -101,17 +106,19 @@
                     v-on:change="handleChangePatient"
             ></CreateAnalyseFormStepPatient>
             <v-btn
+                    v-on:click="onStepperBack()"
+                    round
+                    flat
+            >
+                {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
+            </v-btn>
+            <v-btn
                     v-on:click="onStepperForward(5)"
                     v-bind:disabled="!formValid[3]"
                     color="primary"
+                    round
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.continue') }}
-            </v-btn>
-            <v-btn
-                    v-on:click="onStepperBack()"
-                    text
-            >
-                {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
             </v-btn>
         </v-stepper-content>
 
@@ -130,17 +137,19 @@
                     v-on:change="handleChangeDisease"
             ></CreateAnalyseFormStepDisease>
             <v-btn
+                    v-on:click="onStepperBack()"
+                    round
+                    flat
+            >
+                {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
+            </v-btn>
+            <v-btn
                     v-on:click="onStepperFinish()"
                     v-bind:disabled="!formValid[4]"
                     color="primary"
+                    round
             >
                 {{ $t('analyse.component.createAnalyseFormDialog.stepper.run') }}
-            </v-btn>
-            <v-btn
-                    v-on:click="onStepperBack()"
-                    text
-            >
-                {{ $t('analyse.component.createAnalyseFormDialog.stepper.back') }}
             </v-btn>
         </v-stepper-content>
 
@@ -392,8 +401,7 @@
         }
 
         public navigateToListAnalyse() {
-            this.$router.push({path: '/'});
-            this.$router.go(0);
+            this.$router.push({path: '/analyse'});
         }
 
         get mapErrorMessages() {
