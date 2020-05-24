@@ -20,7 +20,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -46,6 +48,7 @@ public class PushNotificationService implements NotificationService<UUID> {
 
     private final Configuration freeMarkerConfig;
     private final UserRepository userRepository;
+    private final TransactionTemplate transactionTemplate;
     private final PushNotificationRepository pushNotificationRepository;
     private final PushNotificationMapper pushNotificationMapper;
     private final DynamicLocaleMessageSourceAccessor msa;
@@ -56,28 +59,37 @@ public class PushNotificationService implements NotificationService<UUID> {
     @CacheEvict(cacheNames = "notification.list", key = "#userId")
     public void notifyUser(@NonNull UUID userId, @NonNull AbstractNotification notification) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotificationException(
-                        msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {userId})));
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        PushNotification savedNotification = transactionTemplate.execute((status) -> {
 
-        log.debug("notifyUser() - start: notification={}", notification);
-        String notificationBody = processPushNotificationBody(notification.getDataModel(), notification.getTemplateName());
-        Date notificationDate = new Date();
-        UUID notificationId = UUID.randomUUID();
-        PushNotification notificationEntity = new PushNotification()
-                .setId(notificationId)
-                .setDate(new Date())
-                .setType(notification.getType())
-                .setBody(notificationBody)
-                .setRead(false)
-                .setSubject(notification.getSubject().getName())
-                .setUser(user);
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new NotificationException(
+                            msa.getMessage("errors.api.user.userWithIdNotFound", new Object[] {userId})));
 
-        log.debug("notifyUser() - send notification, id={}", notificationId);
-        sendNotification(user.getId(), notification, notificationId, notificationBody, notificationDate);
+            log.debug("notifyUser() - start: notification={}", notification);
+            String notificationBody = processPushNotificationBody(notification.getDataModel(), notification.getTemplateName());
+            UUID notificationId = UUID.randomUUID();
+            PushNotification notificationEntity = new PushNotification()
+                    .setId(notificationId)
+                    .setDate(new Date())
+                    .setType(notification.getType())
+                    .setBody(notificationBody)
+                    .setRead(false)
+                    .setSubject(notification.getSubject().getName())
+                    .setUser(user);
 
-        log.debug("notifyUser() - save notification to db");
-        pushNotificationRepository.save(notificationEntity);
+            log.debug("notifyUser() - save notification to db");
+            return pushNotificationRepository.save(notificationEntity);
+        });
+
+        log.debug("notifyUser() - send notification, id={}", savedNotification.getId());
+        sendNotification(
+                savedNotification.getUser().getId(),
+                notification,
+                savedNotification.getId(),
+                savedNotification.getBody(),
+                savedNotification.getDate()
+        );
 
         log.debug("notifyUser() - end");
     }
@@ -88,34 +100,44 @@ public class PushNotificationService implements NotificationService<UUID> {
     @CacheEvict(cacheNames = "notification.list", allEntries = true)
     public void notifyUsers(@NonNull Collection<UUID> ids, @NonNull AbstractNotification notification) {
 
-        List<User> users = userRepository.findAllById(ids);
-        List<PushNotification> notificationEntities = new ArrayList<>();
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        List<PushNotification> savedNotification = transactionTemplate.execute((status) -> {
+            log.debug("notifyUsers() - start: notification={}", notification);
+            List<User> users = userRepository.findAllById(ids);
 
-        log.debug("notifyUsers() - start: ids={}, notification={}", ids, notification);
-        for (User user : users) {
+            List<PushNotification> notificationEntities = new ArrayList<>();
+            String notificationBody = processPushNotificationBody(notification.getDataModel(),
+                    notification.getTemplateName());
 
-            String notificationBody = processPushNotificationBody(notification.getDataModel(), notification.getTemplateName());
-            Date notificationDate = new Date();
-            UUID notificationId = UUID.randomUUID();
-            PushNotification notificationEntity = new PushNotification()
-                    .setId(notificationId)
-                    .setDate(notificationDate)
-                    .setType(notification.getType())
-                    .setBody(notificationBody)
-                    .setRead(false)
-                    .setSubject(notification.getSubject().getName())
-                    .setUser(user);
+            for (User user : users) {
 
-            log.debug("notifyUsers() - send notification");
-            sendNotification(user.getId(), notification, notificationId, notificationBody, notificationDate);
+                Date notificationDate = new Date();
+                UUID notificationId = UUID.randomUUID();
+                PushNotification notificationEntity = new PushNotification()
+                        .setId(notificationId)
+                        .setDate(notificationDate)
+                        .setType(notification.getType())
+                        .setBody(notificationBody)
+                        .setRead(false)
+                        .setSubject(notification.getSubject().getName())
+                        .setUser(user);
 
-            notificationEntities.add(notificationEntity);
-        }
+                notificationEntities.add(notificationEntity);
+            }
 
-        log.debug("notifyUsers() - save notification to db");
-        pushNotificationRepository.saveAll(notificationEntities);
+            log.debug("notifyUsers() - save notification to db");
+            return pushNotificationRepository.saveAll(notificationEntities);
+        });
 
-        log.debug("notifyUsers() - end");
+        log.debug("notifyUsers() - send notifications");
+        savedNotification.forEach(n -> sendNotification(
+                n.getUser().getId(),
+                notification,
+                n.getId(),
+                n.getBody(),
+                n.getDate()
+        ));
+        log.debug("notifyAllUsers() - end");
     }
 
     @Async
@@ -124,9 +146,44 @@ public class PushNotificationService implements NotificationService<UUID> {
     @CacheEvict(cacheNames = "notification.list", allEntries = true)
     public void notifyAllUsers(@NonNull AbstractNotification notification) {
 
-        log.debug("notifyAllUsers() - start: notification={}", notification);
-        notifyUsers(deferredResultPool.keySet(), notification);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        List<PushNotification> savedNotification = transactionTemplate.execute((status) -> {
 
+            log.debug("notifyAllUsers() - start: notification={}", notification);
+            List<User> users = userRepository.findAll();
+
+            List<PushNotification> notificationEntities = new ArrayList<>();
+            String notificationBody = processPushNotificationBody(notification.getDataModel(),
+                    notification.getTemplateName());
+
+            for (User user : users) {
+
+                Date notificationDate = new Date();
+                UUID notificationId = UUID.randomUUID();
+                PushNotification notificationEntity = new PushNotification()
+                        .setId(notificationId)
+                        .setDate(notificationDate)
+                        .setType(notification.getType())
+                        .setBody(notificationBody)
+                        .setRead(false)
+                        .setSubject(notification.getSubject().getName())
+                        .setUser(user);
+
+                notificationEntities.add(notificationEntity);
+            }
+
+            log.debug("notifyAllUsers() - save notification to db");
+            return pushNotificationRepository.saveAll(notificationEntities);
+        });
+
+        log.debug("notifyAllUsers() - send notifications");
+        savedNotification.forEach(n -> sendNotification(
+                n.getUser().getId(),
+                notification,
+                n.getId(),
+                n.getBody(),
+                n.getDate()
+        ));
         log.debug("notifyAllUsers() - end");
     }
 

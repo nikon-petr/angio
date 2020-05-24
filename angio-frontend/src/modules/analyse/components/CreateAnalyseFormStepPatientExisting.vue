@@ -1,52 +1,51 @@
 <template>
     <v-layout row wrap>
-        <v-flex xs-12>
-            <v-card>
-                <v-card-title>
-                    {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepPatient.data.searchTitle') }}
-                    <v-spacer></v-spacer>
-                    <v-text-field
-                            v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepPatient.data.searchField')"
-                            v-model="searchField"
-                            append-icon="mdi-magnify"
-                            single-line
-                            hide-details
-                            clearable
-                    ></v-text-field>
-                </v-card-title>
-                <v-data-table
-                        v-bind:headers="headers"
-                        v-bind:items="patients"
-                        v-bind:loading="fetching"
-                        v-bind:pagination.sync="pagination"
-                        v-bind:total-items="totalItems"
-                        v-bind:no-data-text="$t('analyse.component.createAnalyseFormDialog.stepper.stepPatient.data.table.noDataText')"
-                        item-key="id"
-                        sort-icon="arrow_drop_down"
-                        disable-initial-sort
-                        hide-actions
-                >
-                    <template slot="headerCell" slot-scope="props">
-                        {{ $t(props.header.text) }}
-                    </template>
-                    <template v-slot:items="props">
-                        <td>{{ props.item.fullName.lastname }}</td>
-                        <td>{{ props.item.fullName.firstname }}</td>
-                        <td>{{ props.item.fullName.patronymic }}</td>
-                        <td>{{ props.item.bday | moment('DD.MM.YYYY') }}</td>
-                        <td>{{ props.item.address }}</td>
-                        <td class="center">
-                            <v-btn
-                                    v-on:click="onFormStepAnalysePatientExistingChanged(props.item)"
-                                    class="ma-2"
-                                    tile dark
-                            >
-                                {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepPatient.data.table.add') }}
-                            </v-btn>
-                        </td>
-                    </template>
-                </v-data-table>
-            </v-card>
+        <v-flex xs12>
+            <v-text-field
+                    v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepPatient.data.searchField')"
+                    v-model="searchField"
+                    hide-details
+                    clearable
+                    solo
+                    mb-3
+            ></v-text-field>
+        </v-flex>
+        <v-flex xs12>
+            <v-data-table
+                    v-bind:headers="headers"
+                    v-bind:items="patients"
+                    v-bind:loading="fetching"
+                    v-bind:pagination.sync="pagination"
+                    v-bind:total-items="totalItems"
+                    v-bind:no-data-text="$t('analyse.component.createAnalyseFormDialog.stepper.stepPatient.data.table.noDataText')"
+                    sort-icon="arrow_drop_down"
+                    disable-initial-sort
+                    class="elevation-2"
+                    item-key="id"
+                    hide-actions
+            >
+                <template slot="headerCell" slot-scope="props">
+                    {{ $t(props.header.text) }}
+                </template>
+                <template v-slot:items="props">
+                    <td>{{ props.item.fullName.lastname }}</td>
+                    <td>{{ props.item.fullName.firstname }}</td>
+                    <td>{{ props.item.fullName.patronymic }}</td>
+                    <td>{{ props.item.bday | moment('DD.MM.YYYY') }}</td>
+                    <td>{{ props.item.address }}</td>
+                    <td class="center">
+                        <v-btn
+                                v-on:click="onFormStepAnalysePatientExistingChanged(props.item)"
+                                color="accent"
+                                class="ma-2"
+                                round
+                                flat
+                        >
+                            {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepPatient.data.table.add') }}
+                        </v-btn>
+                    </td>
+                </template>
+            </v-data-table>
         </v-flex>
 
         <v-flex class="pt-2" xs12>
@@ -69,19 +68,18 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Vue, Watch} from 'vue-property-decorator';
-    import {Patient} from '@/modules/patient/models/patient';
-    import {PatientApiService} from '@/modules/patient/services/patientApiService';
-    import Pagination from '@/modules/common/helpers/pagination';
-    import {SortingDirection} from '@/modules/common/models/page';
-    import AnalyseListPagination from '@/modules/analyse/components/AnalyseListPagination.vue';
-    import {Locale} from '@/modules/user/store/userState';
-    import {State} from 'vuex-class';
-    import StringUtils from '@/utils/stringUtils';
+    import BasePagination from '@/modules/common/components/BasePagination.vue';
     import SingleDatePicker from '@/modules/common/components/SingleDatePicker.vue';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
+    import Pagination from '@/modules/common/helpers/pagination';
     import EventWithValidation from '@/modules/common/models/eventWithValidation';
-    import BasePagination from '@/modules/common/components/BasePagination.vue';
+    import {SortingDirection} from '@/modules/common/models/page';
+    import {Patient} from '@/modules/patient/models/patient';
+    import {PatientApiService} from '@/modules/patient/services/patientApiService';
+    import {Locale} from '@/modules/user/store/userState';
+    import StringUtils from '@/utils/stringUtils';
+    import {Component, Emit, Vue, Watch} from 'vue-property-decorator';
+    import {State} from 'vuex-class';
 
     @Component({
         components: {BasePagination, SingleDatePicker}
@@ -143,7 +141,7 @@
             },
             {
                 text: 'analyse.component.createAnalyseFormDialog.stepper.stepPatient.data.table.headers.actions',
-                align: 'left',
+                align: 'center',
                 value: 'actions',
                 width: '10%',
                 sortable: false

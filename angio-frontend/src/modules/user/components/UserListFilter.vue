@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-flex xs12 px-0 pb-4>
+        <v-flex xs12 px-0 pb-0>
             <v-text-field
                     v-on:input="searchUpdate"
                     v-bind:value="search"

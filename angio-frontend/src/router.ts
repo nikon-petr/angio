@@ -4,6 +4,7 @@ import NotFound from '@/modules/common/views/404.vue';
 import ServerError from '@/modules/common/views/500.vue';
 import About from '@/modules/common/views/About.vue';
 import Landing from '@/modules/common/views/Landing.vue';
+import {notificationRouteConfig} from '@/modules/notification/notificationRouter';
 import {organizationRouteConfig} from '@/modules/organization/organizationRoute';
 import {roleRouterConfig} from '@/modules/role/roleRouterConfig';
 import {UserPermission} from '@/modules/user/store/userState';
@@ -36,7 +37,8 @@ rootRouterConfig = rootRouterConfig.concat(
     userRouterConfig,
     analyseRouterConfig,
     organizationRouteConfig,
-    roleRouterConfig
+    roleRouterConfig,
+    notificationRouteConfig
 );
 
 const rootRouter: Router = new Router({

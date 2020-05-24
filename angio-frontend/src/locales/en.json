@@ -537,6 +537,38 @@
       },
       "notificationScroller": {
         "subheader": "Notifications"
+      },
+      "newNotificationForm": {
+        "title": "Send push-notification",
+        "hint": "The message will be sent to all users.",
+        "field": {
+          "type": {
+            "label": "Notification type",
+            "value": {
+              "info": "Info",
+              "success": "Success",
+              "warning": "Warning",
+              "error": "Error"
+            }
+          },
+          "message": "Notification body"
+        },
+        "validation": {
+          "type": {
+            "NotEmpty": "Message type must be filled"
+          },
+          "message": {
+            "NotEmpty": "Message body must not be empty"
+          }
+        },
+        "button": {
+          "send": "Send"
+        }
+      }
+    },
+    "view": {
+      "newNotification": {
+        "title": "Send notification"
       }
     }
   },
@@ -784,8 +816,7 @@
             "subtitle": "Fill out basic patient information",
             "data": {
               "switch": "Download patient from database",
-              "searchTitle": "Search for patients in the database",
-              "searchField": "Search",
+              "searchField": "Search for patients in the database",
               "table": {
                 "noDataText": "No patients found",
                 "add": "Add",

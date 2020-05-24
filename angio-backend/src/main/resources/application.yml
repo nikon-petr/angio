@@ -18,6 +18,10 @@ spring:
                     use_second_level_cache: true
                     region:
                         factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+                jdbc:
+                    batch_size: 50
+                    order_inserts: true
+
             javax:
                 persistence:
                     sharedCache:
@@ -45,7 +49,7 @@ spring:
         password: q1w2e3
 
     datasource:
-        url: jdbc:postgresql://localhost:5432/angio_app_db
+        url: jdbc:postgresql://localhost:5432/angio_app_db?reWriteBatchedInserts=true
         username: angio_app
         password: q1w2e3
         driver-class-name: org.postgresql.Driver
