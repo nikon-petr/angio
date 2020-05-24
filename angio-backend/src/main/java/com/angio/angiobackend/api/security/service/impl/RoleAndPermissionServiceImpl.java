@@ -52,6 +52,7 @@ public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
     }
 
     @Override
+    @Transactional
     @PreAuthorize("hasAuthority('ROLE_CREATE')")
     public RoleDto createRole(@NotNull UpdateRoleDto dto) {
         log.debug("createRole() - start, dto={}", dto);
