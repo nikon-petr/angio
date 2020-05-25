@@ -38,6 +38,14 @@ public class DetailedAnalyseDto implements Serializable {
     private AnalyseStatusDto status;
 
     /**
+     * Analyse execution configuration
+     */
+    @Valid
+    @NotNull(groups = {NewAnalyse.class})
+    @ApiModelProperty(value = "Analyse execution configuration")
+    private ExecutionConfigurationDto executionConfiguration;
+
+    /**
      * Analyse original image
      */
     @Valid

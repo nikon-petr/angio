@@ -15,6 +15,11 @@ spring:
         password: q1w2e3
         driver-class-name: org.postgresql.Driver
 
+logging:
+    level:
+        root: WARN
+        com.angio.analyseexecutor: DEBUG
+
 analyseexecutor:
     app:
         upload-directory: analyse-executor/src/main/resources/static/uploads/

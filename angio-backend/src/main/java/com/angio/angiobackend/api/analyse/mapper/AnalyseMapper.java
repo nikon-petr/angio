@@ -24,6 +24,7 @@ import org.mapstruct.ReportingPolicy;
                 UploadMapper.class,
                 UserMapper.class,
                 AnalyseStatusMapper.class,
+                ExecutionConfigurationMapper.class,
                 AdditionalInfoMapper.class,
                 GeometricAnalyseMapper.class,
                 BloodFlowAnalyseMapper.class
