@@ -28,6 +28,12 @@ public class AnalyseJmsDto implements Serializable {
     private AnalyseStatusDto analyseStatus;
 
     /**
+     * Analyse execution configuration
+     */
+    @ApiModelProperty(value = "Analyse execution configuration")
+    private ExecutionConfigurationDto executionConfiguration;
+
+    /**
      * Analyse original image
      */
     @ApiModelProperty("Analyse original image")

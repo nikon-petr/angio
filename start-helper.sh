@@ -14,4 +14,8 @@ case $1 in
         COMMAND="${COMMAND} -f docker-compose.local.prod.yml";;
 esac
 
-eval "${COMMAND} up"
+if [ -z "$2" ] && [ -z "$3" ]; then
+    eval "${COMMAND} up"
+elif [ $2 = "build" ]; then
+    eval "${COMMAND} build $3"
+fi

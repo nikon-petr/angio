@@ -1,0 +1,41 @@
+databaseChangeLog:
+- changeSet:
+    id: 021
+    author: nikon-petr
+    changes:
+    - addColumn:
+        tableName: analyses
+        columns:
+        - column:
+            name: macula_blood_flow
+            type: BOOLEAN
+        - column:
+            name: optic_disk_blood_flow
+            type: BOOLEAN
+        - column:
+            name: geometric
+            type: BOOLEAN
+        - column:
+            name: profile_cystic_volume
+            type: BOOLEAN
+        - column:
+            name: profile_retinal_positive_extremum
+            type: BOOLEAN
+    - addColumn:
+        tableName: analyses_aud
+        columns:
+        - column:
+            name: macula_blood_flow
+            type: BOOLEAN
+        - column:
+            name: optic_disk_blood_flow
+            type: BOOLEAN
+        - column:
+            name: geometric
+            type: BOOLEAN
+        - column:
+            name: profile_cystic_volume
+            type: BOOLEAN
+        - column:
+            name: profile_retinal_positive_extremum
+            type: BOOLEAN

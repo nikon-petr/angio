@@ -7,17 +7,17 @@ import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URI;
 
 import static com.mathworks.toolbox.javabuilder.Images.renderArrayData;
 
 @Slf4j
+@Component
 public class GeometricAnalyseAdapter {
 
-    public GeometricAnalyseModel runAnalyse(String absoluteImagePath) throws MWException, IOException {
+    public GeometricAnalyseModel runAnalyse(String absoluteImagePath) throws MWException {
 
         log.info("runAnalyse() - start for image: {}", absoluteImagePath);
 

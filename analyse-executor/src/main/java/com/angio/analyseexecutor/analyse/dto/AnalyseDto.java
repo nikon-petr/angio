@@ -22,6 +22,11 @@ public class AnalyseDto implements Serializable {
     private Long id;
 
     /**
+     * Analyse execution configuration
+     */
+    private ExecutionConfigurationDto executionConfiguration;
+
+    /**
      * Analyse original image
      */
     private StaticFileDto originalImage;

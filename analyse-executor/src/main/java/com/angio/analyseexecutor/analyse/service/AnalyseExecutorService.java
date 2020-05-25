@@ -4,6 +4,7 @@ import com.angio.analyseexecutor.AnalyseExecutorProperties;
 import com.angio.analyseexecutor.analyse.dto.AnalyseDto;
 import com.angio.analyseexecutor.analyse.dto.BloodFlowAnalyseDto;
 import com.angio.analyseexecutor.analyse.dto.DensityDto;
+import com.angio.analyseexecutor.analyse.dto.ExecutionConfigurationDto;
 import com.angio.analyseexecutor.analyse.dto.GeometricAnalyseDto;
 import com.angio.analyseexecutor.analyse.dto.IschemiaDto;
 import com.angio.analyseexecutor.analyse.dto.MaculaDto;
@@ -32,6 +33,8 @@ import java.util.List;
 @Service
 public class AnalyseExecutorService {
 
+    private final BloodFlowAnalyseAdapter bloodFlowAnalyseAdapter;
+    private final GeometricAnalyseAdapter geometricAnalyseAdapter;
     private final AnalyseExecutorProperties props;
     private final UploadsDao dao;
 
@@ -39,53 +42,58 @@ public class AnalyseExecutorService {
 
         log.info("startNewAnalyse() - start");
 
+        log.debug("startNewAnalyse() - get original image");
         File originalImage = new File(props.getUploadDirectory(), analyse.getOriginalImage().getFilename());
-
-        log.info("startNewAnalyse() - geometric analyse start");
-        GeometricAnalyseModel geometricAnalyseModel = new GeometricAnalyseAdapter().runAnalyse(originalImage.getAbsolutePath());
-
-        log.info("startNewAnalyse() - save images of geometric analyse");
         List<StaticFileDto> uploads = new ArrayList<>();
-        StaticFileDto binarizedImage = StaticFileDto.of(FileUtil.saveImage(geometricAnalyseModel.getBinarized(), props.getResultImageFormat(), props.getUploadDirectory()));
-        StaticFileDto skelImage =  StaticFileDto.of(FileUtil.saveImage(geometricAnalyseModel.getSkel(), props.getResultImageFormat(), props.getUploadDirectory()));
-        uploads.add(binarizedImage);
-        uploads.add(skelImage);
 
-        GeometricAnalyseDto geometricAnalyse = new GeometricAnalyseDto();
-        geometricAnalyse.setBinarizedImage(binarizedImage);
-        geometricAnalyse.setSkeletonizedImage(skelImage);
+        log.debug("startNewAnalyse() - execute analyses by execution config");
+        ExecutionConfigurationDto config = analyse.getExecutionConfiguration();
 
-
-        List<VesselDto> vessels = new ArrayList<>();
-        for (VesselModel vesselModel : geometricAnalyseModel.getAnalyseResult()) {
-            StaticFileDto vesselImage = StaticFileDto.of(FileUtil.saveImage(vesselModel.getVesselImage(), props.getResultImageFormat(), props.getUploadDirectory()));
-            StaticFileDto mainVesselImage = StaticFileDto.of(FileUtil.saveImage(vesselModel.getMainVessel(), props.getResultImageFormat(), props.getUploadDirectory()));
-            uploads.add(vesselImage);
-            uploads.add(mainVesselImage);
-
-            VesselDto vessel = new VesselDto();
-            vessel.setVesselImage(vesselImage);
-            vessel.setMainVesselImage(mainVesselImage);
-            vessel.setTortuosityDegree((float) vesselModel.getTortuosity());
-            vessel.setCountOfBranches(vesselModel.getCountOfBranchesOf1Orders());
-            vessel.setBranchingDegree((float) vesselModel.getBranching());
-            vessel.setArea((float) vesselModel.getArea());
-            vessel.setAreaPercent((float) vesselModel.getAreaPercent());
-
-            vessels.add(vessel);
+        log.debug("startNewAnalyse() - maculaBloodFlow willExecute: {}", config.getMaculaBloodFlow());
+        if (config.getMaculaBloodFlow()) {
+            maculaBloodFlow(analyse, originalImage, uploads);
         }
 
-        geometricAnalyse.setVessels(vessels);
+        log.debug("startNewAnalyse() - opticDiskBloodFlow willExecute: {}", config.getOpticDiskBloodFlow());
+        if (config.getOpticDiskBloodFlow()) {
+            opticDiskBloodFlowDensity(analyse, originalImage, uploads);
+        }
 
-        analyse.setGeometricAnalyse(geometricAnalyse);
-        log.info("startNewAnalyse() - blood flow analyse end");
+        log.debug("startNewAnalyse() - geometric willExecute: {}", config.getGeometric());
+        if (config.getGeometric()) {
+            geometric(analyse, originalImage, uploads);
+        }
 
-        log.info("startNewAnalyse() - blood flow analyse");
-        BloodFlowAnalyseResult bloodFlowAnalyseResult = new BloodFlowAnalyseAdapter().runAnalyse(originalImage.getAbsolutePath());
+        log.debug("startNewAnalyse() - profileCysticVolume willExecute: {}", config.getProfileCysticVolume());
+        if (config.getProfileCysticVolume()) {
+            profileCysticVolume(analyse, originalImage, uploads);
+        }
 
-        log.info("startNewAnalyse() - save images of blood flow analyse");
-        StaticFileDto ishemiaImage = StaticFileDto.of(FileUtil.saveImage(bloodFlowAnalyseResult.getIshemiaImage(), props.getResultImageFormat(), props.getUploadDirectory()));
-        StaticFileDto densityImage = StaticFileDto.of(FileUtil.saveImage(bloodFlowAnalyseResult.getCapillarDensityImage(), props.getResultImageFormat(), props.getUploadDirectory()));
+        log.debug("startNewAnalyse() - profileRetinalPositiveExtremum willExecute: {}", config.getProfileRetinalPositiveExtremum());
+        if (config.getProfileRetinalPositiveExtremum()) {
+            profileRetinalPositiveExtremum(analyse, originalImage, uploads);
+        }
+
+        log.debug("maculaBloodFlow() - insert image information to db");
+        dao.insertImageInfo(uploads);
+
+        log.info("startNewAnalyse() - end");
+        return analyse;
+    }
+
+    private void maculaBloodFlow(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) throws
+            IOException, MWException, SQLException {
+
+        log.info("maculaBloodFlow() - start of blood flow analyse");
+        BloodFlowAnalyseResult bloodFlowAnalyseResult = bloodFlowAnalyseAdapter.runAnalyse(originalImage.getAbsolutePath());
+
+        log.debug("maculaBloodFlow() - save images of blood flow analyse");
+        StaticFileDto ishemiaImage = StaticFileDto.of(
+                FileUtil.saveImage(bloodFlowAnalyseResult.getIshemiaImage(), props.getResultImageFormat(),
+                        props.getUploadDirectory()));
+        StaticFileDto densityImage = StaticFileDto.of(
+                FileUtil.saveImage(bloodFlowAnalyseResult.getCapillarDensityImage(), props.getResultImageFormat(),
+                        props.getUploadDirectory()));
         uploads.add(ishemiaImage);
         uploads.add(densityImage);
 
@@ -125,11 +133,71 @@ public class AnalyseExecutorService {
 
         analyse.setBloodFlowAnalyse(bloodFlowAnalyse);
 
-        log.info("startNewAnalyse() - insert image information to db");
-        dao.insertImageInfo(uploads);
+        log.info("maculaBloodFlow() - end of blood flow analyse");
+    }
 
-        log.info("startNewAnalyse() - blood flow analyse end");
-        log.info("startNewAnalyse() - end");
-        return analyse;
+    private void opticDiskBloodFlowDensity(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) {
+        log.info("opticDiskBloodFlowDensity() - start");
+        throw new UnsupportedOperationException("analyse of optiс disk blood flow is not implemented");
+    }
+
+    private void geometric(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) throws
+            MWException, IOException {
+
+        log.info("geometric() - start of geometric analyse");
+        GeometricAnalyseModel geometricAnalyseModel = geometricAnalyseAdapter.runAnalyse(originalImage.getAbsolutePath());
+
+        log.debug("geometric() - save images of geometric analyse");
+        StaticFileDto binarizedImage = StaticFileDto.of(
+                FileUtil.saveImage(geometricAnalyseModel.getBinarized(), props.getResultImageFormat(),
+                        props.getUploadDirectory()));
+        StaticFileDto skelImage = StaticFileDto.of(
+                FileUtil.saveImage(geometricAnalyseModel.getSkel(), props.getResultImageFormat(),
+                        props.getUploadDirectory()));
+        uploads.add(binarizedImage);
+        uploads.add(skelImage);
+
+        GeometricAnalyseDto geometricAnalyse = new GeometricAnalyseDto();
+        geometricAnalyse.setBinarizedImage(binarizedImage);
+        geometricAnalyse.setSkeletonizedImage(skelImage);
+
+
+        List<VesselDto> vessels = new ArrayList<>();
+        for (VesselModel vesselModel : geometricAnalyseModel.getAnalyseResult()) {
+            StaticFileDto vesselImage = StaticFileDto.of(
+                    FileUtil.saveImage(vesselModel.getVesselImage(), props.getResultImageFormat(),
+                            props.getUploadDirectory()));
+            StaticFileDto mainVesselImage = StaticFileDto.of(
+                    FileUtil.saveImage(vesselModel.getMainVessel(), props.getResultImageFormat(),
+                            props.getUploadDirectory()));
+            uploads.add(vesselImage);
+            uploads.add(mainVesselImage);
+
+            VesselDto vessel = new VesselDto();
+            vessel.setVesselImage(vesselImage);
+            vessel.setMainVesselImage(mainVesselImage);
+            vessel.setTortuosityDegree((float) vesselModel.getTortuosity());
+            vessel.setCountOfBranches(vesselModel.getCountOfBranchesOf1Orders());
+            vessel.setBranchingDegree((float) vesselModel.getBranching());
+            vessel.setArea((float) vesselModel.getArea());
+            vessel.setAreaPercent((float) vesselModel.getAreaPercent());
+
+            vessels.add(vessel);
+        }
+
+        geometricAnalyse.setVessels(vessels);
+
+        analyse.setGeometricAnalyse(geometricAnalyse);
+        log.info("geometric() - end of geometric analyse");
+    }
+
+    private void profileCysticVolume(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) {
+        log.info("profileCysticVolume() - start");
+        throw new UnsupportedOperationException("analyse of cystic volume is not implemented");
+    }
+
+    private void profileRetinalPositiveExtremum(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) {
+        log.info("profileRetinalPositiveExtremum() - start");
+        throw new UnsupportedOperationException("analyse of retinal positive extremum is not implemented");
     }
 }

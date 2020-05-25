@@ -3,6 +3,7 @@ package com.angio.angiobackend.api.analyse.entity;
 import com.angio.angiobackend.api.analyse.embeddable.AdditionalInfo;
 import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
 import com.angio.angiobackend.api.analyse.embeddable.BloodFlowAnalyse;
+import com.angio.angiobackend.api.analyse.embeddable.ExecutionConfiguration;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse;
 import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import com.angio.angiobackend.api.user.entities.User;
@@ -56,6 +57,9 @@ public class Analyse {
 
     @Embedded
     private AnalyseStatus status;
+
+    @Embedded
+    private ExecutionConfiguration executionConfiguration;
 
     @Embedded
     private AdditionalInfo additionalInfo;

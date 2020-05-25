@@ -59,6 +59,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/020_security_enhancement_changes.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/021_add_execution_configuration.yml
 
 # always in the end of file
 - include:

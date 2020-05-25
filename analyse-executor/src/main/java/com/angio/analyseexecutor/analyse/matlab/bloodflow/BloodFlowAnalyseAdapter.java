@@ -5,15 +5,15 @@ import com.mathworks.toolbox.javabuilder.Images;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URI;
 
 @Slf4j
+@Component
 public class BloodFlowAnalyseAdapter {
 
-    public BloodFlowAnalyseResult runAnalyse(String absoluteImagePath) throws IOException, MWException {
+    public BloodFlowAnalyseResult runAnalyse(String absoluteImagePath) throws MWException {
 
         BloodFlowAnalyser bloodFlowAnalyser = new BloodFlowAnalyser();
 
