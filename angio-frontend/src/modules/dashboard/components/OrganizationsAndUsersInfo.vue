@@ -43,16 +43,5 @@
 
         @Prop()
         public readonly dashboard!: DashboardModel;
-
-        public organizationsCount!: string;
-
-        public usersCount!: string;
-
-        public data() {
-            return {
-                organizationsCount: this.dashboard.statistics.organization.totalCount.toString(),
-                usersCount: this.dashboard.statistics.user.totalCount.toString()
-            }
-        }
     }
 </script>

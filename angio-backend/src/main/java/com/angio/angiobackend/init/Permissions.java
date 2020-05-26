@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum  Permissions {
 
     ANALYSE_VIEW("Просмотр анализа"),
+    ANALYSE_VIEW_ALL("Просмотр всех анализов"),
     ANALYSE_CREATE("Создание анализа"),
     ANALYSE_EDIT("Изменение анализа"),
     ANALYSE_EXECUTE_ACTION("Изменение анализа"),

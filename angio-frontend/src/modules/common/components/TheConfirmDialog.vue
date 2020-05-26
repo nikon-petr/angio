@@ -119,6 +119,8 @@
 
         get icon(): string | undefined {
             switch (this.type) {
+                case ConfirmType.INFO:
+                    return 'info_outline';
                 case ConfirmType.QUESTION:
                     return 'help';
                 case ConfirmType.DELETE:
@@ -134,6 +136,8 @@
 
         get color(): string | undefined {
             switch (this.type) {
+                case ConfirmType.INFO:
+                    return 'primary';
                 case ConfirmType.QUESTION:
                     return 'primary';
                 case ConfirmType.DELETE:

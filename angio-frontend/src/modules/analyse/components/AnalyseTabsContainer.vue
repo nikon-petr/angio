@@ -4,10 +4,10 @@
             <v-card>
                 <v-card-text>
                     <v-tabs dark centered>
-                        <v-tab ripple v-if="isGeometricTabEnabled()">
+                        <v-tab ripple v-if="analyse.executionConfiguration.geometric">
                             {{ $t('analyse.component.details.analyseTabs.geometricAnalyse.tabName') }}
                         </v-tab>
-                        <v-tab-item v-if="isGeometricTabEnabled()">
+                        <v-tab-item v-if="analyse.executionConfiguration.geometric">
                             <AnalyseGeometricTab
                                     v-bind:analyse-id="analyse.id"
                                     v-bind:original-image="analyse.originalImage"
@@ -16,20 +16,20 @@
                                     v-bind:delete-vessel="deleteVessel"
                             ></AnalyseGeometricTab>
                         </v-tab-item>
-                        <v-tab ripple v-if="isIschemiaAndMaculaTabEnabled()">
+                        <v-tab ripple v-if="analyse.executionConfiguration.maculaBloodFlow">
                             {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.tabName') }}
                         </v-tab>
-                        <v-tab-item v-if="isIschemiaAndMaculaTabEnabled()">
+                        <v-tab-item v-if="analyse.executionConfiguration.maculaBloodFlow">
                             <AnalyseIschemiaAndMaculaTab
                                     v-bind:ischemia-image="analyse.bloodFlowAnalyse.ischemiaImage"
                                     v-bind:ischemias="analyse.bloodFlowAnalyse.ischemias"
                                     v-bind:macula="analyse.bloodFlowAnalyse.macula"
                             ></AnalyseIschemiaAndMaculaTab>
                         </v-tab-item>
-                        <v-tab ripple v-if="isDensityTabEnabled()">
+                        <v-tab ripple v-if="analyse.executionConfiguration.maculaBloodFlow">
                             {{ $t('analyse.component.details.analyseTabs.density.tabName') }}
                         </v-tab>
-                        <v-tab-item v-if="isDensityTabEnabled()">
+                        <v-tab-item v-if="analyse.executionConfiguration.maculaBloodFlow">
                             <AnalyseDensityTab
                                     v-bind:density-image="analyse.bloodFlowAnalyse.densityImage"
                                     v-bind:densities="analyse.bloodFlowAnalyse.densities"
@@ -64,19 +64,5 @@
         @Prop()
         public readonly deleteVessel!: (analyseId: number, vesselId: number) => Promise<void>;
 
-        public isGeometricTabEnabled() {
-            return this.analyse.geometricAnalyse;
-        }
-
-        public isDensityTabEnabled() {
-            return this.analyse.bloodFlowAnalyse.densityImage
-                && this.analyse.bloodFlowAnalyse.densities
-        }
-
-        public isIschemiaAndMaculaTabEnabled() {
-            return this.analyse.bloodFlowAnalyse.ischemiaImage
-                && this.analyse.bloodFlowAnalyse.ischemias
-                && this.analyse.bloodFlowAnalyse.macula
-        }
     }
 </script>

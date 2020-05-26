@@ -70,7 +70,7 @@
         }
 
         public formatValueWithPercent(value: number, percent: number): string {
-            return value + " (" + (isNaN(percent) ? 0 : percent) + "%)";
+            return `${value} (${(isNaN(percent) ? 0 : percent.toFixed(2))}%)`;
         }
     }
 </script>

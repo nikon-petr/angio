@@ -1015,17 +1015,19 @@
     "component": {
       "actions": {
         "title": "Actions",
-        "deleteAnalyses": "Remove all analyses",
-        "deleteFiles": "Remove all files",
+        "deleteAnalyses": "Purge deleted analyses",
+        "deleteFiles": "Purge unused files",
         "dialogDeleteAnalyses": {
-          "title": "Delete analyses",
-          "text": "Are you sure you want to delete the tests??",
-          "error": "An error occurred while deleting analyzes"
+          "title": "Analyses purging",
+          "text": "Are you sure you want to purge analyses? All analyzes in 'deleted' status will be deleted from the database",
+          "error": "An error occurred while purging analyses",
+          "success": "{0} analyses were deleted"
         },
         "dialogDeleteFiles": {
-          "title": "File cleaning",
+          "title": "Files purging",
           "text": "Are you sure you want to delete unused files?",
-          "error": "An error occurred while cleaning files"
+          "error": "An error occurred while cleaning files",
+          "success": "{0} files were deleted"
         }
       },
       "analysesInfo": {
