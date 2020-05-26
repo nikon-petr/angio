@@ -59,7 +59,7 @@ public class DashboardServiceImpl implements DashboardService {
     private void calculateAnalyseStatistics(StatisticsDto dto) {
         log.debug("calculateAnalyseStatistics() - start");
         log.debug("calculateAnalyseStatistics() - count total");
-        long totalCount = analyseRepository.count();
+        long totalCount = analyseRepository.count(analyseSpecification.notDeleted());
         log.debug("calculateAnalyseStatistics() - count success");
         long successCount = analyseRepository.count(analyseSpecification.inStatus(AnalyseStatusType.SUCCESS));
         log.debug("calculateAnalyseStatistics() - count failure");
@@ -67,9 +67,9 @@ public class DashboardServiceImpl implements DashboardService {
         dto.setAnalyse(new AnalyseStatisticsDto()
                 .setTotalCount(totalCount)
                 .setSuccessCount(successCount)
-                .setSuccessPercent((double) successCount / (double) totalCount)
+                .setSuccessPercent(calculatePercentFor(totalCount, successCount))
                 .setFailedCount(failedCount)
-                .setFailedPercent((double) failedCount / (double) totalCount));
+                .setFailedPercent(calculatePercentFor(totalCount, failedCount)));
         log.debug("calculateAnalyseStatistics() - end");
     }
 
@@ -90,5 +90,9 @@ public class DashboardServiceImpl implements DashboardService {
         statistics.setOrganization(new OrganizationStatisticsDto()
                 .setTotalCount(totalCount));
         log.debug("calculateOrganizationStatistics() - end");
+    }
+
+    private double calculatePercentFor(long total, long part) {
+        return part == 0 ? 0 : (double) part / (double) total * 100;
     }
 }

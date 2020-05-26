@@ -64,10 +64,7 @@
         };
 
         public mounted() {
-            if (!this.fetching) {
-                this.fetching = true;
-            }
-
+            this.fetching = true;
             DashboardApiService
                 .getDashboard()
                 .then((response) => {

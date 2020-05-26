@@ -11,7 +11,7 @@
             <h5 class="text-truncate text-uppercase">
                 {{ title }}
             </h5>
-            <h1>{{ content }}</h1>
+            <h1 class="display-1">{{ content }}</h1>
         </div>
 
         <div
@@ -20,8 +20,8 @@
                 class="text-xs-center"
         >
             <v-progress-circular
-                    v-bind:indeterminate="true"
                     v-bind:background-opacity="0"
+                    indeterminate
                     pa-0
                     ma-0
             ></v-progress-circular>

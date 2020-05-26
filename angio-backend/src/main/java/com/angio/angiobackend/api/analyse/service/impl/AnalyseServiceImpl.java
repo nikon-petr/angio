@@ -32,6 +32,7 @@ import com.angio.angiobackend.api.patient.service.PatientService;
 import com.angio.angiobackend.api.uploads.repository.UploadRepository;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.service.CurrentUserResolver;
+import com.angio.angiobackend.init.Permissions;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -195,9 +196,13 @@ public class AnalyseServiceImpl implements AnalyseService {
                 .and(analyseSpecification.analysePeriod(startDate, endDate))
                 .and(analyseSpecification.inStatus(statuses))
                 .and(analyseSpecification.starred(currentUser, isStarred))
-                .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
+
+        if (!CurrentUserResolver.hasPermission(Permissions.ANALYSE_VIEW_ALL)) {
+            log.debug("filterAnalysesByQueryString() - filter analyse by organization");
+            analyseSpecification.ownedBy(currentUser);
+        }
 
         log.debug("filterAnalysesByQueryString() - map sorting fields");
         Pageable mappedPageRequest = mapSortingFields(pageable);

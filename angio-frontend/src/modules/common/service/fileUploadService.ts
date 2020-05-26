@@ -21,8 +21,8 @@ export class FileUploadService {
         return axios.post<Response<StaticFile>>('/upload/image', formData, config);
     }
 
-    public static deleteImages(): AxiosPromise<Response<void>> {
-        log.debug('create deleteImages() request');
+    public static purgeUploadedImages(): AxiosPromise<Response<number>> {
+        log.debug('create purgeUploadedImages request');
         return axios.delete('/upload/image');
     }
 }

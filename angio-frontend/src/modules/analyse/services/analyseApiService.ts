@@ -93,8 +93,8 @@ export class AnalyseApiService {
         return axios.post<Response<Analyse>>(`/analyse`, analyse);
     }
 
-    public static deleteAnalyses(): AxiosPromise<Response<void>> {
-        log.debug('create deleteAnalyses request');
+    public static purgeDeletedAnalyses(): AxiosPromise<Response<number>> {
+        log.debug('create purgeDeletedAnalyses request');
         return axios.delete('/analyse');
     }
 }

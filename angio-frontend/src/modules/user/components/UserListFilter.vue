@@ -142,7 +142,7 @@
             return organization.name
         }
 
-        public getOrganizationId(organization: Organization): number {
+        public getOrganizationId(organization: Organization): number | undefined {
             return organization.id
         }
     }

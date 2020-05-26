@@ -143,20 +143,20 @@
                     <span>{{ $t('common.component.theDrawer.link.newNotification.tooltip') }}</span>
                 </v-tooltip>
 
-                <v-tooltip right>
-                    <template v-slot:activator="{ on }">
-                        <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/about" ripple>
-                            <v-list-tile-action>
-                                <v-icon>info_outline</v-icon>
-                            </v-list-tile-action>
-
-                            <v-list-tile-title>{{ $t('common.component.theDrawer.link.about.name') }}</v-list-tile-title>
-                        </v-list-tile>
-                    </template>
-                    <span>{{ $t('common.component.theDrawer.link.about.tooltip') }}</span>
-                </v-tooltip>
-
             </PreAuthorize>
+
+            <v-tooltip right>
+                <template v-slot:activator="{ on }">
+                    <v-list-tile v-on="on" v-bind:active-class="ACTIVE_CLASS" to="/about" ripple>
+                        <v-list-tile-action>
+                            <v-icon>info_outline</v-icon>
+                        </v-list-tile-action>
+
+                        <v-list-tile-title>{{ $t('common.component.theDrawer.link.about.name') }}</v-list-tile-title>
+                    </v-list-tile>
+                </template>
+                <span>{{ $t('common.component.theDrawer.link.about.tooltip') }}</span>
+            </v-tooltip>
 
         </v-list>
     </v-navigation-drawer>
