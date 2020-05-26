@@ -1,28 +1,28 @@
 <template>
     <div class="pl-3">
         <v-checkbox
+                v-if="isFormStepAnalyseTypeGeometric()"
+                v-model="executionConfigurationSynced.geometric"
+                v-bind:disabled="executionConfigurationSynced.opticDiskBloodFlow"
                 v-on:change="onFormStepAnalyseTypeChanged"
                 v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.data.geometric.tortuosityAndBranching')"
-                v-model="formStepAnalyseParameters"
-                v-if="isFormStepAnalyseTypeGeometric()"
                 hide-details
-                value="TORTUOSITY_AND_BRANCHING"
         ></v-checkbox>
         <v-checkbox
-                v-on:change="onFormStepAnalyseTypeChanged"
-                v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.data.geometric.ishemiaAndMacula')"
-                v-model="formStepAnalyseParameters"
                 v-if="isFormStepAnalyseTypeGeometric()"
+                v-model="executionConfigurationSynced.maculaBloodFlow"
+                v-bind:disabled="executionConfigurationSynced.opticDiskBloodFlow"
+                v-on:change="onFormStepAnalyseTypeChanged"
+                v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.data.geometric.maculaBloodFlow')"
                 hide-details
-                value="ISCHEMIA_AND_MACULA"
         ></v-checkbox>
         <v-checkbox
-                v-on:change="onFormStepAnalyseTypeChanged"
-                v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.data.geometric.density')"
-                v-model="formStepAnalyseParameters"
                 v-if="isFormStepAnalyseTypeGeometric()"
+                v-model="executionConfigurationSynced.opticDiskBloodFlow"
+                v-bind:disabled="executionConfigurationSynced.geometric || executionConfigurationSynced.maculaBloodFlow"
+                v-on:change="onFormStepAnalyseTypeChanged"
+                v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepChooseAnalyseParameter.data.geometric.opticDiskBloodFlow')"
                 hide-details
-                value="DENSITY"
                 class="mb-4"
         ></v-checkbox>
         <v-layout
@@ -42,7 +42,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
+    import {ExecutionConfiguration} from '@/modules/analyse/models/analyse';
+    import {Component, Emit, Prop, PropSync, Vue} from 'vue-property-decorator';
     import {FormStepAnalyseParameter, FormStepAnalyseType} from '@/modules/analyse/helpers/formStep';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
     import EventWithValidation from '@/modules/common/models/eventWithValidation';
@@ -51,7 +52,13 @@
     export default class CreateAnalyseFormStepChooseAnalyseParameter extends Vue {
 
         @Prop()
-        public readonly formStepAnalyseType!: FormStepAnalyseType | undefined;
+        public readonly formStepAnalyseType?: FormStepAnalyseType;
+
+        @Prop()
+        public readonly executionConfiguration!: ExecutionConfiguration;
+
+        @PropSync('executionConfiguration')
+        public executionConfigurationSynced!: ExecutionConfiguration;
 
         public formStepAnalyseParameters: FormStepAnalyseParameter[] = [];
 
@@ -64,22 +71,16 @@
         }
 
         @Emit(CommonEvent.CHANGE)
-        public onFormStepAnalyseTypeChanged(value: string): EventWithValidation<FormStepAnalyseParameter[]> {
-            if (value.toString().length != 0) {
-                this.formStepAnalyseParameters = value.toString().split(',').map(el => el as FormStepAnalyseParameter);
-            } else {
-                this.formStepAnalyseParameters = [];
-            }
-
+        public onFormStepAnalyseTypeChanged(value: string): EventWithValidation<void> {
             if (this.formStepAnalyseType == FormStepAnalyseType.GEOMETRIC) {
                 return {
-                    isValid: this.formStepAnalyseParameters.length > 0,
-                    payload: this.formStepAnalyseParameters
+                    isValid: this.executionConfigurationSynced.geometric
+                        || this.executionConfigurationSynced.maculaBloodFlow
+                        || this.executionConfigurationSynced.opticDiskBloodFlow
                 };
             } else {
                 return {
-                    isValid: false,
-                    payload: []
+                    isValid: false
                 };
             }
         }

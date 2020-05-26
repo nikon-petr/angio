@@ -41,6 +41,7 @@
         <v-stepper-content step="2">
             <CreateAnalyseFormStepChooseAnalyseParameter
                     v-bind:form-step-analyse-type="formStepAnalyseType"
+                    v-bind:execution-configuration.sync="analyse.executionConfiguration"
                     v-on:change="handleChangeAnalyseParameter"
             ></CreateAnalyseFormStepChooseAnalyseParameter>
             <v-btn
@@ -223,9 +224,6 @@
         // #1 Analyse type
         public formStepAnalyseType: FormStepAnalyseType | undefined = undefined;
 
-        // #2 Analyse parameter
-        public formStepAnalyseParameters: FormStepAnalyseParameter[] | undefined = undefined;
-
         // #4 Patient
         public formStepPatient: Patient = {
             id: undefined,
@@ -262,6 +260,13 @@
             analyseDate: undefined,
             geometricAnalyse: undefined,
             bloodFlowAnalyse: undefined,
+            executionConfiguration: {
+                geometric: false,
+                maculaBloodFlow: false,
+                opticDiskBloodFlow: false,
+                profileCysticVolume: false,
+                profileRetinalPositiveExtremum: false
+            },
             originalImage: {
                 filename: undefined,
                 url: undefined,
@@ -279,8 +284,7 @@
         }
 
         // #2 Analyse parameter
-        public handleChangeAnalyseParameter(eventPayload: EventWithValidation<FormStepAnalyseParameter[]>) {
-            this.formStepAnalyseParameters = eventPayload.payload;
+        public handleChangeAnalyseParameter(eventPayload: EventWithValidation<void>) {
             Vue.set(this.formValid, 1, eventPayload.isValid);
         }
 
@@ -310,8 +314,7 @@
 
         public data() {
             return {
-                formStepAnalyseType: undefined,
-                formStepAnalyseParameters: undefined
+                formStepAnalyseType: undefined
             }
         }
 
@@ -353,9 +356,6 @@
             // #1 Analyse type
             this.formStepAnalyseType = undefined;
 
-            // #2 Analyse parameter
-            this.formStepAnalyseParameters = undefined;
-
             // #4 Patient
             this.formStepPatient = {
                 id: undefined,
@@ -392,6 +392,13 @@
                 analyseDate: undefined,
                 geometricAnalyse: undefined,
                 bloodFlowAnalyse: undefined,
+                executionConfiguration: {
+                    geometric: false,
+                    maculaBloodFlow: false,
+                    opticDiskBloodFlow: false,
+                    profileCysticVolume: false,
+                    profileRetinalPositiveExtremum: false
+                },
                 originalImage: {
                     filename: undefined,
                     url: undefined,
