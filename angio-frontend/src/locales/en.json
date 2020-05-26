@@ -793,8 +793,8 @@
             "data": {
               "geometric": {
                 "tortuosityAndBranching": "The geometric characteristic of the vascular system",
-                "ishemiaAndMacula": "Ischemic zones and macula",
-                "density": "Density of capillaries in the macula"
+                "maculaBloodFlow": "Ischemic zones and density of capillaries in the macula",
+                "opticDiskBloodFlow": "Density of vessels in the optic disk"
               },
               "profile": {
                 "inDevelopment": "Retinal profile analysis under development"

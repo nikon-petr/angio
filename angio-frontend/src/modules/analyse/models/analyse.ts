@@ -19,6 +19,14 @@ export enum AnalyseType {
     SUBSEQUENT = 'SUBSEQUENT'
 }
 
+export interface ExecutionConfiguration {
+    maculaBloodFlow: boolean;
+    opticDiskBloodFlow: boolean;
+    geometric: boolean;
+    profileCysticVolume: boolean;
+    profileRetinalPositiveExtremum: boolean;
+}
+
 export interface AnalyseStatus {
     extension: string;
     type: AnalyseStatusType;
@@ -57,7 +65,7 @@ interface Diagnostician {
 
 export interface AnalyseAdditionalInfo {
     name: string;
-    patientId: number | undefined;
+    patientId?: number;
     diagnostician: Diagnostician;
     shortDescription: string;
     fullDescription: string;
@@ -67,13 +75,14 @@ export interface AnalyseAdditionalInfo {
 }
 
 export interface Analyse {
-    id: number | undefined,
-    starred: boolean | undefined,
-    analyseDate: Date | undefined,
+    id?: number,
+    starred?: boolean,
+    analyseDate?: Date,
+    executionConfiguration: ExecutionConfiguration;
     originalImage: StaticFile;
     additionalInfo: AnalyseAdditionalInfo,
-    geometricAnalyse: GeometricAnalyse | undefined,
-    bloodFlowAnalyse: BloodFlowAnalyse | undefined;
+    geometricAnalyse?: GeometricAnalyse,
+    bloodFlowAnalyse?: BloodFlowAnalyse;
 }
 
 export interface GeometricAnalyse {
