@@ -127,7 +127,9 @@
             FileUploadService.uploadImage(formData, progress)
                 .then(response => {
                     load(response.data.data.id);
-                    this.fileId = response.data.data.id;
+                    if (response.data.data.id != undefined) {
+                        this.fileId = response.data.data.id;
+                    }
                 }).catch((error) => {
                     this.$logger.debug(error)
                 });

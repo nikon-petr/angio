@@ -90,20 +90,22 @@
                 .then(async (analyseRes) => {
                     this.analyse = analyseRes.data.data;
 
-                    await PatientApiService.getPatientById(this.analyse.additionalInfo.patientId)
-                        .then((res) => {
-                            this.patient = res.data.data;
-                        })
-                        .catch((error) => this.$logger.error(error));
+                    if (this.analyse.additionalInfo.patientId != undefined) {
+                        await PatientApiService.getPatientById(this.analyse.additionalInfo.patientId)
+                            .then((res) => {
+                                this.patient = res.data.data;
+                            })
+                            .catch((error) => this.$logger.error(error));
 
-                    await AnalyseApiService.getAnalyseStarred(this.analyseId)
-                        .then((starredRes) => {
-                            if (this.analyse != undefined) {
-                                this.analyse.starred = starredRes.data.data.starred;
-                                this.starred = starredRes.data.data.starred;
-                            }
-                        })
-                        .catch((error) => this.$logger.error(error));
+                        await AnalyseApiService.getAnalyseStarred(this.analyseId)
+                            .then((starredRes) => {
+                                if (this.analyse != undefined) {
+                                    this.analyse.starred = starredRes.data.data.starred;
+                                    this.starred = starredRes.data.data.starred;
+                                }
+                            })
+                            .catch((error) => this.$logger.error(error));
+                    }
                 })
                 .catch((error) => this.$logger.error(error))
                 .finally(() => {
@@ -164,7 +166,7 @@
                 await AnalyseApiService
                     .deleteVessel(analyseId, vesselId)
                     .then(() => {
-                        if (this.analyse) {
+                        if (this.analyse && this.analyse.geometricAnalyse) {
                             this.analyse.geometricAnalyse.vessels
                                 = this.analyse.geometricAnalyse.vessels.filter(vessel => vessel.id != vesselId);
                         }

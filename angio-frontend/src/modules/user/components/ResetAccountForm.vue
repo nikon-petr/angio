@@ -97,7 +97,7 @@
         public readonly fetching!: boolean;
 
         @Prop()
-        public readonly errorMessages: string[];
+        public readonly errorMessages!: string[];
 
         public valid: boolean = false;
 
