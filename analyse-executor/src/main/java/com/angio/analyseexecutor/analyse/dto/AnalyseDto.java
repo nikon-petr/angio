@@ -40,4 +40,9 @@ public class AnalyseDto implements Serializable {
      * Blood flow analyse data.
      */
     private BloodFlowAnalyseDto bloodFlowAnalyse;
+
+    /**
+     * Profile analyse data.
+     */
+    private ProfileAnalyseDto profileAnalyse;
 }

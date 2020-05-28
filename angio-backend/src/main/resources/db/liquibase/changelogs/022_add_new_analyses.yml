@@ -1,0 +1,85 @@
+databaseChangeLog:
+- changeSet:
+    id: 022
+    author: nikon-petr
+    changes:
+    - addColumn:
+        tableName: densities
+        columns:
+        - column:
+            name: type
+            type: INT
+    - createTable:
+        tableName: cystic_volumes
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: cystic_volumes_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_id
+            type: BIGINT
+        - column:
+            constraints:
+                nullable: false
+            name: profile_image_id
+            type: BIGINT
+        - column:
+            constraints:
+                nullable: false
+            name: angiogram_image_id
+            type: BIGINT
+        - column:
+            constraints:
+                nullable: false
+            name: cystic_volume
+            type: FLOAT8
+    - createTable:
+        tableName: retinal_positive_extremums
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: retinal_positive_extremums_pkey
+            name: id
+            type: BIGSERIAL
+        - column:
+            constraints:
+              nullable: false
+            name: analyse_id
+            type: BIGINT
+        - column:
+            constraints:
+                nullable: false
+            name: profile_image_id
+            type: BIGINT
+        - column:
+            constraints:
+                nullable: false
+            name: angiogram_image_id
+            type: BIGINT
+        - column:
+            constraints:
+                nullable: false
+            name: extremum_value
+            type: FLOAT8
+    - addForeignKeyConstraint:
+          constraintName: fk_cystic_volumes_analyses
+          baseTableName: cystic_volumes
+          baseColumnNames: analyse_id
+          referencedTableName: analyses
+          referencedColumnNames: id
+          onDelete: CASCADE
+    - addForeignKeyConstraint:
+          constraintName: fk_retinal_positive_extremums_analyses
+          baseTableName: retinal_positive_extremums
+          baseColumnNames: analyse_id
+          referencedTableName: analyses
+          referencedColumnNames: id
+          onDelete: CASCADE

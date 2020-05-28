@@ -5,6 +5,7 @@ import com.angio.angiobackend.api.analyse.embeddable.AnalyseStatus;
 import com.angio.angiobackend.api.analyse.embeddable.BloodFlowAnalyse;
 import com.angio.angiobackend.api.analyse.embeddable.ExecutionConfiguration;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse;
+import com.angio.angiobackend.api.analyse.embeddable.ProfileAnalyse;
 import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import com.angio.angiobackend.api.user.entities.User;
 import lombok.AllArgsConstructor;
@@ -77,6 +78,10 @@ public class Analyse {
     @Embedded
     private BloodFlowAnalyse bloodFlowAnalyse;
 
+    @Access(AccessType.PROPERTY)
+    @Embedded
+    private ProfileAnalyse profileAnalyse;
+
     @NotAudited
     @ManyToMany(mappedBy = "starredAnalyses")
     private Set<User> usersStarredThis = new HashSet<>();
@@ -124,5 +129,17 @@ public class Analyse {
     public void setBloodFlowAnalyse(BloodFlowAnalyse bloodFlowAnalyse) {
         this.bloodFlowAnalyse = bloodFlowAnalyse;
         this.bloodFlowAnalyse.setAnalyse(this);
+    }
+
+    public ProfileAnalyse getProfileAnalyse() {
+        if (profileAnalyse == null) {
+            setProfileAnalyse(new ProfileAnalyse());
+        }
+        return profileAnalyse;
+    }
+
+    public void setProfileAnalyse(ProfileAnalyse profileAnalyse) {
+        this.profileAnalyse = profileAnalyse;
+        this.profileAnalyse.setAnalyse(this);
     }
 }

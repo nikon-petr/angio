@@ -8,7 +8,6 @@ import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.patient.mapper.PatientMapper;
 import com.angio.angiobackend.api.uploads.mapper.UploadMapper;
 import com.angio.angiobackend.api.user.mapper.UserMapper;
-import org.mapstruct.BeanMapping;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,7 +26,8 @@ import org.mapstruct.ReportingPolicy;
                 ExecutionConfigurationMapper.class,
                 AdditionalInfoMapper.class,
                 GeometricAnalyseMapper.class,
-                BloodFlowAnalyseMapper.class
+                BloodFlowAnalyseMapper.class,
+                ProfileAnalyseMapper.class
         })
 public interface AnalyseMapper {
 
@@ -35,6 +35,7 @@ public interface AnalyseMapper {
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "geometricAnalyse", ignore = true)
     @Mapping(target = "bloodFlowAnalyse", ignore = true)
+    @Mapping(target = "profileAnalyse", ignore = true)
     @Mapping(target = "additionalInfo", qualifiedByName = "toNewAdditionalInfoEntity")
     Analyse toNewEntity(DetailedAnalyseDto dto);
 
@@ -43,6 +44,7 @@ public interface AnalyseMapper {
 
     @Mapping(target = "geometricAnalyse", qualifiedByName = "updateGeometricAnalyseEntity")
     @Mapping(target = "bloodFlowAnalyse", qualifiedByName = "updateBloodFlowAnalyseEntity")
+    @Mapping(target = "profileAnalyse", qualifiedByName = "updateProfileAnalyseEntity")
     void updateAnalyseResult(AnalyseJmsDto dto, @MappingTarget Analyse entity);
 
     DetailedAnalyseDto toExtendedDto(Analyse entity);

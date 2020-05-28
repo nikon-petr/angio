@@ -72,4 +72,10 @@ public class DetailedAnalyseDto implements Serializable {
      */
     @ApiModelProperty(value = "Blood flow analyse data", readOnly = true)
     private BloodFlowAnalyseDto bloodFlowAnalyse;
+
+    /**
+     * Profile analyse data.
+     */
+    @ApiModelProperty(value = "Blood flow analyse data", readOnly = true)
+    private ProfileAnalyseDto profileAnalyse;
 }
