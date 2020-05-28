@@ -24,6 +24,7 @@
         <!-- angio matlab libs -->
         <blood-flow-analyse.version>1.0</blood-flow-analyse.version>
         <geometric-analyse.version>1.0</geometric-analyse.version>
+        <profile-cystic-analyse.version>1.0</profile-cystic-analyse.version>
         <javabuilder.version>R2017a</javabuilder.version>
     </properties>
 
@@ -97,6 +98,15 @@
             <scope>system</scope>
             <version>${geometric-analyse.version}</version>
             <systemPath>${basedir}/lib/GeometricAnalyse.jar</systemPath>
+        </dependency>
+
+        <!-- Profile cystic analyse -->
+        <dependency>
+            <groupId>com.angio</groupId>
+            <artifactId>ProfileCysticAnalyse</artifactId>
+            <scope>system</scope>
+            <version>${profile-cystic-analyse.version}</version>
+            <systemPath>${basedir}/lib/ProfileCysticAnalyse.jar</systemPath>
         </dependency>
 
         <!-- Java builder from matlab runtime -->

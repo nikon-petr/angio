@@ -12,6 +12,7 @@ import com.angio.analyseexecutor.analyse.dto.MaculaDto;
 import com.angio.analyseexecutor.analyse.dto.VesselDto;
 import com.angio.analyseexecutor.analyse.matlab.bloodflow.BloodFlowAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.bloodflow.BloodFlowAnalyseResult;
+import com.angio.analyseexecutor.analyse.matlab.profilecystic.ProfileCysticVolumeAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.geometric.GeometricAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.geometric.model.GeometricAnalyseModel;
 import com.angio.analyseexecutor.analyse.matlab.geometric.model.VesselModel;
@@ -37,6 +38,7 @@ public class AnalyseExecutorService {
 
     private final BloodFlowAnalyseAdapter bloodFlowAnalyseAdapter;
     private final GeometricAnalyseAdapter geometricAnalyseAdapter;
+    private final ProfileCysticVolumeAnalyseAdapter profileCysticAnalyseAdapter;
     private final AnalyseExecutorProperties props;
     private final UploadsDao dao;
 
