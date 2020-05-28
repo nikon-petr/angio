@@ -6,8 +6,12 @@ import com.angio.angiobackend.api.analyse.embeddable.BloodFlowAnalyse;
 import com.angio.angiobackend.api.analyse.embeddable.BloodFlowAnalyse_;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse;
 import com.angio.angiobackend.api.analyse.embeddable.GeometricAnalyse_;
+import com.angio.angiobackend.api.analyse.embeddable.ProfileAnalyse;
+import com.angio.angiobackend.api.analyse.embeddable.ProfileAnalyse_;
 import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.analyse.entity.Analyse_;
+import com.angio.angiobackend.api.analyse.entity.CysticVolume_;
+import com.angio.angiobackend.api.analyse.entity.RetinalPositiveExtremum_;
 import com.angio.angiobackend.api.analyse.entity.Vessel_;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.analyse.type.AnalyseType;
@@ -17,14 +21,10 @@ import com.angio.angiobackend.api.patient.entity.Patient_;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.entities.User_;
 import com.angio.angiobackend.util.EnumUtils;
-import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.Fetch;
-import javax.persistence.criteria.Predicate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -385,6 +385,25 @@ public class AnalyseSpecification {
     }
 
     /**
+     * Fetch profile analyse.
+     *
+     * @return specification
+     */
+    public Specification<Analyse> fetchProfileAnalyse() {
+        return (root, query, cb) -> {
+            if (Long.class == query.getResultType()) {
+                return null;
+            }
+            Fetch<Analyse, ProfileAnalyse> analyseFetch = root.fetch(Analyse_.profileAnalyse, LEFT);
+            analyseFetch.fetch(ProfileAnalyse_.cysticVolume, LEFT).fetch(CysticVolume_.profileImage, LEFT);
+            analyseFetch.fetch(ProfileAnalyse_.cysticVolume, LEFT).fetch(CysticVolume_.angiogramImage, LEFT);
+            analyseFetch.fetch(ProfileAnalyse_.retinalPositiveExtremum, LEFT).fetch(RetinalPositiveExtremum_.profileImage, LEFT);
+            analyseFetch.fetch(ProfileAnalyse_.retinalPositiveExtremum, LEFT).fetch(RetinalPositiveExtremum_.angiogramImage, LEFT);
+            return cb.conjunction();
+        };
+    }
+
+    /**
      * Fetch (join column) all nested entities for analyse. Prevent n+1 problem when entity map to dto.
      *
      * @return specification
@@ -392,7 +411,8 @@ public class AnalyseSpecification {
     public Specification<Analyse> fetchAll() {
         return fetchOriginalImage()
                 .or(fetchGeometricAnalyse())
-                .or(fetchBloodFlowAnalyse());
+                .or(fetchBloodFlowAnalyse())
+                .or(fetchProfileAnalyse());
     }
 
     /**

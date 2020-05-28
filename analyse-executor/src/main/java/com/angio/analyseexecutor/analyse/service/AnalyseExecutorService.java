@@ -4,6 +4,7 @@ import com.angio.analyseexecutor.AnalyseExecutorProperties;
 import com.angio.analyseexecutor.analyse.dto.AnalyseDto;
 import com.angio.analyseexecutor.analyse.dto.BloodFlowAnalyseDto;
 import com.angio.analyseexecutor.analyse.dto.DensityDto;
+import com.angio.analyseexecutor.analyse.dto.DensityType;
 import com.angio.analyseexecutor.analyse.dto.ExecutionConfigurationDto;
 import com.angio.analyseexecutor.analyse.dto.GeometricAnalyseDto;
 import com.angio.analyseexecutor.analyse.dto.IschemiaDto;
@@ -22,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -88,12 +90,8 @@ public class AnalyseExecutorService {
         BloodFlowAnalyseResult bloodFlowAnalyseResult = bloodFlowAnalyseAdapter.runAnalyse(originalImage.getAbsolutePath());
 
         log.debug("maculaBloodFlow() - save images of blood flow analyse");
-        StaticFileDto ishemiaImage = StaticFileDto.of(
-                FileUtil.saveImage(bloodFlowAnalyseResult.getIshemiaImage(), props.getResultImageFormat(),
-                        props.getUploadDirectory()));
-        StaticFileDto densityImage = StaticFileDto.of(
-                FileUtil.saveImage(bloodFlowAnalyseResult.getCapillarDensityImage(), props.getResultImageFormat(),
-                        props.getUploadDirectory()));
+        StaticFileDto ishemiaImage = saveImage(bloodFlowAnalyseResult.getIshemiaImage());
+        StaticFileDto densityImage = saveImage(bloodFlowAnalyseResult.getCapillarDensityImage());
         uploads.add(ishemiaImage);
         uploads.add(densityImage);
 
@@ -117,7 +115,8 @@ public class AnalyseExecutorService {
             densities.add(new DensityDto(
                     null,
                     i + 1,
-                    bloodFlowAnalyseResult.getCapilarDensities()[i]));
+                    bloodFlowAnalyseResult.getCapilarDensities()[i],
+                    DensityType.MACULA));
         }
 
         MaculaDto makula = new MaculaDto(
@@ -148,12 +147,8 @@ public class AnalyseExecutorService {
         GeometricAnalyseModel geometricAnalyseModel = geometricAnalyseAdapter.runAnalyse(originalImage.getAbsolutePath());
 
         log.debug("geometric() - save images of geometric analyse");
-        StaticFileDto binarizedImage = StaticFileDto.of(
-                FileUtil.saveImage(geometricAnalyseModel.getBinarized(), props.getResultImageFormat(),
-                        props.getUploadDirectory()));
-        StaticFileDto skelImage = StaticFileDto.of(
-                FileUtil.saveImage(geometricAnalyseModel.getSkel(), props.getResultImageFormat(),
-                        props.getUploadDirectory()));
+        StaticFileDto binarizedImage = saveImage(geometricAnalyseModel.getBinarized());
+        StaticFileDto skelImage = saveImage(geometricAnalyseModel.getSkel());
         uploads.add(binarizedImage);
         uploads.add(skelImage);
 
@@ -164,12 +159,8 @@ public class AnalyseExecutorService {
 
         List<VesselDto> vessels = new ArrayList<>();
         for (VesselModel vesselModel : geometricAnalyseModel.getAnalyseResult()) {
-            StaticFileDto vesselImage = StaticFileDto.of(
-                    FileUtil.saveImage(vesselModel.getVesselImage(), props.getResultImageFormat(),
-                            props.getUploadDirectory()));
-            StaticFileDto mainVesselImage = StaticFileDto.of(
-                    FileUtil.saveImage(vesselModel.getMainVessel(), props.getResultImageFormat(),
-                            props.getUploadDirectory()));
+            StaticFileDto vesselImage = saveImage(vesselModel.getVesselImage());
+            StaticFileDto mainVesselImage = saveImage(vesselModel.getMainVessel());
             uploads.add(vesselImage);
             uploads.add(mainVesselImage);
 
@@ -193,11 +184,39 @@ public class AnalyseExecutorService {
 
     private void profileCysticVolume(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) {
         log.info("profileCysticVolume() - start");
+
+//        if (analyse.getProfileAnalyse() == null) {
+//            analyse.setProfileAnalyse(new ProfileAnalyseDto());
+//        }
+//
+//        CysticVolumeDto cysticVolume = new CysticVolumeDto()
+//        .setCysticVolume(12.0005)
+//        .setAngiogramImage(analyse.getOriginalImage())
+//        .setProfileImage(analyse.getOriginalImage());
+//
+//        analyse.getProfileAnalyse().setCysticVolume(cysticVolume);
+
         throw new UnsupportedOperationException("analyse of cystic volume is not implemented");
     }
 
     private void profileRetinalPositiveExtremum(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) {
         log.info("profileRetinalPositiveExtremum() - start");
+
+//        if (analyse.getProfileAnalyse() == null) {
+//            analyse.setProfileAnalyse(new ProfileAnalyseDto());
+//        }
+//
+//        RetinalPositiveExtremumDto retinalPositiveExtremum = new RetinalPositiveExtremumDto()
+//                .setExtremumValue(540.80)
+//                .setAngiogramImage(analyse.getOriginalImage())
+//                .setProfileImage(analyse.getOriginalImage());
+//
+//        analyse.getProfileAnalyse().setRetinalPositiveExtremum(retinalPositiveExtremum);
+
         throw new UnsupportedOperationException("analyse of retinal positive extremum is not implemented");
+    }
+
+    private StaticFileDto saveImage(BufferedImage img) throws IOException {
+        return StaticFileDto.of(FileUtil.saveImage(img, props.getResultImageFormat(), props.getUploadDirectory()));
     }
 }

@@ -50,4 +50,10 @@ public class AnalyseJmsDto implements Serializable {
      */
     @ApiModelProperty(value = "Blood flow analyse data")
     private BloodFlowAnalyseDto bloodFlowAnalyse;
+
+    /**
+     * Profile analyse data.
+     */
+    @ApiModelProperty(value = "Profile analyse data")
+    private ProfileAnalyseDto profileAnalyse;
 }

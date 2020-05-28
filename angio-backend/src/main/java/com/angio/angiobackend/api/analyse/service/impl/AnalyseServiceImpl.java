@@ -128,6 +128,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         DetailedAnalyseDto savedResult = analyseMapper.toExtendedDto(entity);
         savedResult.setGeometricAnalyse(null);
         savedResult.setBloodFlowAnalyse(null);
+        savedResult.setProfileAnalyse(null);
         log.debug("createAnalyse() - end");
         return savedResult;
     }
@@ -145,7 +146,9 @@ public class AnalyseServiceImpl implements AnalyseService {
         log.debug("saveExecutedAnalyse() - map analyse info dto to entity");
         Analyse entity = analyseRepository.getOne(dto.getId());
 
-        if (dto.getBloodFlowAnalyse() == null && dto.getGeometricAnalyse() == null) {
+        if (dto.getBloodFlowAnalyse() == null
+                && dto.getGeometricAnalyse() == null
+                && dto.getProfileAnalyse() == null) {
             entity.getStatus().setType(AnalyseStatusType.FAILED);
         } else {
             analyseMapper.updateAnalyseResult(dto, entity);
@@ -582,6 +585,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         DetailedAnalyseDto savedResult = analyseMapper.toExtendedDto(analyse);
         savedResult.setGeometricAnalyse(null);
         savedResult.setBloodFlowAnalyse(null);
+        savedResult.setProfileAnalyse(null);
         log.debug("sendAnalyseToExecution() - end");
         return savedResult;
     }

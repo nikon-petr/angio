@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.analyse.dto;
 
+import com.angio.angiobackend.api.analyse.type.DensityType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,4 +32,10 @@ public class DensityDto implements Serializable {
      */
     @ApiModelProperty("Density value")
     private Double density;
+
+    /**
+     * Density type.
+     */
+    @ApiModelProperty("Density type")
+    private DensityType type;
 }

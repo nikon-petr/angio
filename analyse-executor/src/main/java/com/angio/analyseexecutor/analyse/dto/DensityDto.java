@@ -27,4 +27,9 @@ public class DensityDto implements Serializable {
      * Density value.
      */
     private Double density;
+
+    /**
+     * Density type.
+     */
+    private DensityType type;
 }

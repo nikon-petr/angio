@@ -1,6 +1,6 @@
 package com.angio.angiobackend.api.analyse.entity;
 
-import com.angio.angiobackend.api.analyse.type.DensityType;
+import com.angio.angiobackend.api.uploads.entity.StaticFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Data
@@ -27,24 +27,26 @@ import javax.persistence.Table;
 @EqualsAndHashCode(exclude = {"id", "analyse"})
 @Cacheable
 @Entity
-@Table(name = "densities", schema = "public")
-public class Density {
+@Table(name = "retinal_positive_extremums", schema = "public")
+public class RetinalPositiveExtremum {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "sector_number", nullable = false)
-    private Integer sectorNumber;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_image_id")
+    private StaticFile profileImage;
 
-    @Column(name = "density", nullable = false)
-    private Double density;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "angiogram_image_id")
+    private StaticFile angiogramImage;
 
-    @Column(name = "type", nullable = false)
-    private DensityType type;
+    @Column(name = "extremum_value", nullable = false)
+    private Double extremumValue;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analyse_id")
     private Analyse analyse;
 }

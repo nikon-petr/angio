@@ -30,4 +30,6 @@ public class AnalyseReportDto {
     private BloodFlowAnalyseDto bloodFlowAnalyse;
 
     private GeometricAnalyseReportDto geometricAnalyse;
+
+    private ProfileAnalyseDto profileAnalyse;
 }

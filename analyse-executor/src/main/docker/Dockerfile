@@ -18,6 +18,8 @@ COPY . /angio
 
 WORKDIR /angio
 
+RUN ./mvnw verify clean --fail-never
+
 RUN ./mvnw clean package -pl analyse-executor -am spring-boot:repackage
 
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "analyse-executor/target/analyse-executor-0.0.1-SNAPSHOT.jar"]
