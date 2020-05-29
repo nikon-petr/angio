@@ -140,7 +140,6 @@
                 <configuration>
                     <includeSystemScope>true</includeSystemScope>
                     <fork>true</fork>
-                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>

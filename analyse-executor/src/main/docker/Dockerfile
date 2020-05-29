@@ -12,14 +12,23 @@ ENV LD_LIBRARY_PATH=/matlabruntime/v92/runtime/glnxa64:/matlabruntime/v92/bin/gl
 
 FROM matlab-runtime AS analyse-executor
 
-VOLUME /root/.m2/ /root/.m2/
-
-COPY . /angio
+COPY ./mvnw /angio/mvnw
+COPY .mvn /angio/.mvn
+COPY ./pom.xml /angio/pom.xml
+COPY ./analyse-executor/pom.xml /angio/analyse-executor/pom.xml
+COPY ./angio-backend/pom.xml /angio/angio-backend/pom.xml
+COPY ./analyse-executor/lib /angio/analyse-executor/lib
 
 WORKDIR /angio
 
-RUN ./mvnw verify clean --fail-never
+# resolve dependecies
+RUN ./mvnw -B -Dspring-boot.repackage.skip=true dependency:resolve-plugins dependency:resolve clean package -pl analyse-executor
 
-RUN ./mvnw clean package -pl analyse-executor -am spring-boot:repackage
+# copy code
+COPY ./analyse-executor /angio/analyse-executor
+COPY ./angio-backend /angio/angio-backend
+
+# build
+RUN ./mvnw -B clean package -pl analyse-executor -am spring-boot:repackage
 
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "analyse-executor/target/analyse-executor-0.0.1-SNAPSHOT.jar"]
