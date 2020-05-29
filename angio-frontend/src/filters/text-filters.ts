@@ -38,6 +38,14 @@ export function round(value: number): string {
 }
 
 /**
+ * Returns the integer part of a number by removing any fractional digits.
+ * @param value
+ */
+export function trunc(value: number): string {
+    return (Math.trunc(value)).toString();
+}
+
+/**
  * Format full name.
  * @param fullName object
  */

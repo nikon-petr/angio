@@ -25,6 +25,7 @@
         <blood-flow-analyse.version>1.0</blood-flow-analyse.version>
         <geometric-analyse.version>1.0</geometric-analyse.version>
         <profile-cystic-analyse.version>1.0</profile-cystic-analyse.version>
+        <optic-disk-analyse.version>1.0</optic-disk-analyse.version>
         <javabuilder.version>R2017a</javabuilder.version>
     </properties>
 
@@ -107,6 +108,15 @@
             <scope>system</scope>
             <version>${profile-cystic-analyse.version}</version>
             <systemPath>${basedir}/lib/ProfileCysticAnalyse.jar</systemPath>
+        </dependency>
+
+        <!-- Optic disk analyse analyse -->
+        <dependency>
+            <groupId>com.angio</groupId>
+            <artifactId>OpticDiskAnalyse</artifactId>
+            <scope>system</scope>
+            <version>${optic-disk-analyse.version}</version>
+            <systemPath>${basedir}/lib/OpticDiskAnalyse.jar</systemPath>
         </dependency>
 
         <!-- Java builder from matlab runtime -->

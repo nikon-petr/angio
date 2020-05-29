@@ -1,10 +1,10 @@
 <template>
     <v-layout row>
-        <v-flex xs11>
+        <v-flex xs10>
             <span class="display-1">{{ name }}</span><br>
             <span class="font-weight-bold subtitle-1 text--secondary text--darken-4">{{ formatSubtitle() }}</span>
         </v-flex>
-        <v-flex xs1 class="text-xs-right">
+        <v-flex xs2 class="text-xs-right">
             <span class="font-weight-light display-2">#{{ analyseId }}</span>
         </v-flex>
     </v-layout>

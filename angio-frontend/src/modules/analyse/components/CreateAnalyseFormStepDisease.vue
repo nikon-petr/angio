@@ -48,45 +48,66 @@
                     ></v-text-field>
                 </v-flex>
 
-                <v-flex xs12>
-                    <v-textarea
-                            v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepDisease.data.fullDescription.field')"
-                            v-model="analyseAdditionalInfo.fullDescription"
-                            type="text"
-                            name="fullDescription"
-                            counter
-                            maxlength="1000"
-                            clearable
-                            browser-autocomplete="off"
-                            outline
-                    ></v-textarea>
+
+                <v-flex xs12 pl-0 pt-0>
+                    <v-btn
+                            v-on:click="additionalFieldsPanel = !additionalFieldsPanel"
+                            color="accent"
+                            round
+                            flat
+                    >
+                        {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepDisease.data.additionalFields.button') }}
+                        <v-icon v-show="!additionalFieldsPanel">keyboard_arrow_down</v-icon>
+                        <v-icon v-show="additionalFieldsPanel">keyboard_arrow_up</v-icon>
+                    </v-btn>
                 </v-flex>
 
                 <v-flex xs12>
-                    <v-textarea
-                            v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepDisease.data.conclusion.field')"
-                            v-model="analyseAdditionalInfo.conclusion"
-                            type="text"
-                            name="conclusion"
-                            counter
-                            maxlength="1000"
-                            clearable
-                            browser-autocomplete="off"
-                            outline
-                    ></v-textarea>
-                </v-flex>
+                    <v-expand-transition>
+                        <v-layout v-show="additionalFieldsPanel" row wrap>
 
-                <v-flex xs12>
-                    <v-text-field
-                            v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepDisease.data.comment.field')"
-                            v-model="analyseAdditionalInfo.comment"
-                            type="text"
-                            name="comment"
-                            maxlength="125"
-                            clearable
-                            browser-autocomplete="off"
-                            outline
-                    ></v-text-field>
+                            <v-flex xs12>
+                                <v-textarea
+                                        v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepDisease.data.fullDescription.field')"
+                                        v-model="analyseAdditionalInfo.fullDescription"
+                                        type="text"
+                                        name="fullDescription"
+                                        counter
+                                        maxlength="1000"
+                                        clearable
+                                        browser-autocomplete="off"
+                                        outline
+                                ></v-textarea>
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <v-textarea
+                                        v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepDisease.data.conclusion.field')"
+                                        v-model="analyseAdditionalInfo.conclusion"
+                                        type="text"
+                                        name="conclusion"
+                                        counter
+                                        maxlength="1000"
+                                        clearable
+                                        browser-autocomplete="off"
+                                        outline
+                                ></v-textarea>
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <v-text-field
+                                        v-bind:label="$t('analyse.component.createAnalyseFormDialog.stepper.stepDisease.data.comment.field')"
+                                        v-model="analyseAdditionalInfo.comment"
+                                        type="text"
+                                        name="comment"
+                                        maxlength="125"
+                                        clearable
+                                        browser-autocomplete="off"
+                                        outline
+                                ></v-text-field>
+                            </v-flex>
+                        </v-layout>
+                    </v-expand-transition>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -94,10 +115,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Vue, Watch} from 'vue-property-decorator';
     import {AnalyseAdditionalInfo, AnalyseType} from '@/modules/analyse/models/analyse';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
     import EventWithValidation from '@/modules/common/models/eventWithValidation';
+    import {Component, Emit, Vue, Watch} from 'vue-property-decorator';
 
     @Component({})
     export default class CreateAnalyseFormStepDisease extends Vue {
@@ -124,6 +145,8 @@
             {value: AnalyseType.PRIMARY, text: this.getAnalyseTypeName(AnalyseType.PRIMARY)},
             {value: AnalyseType.SUBSEQUENT, text: this.getAnalyseTypeName(AnalyseType.SUBSEQUENT)}
         ];
+
+        public additionalFieldsPanel: boolean = false;
 
         public valid: boolean = false;
 

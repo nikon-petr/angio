@@ -26,9 +26,10 @@
                                         v-model="editedData.type"
                                         v-bind:label="$t('analyse.component.details.editForm.analyseType.field')"
                                         v-bind:items="analyseTypes"
+                                        v-bind:disabled="fetching"
                                         required
                                         persistent-hint
-                                        v-bind:disabled="fetching"
+                                        outline
                                 ></v-select>
                                 <v-text-field
                                         v-model="editedData.name"
@@ -42,6 +43,7 @@
                                         maxlength="75"
                                         browser-autocomplete="off"
                                         required
+                                        outline
                                 ></v-text-field>
                                 <v-text-field
                                         v-model="editedData.shortDescription"
@@ -55,8 +57,9 @@
                                         maxlength="100"
                                         browser-autocomplete="off"
                                         required
+                                        outline
                                 ></v-text-field>
-                                <v-text-field
+                                <v-textarea
                                         v-model="editedData.fullDescription"
                                         v-bind:label="$t('analyse.component.details.editForm.fullDescription.field')"
                                         v-bind:disabled="fetching"
@@ -65,12 +68,11 @@
                                         name="fullDescription"
                                         counter
                                         outline
-                                        multi-line
                                         maxlength="1000"
                                         clearable
                                         browser-autocomplete="off"
-                                ></v-text-field>
-                                <v-text-field
+                                ></v-textarea>
+                                <v-textarea
                                         v-model="editedData.conclusion"
                                         v-bind:label="$t('analyse.component.details.editForm.conclusion.field')"
                                         v-bind:disabled="fetching"
@@ -79,11 +81,10 @@
                                         name="conclusion"
                                         counter
                                         outline
-                                        multi-line
                                         maxlength="1000"
                                         clearable
                                         browser-autocomplete="off"
-                                ></v-text-field>
+                                ></v-textarea>
                                 <v-text-field
                                         v-model="editedData.comment"
                                         v-bind:label="$t('analyse.component.details.editForm.comment.field')"
@@ -93,6 +94,7 @@
                                         name="comment"
                                         maxlength="125"
                                         clearable
+                                        outline
                                         browser-autocomplete="off"
                                 ></v-text-field>
                             </v-flex>
