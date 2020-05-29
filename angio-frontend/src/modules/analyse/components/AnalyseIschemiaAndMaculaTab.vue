@@ -2,8 +2,7 @@
     <v-card flat>
         <v-card-text>
             <v-layout row wrap>
-                <v-spacer></v-spacer>
-                <v-flex xs6>
+                <v-flex xs6 align-self-center>
                     <AnalyseListTablePreviewImage
                             v-bind:src="ischemiaImage.url"
                             v-bind:max-size="500"
@@ -14,17 +13,26 @@
                         {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.macula.title') }}
                     </p>
                     <div>
-                        {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.macula.info.area',
-                            [macula.area])
-                        }}
+                        <span class="font-weight-medium text--secondary">
+                            {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.macula.info.area') }}
+                        </span>
+                        <span>
+                            {{ macula.area }}
+                        </span>
                         <br>
-                        {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.macula.info.radius',
-                            [(Math.round(macula.radius * 100) / 100)])
-                        }}
+                        <span class="font-weight-medium text--secondary">
+                            {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.macula.info.radius') }}
+                        </span>
+                        <span>
+                            {{ macula.radius | trunc() }}
+                        </span>
                         <br>
-                        {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.macula.info.center',
-                            [(Math.round(macula.x * 100) / 100), (Math.round(macula.y * 100) / 100)])
-                        }}
+                        <span class="font-weight-medium text--secondary">
+                            {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.macula.info.center') }}
+                        </span>
+                        <span>
+                            ({{ macula.x | trunc() }}; {{ macula.y | trunc() }})
+                        </span>
                     </div>
                     <div class="pt-3">
                         <p class="headline">
@@ -35,7 +43,7 @@
                         <v-data-table
                                 v-bind:headers="ischemiaTableHeaders"
                                 v-bind:items="ischemias"
-                                class="elevation-1"
+                                class="elevation-0"
                                 v-bind:rows-per-page-items="rowNumbersIcshemia"
                                 v-bind:no-data-text="$t('analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.table.noData')"
                         >
@@ -45,8 +53,8 @@
                             <template slot="items" slot-scope="props">
                                 <td>{{ props.item.zoneNumber }}</td>
                                 <td class="text-xs-center">{{ props.item.area }}</td>
-                                <td class="text-xs-center">{{ props.item.x | round() }}</td>
-                                <td class="text-xs-center">{{ props.item.y | round() }}</td>
+                                <td class="text-xs-center">{{ props.item.x | trunc() }}</td>
+                                <td class="text-xs-center">{{ props.item.y | trunc() }}</td>
                             </template>
                             <template slot="pageText" slot-scope="props" >
                                 {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.table.info',
@@ -88,19 +96,23 @@
             {
                 text: 'analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.table.sectorNum',
                 value: 'zoneNumber',
+                class: 'text-uppercase',
                 sortable: true
             },
             {
                 text: 'analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.table.area',
                 value: 'area',
+                class: 'text-uppercase',
                 sortable: true
             },
             {
                 text: 'analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.table.x',
+                class: 'text-uppercase',
                 sortable: false
             },
             {
                 text: 'analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.table.y',
+                class: 'text-uppercase',
                 sortable: false
             },
         ];

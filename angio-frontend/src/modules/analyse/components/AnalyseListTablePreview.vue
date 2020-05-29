@@ -63,7 +63,7 @@
                         ></AnalyseListTablePreviewImage>
                     </v-layout>
                 </v-flex>
-                <v-flex xs12>
+                <v-flex xs12 v-if="status.type !== 'IN_PROGRESS'">
                     <v-divider class="pb-1"></v-divider>
                     <DeleteAnalyseButton
                             v-if="hasPermissions(['ANALYSE_REMOVE'])"

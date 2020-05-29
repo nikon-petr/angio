@@ -27,9 +27,18 @@
                             ></AnalyseIschemiaAndMaculaTab>
                         </v-tab-item>
                         <v-tab ripple v-if="analyse.executionConfiguration.maculaBloodFlow">
-                            {{ $t('analyse.component.details.analyseTabs.density.tabName') }}
+                            {{ $t('analyse.component.details.analyseTabs.density.title.macula') }}
                         </v-tab>
                         <v-tab-item v-if="analyse.executionConfiguration.maculaBloodFlow">
+                            <AnalyseDensityTab
+                                    v-bind:density-image="analyse.bloodFlowAnalyse.densityImage"
+                                    v-bind:densities="analyse.bloodFlowAnalyse.densities"
+                            ></AnalyseDensityTab>
+                        </v-tab-item>
+                        <v-tab ripple v-if="analyse.executionConfiguration.opticDiskBloodFlow">
+                            {{ $t('analyse.component.details.analyseTabs.density.title.opticDisk') }}
+                        </v-tab>
+                        <v-tab-item v-if="analyse.executionConfiguration.opticDiskBloodFlow">
                             <AnalyseDensityTab
                                     v-bind:density-image="analyse.bloodFlowAnalyse.densityImage"
                                     v-bind:densities="analyse.bloodFlowAnalyse.densities"

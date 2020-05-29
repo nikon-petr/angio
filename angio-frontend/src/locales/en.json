@@ -747,16 +747,16 @@
             "macula": {
               "title": "Macula",
               "info": {
-                "area": "S of macula: {0}",
-                "radius": "R of macula: {0}",
-                "center": "Center of macula: {0} ; {1}"
+                "area": "Area: ",
+                "radius": "Radius: ",
+                "center": "Center coordinates: "
               }
             },
             "ischemia": {
               "title": "Ischemic zones",
               "table": {
-                "sectorNum": "№ of zone",
-                "area": "S (px)",
+                "sectorNum": "Zone number",
+                "area": "Area (px)",
                 "x": "x (px)",
                 "y": "y (px)",
                 "info": "{0} - {1} of {2}",
@@ -765,11 +765,15 @@
             }
           },
           "density": {
-            "tabName": "Density of capillaries in the macula",
+            "title": {
+              "macula": "Density of capillaries in the macula",
+              "opticDisk": "Density of vessels in the optic disk"
+            },
             "table": {
-              "sectorNum": "№ sector",
-              "density": "Density (px)"
-            }
+              "sectorNum": "Sector number",
+              "density": "Density value"
+            },
+            "singleValue": "Density value: "
           },
           "profileCysticVolume": {
             "tabName": "Cystic cavity detection",
@@ -902,6 +906,9 @@
                   "NotEmpty": "Short description should not be empty",
                   "MinLength": "The minimum short description length is 5 characters"
                 }
+              },
+              "additionalFields": {
+                "button": "Additional"
               },
               "fullDescription": {
                 "field": "Full description"

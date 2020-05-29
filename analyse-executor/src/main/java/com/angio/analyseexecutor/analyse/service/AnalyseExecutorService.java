@@ -1,13 +1,24 @@
 package com.angio.analyseexecutor.analyse.service;
 
 import com.angio.analyseexecutor.AnalyseExecutorProperties;
-import com.angio.analyseexecutor.analyse.dto.*;
+import com.angio.analyseexecutor.analyse.dto.AnalyseDto;
+import com.angio.analyseexecutor.analyse.dto.BloodFlowAnalyseDto;
+import com.angio.analyseexecutor.analyse.dto.CysticVolumeDto;
+import com.angio.analyseexecutor.analyse.dto.DensityDto;
+import com.angio.analyseexecutor.analyse.dto.DensityType;
+import com.angio.analyseexecutor.analyse.dto.ExecutionConfigurationDto;
+import com.angio.analyseexecutor.analyse.dto.GeometricAnalyseDto;
+import com.angio.analyseexecutor.analyse.dto.IschemiaDto;
+import com.angio.analyseexecutor.analyse.dto.MaculaDto;
+import com.angio.analyseexecutor.analyse.dto.ProfileAnalyseDto;
+import com.angio.analyseexecutor.analyse.dto.VesselDto;
 import com.angio.analyseexecutor.analyse.matlab.bloodflow.BloodFlowAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.bloodflow.BloodFlowAnalyseResult;
-import com.angio.analyseexecutor.analyse.matlab.profilecystic.ProfileCysticVolumeAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.geometric.GeometricAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.geometric.model.GeometricAnalyseModel;
 import com.angio.analyseexecutor.analyse.matlab.geometric.model.VesselModel;
+import com.angio.analyseexecutor.analyse.matlab.opticdisk.OpticDiskAnalyseAdapter;
+import com.angio.analyseexecutor.analyse.matlab.profilecystic.ProfileCysticVolumeAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.profilecystic.ProfileCysticVolumeAnalyseResult;
 import com.angio.analyseexecutor.uploads.UploadsDao;
 import com.angio.analyseexecutor.uploads.dto.StaticFileDto;
@@ -32,6 +43,7 @@ public class AnalyseExecutorService {
     private final BloodFlowAnalyseAdapter bloodFlowAnalyseAdapter;
     private final GeometricAnalyseAdapter geometricAnalyseAdapter;
     private final ProfileCysticVolumeAnalyseAdapter profileCysticAnalyseAdapter;
+    private final OpticDiskAnalyseAdapter opticDiskAnalyseAdapter;
     private final AnalyseExecutorProperties props;
     private final UploadsDao dao;
 
@@ -130,9 +142,36 @@ public class AnalyseExecutorService {
         log.info("maculaBloodFlow() - end of blood flow analyse");
     }
 
-    private void opticDiskBloodFlowDensity(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) {
+    private void opticDiskBloodFlowDensity(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads)
+            throws IOException, MWException {
         log.info("opticDiskBloodFlowDensity() - start");
-        throw new UnsupportedOperationException("analyse of optiс disk blood flow is not implemented");
+
+
+        log.info("opticDiskBloodFlowDensity() - start of optic disk blood flow analyse");
+        BloodFlowAnalyseResult bloodFlowAnalyseResult = opticDiskAnalyseAdapter.runAnalyse(originalImage.getAbsolutePath());
+
+        log.debug("opticDiskBloodFlowDensity() - save images of optic disk blood flow analyse");
+        StaticFileDto densityImage = saveImage(bloodFlowAnalyseResult.getCapillarDensityImage());
+        uploads.add(densityImage);
+
+        BloodFlowAnalyseDto bloodFlowAnalyse = new BloodFlowAnalyseDto();
+
+        bloodFlowAnalyse.setDensityImage(densityImage);
+
+        List<DensityDto> densities = new ArrayList<>();
+        for (int i = 0; i < bloodFlowAnalyseResult.getCapilarDensities().length; i++) {
+            densities.add(new DensityDto(
+                    null,
+                    i + 1,
+                    bloodFlowAnalyseResult.getCapilarDensities()[i],
+                    DensityType.OPTIC_DISK));
+        }
+
+        bloodFlowAnalyse.setDensities(densities);
+
+        analyse.setBloodFlowAnalyse(bloodFlowAnalyse);
+
+        log.info("opticDiskBloodFlowDensity() - end of optic disk blood flow analyse");
     }
 
     private void geometric(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) throws
@@ -206,18 +245,6 @@ public class AnalyseExecutorService {
 
     private void profileRetinalPositiveExtremum(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) {
         log.info("profileRetinalPositiveExtremum() - start");
-
-//        if (analyse.getProfileAnalyse() == null) {
-//            analyse.setProfileAnalyse(new ProfileAnalyseDto());
-//        }
-//
-//        RetinalPositiveExtremumDto retinalPositiveExtremum = new RetinalPositiveExtremumDto()
-//                .setExtremumValue(540.80)
-//                .setAngiogramImage(analyse.getOriginalImage())
-//                .setProfileImage(analyse.getOriginalImage());
-//
-//        analyse.getProfileAnalyse().setRetinalPositiveExtremum(retinalPositiveExtremum);
-
         throw new UnsupportedOperationException("analyse of retinal positive extremum is not implemented");
     }
 

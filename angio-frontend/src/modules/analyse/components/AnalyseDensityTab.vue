@@ -1,19 +1,21 @@
 <template>
     <v-card flat>
         <v-card-text>
-            <v-layout row wrap align-center>
-                <v-spacer></v-spacer>
-                <v-flex xs6>
+            <v-layout row wrap>
+                <v-flex xs6 align-self-center>
                     <AnalyseListTablePreviewImage
                             v-bind:src="densityImage.url"
                             v-bind:max-size="500"
                     ></AnalyseListTablePreviewImage>
                 </v-flex>
-                <v-flex xs4>
+                <v-flex xs6 v-if="densities.length > 1">
+                    <p class="headline">
+                        {{ $t('analyse.component.details.analyseTabs.density.title.macula') }}
+                    </p>
                     <v-data-table
                             v-bind:headers="densityTableHeaders"
                             v-bind:items="densities"
-                            class="elevation-1"
+                            class="elevation-0"
                             hide-actions
                     >
                         <template slot="headerCell" slot-scope="props">
@@ -24,6 +26,17 @@
                             <td class="text-xs-center">{{ props.item.density | round() }}</td>
                         </template>
                     </v-data-table>
+                </v-flex>
+                <v-flex xs4 v-else>
+                    <p class="headline">
+                        {{ $t('analyse.component.details.analyseTabs.density.title.opticDisk') }}
+                    </p>
+                    <span class="font-weight-medium text--secondary">
+                        {{ $t('analyse.component.details.analyseTabs.density.singleValue') }}
+                    </span>
+                    <span>
+                        {{ densities[0].density | round() }}%
+                    </span>
                 </v-flex>
                 <v-spacer></v-spacer>
             </v-layout>
@@ -52,11 +65,13 @@
             {
                 text: 'analyse.component.details.analyseTabs.density.table.sectorNum',
                 value: 'sectorNumber',
+                class: 'text-uppercase',
                 sortable: true
             },
             {
                 text: 'analyse.component.details.analyseTabs.density.table.density',
                 value: 'density',
+                class: 'text-uppercase',
                 sortable: true
             }
         ];
