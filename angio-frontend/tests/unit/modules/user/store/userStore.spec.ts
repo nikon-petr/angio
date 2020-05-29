@@ -58,6 +58,7 @@ describe('store/modules/user.js', () => {
                 UserPermission.PATIENT_EDIT,
                 UserPermission.PATIENT_REMOVE,
                 UserPermission.IMAGE_UPLOAD,
+                UserPermission.VIDEO_UPLOAD,
                 UserPermission.TOKEN_REVOKE,
                 UserPermission.PUSH_NOTIFICATION_RECEIVE,
             ],

@@ -47,7 +47,7 @@ public class UploadServiceImpl implements UploadService {
 
         log.debug("uploadImage() - start");
         log.debug("uploadImage() - save image to file system");
-        validateFile(file);
+        validateFile(file, props.getImageUploadExtensions());
         String savedFilename = FileUtils.saveFile(file, props.getUploadDirectory());
 
         log.debug("uploadImage() - save image data to database");
@@ -58,6 +58,35 @@ public class UploadServiceImpl implements UploadService {
 
         log.debug("uploadImage() - result: {}", savedStaticFileDto);
         log.debug("uploadImage() - end");
+        return savedStaticFileDto;
+    }
+
+    /**
+     * Upload video if it matches extension defined in angio.app.video-upload-extensions property
+     * else throw {@link IllegalArgumentException}.
+     *
+     * @param file video file
+     * @return saved file
+     * @throws IOException
+     */
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('VIDEO_UPLOAD')")
+    public StaticFileDto uploadVideo(@NonNull MultipartFile file) throws IOException {
+
+        log.debug("uploadVideo() - start");
+        log.debug("uploadVideo() - save video to file system");
+        validateFile(file, props.getVideoUploadExtensions());
+        String savedFilename = FileUtils.saveFile(file, props.getUploadDirectory());
+
+        log.debug("uploadVideo() - save video data to database");
+        StaticFile savedVideo = uploadRepository.save(new StaticFile(null, FileType.VIDEO, savedFilename));
+
+        log.debug("uploadVideo() - map video data");
+        StaticFileDto savedStaticFileDto = uploadMapper.toExternalDto(savedVideo);
+
+        log.debug("uploadVideo() - result: {}", savedStaticFileDto);
+        log.debug("uploadVideo() - end");
         return savedStaticFileDto;
     }
 
@@ -76,7 +105,7 @@ public class UploadServiceImpl implements UploadService {
 
         log.debug("uploadDocument() - start");
         log.debug("uploadDocument() - save document to file system");
-        validateFile(file);
+        validateFile(file, props.getDocumentUploadExtensions());
         String savedFilename = FileUtils.saveFile(file, props.getUploadDirectory());
 
         log.debug("uploadDocument() - save document data to database");
@@ -114,12 +143,12 @@ public class UploadServiceImpl implements UploadService {
         return unlinkedImages.size();
     }
 
-    private void validateFile(MultipartFile file) {
-        if(!FilenameUtils.isExtension(file.getOriginalFilename(), props.getImageUploadExtensions())) {
+    private void validateFile(MultipartFile file, String[] extensions) {
+        if (!FilenameUtils.isExtension(file.getOriginalFilename(), extensions)) {
             throw new IllegalArgumentException(msa.getMessage("errors.api.uploads.extensionNoAllowed",
                     new Object[] {
                             FilenameUtils.getExtension(file.getOriginalFilename()),
-                            Arrays.toString(props.getImageUploadExtensions())}));
+                            Arrays.toString(extensions)}));
         }
 
         if (file.isEmpty()) {

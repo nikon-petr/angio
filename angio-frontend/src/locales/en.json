@@ -770,6 +770,21 @@
               "sectorNum": "№ sector",
               "density": "Density (px)"
             }
+          },
+          "profileCysticVolume": {
+            "tabName": "Cystic cavity detection",
+            "images": {
+              "title": "Detection of cystic cavities and determination of their volume",
+              "profile": "Retinal profile image (slice)",
+              "angio": "Angiogram image (top view)"
+            },
+            "description": {
+              "title": "Decryption of analysis",
+              "commonInfo": "On the right is a profile of the retina (slice). It corresponds to the green horizontal line in the image of the angiogram (image on the left). The vertical lines of the retinal profile image and the angiogram image are the same.",
+              "result": "Result:",
+              "cysticFound": "During the analysis, cystic cavities were found, the volume of which is {0}. In the angiogram image, layers of the retina profile with cystic cavities are present in green segments. On the image of the profile of the retina, the maximum area of the cystic cavity among all sections is highlighted.",
+              "cysticNotFound": "No cystic cavities were detected during the analysis."
+            }
           }
         }
       },
@@ -797,18 +812,24 @@
                 "opticDiskBloodFlow": "Density of vessels in the optic disk"
               },
               "profile": {
-                "inDevelopment": "Retinal profile analysis under development"
+                "cysticVolume": "Cystic cavity detection",
+                "positiveExtremum": "Determination of excess profile of the retina"
               }
             }
           },
-          "stepImage": {
-            "title": "Images",
-            "subtitle": "Select images for computer analysis",
-            "data": {
+          "stepFile": {
+            "title": "Files",
+            "subtitle": "Select file for computer analysis",
+            "angioData": {
               "content1": "To analyze the geometric characteristics of the vascular system of the eye day, it is necessary to upload one image that satisfies the following conditions:",
               "content2": "- Color or black and white;",
               "content3": "- The macula should be in the center of the picture;",
               "content4": "- The picture should have a pronounced vascular system."
+            },
+            "profileData": {
+              "content1": "To analyze the profile of the retina, you need to upload one video that meets the following conditions:",
+              "content2": "- Retina profile must be present on video;",
+              "content3": "- The video must have an angiogram image."
             }
           },
           "stepPatient": {

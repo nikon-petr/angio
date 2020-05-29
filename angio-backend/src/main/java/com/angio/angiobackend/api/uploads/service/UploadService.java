@@ -9,6 +9,8 @@ public interface UploadService {
 
     StaticFileDto uploadImage(MultipartFile file) throws IOException;
 
+    StaticFileDto uploadVideo(MultipartFile file) throws IOException;
+
     StaticFileDto uploadDocument(MultipartFile file) throws IOException;
 
     int purgeUnusedImages();

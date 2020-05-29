@@ -7,6 +7,9 @@ export enum FileTypes {
     PNG = 'image/png',
     IMAGES = 'image/*',
 
+    // videos
+    AVI = 'video/avi',
+
     // text
     CSV = 'text/csv',
     PLAIN = 'text/plain',

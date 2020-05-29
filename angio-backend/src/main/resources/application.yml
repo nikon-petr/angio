@@ -30,8 +30,8 @@ spring:
 
     servlet:
         multipart:
-            max-file-size: 10MB
-            max-request-size: 10MB
+            max-file-size: 300MB
+            max-request-size: 300MB
 
 
     jackson:
@@ -125,6 +125,8 @@ angiobackend:
         image-upload-extensions:
             - bmp
             - png
+        video-upload-extensions:
+            - avi
         document-upload-extensions:
             - pdf
 

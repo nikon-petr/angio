@@ -40,6 +40,10 @@
         "name" : "IMAGE_UPLOAD",
         "description" : "Загрузка изображений в систему"
       }, {
+        "id" : 13,
+        "name" : "VIDEO_UPLOAD",
+        "description" : "Загрузка видео в систему"
+      }, {
         "id" : 4,
         "name" : "ANALYSE_EXECUTE_ACTION",
         "description" : "Изменение анализа"

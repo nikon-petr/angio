@@ -1,21 +1,14 @@
 package com.angio.analyseexecutor.analyse.service;
 
 import com.angio.analyseexecutor.AnalyseExecutorProperties;
-import com.angio.analyseexecutor.analyse.dto.AnalyseDto;
-import com.angio.analyseexecutor.analyse.dto.BloodFlowAnalyseDto;
-import com.angio.analyseexecutor.analyse.dto.DensityDto;
-import com.angio.analyseexecutor.analyse.dto.DensityType;
-import com.angio.analyseexecutor.analyse.dto.ExecutionConfigurationDto;
-import com.angio.analyseexecutor.analyse.dto.GeometricAnalyseDto;
-import com.angio.analyseexecutor.analyse.dto.IschemiaDto;
-import com.angio.analyseexecutor.analyse.dto.MaculaDto;
-import com.angio.analyseexecutor.analyse.dto.VesselDto;
+import com.angio.analyseexecutor.analyse.dto.*;
 import com.angio.analyseexecutor.analyse.matlab.bloodflow.BloodFlowAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.bloodflow.BloodFlowAnalyseResult;
 import com.angio.analyseexecutor.analyse.matlab.profilecystic.ProfileCysticVolumeAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.geometric.GeometricAnalyseAdapter;
 import com.angio.analyseexecutor.analyse.matlab.geometric.model.GeometricAnalyseModel;
 import com.angio.analyseexecutor.analyse.matlab.geometric.model.VesselModel;
+import com.angio.analyseexecutor.analyse.matlab.profilecystic.ProfileCysticVolumeAnalyseResult;
 import com.angio.analyseexecutor.uploads.UploadsDao;
 import com.angio.analyseexecutor.uploads.dto.StaticFileDto;
 import com.angio.analyseexecutor.util.FileUtil;
@@ -184,21 +177,31 @@ public class AnalyseExecutorService {
         log.info("geometric() - end of geometric analyse");
     }
 
-    private void profileCysticVolume(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) {
+    private void profileCysticVolume(AnalyseDto analyse, File originalVideo, List<StaticFileDto> uploads) throws
+            MWException, IOException {
         log.info("profileCysticVolume() - start");
 
-//        if (analyse.getProfileAnalyse() == null) {
-//            analyse.setProfileAnalyse(new ProfileAnalyseDto());
-//        }
-//
-//        CysticVolumeDto cysticVolume = new CysticVolumeDto()
-//        .setCysticVolume(12.0005)
-//        .setAngiogramImage(analyse.getOriginalImage())
-//        .setProfileImage(analyse.getOriginalImage());
-//
-//        analyse.getProfileAnalyse().setCysticVolume(cysticVolume);
+        if (analyse.getProfileAnalyse() == null) {
+            analyse.setProfileAnalyse(new ProfileAnalyseDto());
+        }
 
-        throw new UnsupportedOperationException("analyse of cystic volume is not implemented");
+        ProfileCysticVolumeAnalyseResult profileCysticVolumeAnalyseResult = profileCysticAnalyseAdapter
+                .runAnalyse(originalVideo.getAbsolutePath());
+
+        log.debug("profileCysticVolume() - save images of profile cystic volume analyse");
+        StaticFileDto angiogramImage = saveImage(profileCysticVolumeAnalyseResult.getAngiogramImage());
+        StaticFileDto profileImage = saveImage(profileCysticVolumeAnalyseResult.getProfileImage());
+        uploads.add(angiogramImage);
+        uploads.add(profileImage);
+
+        CysticVolumeDto cysticVolume = new CysticVolumeDto()
+                .setCysticVolume(profileCysticVolumeAnalyseResult.getCysticVolume())
+                .setAngiogramImage(angiogramImage)
+                .setProfileImage(profileImage);
+
+        analyse.getProfileAnalyse().setCysticVolume(cysticVolume);
+
+        log.info("profileCysticVolume() - end of profile cystic volume analyse");
     }
 
     private void profileRetinalPositiveExtremum(AnalyseDto analyse, File originalImage, List<StaticFileDto> uploads) {

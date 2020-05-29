@@ -9,7 +9,7 @@
         <v-flex xs12>
             <div class="text-xs-center">
                 <v-btn
-                        v-on:click="purgeDeletedAnalyses()"
+                        v-on:click="deleteAnalyses()"
                         color="error"
                         round
                 >

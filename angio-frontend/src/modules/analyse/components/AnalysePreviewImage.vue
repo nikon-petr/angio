@@ -4,7 +4,6 @@
             class="elevation-2"
             v-bind:max-height="maxSize"
             v-bind:max-width="maxSize"
-            aspect-ratio="1"
             ma-0
             pa-0
     >

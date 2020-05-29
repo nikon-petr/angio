@@ -25,6 +25,7 @@
                         v-bind:analyse-type="props.item.analyseType"
                         v-bind:status="props.item.status"
                         v-bind:original-image-url="props.item.originalImage.url"
+                        v-bind:show-image="props.item.originalImage.type == 'IMAGE'"
                         v-bind:has-permissions="hasPermissions"
                         v-bind:delete-analyse="deleteAnalyse"
                 ></AnalyseListTablePreview>

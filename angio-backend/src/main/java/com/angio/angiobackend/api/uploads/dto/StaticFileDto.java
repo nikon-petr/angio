@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.uploads.dto;
 
+import com.angio.angiobackend.api.uploads.type.FileType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,4 +38,10 @@ public class StaticFileDto implements Serializable {
      */
     @ApiModelProperty(value = "name of the static file", readOnly = true)
     private String filename;
+
+    /**
+     * Upload file type.
+     */
+    @ApiModelProperty(value = "type of the static file", readOnly = true)
+    private FileType type;
 }

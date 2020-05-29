@@ -31,6 +31,14 @@ public class UploadExtendedRepositoryImpl implements UploadExtendedRepository {
                 "    join uploads u on u.id = v.vessel_image_id " +
                 "  union select u.id from vessels v " +
                 "    join uploads u on u.id = v.main_vessel_image_id " +
+                "  union select u.id from cystic_volumes c " +
+                "    join uploads u on u.id = c.angiogram_image_id " +
+                "  union select u.id from cystic_volumes c " +
+                "    join uploads u on u.id = c.profile_image_id " +
+                "  union select u.id from retinal_positive_extremums r " +
+                "    join uploads u on u.id = r.angiogram_image_id " +
+                "  union select u.id from retinal_positive_extremums r " +
+                "    join uploads u on u.id = r.profile_image_id " +
                 ")";
 
         Query query = em.createNativeQuery(sql, StaticFile.class);

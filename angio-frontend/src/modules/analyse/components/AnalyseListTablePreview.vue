@@ -57,6 +57,7 @@
                             ma-0
                     >
                         <AnalyseListTablePreviewImage
+                                v-if="showImage"
                                 v-bind:src="originalImageUrl"
                                 v-bind:max-size="250"
                         ></AnalyseListTablePreviewImage>
@@ -133,6 +134,9 @@
 
         @Prop()
         public readonly originalImageUrl!: string;
+
+        @Prop()
+        public readonly showImage!: boolean;
 
         @Prop()
         public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;

@@ -83,6 +83,7 @@ export interface Analyse {
     additionalInfo: AnalyseAdditionalInfo,
     geometricAnalyse?: GeometricAnalyse,
     bloodFlowAnalyse?: BloodFlowAnalyse;
+    profileAnalyse?: ProfileAnalyse;
 }
 
 export interface GeometricAnalyse {
@@ -129,4 +130,15 @@ export interface Density {
     id: number,
     sectorNumber: number,
     density: number;
+}
+
+export interface ProfileAnalyse {
+    cysticVolume?: CysticVolume;
+}
+
+export interface CysticVolume {
+    id: number,
+    profileImage: StaticFile,
+    angiogramImage: StaticFile,
+    cysticVolume: number;
 }

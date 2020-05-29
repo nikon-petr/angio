@@ -24,7 +24,8 @@ export const analyseRouterConfig: RouteConfig[] = [
                 UserPermission.ANALYSE_CREATE,
                 UserPermission.PATIENT_CREATE,
                 UserPermission.PATIENT_VIEW,
-                UserPermission.IMAGE_UPLOAD
+                UserPermission.IMAGE_UPLOAD,
+                UserPermission.VIDEO_UPLOAD
             ])
         }
     },
