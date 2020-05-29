@@ -20,6 +20,7 @@ public enum  Roles {
             Permissions.PATIENT_REMOVE,
 
             Permissions.IMAGE_UPLOAD,
+            Permissions.VIDEO_UPLOAD,
 
             Permissions.TOKEN_REVOKE,
 
@@ -39,6 +40,7 @@ public enum  Roles {
             Permissions.PATIENT_REMOVE,
 
             Permissions.IMAGE_UPLOAD,
+            Permissions.VIDEO_UPLOAD,
 
             Permissions.TOKEN_REVOKE,
 

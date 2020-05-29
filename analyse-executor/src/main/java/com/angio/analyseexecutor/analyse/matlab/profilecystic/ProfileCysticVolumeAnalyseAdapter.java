@@ -29,8 +29,8 @@ public class ProfileCysticVolumeAnalyseAdapter {
         log.info("runAnalyse() - map matlab result to profile cystic volume analyse model");
         ProfileCysticVolumeAnalyseResult cysticAnalyseResult = new ProfileCysticVolumeAnalyseResult(
                 cysticVolume,
-                renderArrayData(mWNumericArrayAngio),
-                renderArrayData(mWNumericArraySlice)
+                renderArrayData(mWNumericArraySlice),
+                renderArrayData(mWNumericArrayAngio)
         );
 
         log.info("runAnalyse() - end");

@@ -22,6 +22,6 @@ public class CysticVolumeDto {
     @ApiModelProperty("Cystic volume angiogram image")
     private StaticFileDto angiogramImage;
 
-    @ApiModelProperty("Cystic volume cystic volume")
+    @ApiModelProperty("Cystic volume")
     private Double cysticVolume;
 }

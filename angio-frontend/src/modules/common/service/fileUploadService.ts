@@ -9,7 +9,7 @@ export class FileUploadService {
     public static uploadImage(
         formData: FormData,
         process: (length: number, loaded: number, total: number) => void): AxiosPromise<Response<StaticFile>> {
-        log.debug(`create getAnalyseFilter request with data ${JSON.stringify(formData)}`);
+        log.debug(`create uploadImage request with data`);
         let config: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -19,6 +19,21 @@ export class FileUploadService {
             }
         };
         return axios.post<Response<StaticFile>>('/upload/image', formData, config);
+    }
+
+    public static uploadVideo(
+        formData: FormData,
+        process: (length: number, loaded: number, total: number) => void): AxiosPromise<Response<StaticFile>> {
+        log.debug(`create uploadVideo request with data`);
+        let config: AxiosRequestConfig = {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            onUploadProgress: progressEvent => {
+                process(progressEvent.lengthComputable, progressEvent.loaded, progressEvent.total);
+            }
+        };
+        return axios.post<Response<StaticFile>>('/upload/video', formData, config);
     }
 
     public static purgeUploadedImages(): AxiosPromise<Response<number>> {

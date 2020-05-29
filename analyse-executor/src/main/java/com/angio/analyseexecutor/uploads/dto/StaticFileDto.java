@@ -30,6 +30,11 @@ public class StaticFileDto implements Serializable {
      */
     private String filename;
 
+    /**
+     * File type.
+     */
+    private Long type;
+
     public static StaticFileDto of(String filename) {
 
         return new StaticFileDto()

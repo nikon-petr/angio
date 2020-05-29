@@ -17,6 +17,7 @@
       "ANALYSE_CREATE",
       "ANALYSE_EDIT",
       "IMAGE_UPLOAD",
+      "VIDEO_UPLOAD",
       "ANALYSE_EXECUTE_ACTION",
       "ANALYSE_REMOVE",
       "PATIENT_VIEW",

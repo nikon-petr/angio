@@ -59,10 +59,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Watch, Emit} from 'vue-property-decorator';
-    import {FileUploadService} from '@/modules/common/service/fileUploadService';
-    import {FileTypes} from '@/modules/common/helpers/fileTypes';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
+    import {FileTypes} from '@/modules/common/helpers/fileTypes';
+    import {FileUploadService} from '@/modules/common/service/fileUploadService';
+    import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator';
 
     @Component({})
     export default class FileUploader extends Vue {
@@ -124,15 +124,25 @@
             const CancelToken = this.$axios.CancelToken;
             const source = CancelToken.source();
 
-            FileUploadService.uploadImage(formData, progress)
-                .then(response => {
-                    load(response.data.data.id);
-                    if (response.data.data.id != undefined) {
-                        this.fileId = response.data.data.id;
-                    }
-                }).catch((error) => {
+
+            let axiosPromise;
+            if (this.isImage()) {
+                axiosPromise = FileUploadService.uploadImage(formData, progress)
+            } else if (this.isVideo()) {
+                axiosPromise = FileUploadService.uploadVideo(formData, progress)
+            }
+
+            if (axiosPromise != undefined) {
+                axiosPromise
+                    .then(response => {
+                        load(response.data.data.id);
+                        if (response.data.data.id != undefined) {
+                            this.fileId = response.data.data.id;
+                        }
+                    }).catch((error) => {
                     this.$logger.debug(error)
                 });
+            }
 
             return {
                 abort: () => {
@@ -161,6 +171,18 @@
         restore(uniqueFileId: any, load: any, error: any, progress: any, abort: any, headers: any) {
             this.$logger.debug('filepond restore');
             error()
+        }
+
+        public isVideo(): boolean {
+            return this.acceptedFileTypes.findIndex(t => t == FileTypes.AVI) != -1;
+        }
+
+        public isImage(): boolean {
+            return this.acceptedFileTypes.findIndex(t => t == FileTypes.JPG) != -1
+                || this.acceptedFileTypes.findIndex(t => t == FileTypes.JPEG) != -1
+                || this.acceptedFileTypes.findIndex(t => t == FileTypes.BMP) != -1
+                || this.acceptedFileTypes.findIndex(t => t == FileTypes.PNG) != -1
+                || this.acceptedFileTypes.findIndex(t => t == FileTypes.IMAGES) != -1;
         }
     }
 </script>

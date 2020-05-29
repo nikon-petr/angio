@@ -65,16 +65,18 @@
                 v-bind:complete="stepCounter > 3"
                 step="3"
         >
-            {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepImage.title') }}
+            {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepFile.title') }}
             <small>
-                {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepImage.subtitle') }}
+                {{ $t('analyse.component.createAnalyseFormDialog.stepper.stepFile.subtitle') }}
             </small>
         </v-stepper-step>
 
         <v-stepper-content step="3">
-            <CreateAnalyseFormStepUploadImages
+            <CreateAnalyseFormStepUploadFile
                     v-on:change="handleChangeFileId"
-            ></CreateAnalyseFormStepUploadImages>
+                    v-bind:accepted-file-types="acceptedFileTypes"
+                    v-bind:form-step-analyse-type="formStepAnalyseType"
+            ></CreateAnalyseFormStepUploadFile>
             <v-btn
                     v-on:click="onStepperBack()"
                     round
@@ -184,16 +186,14 @@
 </template>
 
 <script lang="ts">
+    import {FileTypes} from '@/modules/common/helpers/fileTypes';
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import CreateAnalyseFormStepChooseAnalyseType
         from '@/modules/analyse/components/CreateAnalyseFormStepChooseAnalyseType.vue';
-    import {
-        FormStepAnalyseParameter,
-        FormStepAnalyseType,
-    } from '@/modules/analyse/helpers/formStep';
+    import {FormStepAnalyseType} from '@/modules/analyse/helpers/formStep';
     import CreateAnalyseFormStepChooseAnalyseParameter
         from '@/modules/analyse/components/CreateAnalyseFormStepChooseAnalyseParameter.vue';
-    import CreateAnalyseFormStepUploadImages from '@/modules/analyse/components/CreateAnalyseFormStepUploadImages.vue';
+    import CreateAnalyseFormStepUploadFile from '@/modules/analyse/components/CreateAnalyseFormStepUploadFile.vue';
     import CreateAnalyseFormStepPatient from '@/modules/analyse/components/CreateAnalyseFormStepPatient.vue';
     import CreateAnalyseFormStepDisease from '@/modules/analyse/components/CreateAnalyseFormStepDisease.vue';
     import {Patient} from '@/modules/patient/models/patient';
@@ -205,7 +205,7 @@
 
     @Component({
         components: {CreateAnalyseFormStepChooseAnalyseType, CreateAnalyseFormStepChooseAnalyseParameter,
-            CreateAnalyseFormStepUploadImages, CreateAnalyseFormStepPatient, CreateAnalyseFormStepDisease,
+            CreateAnalyseFormStepUploadFile, CreateAnalyseFormStepPatient, CreateAnalyseFormStepDisease,
             BuiltInErrorMessage}
     })
     export default class CreateAnalyseFormStepper extends Vue {
@@ -237,6 +237,8 @@
         };
 
         // #3 & #5 Image and Disease
+        public acceptedFileTypes: FileTypes[] = [];
+
         public analyse: Analyse = {
             additionalInfo: {
                 name: '',
@@ -286,6 +288,18 @@
         // #2 Analyse parameter
         public handleChangeAnalyseParameter(eventPayload: EventWithValidation<void>) {
             Vue.set(this.formValid, 1, eventPayload.isValid);
+
+            if (this.analyse.executionConfiguration.profileRetinalPositiveExtremum
+                || this.analyse.executionConfiguration.profileCysticVolume) {
+                this.acceptedFileTypes = [
+                    FileTypes.AVI
+                ];
+            } else {
+                this.acceptedFileTypes = [
+                    FileTypes.BMP,
+                    FileTypes.PNG
+                ];
+            }
         }
 
         // #3 Images

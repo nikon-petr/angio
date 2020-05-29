@@ -22,6 +22,7 @@ public enum  Permissions {
 
     DOCUMENT_UPLOAD("Загрузка документов в систему"),
     IMAGE_UPLOAD("Загрузка изображений в систему"),
+    VIDEO_UPLOAD("Загрузка видео в систему"),
     IMAGE_UPLOAD_PURGE_UNUSED("Очистка БД от неиспользуемых изображений"),
 
     USER_VIEW("Просмотр данных пользователей системы"),

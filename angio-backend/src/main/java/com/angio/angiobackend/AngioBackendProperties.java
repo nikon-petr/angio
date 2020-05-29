@@ -23,6 +23,8 @@ public class AngioBackendProperties {
 
     private String[] imageUploadExtensions;
 
+    private String[] videoUploadExtensions;
+
     private String[] documentUploadExtensions;
 
     public Oauth oauth;

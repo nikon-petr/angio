@@ -4,7 +4,7 @@
             <v-card>
                 <v-card-text>
                     <v-layout row justify-space-between>
-                        <v-flex xs4>
+                        <v-flex v-if="analyse.originalImage.type == 'IMAGE'" xs4>
                             <div class="subheading">
                                 <div>
                                     <span class="font-weight-medium headline">

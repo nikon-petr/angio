@@ -4,8 +4,6 @@ import com.angio.angiobackend.api.uploads.dto.StaticFileDto;
 import com.angio.angiobackend.api.uploads.service.UploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +28,12 @@ public class UploadResource {
     @PostMapping("/image")
     public StaticFileDto uploadImage(MultipartFile multipartFile) throws IOException {
         return uploadService.uploadImage(multipartFile);
+    }
+
+    @ApiOperation(value = "Resource to upload video")
+    @PostMapping("/video")
+    public StaticFileDto uploadVideo(MultipartFile multipartFile) throws IOException {
+        return uploadService.uploadVideo(multipartFile);
     }
 
     @ApiOperation(value = "Resource to upload document")

@@ -3,7 +3,7 @@
         <v-flex xs12>
             <v-card>
                 <v-card-text>
-                    <v-tabs dark centered>
+                    <v-tabs centered>
                         <v-tab ripple v-if="analyse.executionConfiguration.geometric">
                             {{ $t('analyse.component.details.analyseTabs.geometricAnalyse.tabName') }}
                         </v-tab>
@@ -35,6 +35,15 @@
                                     v-bind:densities="analyse.bloodFlowAnalyse.densities"
                             ></AnalyseDensityTab>
                         </v-tab-item>
+                        <v-tab ripple v-if="analyse.executionConfiguration.profileCysticVolume">
+                            {{ $t('analyse.component.details.analyseTabs.profileCysticVolume.tabName') }}
+                        </v-tab>
+                        <v-tab-item v-if="analyse.executionConfiguration.profileCysticVolume">
+                            <AnalyseProfileCysticVolumeTab
+                                    v-bind:density-image="analyse.bloodFlowAnalyse.densityImage"
+                                    v-bind:cystic-volume="analyse.profileAnalyse.cysticVolume"
+                            ></AnalyseProfileCysticVolumeTab>
+                        </v-tab-item>
                     </v-tabs>
                 </v-card-text>
             </v-card>
@@ -43,6 +52,7 @@
 </template>
 
 <script lang="ts">
+    import AnalyseProfileCysticVolumeTab from '@/modules/analyse/components/AnalyseProfileCysticVolumeTab.vue';
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {Analyse} from '@/modules/analyse/models/analyse';
     import AnalyseDensityTab from '@/modules/analyse/components/AnalyseDensityTab.vue';
@@ -51,7 +61,8 @@
     import {UserPermission} from '@/modules/user/store/userState';
 
     @Component({
-        components: {AnalyseGeometricTab, AnalyseIschemiaAndMaculaTab, AnalyseDensityTab}
+        components: {AnalyseProfileCysticVolumeTab, AnalyseGeometricTab, AnalyseIschemiaAndMaculaTab,
+            AnalyseDensityTab}
     })
     export default class AnalyseTabsContainer extends Vue {
 
