@@ -11,6 +11,7 @@
     <b>Дата рождения:</b> ${data.patient.bday?string["dd.MM.yyyy"]}<br/>
     <b>Адрес:</b> ${data.patient.locationAddress!"_________________________"}<br/>
 </p>
+<#if data.geometricAnalyse.skeletonizedImage??>
 <h2>Геометрическая характеристика сосудистой системы</h2>
 <table border="0" cellpadding="4pt" width="100%" align="center">
     <tr>
@@ -44,6 +45,8 @@
         <td>${data.geometricAnalyse.areaSumPercent?string["0.##"]}%</td>
     </tr>
 </table>
+</#if>
+<#if data.bloodFlowAnalyse.ischemiaImage??>
 <h2 class="page-break">Степень кровоснабжения сосудистой системы</h2>
 <table border="0" cellpadding="4pt" width="100%" align="center">
     <caption><h2>Ишемические зоны и макула</h2></caption>
@@ -94,6 +97,18 @@
         </td>
     </tr>
 </table>
+</#if>
+<#if data.bloodFlowAnalyse.densityImage?? && !data.bloodFlowAnalyse.ischemiaImage??>
+<caption><h2>Плотность сосудов в облости диска зрительного нерва</h2></caption>
+<tr>
+    <td style="text-align:center; vertical-align: top" width="43%"><img src="${data.bloodFlowAnalyse.densityImage.filename}" width="200pt"/></td>
+    <td style="text-align:left; vertical-align: top">
+        <p>
+            Плотность сосудов: ${data.bloodFlowAnalyse.densities[0].density?string["0.##"]}
+        </p>
+    </td>
+</tr>
+</#if>
 <h2>Заключение</h2>
 <#if data.additionalInfo.conclusion??>
     <p>${data.additionalInfo.conclusion}</p>

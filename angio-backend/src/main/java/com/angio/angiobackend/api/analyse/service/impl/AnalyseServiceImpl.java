@@ -204,7 +204,7 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         if (!CurrentUserResolver.hasPermission(Permissions.ANALYSE_VIEW_ALL)) {
             log.debug("filterAnalysesByQueryString() - filter analyse by organization");
-            analyseSpecification.ownedBy(currentUser);
+            specs = Specification.where(specs).and(analyseSpecification.ownedBy(currentUser));
         }
 
         log.debug("filterAnalysesByQueryString() - map sorting fields");
@@ -240,9 +240,13 @@ public class AnalyseServiceImpl implements AnalyseService {
         User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
+
+        if (!CurrentUserResolver.hasPermission(Permissions.ANALYSE_VIEW_ALL)) {
+            log.debug("filterAnalysesByQueryString() - filter analyse by organization");
+            specs = Specification.where(specs).and(analyseSpecification.ownedBy(currentUser));
+        }
 
         return analyseMapper.toExtendedDto(analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -264,9 +268,13 @@ public class AnalyseServiceImpl implements AnalyseService {
         User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
+
+        if (!CurrentUserResolver.hasPermission(Permissions.ANALYSE_VIEW_ALL)) {
+            log.debug("filterAnalysesByQueryString() - filter analyse by organization");
+            specs = Specification.where(specs).and(analyseSpecification.ownedBy(currentUser));
+        }
 
         Analyse analyse = analyseRepository.findOne(specs)
         .orElseThrow(() -> new ResourceNotFoundException(
@@ -277,17 +285,19 @@ public class AnalyseServiceImpl implements AnalyseService {
         }
 
         AnalyseReportDto report = analyseMapper.toReportDto(analyse);
-        report.getGeometricAnalyse().setVesselsCount((long) analyse.getGeometricAnalyse().getVessels().size());
-        report.getGeometricAnalyse().setBranchesCount(analyse.getGeometricAnalyse().getVessels().stream()
-                .mapToLong(Vessel::getCountOfBranches).sum());
-        report.getGeometricAnalyse().setTortuosityDegreeAvg(analyse.getGeometricAnalyse().getVessels().stream()
-                .mapToDouble(Vessel::getTortuosityDegree).average().getAsDouble());
-        report.getGeometricAnalyse().setBranchingDegreeAvg(analyse.getGeometricAnalyse().getVessels().stream()
-                .mapToDouble(Vessel::getBranchingDegree).average().getAsDouble());
-        report.getGeometricAnalyse().setAreaSumPx(analyse.getGeometricAnalyse().getVessels().stream()
-                .mapToDouble(Vessel::getArea).sum());
-        report.getGeometricAnalyse().setAreaSumPercent(analyse.getGeometricAnalyse().getVessels().stream()
-                .mapToDouble(Vessel::getAreaPercent).sum());
+        if (analyse.getExecutionConfiguration().getGeometric()) {
+            report.getGeometricAnalyse().setVesselsCount((long) analyse.getGeometricAnalyse().getVessels().size());
+            report.getGeometricAnalyse().setBranchesCount(analyse.getGeometricAnalyse().getVessels().stream()
+                    .mapToLong(Vessel::getCountOfBranches).sum());
+            report.getGeometricAnalyse().setTortuosityDegreeAvg(analyse.getGeometricAnalyse().getVessels().stream()
+                    .mapToDouble(Vessel::getTortuosityDegree).average().getAsDouble());
+            report.getGeometricAnalyse().setBranchingDegreeAvg(analyse.getGeometricAnalyse().getVessels().stream()
+                    .mapToDouble(Vessel::getBranchingDegree).average().getAsDouble());
+            report.getGeometricAnalyse().setAreaSumPx(analyse.getGeometricAnalyse().getVessels().stream()
+                    .mapToDouble(Vessel::getArea).sum());
+            report.getGeometricAnalyse().setAreaSumPercent(analyse.getGeometricAnalyse().getVessels().stream()
+                    .mapToDouble(Vessel::getAreaPercent).sum());
+        }
 
         return report;
     }
@@ -308,9 +318,13 @@ public class AnalyseServiceImpl implements AnalyseService {
 
         log.debug("deleteAnalyse() - start");
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
+
+        if (!CurrentUserResolver.hasPermission(Permissions.ANALYSE_VIEW_ALL)) {
+            log.debug("filterAnalysesByQueryString() - filter analyse by organization");
+            specs = Specification.where(specs).and(analyseSpecification.ownedBy(currentUser));
+        }
 
         Analyse analyse = analyseRepository.findOne(specs)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -362,9 +376,13 @@ public class AnalyseServiceImpl implements AnalyseService {
         User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
+
+        if (!CurrentUserResolver.hasPermission(Permissions.ANALYSE_VIEW_ALL)) {
+            log.debug("filterAnalysesByQueryString() - filter analyse by organization");
+            specs = Specification.where(specs).and(analyseSpecification.ownedBy(currentUser));
+        }
 
 
         log.debug("updateAnalyseAdditionalInfo() - search analyse info entity with id: {}", id);
@@ -393,9 +411,13 @@ public class AnalyseServiceImpl implements AnalyseService {
         User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
+
+        if (!CurrentUserResolver.hasPermission(Permissions.ANALYSE_VIEW_ALL)) {
+            log.debug("filterAnalysesByQueryString() - filter analyse by organization");
+            specs = Specification.where(specs).and(analyseSpecification.ownedBy(currentUser));
+        }
 
         log.debug("getStarredAnalyse() - start: id {}", id);
         Analyse analyse = analyseRepository.findOne(specs)
@@ -415,9 +437,13 @@ public class AnalyseServiceImpl implements AnalyseService {
         User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(id)
-                .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
+
+        if (!CurrentUserResolver.hasPermission(Permissions.ANALYSE_VIEW_ALL)) {
+            log.debug("filterAnalysesByQueryString() - filter analyse by organization");
+            specs = Specification.where(specs).and(analyseSpecification.ownedBy(currentUser));
+        }
 
         log.debug("starAnalyse() - start: id {}", id);
         Analyse analyse = analyseRepository.findOne(specs)
@@ -446,9 +472,13 @@ public class AnalyseServiceImpl implements AnalyseService {
         User currentUser = currentUserResolver.getCurrentUser();
 
         Specification<Analyse> specs = analyseSpecification.analyseId(analyseId)
-                .and(analyseSpecification.ownedBy(currentUser))
                 .and(analyseSpecification.notDeleted())
                 .and(analyseSpecification.fetchAll());
+
+        if (!CurrentUserResolver.hasPermission(Permissions.ANALYSE_VIEW_ALL)) {
+            log.debug("filterAnalysesByQueryString() - filter analyse by organization");
+            specs = Specification.where(specs).and(analyseSpecification.ownedBy(currentUser));
+        }
 
         log.debug("deleteGeometricAnalyseVessel() - find analyse: id={}", analyseId);
         Analyse analyse = analyseRepository.findOne(specs)
@@ -476,26 +506,45 @@ public class AnalyseServiceImpl implements AnalyseService {
         String originalImageName = format("originalImage.%s", FilenameUtils.getExtension(dto.getOriginalImage().getFilename()));
         images.put(originalImageName, new File(props.getUploadDirectory(), dto.getOriginalImage().getFilename()));
 
-        String skeletonizedImageName = format("skeletonizedImage.%s", FilenameUtils.getExtension(dto.getGeometricAnalyse().getSkeletonizedImage().getFilename()));
-        images.put(skeletonizedImageName, new File(props.getUploadDirectory(), dto.getGeometricAnalyse().getSkeletonizedImage().getFilename()));
+        if (dto.getExecutionConfiguration().getGeometric()) {
+            String skeletonizedImageName = format("skeletonizedImage.%s",
+                    FilenameUtils.getExtension(dto.getGeometricAnalyse().getSkeletonizedImage().getFilename()));
+            images.put(skeletonizedImageName, new File(props.getUploadDirectory(),
+                    dto.getGeometricAnalyse().getSkeletonizedImage().getFilename()));
+            String binarizedImageName = format("skeletonizedImage.%s",
+                    FilenameUtils.getExtension(dto.getGeometricAnalyse().getBinarizedImage().getFilename()));
+            images.put(binarizedImageName,
+                    new File(props.getUploadDirectory(), dto.getGeometricAnalyse().getBinarizedImage().getFilename()));
 
-        String binarizedImageName = format("skeletonizedImage.%s", FilenameUtils.getExtension(dto.getGeometricAnalyse().getBinarizedImage().getFilename()));
-        images.put(binarizedImageName, new File(props.getUploadDirectory(), dto.getGeometricAnalyse().getBinarizedImage().getFilename()));
+            for (VesselDto vessel : dto.getGeometricAnalyse().getVessels()) {
+                String vesselMainImageName = format("geometric/vessel_main_%s.%s", vessel.getId(),
+                        FilenameUtils.getExtension(vessel.getMainVesselImage().getFilename()));
+                images.put(vesselMainImageName,
+                        new File(props.getUploadDirectory(), vessel.getMainVesselImage().getFilename()));
 
-        for (VesselDto vessel : dto.getGeometricAnalyse().getVessels()) {
-            String vesselMainImageName = format("geometric/vessel_main_%s.%s", vessel.getId(), FilenameUtils.getExtension(vessel.getMainVesselImage().getFilename()));
-            images.put(vesselMainImageName, new File(props.getUploadDirectory(), vessel.getMainVesselImage().getFilename()));
-
-            String vesselImageName = format("geometric/vessel_%s.%s", vessel.getId(), FilenameUtils.getExtension(vessel.getVesselImage().getFilename()));
-            images.put(vesselImageName, new File(props.getUploadDirectory(), vessel.getVesselImage().getFilename()));
+                String vesselImageName = format("geometric/vessel_%s.%s", vessel.getId(),
+                        FilenameUtils.getExtension(vessel.getVesselImage().getFilename()));
+                images.put(vesselImageName,
+                        new File(props.getUploadDirectory(), vessel.getVesselImage().getFilename()));
+            }
         }
 
-        String ischemiaImageName = format("ischemiaImage.%s", FilenameUtils.getExtension(dto.getBloodFlowAnalyse().getIschemiaImage().getFilename()));
-        images.put(ischemiaImageName, new File(props.getUploadDirectory(), dto.getBloodFlowAnalyse().getIschemiaImage().getFilename()));
+        if (dto.getExecutionConfiguration().getMaculaBloodFlow()
+                || dto.getExecutionConfiguration().getOpticDiskBloodFlow()) {
+            if (dto.getExecutionConfiguration().getMaculaBloodFlow()) {
+                String ischemiaImageName = format("ischemiaImage.%s",
+                        FilenameUtils.getExtension(dto.getBloodFlowAnalyse().getIschemiaImage().getFilename()));
+                images.put(ischemiaImageName,
+                        new File(props.getUploadDirectory(),
+                                dto.getBloodFlowAnalyse().getIschemiaImage().getFilename()));
+            }
 
-        String densityImageName = format("densityImage.%s", FilenameUtils.getExtension(dto.getBloodFlowAnalyse().getDensityImage().getFilename()));
-        images.put(densityImageName, new File(props.getUploadDirectory(), dto.getBloodFlowAnalyse().getDensityImage().getFilename()));
+            String densityImageName = format("densityImage.%s",
+                    FilenameUtils.getExtension(dto.getBloodFlowAnalyse().getDensityImage().getFilename()));
+            images.put(densityImageName,
+                    new File(props.getUploadDirectory(), dto.getBloodFlowAnalyse().getDensityImage().getFilename()));
 
+        }
 
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); ZipOutputStream zip = new ZipOutputStream(bos)) {
 

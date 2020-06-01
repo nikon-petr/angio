@@ -423,8 +423,11 @@ public class AnalyseSpecification {
      */
     public Specification<Analyse> ownedBy(User user) {
         Long organizationId = user.getOrganization() != null ? user.getOrganization().getId() : null;
-        return Specification.where(organizationId(organizationId))
-                .or(diagnosticianId(user.getId()));
+        if (organizationId != null) {
+            return organizationId(organizationId);
+        } else {
+            return diagnosticianId(user.getId());
+        }
     }
 
     /**
