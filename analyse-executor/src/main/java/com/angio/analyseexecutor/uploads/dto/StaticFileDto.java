@@ -1,5 +1,6 @@
 package com.angio.analyseexecutor.uploads.dto;
 
+import com.angio.analyseexecutor.uploads.type.FileType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,7 +34,7 @@ public class StaticFileDto implements Serializable {
     /**
      * File type.
      */
-    private Long type;
+    private FileType type;
 
     public static StaticFileDto of(String filename) {
 
