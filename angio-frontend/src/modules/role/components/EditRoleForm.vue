@@ -31,6 +31,7 @@
                         <v-autocomplete
                                 v-model="updateRole.permissionIds"
                                 v-bind:items="permissionsDictionary"
+                                v-bind:item-disabled="isPermissionDisabled"
                                 v-bind:label="$t('role.component.editRoleForm.field.permissions')"
                                 v-bind:rules="[v => v.length > 0 || $t('role.component.editRoleForm.validation.permissions.NotEmpty')]"
                                 v-bind:disabled="fetching"
@@ -77,6 +78,7 @@
     import BaseDialogFormContainer from '@/modules/common/components/BaseDialogFormContainer.vue';
     import BuiltInErrorMessage from '@/modules/common/components/BuiltInErrorMessage.vue';
     import {Permission, Role, UpdateRoleModel} from '@/modules/role/models/role';
+    import CollectionUtils from '@/utils/collectionUtils';
     import {isEqual} from 'lodash';
     import {Component, Emit, Prop, PropSync, Ref, Vue, Watch} from 'vue-property-decorator';
 
@@ -93,6 +95,9 @@
 
         @Prop()
         public permissionsDictionary!: Permission[];
+
+        @Prop()
+        public ownedPermissions!: Permission[];
 
         @Prop()
         public fetching!: boolean;
@@ -149,6 +154,10 @@
             this.updateRole = this.getRoleDefaults();
             // @ts-ignore
             this.form.resetValidation();
+        }
+
+        public isPermissionDisabled(permission: Permission) {
+            return this.ownedPermissions.find(p => p.id === permission.id) === undefined;
         }
 
         public data() {

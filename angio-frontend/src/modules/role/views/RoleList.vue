@@ -23,6 +23,7 @@
                     v-bind:show.sync="openedAddRoleForm"
                     v-bind:roles-dictionary="rolesDictionary"
                     v-bind:permissions-dictionary="permissionsDictionary"
+                    v-bind:owned-permissions="ownedPermissions"
                     v-bind:fetching="fetchingAddRole"
                     v-bind:error-messages="addRoleErrorMessages"
             ></AddRoleForm>
@@ -32,6 +33,7 @@
                     v-bind:show.sync="openedEditRoleForm"
                     v-bind:roles-dictionary="rolesDictionary"
                     v-bind:permissions-dictionary="permissionsDictionary"
+                    v-bind:owned-permissions="ownedPermissions"
                     v-bind:fetching="fetchingEditRole"
                     v-bind:error-messages="editRoleErrorMessages"
             ></EditRoleForm>
@@ -48,16 +50,20 @@
     import RoleListTable from '@/modules/role/components/RoleListTable.vue';
     import {Permission, Role, UpdateRoleModel} from '@/modules/role/models/role';
     import {RoleApiService} from '@/modules/role/services/roleApiService';
+    import {UserApiService} from '@/modules/user/services/userApiService';
     import {UserPermission} from '@/modules/user/store/userState';
     import {UserGetter} from '@/modules/user/store/userStore';
     import CollectionUtils from '@/utils/collectionUtils';
     import {Component, Vue} from 'vue-property-decorator';
-    import {Getter} from 'vuex-class';
+    import {Getter, State} from 'vuex-class';
 
     @Component({
         components: {RoleListTable, EditRoleForm, AddRoleForm, BaseSubheader, StackLayout}
     })
     export default class RoleList extends Vue {
+
+        @State((state) => state.user.info.id)
+        public meId!: string;
 
         @Getter(UserGetter.HAS_PERMISSIONS)
         public readonly hasPermissions!: (permissions: UserPermission[]) => boolean;
@@ -74,6 +80,7 @@
 
         public rolesDictionary: Role[] = [];
         public permissionsDictionary: Permission[] = [];
+        public ownedPermissions: Permission[] = [];
 
         public editRoleId: number | null = null;
 
@@ -100,6 +107,11 @@
             await RoleApiService.getAllPermissions()
                 .then(response => {
                     this.permissionsDictionary = response.data.data;
+                })
+                .catch(error => this.$logger.debug(error));
+            await UserApiService.getUserById(this.meId)
+                .then(response => {
+                    this.ownedPermissions = response.data.data.ownedRolesToManage.flatMap(role => role.permissions);
                 })
                 .catch(error => this.$logger.debug(error));
         }

@@ -31,6 +31,7 @@
                         <v-autocomplete
                                 v-model="newRole.permissionIds"
                                 v-bind:items="permissionsDictionary"
+                                v-bind:item-disabled="isPermissionDisabled"
                                 v-bind:label="$t('role.component.addRoleForm.field.permissions')"
                                 v-bind:rules="[v => v.length > 0 || $t('role.component.addRoleForm.validation.permissions.NotEmpty')]"
                                 v-bind:disabled="fetching"
@@ -94,6 +95,9 @@
         public permissionsDictionary!: Permission[];
 
         @Prop()
+        public ownedPermissions!: Permission[];
+
+        @Prop()
         public fetching!: boolean;
 
         @Prop()
@@ -129,6 +133,11 @@
             };
             // @ts-ignore
             this.form.resetValidation();
+        }
+
+
+        public isPermissionDisabled(permission: Permission) {
+            return this.ownedPermissions.find(p => p.id === permission.id) === undefined;
         }
 
         public data() {
