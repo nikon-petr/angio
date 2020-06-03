@@ -1,9 +1,11 @@
 <template lang="html">
     <v-img
             v-bind:src="src"
-            class="elevation-2"
             v-bind:max-height="maxSize"
+            v-bind:min-height="minSize"
             v-bind:max-width="maxSize"
+            v-bind:min-width="minSize"
+            class="elevation-2"
             ma-0
             pa-0
     >
@@ -32,5 +34,8 @@
 
         @Prop()
         public readonly maxSize!: number;
+
+        @Prop({default: undefined})
+        public readonly minSize?: number;
     }
 </script>

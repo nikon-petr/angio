@@ -2,13 +2,14 @@
     <v-card flat>
         <v-card-text>
             <v-layout row wrap>
-                <v-flex xs6 align-self-center>
+                <v-flex align-self-center shrink>
                     <AnalyseListTablePreviewImage
                             v-bind:src="densityImage.url"
-                            v-bind:max-size="500"
+                            v-bind:max-size="600"
+                            v-bind:min-size="600"
                     ></AnalyseListTablePreviewImage>
                 </v-flex>
-                <v-flex xs6 v-if="densities.length > 1">
+                <v-flex v-if="densities.length > 1" xs4>
                     <p class="headline">
                         {{ $t('analyse.component.details.analyseTabs.density.title.macula') }}
                     </p>
@@ -23,7 +24,7 @@
                         </template>
                         <template slot="items" slot-scope="props">
                             <td>{{ props.item.sectorNumber }}</td>
-                            <td class="text-xs-center">{{ props.item.density | round() }}</td>
+                            <td class="text-xs-center">{{ props.item.density * 100 | round() }}%</td>
                         </template>
                     </v-data-table>
                 </v-flex>
@@ -35,7 +36,7 @@
                         {{ $t('analyse.component.details.analyseTabs.density.singleValue') }}
                     </span>
                     <span>
-                        {{ densities[0].density | round() }}%
+                        {{ densities[0].density * 100 | round() }}%
                     </span>
                 </v-flex>
                 <v-spacer></v-spacer>

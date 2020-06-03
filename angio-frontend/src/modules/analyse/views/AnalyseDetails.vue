@@ -8,7 +8,12 @@
                     align-center
                     v-if="fetching"
             >
-                <v-progress-circular :indeterminate="true" :background-opacity="0" pa-0 ma-0></v-progress-circular>
+                <v-progress-circular
+                        v-bind:background-opacity="0"
+                        indeterminate
+                        pa-0
+                        ma-0
+                ></v-progress-circular>
             </v-container>
             <AnalyseDetailsTitle
                     v-if="!fetching"

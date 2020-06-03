@@ -2,17 +2,18 @@
     <v-card flat>
         <v-card-text>
             <v-layout row wrap>
-                <v-flex xs6 align-self-center>
+                <v-flex shrink align-self-center>
                     <AnalyseListTablePreviewImage
                             v-bind:src="ischemiaImage.url"
-                            v-bind:max-size="500"
+                            v-bind:max-size="600"
+                            v-bind:min-size="600"
                     ></AnalyseListTablePreviewImage>
                 </v-flex>
-                <v-flex xs6>
-                    <p class="headline">
+                <v-flex xs4>
+                    <h4 class="headline">
                         {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.macula.title') }}
-                    </p>
-                    <div>
+                    </h4>
+                    <p class="pt-3">
                         <span class="font-weight-medium text--secondary">
                             {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.macula.info.area') }}
                         </span>
@@ -33,19 +34,17 @@
                         <span>
                             ({{ macula.x | trunc() }}; {{ macula.y | trunc() }})
                         </span>
-                    </div>
-                    <div class="pt-3">
-                        <p class="headline">
-                            {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.title') }}
-                        </p>
-                    </div>
+                    </p>
+                    <h4 class="headline">
+                        {{ $t('analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.title') }}
+                    </h4>
                     <div>
                         <v-data-table
                                 v-bind:headers="ischemiaTableHeaders"
                                 v-bind:items="ischemias"
-                                class="elevation-0"
                                 v-bind:rows-per-page-items="rowNumbersIcshemia"
                                 v-bind:no-data-text="$t('analyse.component.details.analyseTabs.ischemiaAndMacula.ischemia.table.noData')"
+                                class="elevation-0 pt-3"
                         >
                             <template slot="headerCell" slot-scope="props">
                                 {{ $t(props.header.text) }}
