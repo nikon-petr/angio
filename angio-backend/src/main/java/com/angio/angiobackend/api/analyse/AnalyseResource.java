@@ -6,6 +6,7 @@ import com.angio.angiobackend.api.analyse.dto.AnalyseShortItemDto;
 import com.angio.angiobackend.api.analyse.dto.DetailedAnalyseDto;
 import com.angio.angiobackend.api.analyse.dto.StarredAnalyseDto;
 import com.angio.angiobackend.api.analyse.service.AnalyseService;
+import com.angio.angiobackend.api.analyse.service.AnalyseZipService;
 import com.angio.angiobackend.api.analyse.type.AnalyseStatusType;
 import com.angio.angiobackend.api.analyse.validation.group.NewAnalyse;
 import com.angio.angiobackend.api.common.report.service.ReportService;
@@ -52,6 +53,7 @@ public class AnalyseResource {
 
     private final ReportService reportService;
     private final AnalyseService analyseService;
+    private final AnalyseZipService analyseZipService;
 
     @ApiOperation(value = "Create new analyse")
     @PostMapping
@@ -106,7 +108,7 @@ public class AnalyseResource {
     public ResponseEntity<byte[]> getArchive(@PathVariable Long id) {
 
         DetailedAnalyseDto dto = analyseService.getAnalyseById(id);
-        byte[] contents = analyseService.createArchive(dto);
+        byte[] contents = analyseZipService.createArchive(dto);
 
         String filename = String.format("analyse-archive-%s-%s-%tD.pdf",
                 dto.getId(),
