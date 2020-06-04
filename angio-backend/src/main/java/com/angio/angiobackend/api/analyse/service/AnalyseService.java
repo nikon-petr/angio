@@ -44,7 +44,5 @@ public interface AnalyseService {
 
     DetailedAnalyseDto deleteGeometricAnalyseVessel(Long analyseId, Long vesselId);
 
-    byte[] createArchive(DetailedAnalyseDto dto);
-
     int purgeAnalysesInStatusDeleted();
 }
