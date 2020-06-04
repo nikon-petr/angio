@@ -17,7 +17,7 @@ import {
 import '@/modules/user/interceptors/refreshAccessTokenInterceptor';
 import {NotificationAction} from '@/modules/notification/store/notificationStore';
 
-const log = root.getLogger('store/modules/user');
+const log = root.getLogger('UserStore');
 
 type UserContext = ActionContext<UserState, RootState>;
 

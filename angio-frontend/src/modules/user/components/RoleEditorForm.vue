@@ -1,23 +1,25 @@
 <template>
     <BaseDialogFormContainer
             v-bind:open="active"
-            v-bind:title="$t('user.component.roleEditorForm.title')"
+            v-bind:title="title"
     >
         <template slot="form">
             <v-form
                     ref="form"
                     v-model="valid"
-                    v-on:submit.prevent="submit"
-                    id="role-editor-form"
             >
                 <v-combobox
                         v-model="editedRoleList"
+                        v-bind:label="$t('user.component.roleEditorForm.combobox.label')"
                         v-bind:disabled="fetching"
                         v-bind:items="rolesDictionary"
                         v-bind:item-text="(item) => item.description"
                         v-bind:item-value="(item) => item.id"
                         v-bind:item-disabled="(item) => !checkRoleManaged(item.id)"
-                        v-bind:rules="[v => v.length > 0 || $t('user.component.roleEditorForm.validation.Empty'), validateChanges]"
+                        v-bind:rules="[validateLength, validateChanges]"
+                        deletable-chips
+                        small-chips
+                        outline
                         multiple
                         chips
                 ></v-combobox>
@@ -28,22 +30,21 @@
         </template>
         <template slot="buttons">
             <v-btn
-                    v-on:click.native="cancel"
+                    v-on:click.native="activeSynced = false"
                     v-bind:disabled="fetching"
                     flat
                     round
             >
-                {{ $t('user.component.roleEditorForm.cancel') }}
+                {{ $t('common.component.button.cancel') }}
             </v-btn>
             <v-btn
+                    v-on:click.prevent="save"
                     v-bind:disabled="!valid"
                     v-bind:loading="fetching"
-                    form="role-editor-form"
-                    type="submit"
                     color="success"
                     round
             >
-                {{ $t('user.component.roleEditorForm.submit') }}
+                {{ $t('common.component.button.save') }}
             </v-btn>
         </template>
     </BaseDialogFormContainer>
@@ -53,11 +54,8 @@
     import BaseDialogFormContainer from '@/modules/common/components/BaseDialogFormContainer.vue';
     import BuiltInErrorMessage from '@/modules/common/components/BuiltInErrorMessage.vue';
     import {Role} from '@/modules/role/models/role';
-    import {UserDetailsModel} from '@/modules/user/models/user';
-    import {UserApiService} from '@/modules/user/services/userApiService';
-    import {cloneDeep} from 'lodash';
-    import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
-    import {State} from 'vuex-class';
+    import {isEqual, sortBy} from 'lodash';
+    import {Component, Emit, Prop, PropSync, Ref, Vue, Watch} from 'vue-property-decorator';
 
     @Component({
         components: {BuiltInErrorMessage, BaseDialogFormContainer}
@@ -67,80 +65,72 @@
         @Ref('form')
         public form!: HTMLElement;
 
-        @State((state) => state.user.info.id)
-        public meId!: string;
+        @Prop()
+        public readonly errorMessages!: string[];
 
         @Prop()
-        public rolesDictionary!: Role[];
+        public readonly title!: string;
 
         @Prop()
-        public ownedRolesToManage!: Role[];
+        public readonly fetching!: boolean;
 
-        public active: boolean = false;
+        @Prop()
+        public readonly rolesDictionary!: Role[];
 
-        public fetching: boolean = false;
+        @Prop()
+        public readonly ownedRolesToManage!: Role[];
 
-        public errorMessages: string[] = [];
+        @Prop({default: false})
+        public readonly allowEmpty!: boolean;
 
-        public userId!: string;
+        @Prop()
+        public readonly roles!: Role[];
 
-        public roles!: Role[];
+        @Prop()
+        public readonly active!: boolean;
+
+        @PropSync('active')
+        public activeSynced!: boolean;
+
+        @Watch('active')
+        onShowChanged(newVal: boolean, oldVal: boolean) {
+            if (newVal) {
+                this.reset();
+                this.editedRoleList = [...this.roles];
+                this.activeSynced = true;
+            }
+        }
+
+        @Emit()
+        public save() {
+            return this.editedRoleList.map(r => r.id);
+        }
 
         public valid: boolean = false;
 
-        public editedRoleList!: Role[];
-
-        public open(user: UserDetailsModel) {
-            this.reset();
-            this.roles = cloneDeep(user.roles);
-            this.editedRoleList = cloneDeep(user.roles);
-            this.userId = user.id;
-            this.active = true;
-        }
-
-        public submit() {
-            this.fetching = true;
-            UserApiService.changeRoles(this.userId, this.editedRoleList.map(r => r.id))
-                .then(response => {
-                    this.active = false;
-                })
-                .catch(error => {
-                    this.$logger.error(error);
-                    this.errorMessages = ['user.component.roleEditorForm.error'];
-                })
-                .finally(() => this.fetching = false);
-
-        }
-
-        public cancel() {
-            this.active = false;
-        }
+        public editedRoleList: Role[] = [];
 
         public checkRoleManaged(roleId: number): boolean {
             return this.ownedRolesToManage ? this.ownedRolesToManage.map(r => r.id).includes(roleId) : false;
         }
 
         public validateChanges(v: Role[]) {
-            return (!v.every(r => this.roles.includes(r)) && v.length != this.roles.length)
+            return !isEqual(sortBy(v), sortBy(this.roles))
                 || this.$t('user.component.roleEditorForm.validation.NoChanges');
         }
 
+        public validateLength(v: Role[]) {
+            return v.length > 0 || this.allowEmpty || this.$t('user.component.roleEditorForm.validation.Empty');
+        }
+
         public reset() {
-            this.editedRoleList = cloneDeep(this.roles);
+            this.editedRoleList = [...this.roles];
             // @ts-ignore
             this.form.resetValidation();
         }
 
         get mapErrorMessages() {
             return this.errorMessages.map(message => this.$t(message));
-        }
-
-        public data() {
-            return {
-                userId: undefined,
-                editedRoleList: undefined,
-                roles: undefined
-            };
         }
     }
 </script>

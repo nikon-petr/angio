@@ -6,7 +6,7 @@ log.setLevel(process.env.VUE_APP_LOGGING_LEVEL as LogLevelDesc, true);
 
 prefixer.reg(log);
 prefixer.apply(log, {
-    template: '%t [%l] %n - ',
+    template: '%t [%l] %n -',
     levelFormatter(level) {
         return level.toUpperCase();
     },
@@ -14,11 +14,11 @@ prefixer.apply(log, {
         return name || 'store.ts';
     },
     timestampFormatter(date) {
-        return date.toLocaleTimeString();
+        return date.toLocaleString('ru');
     },
 });
 
-const logger = log.getLogger('vue');
+const logger = log.getLogger('VueComponent');
 Vue.prototype.$logger = logger;
 Vue.logger = logger;
 

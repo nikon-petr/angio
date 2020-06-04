@@ -3,6 +3,10 @@ export default class CollectionUtils {
         return [...collection, item];
     }
 
+    public static appendItems<T>(collection: Array<T>, items: Array<T>): Array<T> {
+        return [...collection, ...items];
+    }
+
     public static prependItem<T>(collection: Array<T>, item: T): Array<T> {
         return [item, ...collection];
     }

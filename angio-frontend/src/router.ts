@@ -17,7 +17,7 @@ import root, {Logger} from 'loglevel';
 import Vue from 'vue';
 import Router, {RawLocation, Route, RouteConfig} from 'vue-router';
 
-const log: Logger = root.getLogger('router');
+const log: Logger = root.getLogger('RootRouter');
 
 Vue.use(Router);
 

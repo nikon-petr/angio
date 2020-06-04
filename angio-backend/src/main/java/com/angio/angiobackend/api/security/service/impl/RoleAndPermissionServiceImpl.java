@@ -13,6 +13,7 @@ import com.angio.angiobackend.api.security.mapper.RoleMapper;
 import com.angio.angiobackend.api.security.repository.PermissionRepository;
 import com.angio.angiobackend.api.security.repository.RoleRepository;
 import com.angio.angiobackend.api.security.service.RoleAndPermissionService;
+import com.angio.angiobackend.api.user.service.CurrentUserResolver;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
     private final PermissionRepository permissionRepository;
     private final RoleMapper roleMapper;
     private final PermissionMapper permissionMapper;
+    private final CurrentUserResolver currentUserResolver;
 
     @Override
     @Transactional(readOnly = true)
@@ -67,6 +69,9 @@ public class RoleAndPermissionServiceImpl implements RoleAndPermissionService {
 
         log.debug("createRole() - save new role");
         newRole = roleRepository.save(newRole);
+
+        log.debug("createRole() - add new role to creator owned roles list");
+        currentUserResolver.getCurrentUser().getOwnedRolesToManage().add(newRole);
 
         log.debug("createRole() - map to dto and return");
         return roleMapper.toRoleDto(newRole);

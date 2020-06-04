@@ -45,7 +45,7 @@
                             </div>
                             <div>
                                 <span class="font-weight-medium text--secondary">
-                                    {{ $tc('user.component.userListTableDetails.field.ownedRolesToManage', user.roles.length) }}
+                                    {{ $tc('user.component.userListTableDetails.field.ownedRolesToManage', user.ownedRolesToManage.length) }}
                                 </span>
                                 <v-chip
                                         v-for="role in user.ownedRolesToManage"
@@ -76,6 +76,16 @@
                     >
                         {{ $t('user.component.userListTableDetails.button.roles.name') }}
                     </v-btn>
+                    <v-btn
+                            v-on:click="openOwnedRoleEditor"
+                            class="ma-0"
+                            color="accent"
+                            ripple
+                            round
+                            flat
+                    >
+                        {{ $t('user.component.userListTableDetails.button.ownedRoles.name') }}
+                    </v-btn>
                 </v-flex>
             </v-layout>
         </v-card-text>
@@ -102,8 +112,13 @@
         @Prop()
         public readonly user!: UserDetailsModel;
 
-        @Emit('open-role-editor')
+        @Emit()
         public openRoleEditor() {
+            return this.user;
+        }
+
+        @Emit()
+        public openOwnedRoleEditor() {
             return this.user;
         }
     }

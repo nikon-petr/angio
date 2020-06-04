@@ -167,11 +167,11 @@
     import {Organization} from '@/modules/organization/models/organization';
     import {Role} from '@/modules/role/models/role';
     import AddUserFormTableDetails from '@/modules/user/components/AddUserFormTableDetails.vue';
-    import {NewUserModel} from '@/modules/user/models/user';
+    import {NewUserModel, UserDetailsModel} from '@/modules/user/models/user';
     import {UserApiService} from '@/modules/user/services/userApiService';
     import {UserPermission} from '@/modules/user/store/userState';
     import RegexUtils from '@/utils/regexUtils';
-    import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
+    import {Component, Emit, Prop, Ref, Vue} from 'vue-property-decorator';
 
     @Component({
         components: {AddUserFormTableDetails, BuiltInErrorMessage, BaseDialogFormContainer}
@@ -228,12 +228,18 @@
             UserApiService.createUsers(this.formData)
                 .then(response => {
                     this.active = false;
+                    this.usersSaved(response.data.data)
                 })
                 .catch(error => {
                     this.$logger.error(error);
                     this.errorMessages = ['user.component.addUserFrom.error'];
                 })
                 .finally(() => this.fetching = false);
+        }
+
+        @Emit()
+        public usersSaved(users: UserDetailsModel[]) {
+            return users;
         }
 
         public cancel() {

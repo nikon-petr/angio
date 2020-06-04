@@ -1,8 +1,8 @@
-import root from 'loglevel';
-
-const log = root.getLogger('NotificationSoundService');
+import root, {Logger} from 'loglevel';
 
 export default class NotificationSoundService {
+
+    private static log: Logger = root.getLogger(NotificationSoundService.name);
 
     private _audio: HTMLAudioElement = new Audio(require('@/assets/small-tip.mp3'));
 
@@ -18,10 +18,10 @@ export default class NotificationSoundService {
     public playNewNotificationSound() {
         this._audio.play()
             .then(() => {
-                log.debug('play new notification sound');
+                NotificationSoundService.log.debug('play new notification sound');
             })
             .catch((error) => {
-                log.error(error);
+                NotificationSoundService.log.error(error);
             });
     }
 }

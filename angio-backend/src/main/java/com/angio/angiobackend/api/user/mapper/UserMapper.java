@@ -20,6 +20,7 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.Collection;
 import java.util.List;
 
 @Mapper(
@@ -52,6 +53,8 @@ public interface UserMapper {
     void updateEntity(UpdateUserDto dto, @MappingTarget User entity);
 
     UserDetailsDto toDetailedDto(User entity);
+
+    List<UserDetailsDto> toDetailedDto(Collection<User> entities);
 
     UserShortItemDto toShortItemDto(User entity);
 

@@ -3,7 +3,7 @@ import {UserAction, UserGetter} from '@/modules/user/store/userStore';
 import store from '@/store';
 import root from 'loglevel';
 
-const log = root.getLogger('user/interceptors/refreshAccessTokenInterceptor');
+const log = root.getLogger('RefreshAccessTokenInterceptor');
 
 let isAlreadyFetchingAccessToken: Boolean = false;
 let subscribers: (() => any)[] = [];
