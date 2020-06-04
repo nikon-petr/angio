@@ -24,7 +24,7 @@ public interface UserService {
 
     User findUserEntityByEmail(String email);
 
-    List<NewUserDto> createUsers(List<NewUserDto> dtos);
+    List<UserDetailsDto> createUsers(List<NewUserDto> dtos);
 
     Page<UserDetailsDto> filterUsersByQueryString(
             String search,

@@ -445,24 +445,31 @@
           "enabled": "User activated: ",
           "locked": "User locked: ",
           "roles": "User role:  | User roles: ",
-          "ownedRolesToManage": "User owned role:  | User owned roles: "
+          "ownedRolesToManage": "No owned roles | User owned role:  | User owned roles: "
         },
         "button": {
           "roles": {
             "name": "Edit roles"
+          },
+          "ownedRoles": {
+            "name": "Edit owned roles"
           }
         },
         "object": "user"
       },
       "roleEditorForm": {
         "title": "Edit roles",
-        "cancel": "Cancel",
-        "submit": "Save",
         "validation": {
           "Empty": "Role list can not be empty",
           "NoChanges": "Role list is not changed"
         },
+        "combobox": {
+          "label": "Roles"
+        },
         "error": "An error occurred while editing user role list"
+      },
+      "ownedRoleEditorForm": {
+        "title": "Edit owned roles"
       },
       "addUserFrom": {
         "title": "Add users",

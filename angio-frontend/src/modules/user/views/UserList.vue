@@ -20,13 +20,13 @@
 
         <v-flex xs12>
             <UserListTable
+                    v-on:open-role-editor="openEditUserRolesForm"
+                    v-on:open-owned-role-editor="openEditUserOwnedRolesForm"
                     v-bind:lock-user="lockUser"
                     v-bind:users="users"
                     v-bind:sort.sync="sort"
                     v-bind:total-items="totalItems"
                     v-bind:search="filter.search"
-                    v-bind:roles-dictionary="rolesDictionary"
-                    v-bind:owned-roles-to-manage="currentUser && currentUser.ownedRolesToManage"
                     v-bind:show-editor-buttons="hasPermissions(['USER_EDIT'])"
             ></UserListTable>
         </v-flex>
@@ -42,10 +42,35 @@
         <v-flex xs12>
             <AddUserFrom
                     ref="addUserForm"
+                    v-on:users-saved="updateUserList"
                     v-bind:roles-dictionary="rolesDictionary"
                     v-bind:organizations-dictionary="organizationsDictionary"
                     v-bind:owned-roles-to-manage="currentUser && currentUser.ownedRolesToManage"
             ></AddUserFrom>
+        </v-flex>
+
+        <v-flex xs12>
+            <RoleEditorForm
+                    v-on:save="saveRoles"
+                    v-bind:title="$t('user.component.roleEditorForm.title')"
+                    v-bind:active.sync="roleEditorFormActive"
+                    v-bind:roles="editUser && editUser.roles || []"
+                    v-bind:fetching="roleEditorFetching"
+                    v-bind:error-messages="roleEditorErrorMessages"
+                    v-bind:roles-dictionary="rolesDictionary"
+                    v-bind:owned-roles-to-manage="currentUser && currentUser.ownedRolesToManage"
+            ></RoleEditorForm>
+            <RoleEditorForm
+                    v-on:save="saveOwnedRoles"
+                    v-bind:title="$t('user.component.ownedRoleEditorForm.title')"
+                    v-bind:active.sync="ownedRoleEditorFormActive"
+                    v-bind:roles="editUser && editUser.ownedRolesToManage || []"
+                    v-bind:fetching="ownedRoleEditorFetching"
+                    v-bind:error-messages="ownedRoleEditorErrorMessages"
+                    v-bind:roles-dictionary="rolesDictionary"
+                    v-bind:owned-roles-to-manage="currentUser && currentUser.ownedRolesToManage"
+                    allow-empty
+            ></RoleEditorForm>
         </v-flex>
     </StackLayout>
 </template>
@@ -59,19 +84,23 @@
     import {Role} from '@/modules/role/models/role';
     import {RoleApiService} from '@/modules/role/services/roleApiService';
     import AddUserFrom from '@/modules/user/components/AddUserFrom.vue';
+    import RoleEditorForm from '@/modules/user/components/RoleEditorForm.vue';
     import UserListFilter from '@/modules/user/components/UserListFilter.vue';
     import UserListTable from '@/modules/user/components/UserListTable.vue';
     import {UserDetailsModel, UserFilterModel} from '@/modules/user/models/user';
     import {UserApiService} from '@/modules/user/services/userApiService';
     import {UserPermission} from '@/modules/user/store/userState';
     import {UserGetter} from '@/modules/user/store/userStore';
+    import CollectionUtils from '@/utils/collectionUtils';
     import {Component, Ref, Vue, Watch} from 'vue-property-decorator';
     import {Getter, State} from 'vuex-class';
 
     @Component({
-        components: {AddUserFrom, BasePagination, UserListTable, UserListFilter, StackLayout, BaseSubheader}
+        components: {
+            RoleEditorForm,
+            AddUserFrom, BasePagination, UserListTable, UserListFilter, StackLayout, BaseSubheader}
     })
-    export default class UserManager extends Vue {
+    export default class UserList extends Vue {
 
         public static readonly ROWS_PER_PAGE = 10;
 
@@ -94,6 +123,19 @@
         public dictionaryFetching: boolean = false;
         // end dicts
 
+        // role editor state begin
+        public roleEditorFormActive = false;
+        public ownedRoleEditorFormActive = false;
+
+        public editUser: UserDetailsModel | null = null;
+
+        public roleEditorErrorMessages: string[] = [];
+        public ownedRoleEditorErrorMessages: string[] = [];
+
+        public roleEditorFetching = false;
+        public ownedRoleEditorFetching = false;
+        // role editor state end
+
         public filter!: UserFilterModel;
 
         public users: UserDetailsModel[] = [];
@@ -104,7 +146,7 @@
 
         public page: number = 1;
 
-        public rowsPerPage: number = UserManager.ROWS_PER_PAGE;
+        public rowsPerPage: number = UserList.ROWS_PER_PAGE;
 
         public totalItems: number = 0;
 
@@ -132,9 +174,53 @@
 
         }
 
+        public saveRoles(roleIds: number[]) {
+            if (!this.editUser) {
+                return;
+            }
+            this.roleEditorFetching = true;
+            UserApiService.changeRoles(this.editUser.id, roleIds)
+                .then(response => {
+                    this.roleEditorFormActive = false;
+                    this.users = CollectionUtils.updateItem(this.users, response.data.data, user => user.id)
+                })
+                .catch(error => {
+                    this.$logger.error(error);
+                    this.roleEditorErrorMessages = ['user.component.roleEditorForm.error'];
+                })
+                .finally(() => this.roleEditorFetching = false);
+        }
+
+        public saveOwnedRoles(roleIds: number[]) {
+            if (!this.editUser) {
+                return;
+            }
+            this.ownedRoleEditorFetching = true;
+            UserApiService.changeOwnedRoles(this.editUser.id, roleIds)
+                .then(response => {
+                    this.ownedRoleEditorFormActive = false;
+                    this.users = CollectionUtils.updateItem(this.users, response.data.data, user => user.id)
+                })
+                .catch(error => {
+                    this.$logger.error(error);
+                    this.ownedRoleEditorErrorMessages = ['user.component.roleEditorForm.error'];
+                })
+                .finally(() => this.ownedRoleEditorFetching = false);
+        }
+
         public openAddUserForm() {
             // @ts-ignore
             this.addUserForm.open();
+        }
+
+        public openEditUserRolesForm(user: UserDetailsModel) {
+            this.editUser = user;
+            this.roleEditorFormActive = true;
+        }
+
+        public openEditUserOwnedRolesForm(user: UserDetailsModel) {
+            this.editUser = user;
+            this.ownedRoleEditorFormActive = true;
         }
 
         public async fetchDictionaries() {
@@ -171,6 +257,10 @@
                         reject();
                     });
             });
+        }
+
+        public updateUserList(users: UserDetailsModel[]) {
+            this.users = CollectionUtils.appendItems(this.users, users);
         }
 
         public data() {

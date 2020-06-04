@@ -47,7 +47,7 @@ public class UserResource {
 
     @ApiOperation("Create users")
     @PostMapping
-    public List<NewUserDto> createUsers(@RequestBody @Validated List<NewUserDto> dtos) {
+    public List<UserDetailsDto> createUsers(@RequestBody @Validated List<NewUserDto> dtos) {
         return userService.createUsers(dtos);
     }
 

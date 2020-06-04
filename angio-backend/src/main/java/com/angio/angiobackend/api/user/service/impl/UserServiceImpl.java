@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @PreAuthorize("hasAuthority('USER_CREATE')")
-    public List<NewUserDto> createUsers(@NonNull List<NewUserDto> dtos) {
+    public List<UserDetailsDto> createUsers(@NonNull List<NewUserDto> dtos) {
 
         Map<String, User> passwordsAndCreatedUsers = transactionTemplate.execute((status) -> {
 
@@ -172,6 +172,7 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
             log.info("createUsers() - result: {}", passwordsAndNewUsers);
 
+            userMapper.toDetailedDto(passwordsAndNewUsers.values());
             return passwordsAndNewUsers;
         });
 
@@ -187,7 +188,7 @@ public class UserServiceImpl implements UserService {
         }
 
         log.debug("createUsers() - end");
-        return userMapper.toNewUserDtos(new ArrayList<>(passwordsAndCreatedUsers.values()));
+        return transactionTemplate.execute((status) -> userMapper.toDetailedDto(passwordsAndCreatedUsers.values()));
     }
 
     /**
@@ -552,8 +553,12 @@ public class UserServiceImpl implements UserService {
         List<Role> changedRoles = roleRepository.findAllById(roleIds);
 
         if (changedRoles.size() == 0) {
-            throw new ResourceNotFoundException(
-                    msa.getMessage("errors.api.user.rolesNotFound", new Object[] {roleIds}));
+            log.debug("changeUserOwnedRoles() - clear user owned roles to manage");
+            user.setOwnedRolesToManage(Collections.emptySet());
+            user = userRepository.save(user);
+
+            log.debug("changeUserOwnedRoles() - end");
+            return userMapper.toDetailedDto(user);
         }
 
         log.debug("changeUserOwnedRoles() - checking that change requester is owner of requested roles");

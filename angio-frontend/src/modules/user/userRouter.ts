@@ -8,7 +8,7 @@ import ResetAccount from '@/modules/user/views/ResetAccount.vue';
 import Settings from '@/modules/user/views/Settings.vue';
 import Registration from '@/modules/user/views/Registration.vue';
 import ChangePassword from "@/modules/user/views/ChangePassword.vue";
-import UserManager from '@/modules/user/views/UserManager.vue';
+import UserList from '@/modules/user/views/UserList.vue';
 import {UserPermission} from '@/modules/user/store/userState';
 
 export const userRouterConfig: RouteConfig[] = [
@@ -52,7 +52,7 @@ export const userRouterConfig: RouteConfig[] = [
     },
     {
         path: '/user',
-        component: UserManager,
+        component: UserList,
         meta: {
             title: 'user.view.userManager.title',
             auth: AuthPredicate.hasPermissions([

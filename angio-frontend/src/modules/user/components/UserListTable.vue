@@ -19,6 +19,7 @@
                 <div>
                     <UserListTableDetails
                             v-on:open-role-editor="openRoleEditor"
+                            v-on:open-owned-role-editor="openOwnedRoleEditor"
                             v-bind:lock-user="lockUser"
                             v-bind:user="props.item"
                             v-bind:show-editor-buttons="showEditorButtons"
@@ -54,11 +55,6 @@
                 </tr>
             </template>
         </v-data-table>
-        <RoleEditorForm
-                ref="roleEditorForm"
-                v-bind:roles-dictionary="rolesDictionary"
-                v-bind:owned-roles-to-manage="ownedRolesToManage"
-        ></RoleEditorForm>
     </div>
 </template>
 
@@ -66,7 +62,6 @@
     import Pagination from '@/modules/common/helpers/pagination';
     import {SortingDirection} from '@/modules/common/models/page';
     import {Organization} from '@/modules/organization/models/organization';
-    import {Role} from '@/modules/role/models/role';
     import RoleEditorForm from '@/modules/user/components/RoleEditorForm.vue';
     import UserListTableDetails from '@/modules/user/components/UserListTableDetails.vue';
     import {UserDetailsModel} from '@/modules/user/models/user';
@@ -77,17 +72,8 @@
     })
     export default class UserListTable extends Vue {
 
-        @Ref('roleEditorForm')
-        public roleEditorForm!: RoleEditorForm;
-
         @Prop()
         public readonly showEditorButtons!: boolean;
-
-        @Prop()
-        public rolesDictionary!: Role[];
-
-        @Prop()
-        public ownedRolesToManage!: Role[];
 
         @Prop()
         public readonly lockUser!: (id: string, locked: boolean) => Promise<void>;
@@ -169,9 +155,10 @@
             }
         }
 
-        public openRoleEditor(user: UserDetailsModel) {
-            // @ts-ignore
-            this.roleEditorForm.open(user);
-        }
+        @Emit()
+        public openRoleEditor(user: UserDetailsModel) {}
+
+        @Emit()
+        public openOwnedRoleEditor(user: UserDetailsModel) {}
     }
 </script>

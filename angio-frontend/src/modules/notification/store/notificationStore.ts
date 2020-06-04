@@ -6,7 +6,7 @@ import {NotificationState, Notification} from '@/modules/notification/store/noti
 import {NotificationApiService} from '@/modules/notification/services/notificationApiService';
 import NotificationLongPollingService from "@/modules/notification/services/notificationLongPollingService";
 
-const log = root.getLogger('store/modules/notification');
+const log = root.getLogger('NotificationStore');
 
 type NotificationContext = ActionContext<NotificationState, RootState>;
 

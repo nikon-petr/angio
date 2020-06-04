@@ -4,7 +4,7 @@ import ls from 'local-storage';
 import axios, {AxiosStatic} from 'axios';
 import root from 'loglevel';
 
-const log = root.getLogger('plugins/axios');
+const log = root.getLogger('AxiosConfiguration');
 
 axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 
@@ -19,15 +19,17 @@ export const deleteAxiosAccessToken = () => {
 };
 
 export const setAxiosLocale = (locale: string) => {
-    log.debug(`set axios locale to ${locale}`);
+    log.debug(`set axios Accept-Language header to ${locale}-${locale.toUpperCase()}`);
     axios.defaults.headers.common['Accept-Language'] = `${locale}-${locale.toUpperCase()}`;
 };
 
 if (!!ls.get('accessToken')) {
+    log.debug('accessToken found in local storage...');
     setAxiosAccessToken(ls.get('accessToken'));
 }
 
 if (!!ls.get('locale')) {
+    log.debug('locale found in local storage...');
     setAxiosLocale(ls.get('locale'));
 }
 

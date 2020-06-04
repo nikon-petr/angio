@@ -1,13 +1,13 @@
 import Vue from 'vue';
-import root from 'loglevel';
+import root, {Logger} from 'loglevel';
 import store from '@/store';
 import {NotificationApiService} from '@/modules/notification/services/notificationApiService';
 import NotificationSoundService from '@/modules/notification/services/notificationSoundService';
 import {NotificationMutation} from '@/modules/notification/store/notificationStore';
 
-const log = root.getLogger('NotificationLongPollingService');
-
 export default class NotificationLongPollingService {
+
+    private static log: Logger = root.getLogger(NotificationLongPollingService.name);
 
     private _pollingEnabled: boolean = false;
     private _watching: boolean = false;
@@ -34,7 +34,7 @@ export default class NotificationLongPollingService {
         NotificationApiService.watchNotification()
             .then((watchResponse) => {
 
-                log.debug(`get new notification: ${JSON.stringify(watchResponse.data.data)}`);
+                NotificationLongPollingService.log.debug(`get new notification: ${JSON.stringify(watchResponse.data.data)}`);
                 NotificationApiService.readNotification([watchResponse.data.data.id]);
                 watchResponse.data.data.read = true;
                 store.commit(NotificationMutation.ADD_NOTIFICATION, watchResponse.data.data);
@@ -48,7 +48,7 @@ export default class NotificationLongPollingService {
                 }
             })
             .catch((error) => {
-                    log.error(error);
+                NotificationLongPollingService.log.error(error);
                     this._watching = false;
                     if (this._pollingEnabled) {
                         setTimeout(() => {
@@ -60,6 +60,7 @@ export default class NotificationLongPollingService {
     }
 
     public stopPolling() {
+        NotificationLongPollingService.log.debug('stop polling');
         this._pollingEnabled = false;
     }
 }
