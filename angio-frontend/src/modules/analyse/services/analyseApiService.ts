@@ -11,7 +11,7 @@ import Page from '@/modules/common/models/page';
 import printJS from 'print-js';
 
 export class AnalyseApiService {
-    private static log = root.getLogger(AnalyseApiService.name);
+    private static log = root.getLogger('AnalyseApiService');
 
     public static getAnalyseFilter(filter: AnalyseFilterModel, size?: number, page?: number, sort?: string): AxiosPromise<Response<Page<AnalyseItem>>> {
         AnalyseApiService.log.debug(`create getAnalyseFilter request with data ${JSON.stringify(filter)}`);

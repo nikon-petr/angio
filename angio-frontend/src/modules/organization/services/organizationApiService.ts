@@ -5,7 +5,7 @@ import Page from '@/modules/common/models/page';
 import {Organization} from '@/modules/organization/models/organization';
 
 export class OrganizationApiService {
-    private static log = root.getLogger(OrganizationApiService.name);
+    private static log = root.getLogger('OrganizationApiService');
 
     public static getOrganizationsFilter(size?: number, page?: number, sort?: string, search?: string): AxiosPromise<Response<Page<Organization>>> {
         OrganizationApiService.log.debug(`create getOrganizationsFilter request`);

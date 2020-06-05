@@ -2,7 +2,7 @@
     <v-badge
             v-bind:value="value"
             overlap
-            color="info">
+            color="accent">
         <template v-slot:badge>
             <v-icon small>notifications</v-icon>
         </template>

@@ -4,7 +4,7 @@ import axios, {AxiosPromise} from 'axios';
 import root from 'loglevel';
 
 export class DashboardApiService {
-    private static log = root.getLogger(DashboardApiService.name);
+    private static log = root.getLogger('DashboardApiService');
 
     public static getDashboard(): AxiosPromise<Response<DashboardModel>> {
         DashboardApiService.log.debug(`create getDashboard request`);

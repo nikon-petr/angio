@@ -4,7 +4,7 @@ import {Response} from '@/modules/common/models/response';
 import {NewNotificationModel, NotificationModel} from '@/modules/notification/models/notification';
 
 export class NotificationApiService {
-    private static log = root.getLogger(NotificationApiService.name);
+    private static log = root.getLogger('NotificationApiService');
 
     public static getNotifications(): AxiosPromise<Response<Array<NotificationModel>>> {
         NotificationApiService.log.debug(`create getNotifications request`);

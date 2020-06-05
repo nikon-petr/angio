@@ -4,7 +4,7 @@ import axios, {AxiosPromise} from 'axios';
 import root from 'loglevel';
 
 export class RoleApiService {
-    private static log = root.getLogger(RoleApiService.name);
+    private static log = root.getLogger('RoleApiService');
 
     public static getAllRoles(): AxiosPromise<Response<Array<Role>>> {
         RoleApiService.log.debug('create getAllRoles request');

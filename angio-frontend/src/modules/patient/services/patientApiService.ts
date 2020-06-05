@@ -5,7 +5,7 @@ import {Patient, PatientRequest} from '@/modules/patient/models/patient';
 import Page from '@/modules/common/models/page';
 
 export class PatientApiService {
-    private static log = root.getLogger(PatientApiService.name);
+    private static log = root.getLogger('PatientApiService');
 
     public static getPatientById(id: number): AxiosPromise<Response<Patient>> {
         PatientApiService.log.debug(`create getPatientById request with id ${id}`);

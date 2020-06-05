@@ -4,12 +4,12 @@ import StaticFile from '@/modules/common/models/staticFile';
 import root from 'loglevel';
 
 export class FileUploadService {
-    private static log = root.getLogger(FileUploadService.name);
+    private static log = root.getLogger('FileUploadService');
 
     public static uploadImage(
         formData: FormData,
         process: (length: number, loaded: number, total: number) => void): AxiosPromise<Response<StaticFile>> {
-        FileUploadService.log.debug(`create uploadImage request with data`);
+        FileUploadService.log.debug(`create uploadImage request`);
         let config: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -24,7 +24,7 @@ export class FileUploadService {
     public static uploadVideo(
         formData: FormData,
         process: (length: number, loaded: number, total: number) => void): AxiosPromise<Response<StaticFile>> {
-        FileUploadService.log.debug(`create uploadVideo request with data`);
+        FileUploadService.log.debug(`create uploadVideo request`);
         let config: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'multipart/form-data'

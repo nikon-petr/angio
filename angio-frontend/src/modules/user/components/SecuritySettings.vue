@@ -7,7 +7,7 @@
         <span>{{userInfo.id}}</span><br>
         <span class="body-2 text--secondary text--darken-4 mr-2">{{ $t('user.component.securitySettings.password') }}:</span>
         <span>●●●●●● </span>
-        <router-link to="/user/password">{{ $t('user.component.securitySettings.changePasswordLink') }}</router-link>
+        <router-link class="link--accent" to="/user/password">{{ $t('user.component.securitySettings.changePasswordLink') }}</router-link>
         <br/>
     </div>
 </template>
@@ -26,3 +26,9 @@
         public readonly userInfo!: UserInfo;
     }
 </script>
+
+<style scoped>
+    .link--accent {
+        color: var(--v-accent-base);
+    }
+</style>

@@ -21,7 +21,7 @@ import root from 'loglevel';
 import qs from 'querystring';
 
 export class UserApiService {
-    private static log = root.getLogger(UserApiService.name);
+    private static log = root.getLogger('UserApiService');
 
     public static getToken(credentials: UserCredentialsModel): AxiosPromise<UserAuthModel> {
         const data = {

@@ -10,6 +10,9 @@ Vue.use(Vuetify, {
         t: (key, ...params) => i18n.t(key, params),
     } as VuetifyLanguage,
     iconfont: 'md',
+    options: {
+        customProperties: true
+    }
 });
 
 declare module 'vue/types/vue' {
