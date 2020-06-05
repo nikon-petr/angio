@@ -1,7 +1,21 @@
 <template>
     <v-toolbar app clipped-left>
 
-        <v-toolbar-title>{{ $t('common.appName') }}</v-toolbar-title>
+        <v-img
+                v-on:click="$router.push('/')"
+                v-bind:src="require('@/assets/logo.png')"
+                style="cursor: pointer"
+                max-width="30"
+                class="mr-2"
+                alt="Angio Logo"
+        ></v-img>
+
+        <v-toolbar-title
+                v-on:click="$router.push('/')"
+                style="cursor: pointer"
+        >
+            {{ $t('common.appName') }}
+        </v-toolbar-title>
 
         <v-spacer></v-spacer>
 

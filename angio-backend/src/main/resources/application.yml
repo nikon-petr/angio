@@ -73,6 +73,8 @@ spring:
     liquibase:
         change-log: classpath:db/liquibase/master.yml
 
+    resources:
+        add-mappings: false
     mvc:
         throw-exception-if-no-handler-found: true
         async:

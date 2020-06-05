@@ -6,8 +6,10 @@ import com.angio.angiobackend.api.common.dto.ValidationError;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.core.JsonParseException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -16,8 +18,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -26,6 +30,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+@Slf4j
 @AllArgsConstructor
 @Order(2)
 @RestControllerAdvice
@@ -34,9 +39,14 @@ public class ApiExceptionHandler {
     private final DynamicLocaleMessageSourceAccessor msa;
 
     @ExceptionHandler({ResourceNotFoundException.class, NoHandlerFoundException.class})
-    @ResponseStatus(NOT_FOUND)
-    public Error handleNotFoundException(Exception e) {
-        return Error.of(e.getMessage());
+    public Object handleNotFoundException(Exception e, HttpServletRequest request) {
+        if (request.getRequestURI().startsWith("/api/v2")) {
+            log.debug("handleNotFoundException() - send 404 error");
+            return new ResponseEntity(Error.of(e.getMessage()), NOT_FOUND);
+        } else {
+            log.debug("handleNotFoundException() - redirect to index.html");
+            return new ModelAndView("forward:/");
+        }
     }
 
     @ExceptionHandler(AccessDeniedException.class)

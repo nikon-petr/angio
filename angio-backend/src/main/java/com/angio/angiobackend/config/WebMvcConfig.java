@@ -11,6 +11,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.util.UriComponents;
@@ -20,8 +21,6 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.String.format;
-
 @AllArgsConstructor
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -30,14 +29,31 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(format("%s*",props.getUploadPath()))
-                .addResourceLocations(format("file:%s", props.getUploadDirectory()))
+        registry.addResourceHandler(props.getUploadPath() + "*")
+                .addResourceLocations("file:" + props.getUploadDirectory())
                 .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
-        registry.addResourceHandler(format("%s**",props.getFrontendDistPath()))
-                .addResourceLocations(format("file:%s", props.getFrontendDistDirectory()))
+        registry.addResourceHandler(props.getFrontendDistPath() + "css/*")
+                .addResourceLocations("file:" + props.getFrontendDistDirectory() + "css/")
                 .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler(props.getFrontendDistPath() + "img/*")
+                .addResourceLocations("file:" + props.getFrontendDistDirectory() + "img/")
+                .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
+        registry.addResourceHandler(props.getFrontendDistPath() + "js/*")
+                .addResourceLocations("file:" + props.getFrontendDistDirectory() + "js/")
+                .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
+        registry.addResourceHandler(props.getFrontendDistPath() + "favicon.ico")
+                .addResourceLocations("file:" + props.getFrontendDistDirectory() + "favicon.ico")
+                .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
+        registry.addResourceHandler(props.getFrontendDistPath() + "index.html")
+                .addResourceLocations("file:" + props.getFrontendDistDirectory() + "index.html")
+                .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
+        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("forward:index.html");
     }
 
     @Bean
