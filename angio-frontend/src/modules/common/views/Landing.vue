@@ -6,95 +6,139 @@
             ></BaseSubheader>
         </v-flex>
 
-        <v-flex xs12>
+        <v-flex xs6 d-flex>
             <v-card>
-                <v-container fluid>
-                    <v-layout
-                            row
-                            wrap
-                            grid-list-md
-                            align-content-space-around
-                    >
-                        <v-flex xs12>
-                            <v-card-title primary-title>
-                                <h4 class="display-1 font-weight-regular mb-0">{{ $t('common.view.landing.content.main.title') }}</h4>
-                            </v-card-title>
-                            <v-card-text class="headline font-weight-light pt-0">{{ $t('common.view.landing.content.main.content') }}</v-card-text>
-                        </v-flex>
+            <v-container>
+                <v-card-title primary-title>
+                    <h4 class="display-1">{{ $t('common.view.landing.content.main.title') }}</h4>
+                </v-card-title>
+                <v-card-text class="headline font-weight-light">
+                    {{ $t('common.view.landing.content.main.content') }}
+                </v-card-text>
+            </v-container>
+            </v-card>
+        </v-flex>
 
-                        <v-flex xs12>
-                            <v-card-title primary-title>
-                                <h4 class="display-1 font-weight-regular mb-0">{{ $t('common.view.landing.content.analyses.title') }}</h4>
-                            </v-card-title>
-                            <v-card-text
-                                    class="headline font-weight-light pt-0 pr-0 pb-0"
+        <v-flex xs6 d-flex>
+            <v-card>
+                <v-container>
+                    <v-card-text
+                    >
+                        <h4 class="display-1 py-4">{{ $t('common.view.landing.content.analyses.title') }}</h4>
+                        <ul>
+                            <li
+                                    class="headline font-weight-light"
                                     v-for="analyse in $t('common.view.landing.content.analyses.content')"
                             >
-                                &#9679; {{ analyse }}
-                            </v-card-text>
-                        </v-flex>
+                                {{ analyse }}
+                            </li>
+                        </ul>
+                    </v-card-text>
+                </v-container>
+            </v-card>
+        </v-flex>
 
-                        <v-flex xs12>
-                            <v-card-title primary-title>
-                                <h4 class="display-1 font-weight-regular mb-0">{{ $t('common.view.landing.content.abilities.title') }}</h4>
-                            </v-card-title>
-                            <v-card-text
-                                    class="headline font-weight-light pt-0 pr-0 pb-0"
+        <v-flex xs8>
+            <v-card>
+                <v-container>
+                    <v-card-title primary-title>
+                        <h4 class="display-1">{{ $t('common.view.landing.content.work.title') }}</h4>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-layout row wrap>
+                            <v-flex>
+                                <v-img
+                                        min-height="500"
+                                        min-width="500"
+                                        max-height="500"
+                                        max-width="500"
+                                        aspect-ratio="1"
+                                        v-bind:src="require('@/assets/angio-landing.png')"
+                                ></v-img>
+                            </v-flex>
+                            <v-flex grow align-center>
+                                <ol>
+                                    <li
+                                            class="headline font-weight-light"
+                                            v-for="step in $t('common.view.landing.content.work.content')"
+                                    >
+                                        {{ step }}
+                                    </li>
+                                </ol>
+                            </v-flex>
+                        </v-layout>
+                    </v-card-text>
+                </v-container>
+            </v-card>
+        </v-flex>
+
+        <v-flex xs4>
+            <v-container fill-height>
+                <v-layout row wrap align-center>
+                    <v-flex class="text-xs-center">
+                        <v-btn
+                                to="/register"
+                                color="success"
+                                round
+                                large
+                        >
+                            {{ $t('common.view.landing.content.getStarted.button') }}<v-icon right>person_add</v-icon>
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-flex>
+
+        <v-flex xs4 d-flex>
+            <v-card>
+                <v-container>
+                    <v-card-text>
+                        <h4 class="display-1 py-4">{{ $t('common.view.landing.content.parameters.title') }}</h4>
+                        <ul>
+                            <li
+                                    class="headline font-weight-light"
+                                    v-for="parameter in $t('common.view.landing.content.parameters.content')"
+                            >
+                                {{ parameter }}
+                            </li>
+                        </ul>
+                    </v-card-text>
+                </v-container>
+            </v-card>
+        </v-flex>
+
+        <v-flex xs4 d-flex>
+            <v-card>
+                <v-container>
+                    <v-card-text>
+                        <h4 class="display-1 py-4">{{ $t('common.view.landing.content.abilities.title') }}</h4>
+                        <ul>
+                            <li
+                                    class="headline font-weight-light"
                                     v-for="ability in $t('common.view.landing.content.abilities.content')"
                             >
-                                &#9679; {{ ability }}
-                            </v-card-text>
-                        </v-flex>
+                                {{ ability }}
+                            </li>
+                        </ul>
+                    </v-card-text>
+                </v-container>
+            </v-card>
+        </v-flex>
 
-                        <v-flex xs12>
-                            <v-card-title primary-title>
-                                <h4 class="display-1 font-weight-regular mb-0">{{ $t('common.view.landing.content.parameters.title') }}</h4>
-                            </v-card-title>
-                            <v-card-text
-                                    class="headline font-weight-light pt-0 pr-0 pb-0"
-                                    v-for="(parameter, index) in $t('common.view.landing.content.parameters.content')"
+        <v-flex xs4 d-flex>
+            <v-card>
+                <v-container>
+                    <v-card-text>
+                        <h4 class="display-1 py-4">{{ $t('common.view.landing.content.specifications.title') }}</h4>
+                        <ul>
+                            <li
+                                    class="headline font-weight-light"
+                                    v-for="specification in $t('common.view.landing.content.specifications.content')"
                             >
-                                {{ incrementIndex(index) }}. {{ parameter }}
-                            </v-card-text>
-                        </v-flex>
-
-                        <v-flex xs12>
-                            <v-card-title primary-title>
-                                <h4 class="display-1 font-weight-regular mb-0">{{ $t('common.view.landing.content.work.title') }}</h4>
-                            </v-card-title>
-                            <v-card-text
-                                    class="headline font-weight-light pt-0 pr-0 pb-0"
-                                    v-for="(step, index) in filterWorks($t('common.view.landing.content.work.content'), true)"
-                            >
-                                {{ incrementIndex(index) }}. {{ step }}
-                            </v-card-text>
-                            <v-img
-                                    min-height="100"
-                                    min-width="100"
-                                    max-height="500"
-                                    max-width="500"
-                                    aspect-ratio="1"
-                                    v-bind:src="require('@/assets/angio-landing.png')"
-                            ></v-img>
-                            <v-card-text
-                                    class="headline font-weight-light pt-0 pr-0 pb-0"
-                                    v-for="(step, index) in filterWorks($t('common.view.landing.content.work.content'), false)"
-                            >
-                                {{ incrementIndex(index+1) }}. {{ step }}
-                            </v-card-text>
-                        </v-flex>
-
-                        <v-flex xs12>
-                            <v-card-title primary-title>
-                                <h4 class="display-1 font-weight-regular mb-0">{{ $t('common.view.landing.content.specifications.title') }}</h4>
-                            </v-card-title>
-                            <v-card-text
-                                    class="headline font-weight-light pt-0 pr-0 pb-0"
-                                    v-for="specification in $t('common.view.landing.content.specifications.content')">
-                                &#9679; {{ specification }}
-                            </v-card-text>
-                        </v-flex>
-                    </v-layout>
+                                {{ specification }}
+                            </li>
+                        </ul>
+                    </v-card-text>
                 </v-container>
             </v-card>
         </v-flex>
@@ -102,28 +146,20 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
     import BaseSubheader from '@/modules/common/components/BaseSubheader.vue';
     import StackLayout from '@/modules/common/components/StackLayout.vue';
+    import {Component, Vue} from 'vue-property-decorator';
 
     @Component({
         components: {StackLayout, BaseSubheader},
     })
     export default class Landing extends Vue {
-        public incrementIndex(i: string): string {
-            return i + 1;
-        }
-
-        public filterWorks(works: string[], isFirst: boolean) {
-            if (works.length > 0) {
-                if (isFirst) {
-                    return works.filter((value, index) => index === 0)
-                } else {
-                    return works.filter((value, index) => index > 0)
-                }
-            } else {
-                return []
-            }
-        }
     }
 </script>
+
+<style scoped>
+    .right-list {
+        list-style-position: inside;
+        direction: rtl;
+    }
+</style>

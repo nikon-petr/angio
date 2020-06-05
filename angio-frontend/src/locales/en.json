@@ -45,55 +45,60 @@
         "artem": "Artem Karkavin"
       },
       "landing": {
-        "title": "Home",
-        "subheader": "Home",
+        "title": "What is AngioVision?",
+        "subheader": "What is AngioVision?",
         "content": {
           "main": {
-            "title": "Basic information:",
-            "content": "AngioVision - web-based software for processing angiograms to determine the quantitative parameters of the retina. The main goal is to provide the diagnostician with a quantitative diagnosis."
+            "title": "In short",
+            "content": "AngioVision - application for processing angiograms to determine the quantitative parameters of the retina. The main goal is to provide the diagnostician with a quantitative diagnosis."
           },
           "abilities": {
-            "title": "Abilities:",
+            "title": "Abilities",
             "content": [
-              "Quantitative determination of the loaded angiogram;",
-              "Saving analysis results in .pdf format;",
-              "Filter for quick search and convenient structuring of information about processed angiograms."
+              "Quantitative determination of the loaded angiogram",
+              "Saving analysis results in .pdf format",
+              "Filter for quick search and convenient structuring of information about processed angiograms"
             ]
           },
           "analyses": {
-            "title": "Ongoing analyzes:",
+            "title": "Ongoing analyzes",
             "content": [
-              "Avascular area analysis;",
-              "Determination of the geometric characteristics of the vascular system of the retina;",
-              "Determination of the presence of ischemic zones and their characteristics."
+              "Avascular area analysis",
+              "Determination of the geometric characteristics of the vascular system of the retina",
+              "Determination of the presence of ischemic zones and their characteristics"
             ]
           },
           "parameters": {
-            "title": "Determined quantitative parameters:",
+            "title": "Determined quantitative parameters",
             "content": [
-              "The density of the vessels around the optic disc;",
-              "Avascular area;",
-              "Vessel area;",
-              "Degree of tortuosity;",
-              "Degree of branching;",
-              "The presence and area of ischemic zones."
+              "The density of the capillaries around the macula",
+              "The density of the vessels around the optic disc",
+              "Macula area",
+              "Vessel area",
+              "Degree of tortuosity",
+              "Degree of branching",
+              "The presence and area of ischemic zones"
             ]
           },
+          "getStarted": {
+            "button": "Get Started"
+          },
           "work": {
-            "title": "Work with software:",
+            "title": "The process of working with the application",
             "content": [
-              "Download angiogram. Sample snapshot:",
-              "Filling out basic patient and disease information;",
-              "Run analysis;",
-              "Obtaining analysis results for further work (saving results / editing indicators)."
+              "Analysis Type Selection",
+              "Upload angiogram",
+              "Filling out basic patient and disease information",
+              "Run analysis",
+              "Obtaining analysis results for further work"
             ]
           },
           "specifications": {
-            "title": "Main technical characteristics:",
+            "title": "Main technical characteristics",
             "content": [
-              "The number of determined quantitative parameters: 7;",
-              "Single shot processing time: 120 - 240 с;",
-              "Image format for download to the analysis: .bmp."
+              "7 quantifiable parameters",
+              "1-5 minutes to process",
+              "bmp and png image format"
             ]
           }
         }
