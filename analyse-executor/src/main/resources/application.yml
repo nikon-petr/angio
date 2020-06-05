@@ -26,5 +26,5 @@ analyseexecutor:
         result-image-format: png
 
         jms:
-            analyse-to-execute-queue: queue.analyse.toExecute
-            analyse-results-queue: queue.analyse.results
+            analyse-execute-request: com.angio.analyseexecutor.execute_request
+            analyse-execute-response: com.angio.analyseexecutor.execute_response

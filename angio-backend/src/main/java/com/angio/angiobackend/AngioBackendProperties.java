@@ -46,8 +46,8 @@ public class AngioBackendProperties {
 
     @Data
     public static class Jms {
-        private String analyseToExecuteQueue;
-        private String analyseResultsQueue;
+        private String analyseExecuteRequest;
+        private String analyseExecuteResponse;
     }
 
     @Data

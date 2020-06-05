@@ -140,8 +140,8 @@ angiobackend:
             clientSecret: angio-client-secret
 
         jms:
-            analyse-to-execute-queue: queue.analyse.toExecute
-            analyse-results-queue: queue.analyse.results
+            analyse-execute-request: com.angio.analyseexecutor.execute_request
+            analyse-execute-response: com.angio.analyseexecutor.execute_response
 
         scheduling:
             # every day at 3:00

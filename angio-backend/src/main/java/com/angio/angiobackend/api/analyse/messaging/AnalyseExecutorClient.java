@@ -2,7 +2,7 @@ package com.angio.angiobackend.api.analyse.messaging;
 
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
 
-public interface AnalyseResultListener {
+public interface AnalyseExecutorClient {
 
-    void receiveAnalyseResult(AnalyseJmsDto result);
+    void execute(AnalyseJmsDto analyse);
 }

@@ -15,7 +15,7 @@ public class AnalyseListener {
     private final AnalyseExecutorService analyseExecutorService;
     private final AnalyseSender analyseSender;
 
-    @JmsListener(destination = "${analyseexecutor.app.jms.analyse-to-execute-queue}")
+    @JmsListener(destination = "${analyseexecutor.app.jms.analyse-execute-request}")
     public void receiveAnalyseToExecute(AnalyseDto analyse) {
 
         log.debug("receiveAnalyseToExecute() - start, analyse received to execute: {}", analyse);

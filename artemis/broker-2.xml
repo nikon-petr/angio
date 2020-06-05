@@ -3,7 +3,7 @@
 <configuration xmlns="urn:activemq" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
     <core xmlns="urn:activemq:core" xsi:schemaLocation="urn:activemq:core ">
         <address-settings>
-            <address-setting match="queue.analyse.#">
+            <address-setting match="com.angio.analyseexecutor.#">
                 <redelivery-delay-multiplier>1.5</redelivery-delay-multiplier>
                 <redelivery-delay>300000</redelivery-delay>
                 <max-redelivery-delay>500000</max-redelivery-delay>

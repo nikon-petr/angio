@@ -3,14 +3,14 @@
 <configuration xmlns="urn:activemq" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
     <core xmlns="urn:activemq:core" xsi:schemaLocation="urn:activemq:core ">
         <addresses>
-            <address name="queue.analyse.toExecute">
+            <address name="com.angio.analyseexecutor.execute_request">
                 <anycast>
-                    <queue name="queue.analyse.toExecute"/>
+                    <queue name="com.angio.analyseexecutor.execute_request"/>
                 </anycast>
             </address>
-            <address name="queue.analyse.results">
+            <address name="com.angio.analyseexecutor.execute_response">
                 <anycast>
-                    <queue name="queue.analyse.results"/>
+                    <queue name="com.angio.analyseexecutor.execute_response"/>
                 </anycast>
             </address>
         </addresses>

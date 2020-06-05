@@ -1,6 +1,5 @@
 package com.angio.angiobackend.api.analyse.service.impl;
 
-import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.analyse.AnalyseActions;
 import com.angio.angiobackend.api.analyse.dto.AdditionalInfoDto;
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
@@ -13,7 +12,7 @@ import com.angio.angiobackend.api.analyse.entity.Analyse;
 import com.angio.angiobackend.api.analyse.entity.Vessel;
 import com.angio.angiobackend.api.analyse.mapper.AdditionalInfoMapper;
 import com.angio.angiobackend.api.analyse.mapper.AnalyseMapper;
-import com.angio.angiobackend.api.analyse.messaging.AnalyseToExecuteSender;
+import com.angio.angiobackend.api.analyse.messaging.AnalyseExecutorClient;
 import com.angio.angiobackend.api.analyse.repository.AnalyseRepository;
 import com.angio.angiobackend.api.analyse.service.AnalyseService;
 import com.angio.angiobackend.api.analyse.specification.AnalyseSpecification;
@@ -70,7 +69,7 @@ public class AnalyseServiceImpl implements AnalyseService {
 
     private final PatientService patientService;
     private final CurrentUserResolver currentUserResolver;
-    private final AnalyseToExecuteSender analyseToExecuteSender;
+    private final AnalyseExecutorClient analyseExecutorClient;
     private final DynamicLocaleMessageSourceAccessor msa;
 
     /**
@@ -570,7 +569,7 @@ public class AnalyseServiceImpl implements AnalyseService {
         try {
             log.info("sendAnalyseToExecution() - analyse execution result status: IN_PROGRESS");
             analyse.setStatus(new AnalyseStatus().setType(AnalyseStatusType.IN_PROGRESS));
-            analyseToExecuteSender.sendAnalyseToExecute(dto);
+            analyseExecutorClient.execute(dto);
             sendAnalyseInProgressNotification(analyse);
         } catch (Exception e) {
             log.info("sendAnalyseToExecution() - analyse execution result status: FAILED cause: {}", e);

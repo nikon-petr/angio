@@ -2,7 +2,7 @@ package com.angio.angiobackend.api.analyse.messaging.impl;
 
 import com.angio.angiobackend.AngioBackendProperties;
 import com.angio.angiobackend.api.analyse.dto.AnalyseJmsDto;
-import com.angio.angiobackend.api.analyse.messaging.AnalyseToExecuteSender;
+import com.angio.angiobackend.api.analyse.messaging.AnalyseExecutorClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -13,17 +13,18 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 @Profile("!disablejms")
-public class AnalyseToExecuteSenderImpl implements AnalyseToExecuteSender {
+public class AnalyseExecutorClientImpl implements AnalyseExecutorClient {
+
 
     private final AngioBackendProperties props;
     private final JmsTemplate jmsTemplate;
 
     @Override
-    public void sendAnalyseToExecute(AnalyseJmsDto analyse) {
+    public void execute(AnalyseJmsDto analyse) {
 
-        log.info("sendAnalyseToExecute() - start");
-        jmsTemplate.convertAndSend(props.getJms().getAnalyseToExecuteQueue(), analyse);
+        log.info("execute() - start");
+        jmsTemplate.convertAndSend(props.getJms().getAnalyseExecuteRequest(), analyse);
 
-        log.info("sendAnalyseToExecute() - end");
+        log.info("execute() - end");
     }
 }

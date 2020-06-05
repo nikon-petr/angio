@@ -19,7 +19,7 @@ public class AnalyseSender {
 
         log.debug("sendAnalyseResult() - start");
         log.debug("sendAnalyseResult() - payload: {}", analyse);
-        jmsTemplate.convertAndSend(props.getJms().getAnalyseResultsQueue(), analyse);
+        jmsTemplate.convertAndSend(props.getJms().getAnalyseExecuteResponse(), analyse);
 
         log.debug("sendAnalyseResult() - end");
     }
