@@ -15,7 +15,7 @@ import {
     UserResetAccountModel,
     UserSettingsModel,
 } from '@/modules/user/models/user';
-import {OAUTH_CONFIG} from '@/plugins/axios';
+import {AxiosConfigurator} from '@/plugins/axios';
 import axios, {AxiosPromise} from 'axios';
 import root from 'loglevel';
 import qs from 'querystring';
@@ -30,7 +30,7 @@ export class UserApiService {
             password: credentials.password,
         };
         UserApiService.log.debug(`create getToken request with data: ${JSON.stringify(data)}`);
-        return axios.post<UserAuthModel>('/oauth/token', qs.stringify(data), OAUTH_CONFIG);
+        return axios.post<UserAuthModel>('/oauth/token', qs.stringify(data), AxiosConfigurator.OAUTH_CONFIG);
     }
 
     public static refreshToken(refreshToken: string): AxiosPromise<RefreshTokenModel> {
@@ -39,7 +39,7 @@ export class UserApiService {
             refresh_token: refreshToken,
         };
         UserApiService.log.debug(`create refreshToken request with data: [SECRET]`);
-        return axios.post('/oauth/token', qs.stringify(data), OAUTH_CONFIG);
+        return axios.post('/oauth/token', qs.stringify(data), AxiosConfigurator.OAUTH_CONFIG);
     }
 
     public static getMe(): AxiosPromise<Response<UserInfoModel>> {

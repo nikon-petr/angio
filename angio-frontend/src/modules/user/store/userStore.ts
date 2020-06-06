@@ -8,12 +8,7 @@ import {UserApiService} from '@/modules/user/services/userApiService';
 import {UserLocalStorageService} from '@/modules/user/services/userLocalStorageService';
 import {UserAuthModel} from '@/modules/user/models/user';
 import {UserAuth, UserInfo, UserPermission, UserSettings, UserState} from '@/modules/user/store/userState';
-import {
-    cancelAllRequests,
-    deleteAxiosAccessToken,
-    setAxiosAccessToken,
-    setAxiosLocale
-} from '@/plugins/axios';
+import {AxiosConfigurator} from '@/plugins/axios';
 import '@/modules/user/interceptors/refreshAccessTokenInterceptor';
 import {NotificationAction} from '@/modules/notification/store/notificationStore';
 
@@ -92,7 +87,7 @@ export const user = {
             state.settings.darkThemeEnabled = userSettings.darkThemeEnabled;
             state.settings.locale = userSettings.locale;
             UserLocalStorageService.persistUserSetting(userSettings);
-            setAxiosLocale(userSettings.locale);
+            AxiosConfigurator.setAxiosLocale(userSettings.locale);
         },
     },
 
@@ -128,7 +123,7 @@ export const user = {
                     .getToken(credentials)
                     .then(async (userAuthResponse: AxiosResponse<UserAuthModel>) => {
 
-                        setAxiosAccessToken(userAuthResponse.data.access_token);
+                        AxiosConfigurator.setAxiosAccessToken(userAuthResponse.data.access_token);
 
                         await UserApiService.getMe().then((meResponse) => {
 
@@ -149,7 +144,7 @@ export const user = {
                     .catch((error) => {
                         log.error(error);
                         ctx.commit(UserMutation.CLEAR_USER, undefined, {root: true});
-                        deleteAxiosAccessToken();
+                        AxiosConfigurator.deleteAxiosAccessToken();
                         reject(error);
                     })
                     .finally(() => ctx.commit(UserMutation.END_FETCHING, undefined, {root: true}));
@@ -166,7 +161,7 @@ export const user = {
                 .refreshToken(ctx.state.auth.refreshToken as string)
                 .then((response) => {
                     ctx.commit(UserMutation.SET_ACCESS_TOKEN, response.data.access_token, {root: true});
-                    setAxiosAccessToken(response.data.access_token);
+                    AxiosConfigurator.setAxiosAccessToken(response.data.access_token);
                     JwtUtils.decodeJwtToken(response.data.access_token)
                         .then((jwtClaims) => {
                             ctx.commit(UserMutation.SET_PERMISSIONS, jwtClaims.authorities as UserPermission[], {root: true});
@@ -175,17 +170,16 @@ export const user = {
                 })
                 .catch((error) => {
                     ctx.commit(UserMutation.CLEAR_USER, undefined, {root: true});
-                    deleteAxiosAccessToken();
+                    AxiosConfigurator.deleteAxiosAccessToken();
                     log.error(error);
                 })
                 .then(() => ctx.commit(UserMutation.END_FETCHING, undefined, {root: true}));
         },
         async logout(ctx: UserContext) {
             ctx.commit(UserMutation.START_FETCHING, undefined, {root: true});
-            // TODO: api call
             ctx.dispatch(NotificationAction.DOWN_NOTIFICATION_POLLING, undefined, {root: true});
             ctx.commit(UserMutation.CLEAR_USER, undefined, {root: true});
-            cancelAllRequests();
+            AxiosConfigurator.cancelAllRequests();
             ctx.commit(UserMutation.END_FETCHING, undefined, {root: true});
         },
         async fetchUser(ctx: UserContext) {
