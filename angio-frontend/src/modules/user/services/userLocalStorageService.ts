@@ -3,7 +3,7 @@ import ls from 'local-storage';
 import {UserAuth, UserInfo, UserPermission, UserSettings} from '@/modules/user/store/userState';
 
 export class UserLocalStorageService {
-    private static log: Logger = root.getLogger(UserLocalStorageService.name);
+    private static log: Logger = root.getLogger('UserLocalStorageService');
 
     public static purgeUser() {
         UserLocalStorageService.log.debug('clear local storage');

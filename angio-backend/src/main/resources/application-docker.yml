@@ -27,5 +27,5 @@ logging:
 angiobackend:
     app:
         sent-email-directory: /opt/angio-backend/static/email
-        upload-directory: /opt/angio-backend/static/uploads
-        frontend-dist-directory: /opt/angio-backend/static/dist
+        upload-directory: /opt/angio-backend/static/uploads/
+        frontend-dist-directory: /opt/angio-backend/static/dist/

@@ -31,4 +31,4 @@ COPY ./angio-backend /angio/angio-backend
 # build
 RUN ./mvnw -B clean package -pl analyse-executor -am spring-boot:repackage
 
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "analyse-executor/target/analyse-executor-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "analyse-executor/target/analyse-executor-0.1.0-SNAPSHOT.jar"]
