@@ -427,6 +427,12 @@
           },
           "organization": {
             "label": "Organization"
+          },
+          "role": {
+            "label": "Roles"
+          },
+          "ownedRole": {
+            "label": "Owned roles"
           }
         }
       },

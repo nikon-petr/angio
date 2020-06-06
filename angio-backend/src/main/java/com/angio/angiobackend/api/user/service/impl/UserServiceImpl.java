@@ -57,7 +57,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.constraints.NotNull;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -198,6 +197,8 @@ public class UserServiceImpl implements UserService {
      * @param enabled user enabled
      * @param locked user locked
      * @param organizationId organization id
+     * @param roleIds role id list
+     * @param ownedRoleIds owned role id list
      * @param pageable page request
      * @return page of filtered users
      */
@@ -209,6 +210,8 @@ public class UserServiceImpl implements UserService {
             Boolean enabled,
             Boolean locked,
             Long organizationId,
+            List<Long> roleIds,
+            List<Long> ownedRoleIds,
             Pageable pageable) {
         log.debug("filterUsersByQueryString() - start");
 
@@ -216,7 +219,10 @@ public class UserServiceImpl implements UserService {
         Specification<User> specs = userSpecification.getUserFilter(search)
                 .and(userSpecification.userEnabled(enabled))
                 .and(userSpecification.userLocked(locked))
-                .and(userSpecification.userOrganizationId(organizationId));
+                .and(userSpecification.userOrganizationId(organizationId))
+                .and(userSpecification.userRoleIds(roleIds))
+                .and(userSpecification.userOwnedRoleIds(ownedRoleIds))
+                .and(userSpecification.distinct());
 
         log.debug("filterUsersByQueryString() - filter user");
         Page<User> analyseInfoEntityPage = userRepository.findAll(specs, pageable);

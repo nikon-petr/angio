@@ -74,6 +74,8 @@ export interface UserFilterModel {
     enabled?: string;
     locked?: string;
     organizationId?: number;
+    roleIds: number[];
+    ownedRoleIds: number[];
 }
 
 export interface UserLockedModel {

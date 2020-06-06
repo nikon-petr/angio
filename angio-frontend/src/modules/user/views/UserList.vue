@@ -15,6 +15,7 @@
                     v-bind:fetching="usersFetching"
                     v-bind:organizations-dictionary="organizationsDictionary"
                     v-bind:organizations-fetch="dictionaryFetching"
+                    v-bind:roles-dictionary="rolesDictionary"
             ></UserListFilter>
         </v-flex>
 
@@ -272,7 +273,9 @@
                     search: undefined,
                     enabled: undefined,
                     locked: undefined,
-                    organizationId: undefined
+                    organizationId: undefined,
+                    roleIds: undefined,
+                    ownedRoleIds: undefined
                 },
                 sort: undefined
             };

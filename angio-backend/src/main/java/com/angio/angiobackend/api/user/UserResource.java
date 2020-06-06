@@ -63,8 +63,10 @@ public class UserResource {
             @RequestParam(value = "enabled", required = false) Boolean enabled,
             @RequestParam(value = "locked", required = false) Boolean locked,
             @RequestParam(value = "organizationId", required = false) Long organizationId,
+            @RequestParam(value = "roleIds", required = false) List<Long> roleIds,
+            @RequestParam(value = "ownedRoleIds", required = false) List<Long> ownedRoleIds,
             @ApiIgnore @PageableDefault Pageable pageable) {
-        return userService.filterUsersByQueryString(search, enabled, locked, organizationId, pageable);
+        return userService.filterUsersByQueryString(search, enabled, locked, organizationId, roleIds, ownedRoleIds, pageable);
     }
 
     @ApiOperation("Register user")

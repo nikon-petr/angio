@@ -427,6 +427,12 @@
           },
           "organization": {
             "label": "Организация"
+          },
+          "role": {
+            "label": "Роли"
+          },
+          "ownedRole": {
+            "label": "Управляемые роли"
           }
         }
       },

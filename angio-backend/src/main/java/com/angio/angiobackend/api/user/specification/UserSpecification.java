@@ -1,13 +1,17 @@
 package com.angio.angiobackend.api.user.specification;
 
-import static com.angio.angiobackend.util.SpecificationUtils.substringPattern;
-
 import com.angio.angiobackend.api.common.embeddable.FullName_;
 import com.angio.angiobackend.api.organization.entity.Organization_;
+import com.angio.angiobackend.api.security.entity.Role_;
 import com.angio.angiobackend.api.user.entities.User;
 import com.angio.angiobackend.api.user.entities.User_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+
+import static com.angio.angiobackend.util.SpecificationUtils.substringPattern;
 
 @Component
 public class UserSpecification {
@@ -138,6 +142,46 @@ public class UserSpecification {
                             .get(Organization_.name)), substringPattern(organization).toUpperCase());
         }
         return null;
+    }
+
+    /**
+     * Find user by role id list.
+     *
+     * @param roleIds role id list
+     * @return specification
+     */
+    public Specification<User> userRoleIds(List<Long> roleIds) {
+        if (!CollectionUtils.isEmpty(roleIds)) {
+            return (root, query, cb) ->
+                root.join(User_.roles).get(Role_.id).in(roleIds);
+        }
+        return null;
+    }
+
+    /**
+     * Find user by owned role id list.
+     *
+     * @param ownedRoleIds owned role id list
+     * @return specification
+     */
+    public Specification<User> userOwnedRoleIds(List<Long> ownedRoleIds) {
+        if (!CollectionUtils.isEmpty(ownedRoleIds)) {
+            return (root, query, cb) ->
+                    root.join(User_.ownedRolesToManage).get(Role_.id).in(ownedRoleIds);
+        }
+        return null;
+    }
+
+    /**
+     * Distinct users.
+     *
+     * @return specification
+     */
+    public Specification<User> distinct() {
+        return (root, query, cb) -> {
+            query.distinct(true);
+            return cb.conjunction();
+        };
     }
 
     /**
