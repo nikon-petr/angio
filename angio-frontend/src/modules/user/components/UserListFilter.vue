@@ -2,8 +2,7 @@
     <div>
         <v-flex xs12 px-0 pb-0>
             <v-text-field
-                    v-on:input="searchUpdate"
-                    v-bind:value="search"
+                    v-model="searchSynced"
                     v-bind:label="$t('user.component.userListFilter.field.search.label')"
                     v-bind:loading="fetching"
                     type="search"
@@ -37,28 +36,53 @@
                             row
                             wrap
                             grid-list-md
-                            justify-space-between
                             align-content-space-around
                     >
-                        <v-flex xl3 lg6 md6 sm12 xs6>
+                        <v-flex xl4 lg6 md6 sm12 xs12>
                             <v-select
-                                    v-on:change="organizationIdUpdate"
-                                    v-bind:value="organizationId"
+                                    v-model="organizationIdSynced"
                                     v-bind:items="organizationsDictionary"
-                                    v-bind:item-text="getOrganizationName"
-                                    v-bind:item-value="getOrganizationId"
                                     v-bind:label="$t('user.component.userListFilter.field.organization.label')"
                                     v-bind:return-object="false"
                                     v-bind:loading="organizationsFetch"
-                                    clearable
+                                    item-value="id"
+                                    item-text="name"
                                     hide-details
+                                    clearable
                                     outline
                             ></v-select>
                         </v-flex>
-                        <v-flex xl3 lg6 md6 sm6 xs6 align-self-center>
+                        <v-flex xl4 lg6 md6 sm12 xs12>
+                            <v-autocomplete
+                                    v-model="roleIdsSynced"
+                                    v-bind:items="rolesDictionary"
+                                    v-bind:label="$t('user.component.userListFilter.field.role.label')"
+                                    v-bind:return-object="false"
+                                    item-value="id"
+                                    item-text="description"
+                                    hide-details
+                                    clearable
+                                    multiple
+                                    outline
+                            ></v-autocomplete>
+                        </v-flex>
+                        <v-flex xl4 lg6 md6 sm12 xs12>
+                            <v-autocomplete
+                                    v-model="ownedRoleIdsSynced"
+                                    v-bind:items="rolesDictionary"
+                                    v-bind:label="$t('user.component.userListFilter.field.ownedRole.label')"
+                                    v-bind:return-object="false"
+                                    item-value="id"
+                                    item-text="description"
+                                    hide-details
+                                    clearable
+                                    multiple
+                                    outline
+                            ></v-autocomplete>
+                        </v-flex>
+                        <v-flex xs3>
                             <v-checkbox
-                                    v-on:change="enabledUpdate"
-                                    v-bind:value="enabled"
+                                    v-model="enabledSynced"
                                     v-bind:label="$t('user.component.userListFilter.field.enabled.label')"
                                     v-bind:true-value="true"
                                     v-bind:false-value="false"
@@ -67,10 +91,9 @@
                                     hide-details
                             ></v-checkbox>
                         </v-flex>
-                        <v-flex xl3 lg6 md6 sm6 xs6 align-self-center>
+                        <v-flex xs3>
                             <v-checkbox
-                                    v-on:change="lockedUpdate"
-                                    v-bind:value="locked"
+                                    v-model="lockedSynced"
                                     v-bind:label="$t('user.component.userListFilter.field.locked.label')"
                                     v-bind:true-value="true"
                                     v-bind:false-value="false"
@@ -87,7 +110,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Emit} from 'vue-property-decorator';
+    import {Role} from '@/modules/role/models/role';
+    import {Component, Vue, Prop, Emit, PropSync} from 'vue-property-decorator';
     import {Organization} from '@/modules/organization/models/organization';
     import {CommonEvent} from '@/modules/common/helpers/commonEvent';
 
@@ -95,16 +119,40 @@
     export default class UserListFilter extends Vue {
 
         @Prop()
-        public search!: string;
+        public readonly search!: string;
+
+        @PropSync('search')
+        public searchSynced!: string;
 
         @Prop()
-        public enabled!: boolean;
+        public readonly enabled!: boolean;
+
+        @PropSync('enabled')
+        public enabledSynced!: boolean;
 
         @Prop()
-        public locked!: boolean;
+        public readonly locked!: boolean;
+
+        @PropSync('locked')
+        public readonly lockedSynced!: boolean;
 
         @Prop()
-        public organizationId!: number;
+        public readonly organizationId!: number;
+
+        @PropSync('organizationId')
+        public organizationIdSynced!: number;
+
+        @Prop()
+        public readonly roleIds!: number[];
+
+        @PropSync('roleIds')
+        public roleIdsSynced!: number[];
+
+        @Prop()
+        public readonly ownedRoleIds!: number[];
+
+        @PropSync('ownedRoleIds')
+        public ownedRoleIdsSynced!: number[];
 
         @Prop()
         public readonly fetching!: boolean;
@@ -113,37 +161,12 @@
         public readonly organizationsDictionary!: Organization[];
 
         @Prop()
+        public readonly rolesDictionary!: Role[];
+
+        @Prop()
         public readonly organizationsFetch!: boolean;
 
         @Emit(CommonEvent.SUBMIT)
         public submitSearch() {}
-
-        @Emit('update:search')
-        public searchUpdate(value: string): string {
-            return value;
-        }
-
-        @Emit('update:enabled')
-        public enabledUpdate(value: boolean): boolean {
-            return value;
-        }
-
-        @Emit('update:locked')
-        public lockedUpdate(value: boolean): boolean {
-            return value;
-        }
-
-        @Emit('update:organizationId')
-        public organizationIdUpdate(value: number): number {
-            return value;
-        }
-
-        public getOrganizationName(organization: Organization): string {
-            return organization.name
-        }
-
-        public getOrganizationId(organization: Organization): number | undefined {
-            return organization.id
-        }
     }
 </script>

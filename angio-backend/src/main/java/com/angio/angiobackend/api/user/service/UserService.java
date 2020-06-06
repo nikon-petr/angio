@@ -31,6 +31,8 @@ public interface UserService {
             Boolean enabled,
             Boolean locked,
             Long organizationId,
+            List<Long> roleIds,
+            List<Long> ownedRoleIds,
             Pageable pageable);
 
     Response registerUser(RegisterUserDto dto);
