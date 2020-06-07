@@ -97,7 +97,6 @@ typings/
 .next
 
 # ANGIO-BACKEND
-angio-backend/src/main/resources/static/dist/*
 angio-backend/src/main/resources/static/uploads/*
 angio-backend/src/main/resources/static/email/*
 
