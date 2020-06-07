@@ -8,7 +8,7 @@
                     ref="form"
                     v-model="valid"
             >
-                <v-combobox
+                <v-autocomplete
                         v-model="editedRoleList"
                         v-bind:label="$t('user.component.roleEditorForm.combobox.label')"
                         v-bind:disabled="fetching"
@@ -22,7 +22,7 @@
                         outline
                         multiple
                         chips
-                ></v-combobox>
+                ></v-autocomplete>
                 <BuiltInErrorMessage
                         v-bind:error-messages="mapErrorMessages"
                 ></BuiltInErrorMessage>
@@ -103,7 +103,7 @@
 
         @Emit()
         public save() {
-            return this.editedRoleList.map(r => r.id);
+            return this.editedRoleList;
         }
 
         public valid: boolean = false;
