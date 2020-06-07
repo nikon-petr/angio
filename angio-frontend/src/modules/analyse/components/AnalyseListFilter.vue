@@ -71,7 +71,7 @@
                                     </v-flex>
 
                                     <v-flex xl3 lg4 md5 sm12 xs12>
-                                        <v-combobox
+                                        <v-autocomplete
                                                 v-model="analyseFilterModel.statuses"
                                                 v-bind:items="statuses"
                                                 v-bind:item-text="(item) => $t(item.text)"
@@ -92,7 +92,7 @@
                                                         class="v-chip--select-multi caption"
                                                         small
                                                 >
-                                                    {{ $t(statuses.find(status => status.value === data.item).text) }}
+                                                    {{ $t(statuses.find(status => status.value === data.item.value).text) }}
                                                     <v-icon
                                                             v-on:click="data.parent.selectItem(data.item)"
                                                             small
@@ -110,7 +110,7 @@
                                                     </v-list-tile-content>
                                                 </v-list-tile>
                                             </template>
-                                        </v-combobox>
+                                        </v-autocomplete>
                                     </v-flex>
 
                                     <v-flex xl3 lg8 md7 sm12 xs12 align-self-center>
