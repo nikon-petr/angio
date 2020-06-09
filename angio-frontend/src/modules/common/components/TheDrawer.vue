@@ -9,7 +9,7 @@
     >
         <v-list>
 
-            <PreAuthorize v-bind:has-permissions="['ANALYSE_VIEW']">
+            <PreAuthorize v-bind:has-permissions="['ANALYSE_CREATE']">
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
@@ -29,7 +29,7 @@
 
             </PreAuthorize>
 
-            <PreAuthorize v-bind:has-permissions="['ANALYSE_CREATE']">
+            <PreAuthorize v-bind:has-permissions="['ANALYSE_VIEW']">
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
