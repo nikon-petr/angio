@@ -21,7 +21,7 @@ public class UpdateRoleDto {
     private Long id;
 
     @NotNull(groups = NewRole.class)
-    @Size(min = 3, max = 30)
+    @Size(min = 3, max = 100)
     @ApiModelProperty(name = "Role description")
     private String description;
 

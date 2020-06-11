@@ -23,15 +23,22 @@ Application for the analysis of retinal angiograms
   * Log4j2
 * frontend
   * vue
-  * vue-router
-  * vue-axios
+  * vuex
   * vuetify
+  * vue-router
   * vue-notification
   * vue-bus
   * vue-i18n
   * vue-filepond
+  * vue-text-highlight
+  * vue-moment
+  * vue-property-decorator
+  * axios
   * loglevel
-  * moment
+  * print-js
+  * jwt-decode
+  * local-storage
+  * helpful-decorators
 
 ### Run
 
