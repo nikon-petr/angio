@@ -9,7 +9,15 @@
     >
         <v-list>
 
-            <PreAuthorize v-bind:has-permissions="['ANALYSE_CREATE']">
+            <PreAuthorize
+                    v-bind:has-permissions="[
+                        'ANALYSE_CREATE',
+                        'PATIENT_CREATE',
+                        'PATIENT_VIEW',
+                        'IMAGE_UPLOAD',
+                        'VIDEO_UPLOAD'
+                    ]"
+            >
 
                 <v-tooltip right>
                     <template v-slot:activator="{ on }">
