@@ -40,7 +40,6 @@
                 {{ $t('organization.component.createOrganizationForm.cancel') }}
             </v-btn>
             <v-btn
-                    v-on:click.native="submit"
                     v-bind:disabled="!valid"
                     v-bind:loading="fetching"
                     form="create-organization-form"
