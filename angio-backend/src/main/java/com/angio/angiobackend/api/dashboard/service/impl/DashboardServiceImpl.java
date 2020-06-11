@@ -59,7 +59,9 @@ public class DashboardServiceImpl implements DashboardService {
     private void calculateAnalyseStatistics(StatisticsDto dto) {
         log.debug("calculateAnalyseStatistics() - start");
         log.debug("calculateAnalyseStatistics() - count total");
-        long totalCount = analyseRepository.count(analyseSpecification.notDeleted());
+        long totalCount = analyseRepository.count(analyseSpecification.notDeleted()
+                .and(analyseSpecification.inStatus(AnalyseStatusType.SUCCESS, AnalyseStatusType.FAILED))
+        );
         log.debug("calculateAnalyseStatistics() - count success");
         long successCount = analyseRepository.count(analyseSpecification.inStatus(AnalyseStatusType.SUCCESS));
         log.debug("calculateAnalyseStatistics() - count failure");
