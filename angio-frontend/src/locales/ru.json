@@ -405,7 +405,7 @@
         "title": "Безопасность",
         "id": "ID",
         "password": "Пароль",
-        "changePasswordLink": "изменпить пароль"
+        "changePasswordLink": "изменить пароль"
       },
       "personalization": {
         "title": "Персонализация",
