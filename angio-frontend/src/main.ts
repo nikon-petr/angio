@@ -9,7 +9,6 @@ import '@/plugins/axios';
 import '@/plugins/moment';
 import '@/plugins/vuetify';
 import '@/plugins/notification';
-import '@/plugins/lightbox';
 import '@/plugins/filepond';
 import '@/plugins/filters';
 import '@/plugins/axios';

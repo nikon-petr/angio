@@ -77,7 +77,7 @@ public enum  Roles {
             Permissions.PUSH_NOTIFICATION_SEND,
 
             Permissions.DASHBOARD_VIEW
-    }, "Администратор системы", false),
+    }, "Администратор системы", true),
 
     ROOT(Permissions.values(), "Супер пользователь системы", true);
 
