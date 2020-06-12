@@ -45,7 +45,7 @@ public enum  Roles {
             Permissions.TOKEN_REVOKE,
 
             Permissions.PUSH_NOTIFICATION_RECEIVE
-    }, "Врач диагност (без организации)", false),
+    }, "Врач диагност (без организации)", true),
 
     ADMIN(new Permissions[]{
             Permissions.ANALYSE_PURGE_DELETED,
