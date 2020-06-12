@@ -8,6 +8,8 @@ import com.angio.angiobackend.api.patient.mapper.PatientMapper;
 import com.angio.angiobackend.api.patient.repository.PatientRepository;
 import com.angio.angiobackend.api.patient.service.PatientService;
 import com.angio.angiobackend.api.patient.specification.PatientSpecification;
+import com.angio.angiobackend.api.user.entities.User;
+import com.angio.angiobackend.api.user.service.CurrentUserResolver;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +20,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @AllArgsConstructor
 public class PatientServiceImpl implements PatientService {
 
+    private final CurrentUserResolver currentUserResolver;
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
     private final PatientSpecification patientSpecification;
@@ -39,7 +44,14 @@ public class PatientServiceImpl implements PatientService {
     @PreAuthorize("hasAuthority('PATIENT_CREATE')")
     public PatientDto createPatient(@NonNull PatientDto dto) {
         log.debug("getPatientByPolicy() - start: patient={}", dto);
+
+        log.debug("getPatientByPolicy() - get current user");
+        User currentUser = currentUserResolver.getCurrentUser();
         Patient entity = patientMapper.toEntity(dto);
+
+        log.debug("getPatientByPolicy() - set patient organization of current user");
+        entity.setOrganization(currentUser.getOrganization());
+        entity.setUser(currentUser);
 
         log.debug("getPatientByPolicy() - save patient to db");
         entity = patientRepository.save(entity);
@@ -61,7 +73,15 @@ public class PatientServiceImpl implements PatientService {
     public Page<PatientDto> filterPatientsByQueryString(String search, Pageable pageable) {
 
         log.debug("filterPatientsByQueryString() - start");
-        Specification<Patient> specs = patientSpecification.getPatientFilter(search);
+        log.debug("filterPatientsByQueryString() - get current user");
+        User currentUser = currentUserResolver.getCurrentUser();
+
+        Long currentUserOrgId = currentUser.getOrganization() != null ? currentUser.getOrganization().getId() : null;
+        UUID currentUserId = currentUser.getId();
+
+        Specification<Patient> specs = patientSpecification.getPatientFilter(search)
+                .and(Specification.where(patientSpecification.patientOrganization(currentUserOrgId))
+                        .or(patientSpecification.patientUser(currentUserId)));
 
         log.debug("filterPatientsByQueryString() - filter patients");
         Page<Patient> patientEntityPage = patientRepository.findAll(specs, pageable);
