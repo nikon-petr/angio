@@ -402,7 +402,7 @@ public class UserServiceImpl implements UserService {
 
         log.debug("changePassword() - check old password");
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Password check failure");
+            throw new OperationException(msa.getMessage("errors.api.user.passwordCheckFailure"));
         }
 
         log.debug("changePassword() - save new password");
@@ -448,12 +448,12 @@ public class UserServiceImpl implements UserService {
                 || user.getFullName().getFirstname() == null
                 || user.getFullName().getLastname() == null
                 || user.getFullName().getPatronymic() == null) {
-            throw new OperationException("User does not needs resetting now");
+            throw new OperationException(msa.getMessage("errors.api.user.resettingNotNeeded"));
         }
 
         log.debug("resetUser() - match password");
         if (!passwordEncoder.matches(resetUser.getResetCode(), user.getPassword())) {
-            throw new BadCredentialsException("Wrong resetting code");
+            throw new OperationException(msa.getMessage("errors.api.user.wrongResettingCode"));
         }
 
         log.debug("resetUser() - reset user and save");
@@ -473,12 +473,12 @@ public class UserServiceImpl implements UserService {
 
         log.debug("enableUser() - check the user needs resetting");
         if (user.isEnabled() || user.getFullName() != null) {
-            throw new OperationException("User does not needs enabling now");
+            throw new OperationException(msa.getMessage("errors.api.user.enablingNotNeeded"));
         }
 
         log.debug("resetUser() - match password");
         if (!passwordEncoder.matches(enableUser.getEnablingCode(), user.getPassword())) {
-            throw new BadCredentialsException(msa.getMessage("errors.api.user.wrongEnablingCode"));
+            throw new OperationException(msa.getMessage("errors.api.user.wrongEnablingCode"));
         }
 
         log.debug("resetUser() - reset user and save");

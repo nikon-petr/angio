@@ -186,8 +186,12 @@
                     this.users = CollectionUtils.updateItem(this.users, response.data.data, user => user.id)
                 })
                 .catch(error => {
+                    if (error.response.status >= 400 && error.response.status < 500) {
+                        this.roleEditorErrorMessages = [error.response.data.error.message];
+                    } else if (error.response.status >= 500) {
+                        this.roleEditorErrorMessages = ['common.form.error.500'];
+                    }
                     this.$logger.error(error);
-                    this.roleEditorErrorMessages = ['user.component.roleEditorForm.error'];
                 })
                 .finally(() => this.roleEditorFetching = false);
         }
@@ -203,8 +207,12 @@
                     this.users = CollectionUtils.updateItem(this.users, response.data.data, user => user.id)
                 })
                 .catch(error => {
+                    if (error.response.status >= 400 && error.response.status < 500) {
+                        this.ownedRoleEditorErrorMessages = [error.response.data.error.message];
+                    } else if (error.response.status >= 500) {
+                        this.ownedRoleEditorErrorMessages = ['common.form.error.500'];
+                    }
                     this.$logger.error(error);
-                    this.ownedRoleEditorErrorMessages = ['user.component.roleEditorForm.error'];
                 })
                 .finally(() => this.ownedRoleEditorFetching = false);
         }
