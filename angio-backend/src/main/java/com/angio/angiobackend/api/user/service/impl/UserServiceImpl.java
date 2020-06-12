@@ -42,6 +42,7 @@ import com.angio.angiobackend.util.PasswordUtils;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,6 +65,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -400,7 +402,7 @@ public class UserServiceImpl implements UserService {
 
         log.debug("changePassword() - check old password");
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Password check failure");
+            throw new OperationException(msa.getMessage("errors.api.user.passwordCheckFailure"));
         }
 
         log.debug("changePassword() - save new password");
@@ -446,12 +448,12 @@ public class UserServiceImpl implements UserService {
                 || user.getFullName().getFirstname() == null
                 || user.getFullName().getLastname() == null
                 || user.getFullName().getPatronymic() == null) {
-            throw new OperationException("User does not needs resetting now");
+            throw new OperationException(msa.getMessage("errors.api.user.resettingNotNeeded"));
         }
 
         log.debug("resetUser() - match password");
         if (!passwordEncoder.matches(resetUser.getResetCode(), user.getPassword())) {
-            throw new BadCredentialsException("Wrong resetting code");
+            throw new OperationException(msa.getMessage("errors.api.user.wrongResettingCode"));
         }
 
         log.debug("resetUser() - reset user and save");
@@ -471,12 +473,12 @@ public class UserServiceImpl implements UserService {
 
         log.debug("enableUser() - check the user needs resetting");
         if (user.isEnabled() || user.getFullName() != null) {
-            throw new OperationException("User does not needs enabling now");
+            throw new OperationException(msa.getMessage("errors.api.user.enablingNotNeeded"));
         }
 
         log.debug("resetUser() - match password");
         if (!passwordEncoder.matches(enableUser.getEnablingCode(), user.getPassword())) {
-            throw new BadCredentialsException("Wrong enabling code");
+            throw new OperationException(msa.getMessage("errors.api.user.wrongEnablingCode"));
         }
 
         log.debug("resetUser() - reset user and save");
@@ -538,7 +540,9 @@ public class UserServiceImpl implements UserService {
         }
 
         log.debug("changeUserRoles() - checking that change requester is owner of requested roles");
-        checkAllowedRoles(changedRoles);
+        Set<Long> userRolesIdsFromDb = user.getRoles().stream().map(Role::getId).collect(Collectors.toSet());
+        Set<Long> newRolesIdListFromDb = changedRoles.stream().map(Role::getId).collect(Collectors.toSet());
+        checkAllowedRoles(newRolesIdListFromDb, userRolesIdsFromDb);
 
         log.debug("changeUserRoles() - change and save");
         user.setRoles(new HashSet<>(changedRoles));
@@ -568,7 +572,9 @@ public class UserServiceImpl implements UserService {
         }
 
         log.debug("changeUserOwnedRoles() - checking that change requester is owner of requested roles");
-        checkAllowedRoles(changedRoles);
+        Set<Long> userRolesIdsFromDb = user.getOwnedRolesToManage().stream().map(Role::getId).collect(Collectors.toSet());
+        Set<Long> newRolesIdListFromDb = changedRoles.stream().map(Role::getId).collect(Collectors.toSet());
+        checkAllowedRoles(newRolesIdListFromDb, userRolesIdsFromDb);
 
         log.debug("changeUserOwnedRoles() - change and save");
         user.setOwnedRolesToManage(new HashSet<>(changedRoles));
@@ -640,11 +646,30 @@ public class UserServiceImpl implements UserService {
         User creator = currentUserResolver.getCurrentUser();
 
         if (!creator.getOwnedRolesToManage().containsAll(roles)) {
-            List<Long> ownedRolesIds = creator.getOwnedRolesToManage().stream()
-                    .map(Role::getId)
+            List<String> ownedRolesIds = creator.getOwnedRolesToManage().stream()
+                    .map(Role::getDescription)
                     .collect(Collectors.toList());
             throw new OperationException(
-                    msa.getMessage("errors.api.user.rolesNotOwnedUser", new Object[]{ownedRolesIds}));
+                    msa.getMessage("errors.api.user.rolesNotOwnedUser", new Object[] {ownedRolesIds}));
+        }
+    }
+
+    private void checkAllowedRoles(Set<Long> newRoleIdList, Set<Long> userRolesFromDbIds) {
+        User creator = currentUserResolver.getCurrentUser();
+        Collection roleListDiffIds = CollectionUtils.disjunction(newRoleIdList, userRolesFromDbIds);
+        log.debug("checkAllowedRoles() - new role list: {}", newRoleIdList);
+        log.debug("checkAllowedRoles() - user roles from db: {}", userRolesFromDbIds);
+        log.debug("checkAllowedRoles() - role list diff: {}", roleListDiffIds);
+        Collection<Long> ownedRoleIds = creator.getOwnedRolesToManage().stream()
+                .map(Role::getId)
+                .collect(Collectors.toList());
+
+        if (!ownedRoleIds.containsAll(roleListDiffIds)) {
+            List<String> ownedRolesDescriptions = creator.getOwnedRolesToManage().stream()
+                    .map(Role::getDescription)
+                    .collect(Collectors.toList());
+            throw new OperationException(
+                    msa.getMessage("errors.api.user.rolesNotOwnedUser", new Object[] {ownedRolesDescriptions}));
         }
     }
 

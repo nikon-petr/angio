@@ -6,11 +6,14 @@ Application for the analysis of retinal angiograms
 
 * data base
   * PostgreSQL
+* JMS
+  * ArtemisMQ
 * backend and analyse-executor
   * Spring Boot
   * Spring Data JPA
   * Hibernate Envers
   * Liquibase
+  * Maven
   * Spring OAuth Security
   * Spring JMS
   * Freemarker
@@ -20,16 +23,22 @@ Application for the analysis of retinal angiograms
   * Log4j2
 * frontend
   * vue
-  * vue-router
-  * vue-axios
+  * vuex
   * vuetify
+  * vue-router
   * vue-notification
   * vue-bus
   * vue-i18n
-  * vue-pure-lightbox
   * vue-filepond
+  * vue-text-highlight
+  * vue-moment
+  * vue-property-decorator
+  * axios
   * loglevel
-  * moment
+  * print-js
+  * jwt-decode
+  * local-storage
+  * helpful-decorators
 
 ### Run
 
@@ -58,6 +67,8 @@ for development or
 ```
 
 Backend rest api documentation: http://localhost:8080/swagger-ui.html
+
+Frontend app: http://localhost:8080
 
 Test-users credentials:
 

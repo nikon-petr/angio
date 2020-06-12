@@ -19,6 +19,11 @@
   },
   "common": {
     "appName": "AngioVision",
+    "form": {
+      "error": {
+        "500": "Ошибка сервера"
+      }
+    },
     "helper": {
       "i18n": {
         "formatBoolean": {
@@ -267,8 +272,7 @@
         },
         "button": {
           "register": "Зарегистрироваться"
-        },
-        "error": "Возникла ошибка при регистрации нового пользователя"
+        }
       },
       "activation": {
         "activationFormStep": {
@@ -276,7 +280,6 @@
           "button": {
             "send": "Отправить"
           },
-          "error": "Ошибка активации",
           "enablingCode": {
             "field": "Код активации",
             "validation": {
@@ -359,8 +362,7 @@
           },
           "button": {
             "submit": "Сбросить"
-          },
-          "error": "Ошибка сброса пароля"
+          }
         },
         "resetPasswordSuccessStep": {
           "title": "Пароль сброшен!",
@@ -390,8 +392,7 @@
         },
         "newPasswordRepeat": {
           "field": "Повторите пароль"
-        },
-        "error": "Ошибка восстановления доступа"
+        }
       },
       "personalInfo": {
         "title": "Персональные данные",
@@ -405,7 +406,7 @@
         "title": "Безопасность",
         "id": "ID",
         "password": "Пароль",
-        "changePasswordLink": "изменпить пароль"
+        "changePasswordLink": "изменить пароль"
       },
       "personalization": {
         "title": "Персонализация",
@@ -476,8 +477,7 @@
         },
         "combobox": {
           "label": "Роли"
-        },
-        "error": "Возникла ошибка при редактировании списка ролей пользователя"
+        }
       },
       "ownedRoleEditorForm": {
         "title": "Редактировать управляемые роли"
@@ -539,7 +539,7 @@
         "subheader": "Настройки"
       },
       "userManager": {
-        "title": "Ползователи",
+        "title": "Пользователи",
         "subheader": "Пользователи"
       },
       "403": {

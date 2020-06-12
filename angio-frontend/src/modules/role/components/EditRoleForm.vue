@@ -22,7 +22,7 @@
                                 type="text"
                                 name="description"
                                 browser-autocomplete="off"
-                                maxlength="30"
+                                maxlength="100"
                                 outline
                                 required
                         ></v-text-field>

@@ -11,7 +11,7 @@ public enum  Permissions {
     ANALYSE_VIEW_ALL("Просмотр всех анализов"),
     ANALYSE_CREATE("Создание анализа"),
     ANALYSE_EDIT("Изменение анализа"),
-    ANALYSE_EXECUTE_ACTION("Изменение анализа"),
+    ANALYSE_EXECUTE_ACTION("Выполнить действия для анализа"),
     ANALYSE_REMOVE("Удаление анализа"),
     ANALYSE_PURGE_DELETED("Очистка БД от анализов в статусе DELETED"),
 

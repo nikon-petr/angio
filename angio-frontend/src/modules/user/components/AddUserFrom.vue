@@ -231,8 +231,12 @@
                     this.usersSaved(response.data.data)
                 })
                 .catch(error => {
+                    if (error.response.status >= 400 && error.response.status < 500) {
+                        this.errorMessages = [error.response.data.error.message];
+                    } else if (error.response.status >= 500) {
+                        this.errorMessages = ['common.form.error.500'];
+                    }
                     this.$logger.error(error);
-                    this.errorMessages = ['user.component.addUserFrom.error'];
                 })
                 .finally(() => this.fetching = false);
         }

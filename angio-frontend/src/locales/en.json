@@ -19,6 +19,11 @@
   },
   "common": {
     "appName": "AngioVision",
+    "form": {
+      "error": {
+        "500": "Ошибка сервера"
+      }
+    },
     "helper": {
       "i18n": {
         "formatBoolean": {
@@ -267,8 +272,7 @@
         },
         "button": {
           "register": "Sign Up"
-        },
-        "error": "An error occurred while registering a new user"
+        }
       },
       "activation": {
         "activationFormStep": {
@@ -276,7 +280,6 @@
           "button": {
             "send": "Send"
           },
-          "error": "Activation error",
           "enablingCode": {
             "field": "Activation code",
             "validation": {
@@ -359,8 +362,7 @@
           },
           "button": {
             "submit": "Reset"
-          },
-          "error": "Password reset error"
+          }
         },
         "resetPasswordSuccessStep": {
           "title": "Password reset!",
@@ -390,8 +392,7 @@
         },
         "newPasswordRepeat": {
           "field": "Confirm password"
-        },
-        "error": "Access recovery error"
+        }
       },
       "personalInfo": {
         "title": "Personal Information",
@@ -476,8 +477,7 @@
         },
         "combobox": {
           "label": "Roles"
-        },
-        "error": "An error occurred while editing user role list"
+        }
       },
       "ownedRoleEditorForm": {
         "title": "Edit owned roles"
