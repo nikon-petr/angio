@@ -2,6 +2,7 @@ package com.angio.angiobackend.api.common.advice;
 
 import com.angio.angiobackend.api.common.accessor.DynamicLocaleMessageSourceAccessor;
 import com.angio.angiobackend.api.common.dto.Error;
+import com.angio.angiobackend.api.common.dto.Response;
 import com.angio.angiobackend.api.common.dto.ValidationError;
 import com.angio.angiobackend.api.common.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -42,7 +43,7 @@ public class ApiExceptionHandler {
     public Object handleNotFoundException(Exception e, HttpServletRequest request) {
         if (request.getRequestURI().startsWith("/api/v2")) {
             log.debug("handleNotFoundException() - send 404 error");
-            return new ResponseEntity(Error.of(e.getMessage()), NOT_FOUND);
+            return new ResponseEntity(Response.error(Error.of(e.getMessage())), NOT_FOUND);
         } else {
             log.debug("handleNotFoundException() - redirect to index.html");
             return new ModelAndView("forward:/");
