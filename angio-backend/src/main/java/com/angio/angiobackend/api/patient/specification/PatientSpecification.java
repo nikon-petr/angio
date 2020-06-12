@@ -3,10 +3,14 @@ package com.angio.angiobackend.api.patient.specification;
 import static com.angio.angiobackend.util.SpecificationUtils.substringPattern;
 
 import com.angio.angiobackend.api.common.embeddable.FullName_;
+import com.angio.angiobackend.api.organization.entity.Organization_;
 import com.angio.angiobackend.api.patient.entity.Patient;
 import com.angio.angiobackend.api.patient.entity.Patient_;
+import com.angio.angiobackend.api.user.entities.User_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class PatientSpecification {
@@ -65,6 +69,32 @@ public class PatientSpecification {
             return (root, query, cb) ->
                     cb.like(cb.upper(root.get(Patient_.fullName)
                             .get(FullName_.patronymic)), substringPattern(patronymic).toUpperCase());
+        }
+        return null;
+    }
+
+    /**
+     * Find patient by organization.
+     *
+     * @param organizationId organization id
+     * @return specification
+     */
+    public Specification<Patient> patientOrganization(Long organizationId) {
+        if (organizationId != null) {
+            return (root, query, cb) -> cb.equal(root.get(Patient_.organization).get(Organization_.id), organizationId);
+        }
+        return null;
+    }
+
+    /**
+     * Find patient by user.
+     *
+     * @param userId user id
+     * @return specification
+     */
+    public Specification<Patient> patientUser(UUID userId) {
+        if (userId != null) {
+            return (root, query, cb) -> cb.equal(root.get(Patient_.user).get(User_.id), userId);
         }
         return null;
     }

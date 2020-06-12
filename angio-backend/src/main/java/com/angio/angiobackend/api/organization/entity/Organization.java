@@ -1,5 +1,6 @@
 package com.angio.angiobackend.api.organization.entity;
 
+import com.angio.angiobackend.api.patient.entity.Patient;
 import com.angio.angiobackend.api.user.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,6 +38,12 @@ public class Organization {
 
     @Column(name = "locked", nullable = false)
     private boolean locked;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "organization"
+    )
+    private Set<Patient> patients = new HashSet<>();
 
     @OneToMany(
             fetch = FetchType.LAZY,

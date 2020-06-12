@@ -65,6 +65,9 @@ databaseChangeLog:
 - include:
     relativeToChangelogFile: true
     file: ./changelogs/022_add_new_analyses.yml
+- include:
+    relativeToChangelogFile: true
+    file: ./changelogs/023_add_organization_for_patient.yml
 
 # always in the end of file
 - include:

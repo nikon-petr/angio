@@ -1,0 +1,29 @@
+databaseChangeLog:
+- changeSet:
+    id: 023
+    author: nikon-petr
+    changes:
+    - addColumn:
+        tableName: patients
+        columns:
+        - column:
+            constraints:
+                foreignKeyName: patients_organization_fk
+                references: organizations(id)
+            name: organization_id
+            type: BIGINT
+        - column:
+            constraints:
+                foreignKeyName: patients_user_fk
+                references: users(id)
+            name: user_id
+            type: UUID
+    - addColumn:
+        tableName: patients_aud
+        columns:
+        - column:
+            name: organization_id
+            type: BIGINT
+        - column:
+            name: user_id
+            type: UUID

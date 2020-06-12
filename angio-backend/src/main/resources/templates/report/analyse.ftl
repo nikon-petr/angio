@@ -19,7 +19,7 @@
                 <b>Диагност:</b> ${data.additionalInfo.diagnostician.fullName.lastname} ${data.additionalInfo.diagnostician.fullName.firstname} ${data.additionalInfo.diagnostician.fullName.patronymic!""}<br/>
                 <b>Пациент:</b> ${data.patient.fullName.lastname} ${data.patient.fullName.firstname} ${data.patient.fullName.patronymic!""}<br/>
                 <b>Дата рождения:</b> ${data.patient.bday?string["dd.MM.yyyy"]}<br/>
-                <b>Адрес:</b> ${data.patient.locationAddress!"_________________________"}<br/>
+                <b>Адрес:</b> ${data.patient.address!"_________________________"}<br/>
             </p>
         </td>
     </tr>
