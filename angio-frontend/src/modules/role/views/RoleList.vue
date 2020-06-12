@@ -126,8 +126,10 @@
                     this.rolesDictionary = CollectionUtils.appendItem(this.rolesDictionary, response.data.data);
                 })
                 .catch(error => {
-                    if (error.response.status == 400) {
+                    if (error.response.status >= 400 && error.response.status < 500) {
                         this.addRoleErrorMessages = [error.response.data.error.message];
+                    } else if (error.response.status >= 500) {
+                        this.addRoleErrorMessages = ['common.form.error.500'];
                     }
                     this.$logger.error(error);
                 })
@@ -147,8 +149,10 @@
                     this.rolesDictionary = CollectionUtils.updateItem(this.rolesDictionary, response.data.data, (r) => r.id);
                 })
                 .catch(error => {
-                    if (error.response.status == 400) {
+                    if (error.response.status >= 400 && error.response.status < 500) {
                         this.editRoleErrorMessages = [error.response.data.error.message];
+                    } else if (error.response.status >= 500) {
+                        this.editRoleErrorMessages = ['common.form.error.500'];
                     }
                     return this.$logger.error(error);
                 })

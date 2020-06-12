@@ -477,8 +477,7 @@
         },
         "combobox": {
           "label": "Roles"
-        },
-        "error": "An error occurred while editing user role list"
+        }
       },
       "ownedRoleEditorForm": {
         "title": "Edit owned roles"
