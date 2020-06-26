@@ -35,7 +35,7 @@
 		<spring-jwt.version>1.0.9.RELEASE</spring-jwt.version>
 		<spring-oauth2-autoconfig.version>2.1.2.RELEASE</spring-oauth2-autoconfig.version>
 		<spring-oauth2.version>2.3.6.RELEASE</spring-oauth2.version>
-		<swagger.version>2.9.2</swagger.version>
+		<swagger.version>2.10.5</swagger.version>
 		<flying-saucer-pdf.version>9.1.5</flying-saucer-pdf.version>
 
 		<!-- datasource -->
