@@ -10,12 +10,8 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-    commit-message:
-      include: "scope"
 
   - package-ecosystem: "npm"
     directory: "/angio-frontend"
     schedule:
       interval: "monthly"
-    commit-message:
-      include: "scope"
