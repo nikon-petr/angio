@@ -9,8 +9,8 @@ services:
             - "5432"
         ports:
             - 5432:5432
-        environment:
-            - POSTGRES_PASSWORD=DO$od~lBd}8L
+        env_file:
+            - .db.env
 
 volumes:
     static-content:

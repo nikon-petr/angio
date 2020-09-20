@@ -1,22 +1,17 @@
 spring:
 
     artemis:
-        mode: native
         host: artemis
-        port: 61616
-        user: angio_app
-        password: q1w2e3
+        password: ${ARTEMIS_PASSWORD}
 
     datasource:
-        url: jdbc:postgresql://db:5432/angio_app_db
-        username: angio_app
-        password: q1w2e3
-        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://db:5432/angio_app_db?reWriteBatchedInserts=true
+        password: ${ANGIO_DB_USER_PASSWORD}
 
 logging:
     level:
         root: WARN
-        com.angio.angiobackend: INFO
+        com.angio.angiobackend: ${ANGIO_LOG_MODE}
         org.springframework.web: INFO
         org.springframework.security: INFO
         org.hibernate.stat: OFF
@@ -26,6 +21,7 @@ logging:
 
 angiobackend:
     app:
+        base-url: ${BASE_URL}
         sent-email-directory: /opt/angio-backend/static/email
         upload-directory: /opt/angio-backend/static/uploads/
         frontend-dist-directory: /opt/angio-backend/static/dist/

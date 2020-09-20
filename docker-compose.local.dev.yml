@@ -10,9 +10,8 @@ services:
         ports:
             - 8161:8161
             - 61616:61616
-        environment:
-            - ARTEMIS_USERNAME=angio_app
-            - ARTEMIS_PASSWORD=q1w2e3
+        env_file:
+            - .artemis.env
 
     analyse-executor:
         image: analyse-executor:latest
@@ -25,3 +24,6 @@ services:
         depends_on:
             - db
             - artemis
+        env_file:
+            - .db.env
+            - .artemis.env

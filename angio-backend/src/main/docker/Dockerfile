@@ -25,6 +25,6 @@ RUN if [ ! -f /opt/angio-backend/static/dist/index.html ] ; then echo "angio-fro
 
 RUN ./mvnw clean package -pl angio-backend -am spring-boot:repackage
 
-ENTRYPOINT ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000", "-jar", "-Dspring.profiles.active=docker", "angio-backend/target/angio-backend-0.1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000", "-jar", "-Dspring.profiles.active=docker,prod", "angio-backend/target/angio-backend-0.1.0-SNAPSHOT.jar"]
 
 EXPOSE 8080 8000

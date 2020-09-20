@@ -12,7 +12,8 @@ services:
             - 61616:61616
         environment:
             - ARTEMIS_USERNAME=angio_app
-            - ARTEMIS_PASSWORD=q1w2e3
+        env_file:
+            - .artemis.env
 
     angio-backend:
         image: angio-backend:latest
@@ -21,13 +22,17 @@ services:
             dockerfile: ./angio-backend/src/main/docker/Dockerfile
         ports:
             - 8000:8000
-            - 8080:8080
+            - 80:8080
         volumes:
             - static-content:/opt/angio-backend/static
         tty: true
         depends_on:
             - db
             - artemis
+        env_file:
+            - .angio-backend.env
+            - .db.env
+            - .artemis.env
 
     analyse-executor:
         image: analyse-executor:latest
@@ -40,3 +45,6 @@ services:
         depends_on:
             - db
             - artemis
+        env_file:
+            - .db.env
+            - .artemis.env
