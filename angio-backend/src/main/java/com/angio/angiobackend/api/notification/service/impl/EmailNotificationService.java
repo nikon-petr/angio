@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -101,11 +100,12 @@ public class EmailNotificationService implements NotificationService<UUID> {
         String body = processEmailNotificationBody(notification.getDataModel(), notification.getTemplateName());
 
         try {
+            String subjectPrefix = "[ANGIO][" + notification.getType().name() + "] ";
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setTo(email);
             mimeMessageHelper.setFrom("angiovision.team@mail.ru");
-            mimeMessageHelper.setSubject(notification.getSubject().getName());
+            mimeMessageHelper.setSubject(subjectPrefix + notification.getSubject().getName());
             mimeMessageHelper.setText(body, true);
             emailSender.send(mimeMessage);
             saveEmailToFs(mimeMessage);

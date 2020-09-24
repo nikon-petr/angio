@@ -53,6 +53,8 @@ public interface UserService {
 
     void resetPassword(String email);
 
+    void resetRootPassword(String email);
+
     void resetUser(UUID id, ResetUserDto resetUser);
 
     UserDetailsDto enableUser(UUID id, EnableUserDto enableUser);

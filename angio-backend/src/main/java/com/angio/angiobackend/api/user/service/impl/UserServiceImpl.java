@@ -48,7 +48,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -183,7 +182,7 @@ public class UserServiceImpl implements UserService {
                     .setDate(new Date())
                     .setType(NotificationType.INFO)
                     .setTemplateName("registration.ftl")
-                    .setSubject(new SubjectDto("Новая учетная запись Angio"))
+                    .setSubject(new SubjectDto("Создана учетная запись"))
                     .setDataModel(prepareRegistrationEmail(entry.getKey(), entry.getValue()));
             emailNotificationService.notifyUser(entry.getValue().getId(), notification);
         }
@@ -274,7 +273,7 @@ public class UserServiceImpl implements UserService {
                 .setDate(new Date())
                 .setType(NotificationType.INFO)
                 .setTemplateName("registration.ftl")
-                .setSubject(new SubjectDto("Регистрация в Angio"))
+                .setSubject(new SubjectDto("Регистрация учетной записи"))
                 .setDataModel(prepareRegistrationEmail(password, newUser));
         emailNotificationService.notifyUser(newUser.getId(), notification);
 
@@ -426,11 +425,33 @@ public class UserServiceImpl implements UserService {
                 .setDate(new Date())
                 .setType(NotificationType.INFO)
                 .setTemplateName("reset-password.ftl")
-                .setSubject(new SubjectDto("Восстановление пароля учетной записи в Angio"))
+                .setSubject(new SubjectDto("Восстановление пароля учетной записи"))
                 .setDataModel(prepareResetPasswordEmail(resetCode, user));
         emailNotificationService.notifyUser(user.getId(), notification);
 
         log.debug("resetPassword() - disable user email={}", email);
+        user.setEnabled(false);
+        user.setPassword(passwordEncoder.encode(resetCode));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void resetRootPassword(String email) {
+
+        log.debug("resetRootPassword() - start");
+        User user = findUserEntityByEmail(email);
+        String resetCode = PasswordUtils.generateNumberPassword(6);
+
+        log.debug("resetRootPassword() - send email");
+        NewNotificationDto notification = new NewNotificationDto()
+                .setDate(new Date())
+                .setType(NotificationType.INFO)
+                .setTemplateName("reset-root-user.ftl")
+                .setSubject(new SubjectDto("Восстановление пароля суперпользователя"))
+                .setDataModel(prepareResetPasswordEmail(resetCode, user));
+        emailNotificationService.notifyUser(user.getId(), notification);
+
+        log.debug("resetRootPassword() - disable user email={}", email);
         user.setEnabled(false);
         user.setPassword(passwordEncoder.encode(resetCode));
         userRepository.save(user);
@@ -446,8 +467,7 @@ public class UserServiceImpl implements UserService {
         log.debug("resetUser() - check the user needs resetting");
         if (user.isEnabled()
                 || user.getFullName().getFirstname() == null
-                || user.getFullName().getLastname() == null
-                || user.getFullName().getPatronymic() == null) {
+                || user.getFullName().getLastname() == null) {
             throw new OperationException(msa.getMessage("errors.api.user.resettingNotNeeded"));
         }
 
@@ -680,8 +700,7 @@ public class UserServiceImpl implements UserService {
         return new RegistrationEmailDto()
                 .setEmail(user.getEmail())
                 .setPassword(password)
-                .setActivationFormLink(activationFormLink)
-                .setPreview("Учетная запись Angio");
+                .setActivationFormLink(activationFormLink);
     }
 
     private AbstractEmailDto prepareResetPasswordEmail(String password, User user) {
@@ -691,7 +710,6 @@ public class UserServiceImpl implements UserService {
         return new ResetPasswordDto()
                 .setEmail(user.getEmail())
                 .setPassword(password)
-                .setResettingFormLink(resettingFormLink)
-                .setPreview("Восстановление пароля учетной записи в Angio");
+                .setResettingFormLink(resettingFormLink);
     }
 }

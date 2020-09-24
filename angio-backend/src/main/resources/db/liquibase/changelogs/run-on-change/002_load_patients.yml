@@ -3,6 +3,7 @@ databaseChangeLog:
     id: load_patients_1
     author: nikon-petr
     runOnChange: true
+    context: "!prod"
     changes:
 
     # load patients

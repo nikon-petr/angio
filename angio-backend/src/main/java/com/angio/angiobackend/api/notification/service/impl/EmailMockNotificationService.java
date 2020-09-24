@@ -42,11 +42,12 @@ public class EmailMockNotificationService extends EmailNotificationService {
 
         log.debug("sendEmail() - create email and save to file system without sending");
         try {
+            String subjectPrefix = "[ANGIO][" + notification.getType().name() + "] ";
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setTo(email);
             mimeMessageHelper.setFrom("angiovision.team@mail.ru");
-            mimeMessageHelper.setSubject(notification.getSubject().getName());
+            mimeMessageHelper.setSubject(subjectPrefix + notification.getSubject().getName());
             mimeMessageHelper.setText(body, true);
             saveEmailToFs(mimeMessage);
         } catch (MessagingException e) {

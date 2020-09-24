@@ -12,3 +12,17 @@ databaseChangeLog:
         encoding: UTF-8
         file: db/csv/users.csv
         quotchar: "'"
+- changeSet:
+    id: load_users_2
+    author: nikon-petr
+    runOnChange: true
+    context: "!prod"
+    changes:
+
+    # load demo users data
+    - loadUpdateData:
+        tableName: users
+        primaryKey: id
+        encoding: UTF-8
+        file: db/csv/users_demo.csv
+        quotchar: "'"

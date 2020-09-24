@@ -8,6 +8,7 @@ COPY ./pom.xml /angio/pom.xml
 COPY ./analyse-executor/pom.xml /angio/analyse-executor/pom.xml
 COPY ./angio-backend/pom.xml /angio/angio-backend/pom.xml
 COPY ./analyse-executor/lib /angio/analyse-executor/lib
+COPY ./clear-uploads-and-emails.sh /angio/clear-uploads-and-emails.sh
 
 WORKDIR /angio
 
@@ -17,6 +18,10 @@ RUN ./mvnw -B -Dspring-boot.repackage.skip=true dependency:resolve-plugins depen
 # copy code
 COPY ./analyse-executor /angio/analyse-executor
 COPY ./angio-backend /angio/angio-backend
+
+# remove static files
+RUN chmod +x ./clear-uploads-and-emails.sh
+RUN ./clear-uploads-and-emails.sh
 
 # copy frontend dist
 COPY ./angio-backend/src/main/resources/static/dist /opt/angio-backend/static/dist

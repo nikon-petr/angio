@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @SpringBootApplication
 @EnableCaching
-@EnableAsync
+@EnableAsync(proxyTargetClass = true)
 @EnableScheduling
 @EnableConfigurationProperties
 public class AngioApplication {

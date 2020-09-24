@@ -326,7 +326,7 @@
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                         <tr>
                             <td class="content-block">
-                                <span class="apple-link">Copyright © Angio ${data.copyrightDate?string["yyyy"]}</span>
+                                <span class="apple-link">Copyright © Angio 2018-${data.copyrightDate?string["yyyy"]}</span>
                             </td>
                         </tr>
                     </table>
