@@ -28,7 +28,7 @@
 		<javabuilder.version>1.0</javabuilder.version>
 
 		<!-- libs -->
-		<commons-io.version>2.5</commons-io.version>
+		<commons-io.version>2.7</commons-io.version>
 		<liquibase.version>3.5.5</liquibase.version>
 		<lombok.version>1.18.4</lombok.version>
 		<mapstruct.version>1.3.0.Beta2</mapstruct.version>
